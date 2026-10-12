@@ -14,6 +14,14 @@ Code license: MIT (see `Cargo.toml`). The MusyX runtime is not included: it is a
 [AxioDL/musyx](https://github.com/AxioDL/musyx), fetched from there when you clone.
 Fonts: SIL OFL 1.1 / Bitstream Vera (`crates/colo-viewer/assets/FONT-LICENSE.md`).
 
+## Decompilation
+
+The `main.dol` function names, addresses and engine behaviour used here come from a matching decompilation:
+[wastelandgunner/pkmn-colosseum](https://github.com/wastelandgunner/pkmn-colosseum), a fork of
+[dougchansan/pkmn-colosseum](https://github.com/dougchansan/pkmn-colosseum) (dtk-template, byte-exact build).
+The fork's `ghidra-names` branch carries the names worked out alongside this project, so any address or
+function name mentioned here can be looked up in its `config/GC6E01/symbols.txt` and `src/`.
+
 ## Getting the code
 
 Clone recursively so the MusyX submodule (`crates/colo-audio/musyx`) is fetched too:
