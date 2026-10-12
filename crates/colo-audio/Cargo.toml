@@ -1,0 +1,11 @@
+[package]
+name = "colo-audio"
+version = "0.1.0"
+edition = "2021"
+description = "MusyX (the GameCube sound system Pokémon Colosseum uses) via the decompiled runtime, plus the game's sound layer."
+
+[dependencies]
+colo-formats = { path = "../colo-formats" }
+
+[build-dependencies]
+cc = "1"

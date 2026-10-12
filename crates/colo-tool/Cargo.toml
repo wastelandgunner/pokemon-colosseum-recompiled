@@ -1,0 +1,12 @@
+[package]
+name = "colo-tool"
+description = "CLI for inspecting Pokemon Colosseum game data"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+colo-formats = { path = "../colo-formats" }
+colo-script = { path = "../colo-script" }
+colo-export = { path = "../colo-export" }
+colo-audio = { path = "../colo-audio" }

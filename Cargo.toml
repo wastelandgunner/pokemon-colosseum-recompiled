@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members = ["crates/colo-formats", "crates/colo-script", "crates/colo-export", "crates/colo-tool", "crates/colo-viewer", "crates/colo-audio"]
+# `cargo build` skips the Bevy viewer; build it with `cargo run -p colo-viewer --release -- ...`
+default-members = ["crates/colo-formats", "crates/colo-script", "crates/colo-export", "crates/colo-tool"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[profile.dev]
+opt-level = 1
+
+# dependencies (Bevy) optimized even in dev builds
+[profile.dev.package."*"]
+opt-level = 3

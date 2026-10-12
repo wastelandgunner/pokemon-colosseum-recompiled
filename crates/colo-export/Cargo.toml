@@ -1,0 +1,9 @@
+[package]
+name = "colo-export"
+description = "Export Pokemon Colosseum models to glTF 2.0 (.glb) and textures to PNG"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+colo-formats = { path = "../colo-formats" }

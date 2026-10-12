@@ -1,0 +1,9 @@
+[package]
+name = "colo-script"
+description = "Interpreter for Pokemon Colosseum CMS script bytecode (.scd)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+colo-formats = { path = "../colo-formats" }

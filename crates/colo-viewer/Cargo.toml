@@ -1,0 +1,14 @@
+[package]
+name = "colo-viewer"
+description = "Bevy room viewer for Pokemon Colosseum: map, NPCs, collision, talk scripts"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+colo-formats = { path = "../colo-formats" }
+colo-script = { path = "../colo-script" }
+colo-audio = { path = "../colo-audio" }
+cpal = "0.15"
+bevy = { version = "0.19", default-features = false, features = ["3d", "ui"] }
+image = { version = "0.25", default-features = false, features = ["png"] }

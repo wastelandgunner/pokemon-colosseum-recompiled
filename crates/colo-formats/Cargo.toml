@@ -1,0 +1,6 @@
+[package]
+name = "colo-formats"
+description = "Readers for Pokemon Colosseum (GC6E01) data formats: GCM disc, FSYS, LZSS, MSG, SCD"
+version.workspace = true
+edition.workspace = true
+license.workspace = true

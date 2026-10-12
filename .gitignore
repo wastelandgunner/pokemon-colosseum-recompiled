@@ -1,0 +1,70 @@
+# Build output
+/target/
+**/target/
+
+# Disc images and archives: never commit game data
+*.iso
+*.gcm
+*.ciso
+*.gcz
+*.rvz
+*.wbfs
+*.wia
+*.nkit.*
+*.dol
+*.rel
+*.fsys
+*.bin
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# Extracted / exported game assets
+out/
+out-*/
+export/
+extracted/
+unpacked/
+dump/
+*.glb
+*.gltf
+*.gfl
+*.msg
+*.scd
+*.ccd
+*.wav
+*.thp
+*.sdir
+*.proj
+*.pool
+*.samp
+*.dsp
+*.adp
+*.tpl
+*.gtx
+
+# Screenshots and captures
+screenshots/
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.gif
+*.webp
+*.mp4
+*.mkv
+
+# Ghidra / RE databases (built from the game binary)
+*.gpr
+*.rep/
+*.gzf
+*.lock~
+
+# Editor / OS junk
+.DS_Store
+*.swp
+.idea/
+.vscode/
