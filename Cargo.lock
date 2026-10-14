@@ -2047,6 +2047,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "colo-battle"
+version = "0.1.0"
+dependencies = [
+ "colo-formats",
+ "colo-gx",
+]
+
+[[package]]
 name = "colo-export"
 version = "0.1.0"
 dependencies = [
@@ -2056,6 +2064,22 @@ dependencies = [
 [[package]]
 name = "colo-formats"
 version = "0.1.0"
+
+[[package]]
+name = "colo-gx"
+version = "0.1.0"
+dependencies = [
+ "colo-formats",
+]
+
+[[package]]
+name = "colo-gxgpu"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "colo-gx",
+ "wgpu",
+]
 
 [[package]]
 name = "colo-script"
@@ -2069,6 +2093,7 @@ name = "colo-tool"
 version = "0.1.0"
 dependencies = [
  "colo-audio",
+ "colo-battle",
  "colo-export",
  "colo-formats",
  "colo-script",
@@ -2080,10 +2105,17 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "colo-audio",
+ "colo-battle",
  "colo-formats",
+ "colo-gx",
+ "colo-gxgpu",
  "colo-script",
  "cpal",
+ "futures-lite",
+ "gilrs",
  "image",
+ "wgpu",
+ "winit",
 ]
 
 [[package]]

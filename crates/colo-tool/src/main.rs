@@ -30,7 +30,7 @@ colo-tool <command> ...
   worldmap <FILE>                        world_map.fsys's worldmap_menu_rel tables (destinations, texts, rides, links)
   map <image.gcm> <room>                 room data, e.g. `map disc.gcm M2_out`: NPCs (model, pos, scripts),
                                          entry points, interaction points (warps/doors/events)
-  maps <image.gcm>                       parse every room on the disc
+  maps <image.gcm> [list]                parse every room on the disc (list: one line per room record)
   room <image.gcm> <room> [options]      emulate a room load with the tracing host, then optionally
       --talk N       talk to character N (sync call with (group, N, 0, 0))
       --ip N         trigger interaction point #N (sync call with its 4 params)
@@ -40,6 +40,7 @@ colo-tool <command> ...
   ccd <FILE>                             summarize a room's collision (.ccd)
   flare <image.gcm> <room> [pngdir]      a room's lens flare (.gfl elements, textures) and sun position
   anims <FILE> <model>                   list a model's joint animations
+  cam <FILE> <name> [f,f,...]            a .cam's base camera, animations and its pose at frames
   check-models <image.gcm>               load every .dat/.rdat/.pkx model on the disc, report failures
   materials <image.gcm>                  tally render modes, TObj flags and TObj TEV setups over every model
   mats <file.dat>                        one model's materials: colours, TObjs and TEV graph
@@ -47,6 +48,12 @@ colo-tool <command> ...
   rel <FILE> [name]                      dump a REL (sections, words, relocated pointers)
   dis <FILE> [name]                      disassemble the .scd in an FSYS (or a raw .scd; common_rel.rel or
                                          common.fsys: the global script embedded in common_rel)
+  ws <image.gcm|main.dol> [trace.log]    disassemble the battle move scripts (WS) in main.dol; with a
+                                         Dolphin battle trace (Working/dolphin), check every traced command
+  battle-data <image.gcm> [moves|species|items|types|tables|table:<name>]
+                                         battle tables (common_rel moves/species, main.dol items/type chart)
+  battle-replay <snapdir>                 run a call captured by Working/dolphin/snapshot.py through the lifted
+                                         battle code and compare RNG draws, script commands, registers and RAM
   ips <FILE> [script]                    interaction points in common_rel (only those calling a script
                                          thread id, hex), e.g. ips common.fsys 596000d  (the PCs)
   check <image.gcm>                      run every function of every script on the disc twice
@@ -131,17 +138,21 @@ fn run(args: &[String]) -> R<()> {
         Some("worldmap") => cmd_worldmap(a(1)?),
         Some("gpt1") => cmd_gpt1(a(1)?, args.get(2).map(String::as_str)),
         Some("dis") => cmd_dis(a(1)?, args.get(2).map(String::as_str)),
+        Some("ws") => cmd_ws(a(1)?, args.get(2).map(String::as_str)),
+        Some("battle-replay") => cmd_battle_replay(a(1)?),
+        Some("battle-data") => cmd_battle_data(a(1)?, args.get(2).map(String::as_str)),
         Some("run") => cmd_run(a(1)?, &args[2..]),
         Some("story") => story::cmd_story(a(1)?, a(2)?),
         Some("story-explore") => explore::cmd_story_explore(a(1)?, a(2)?, &args[3..]),
         Some("sound") => sound::cmd_sound(a(1)?, a(2)?, a(3)?, &args[4..]),
         Some("check") => cmd_check(a(1)?),
         Some("map") => cmd_map(a(1)?, a(2)?),
-        Some("maps") => cmd_maps(a(1)?),
+        Some("maps") => cmd_maps(a(1)?, args.get(2).map(|s| s.as_str()) == Some("list")),
         Some("room") => cmd_room(a(1)?, a(2)?, &args[3..]),
         Some("ccd") => cmd_ccd(a(1)?),
         Some("flare") => cmd_flare(a(1)?, a(2)?, args.get(3).map(|s| s.as_str())),
         Some("anims") => cmd_anims(a(1)?, a(2)?),
+        Some("cam") => cmd_cam(a(1)?, a(2)?, args.get(3).map(|s| s.as_str()).unwrap_or("0")),
         Some("check-models") => cmd_check_models(a(1)?),
         Some("materials") => cmd_materials(a(1)?),
         Some("mats") => cmd_mats(a(1)?),
@@ -294,6 +305,286 @@ fn cmd_ips(spec: &str, script: Option<&str>) -> R<()> {
         outln!("#{:<4} method {} floor {:#x} group {:#x} region {} script {:#010x} params {:x?}", ip.index, ip.method, ip.room_id,
             room.map(|r| r.group_id).unwrap_or(0), ip.region, ip.script, ip.params);
     }
+    Ok(())
+}
+
+fn cmd_battle_replay(dir: &str) -> R<()> {
+    use colo_battle::{lifted, mem::Mem, ppc::Cpu, stubs};
+    let d = Path::new(dir);
+    let before = std::fs::read(d.join("before.bin"))?;
+    let after = std::fs::read(d.join("after.bin"))?;
+    let num = |v: &str| u32::from_str_radix(v.trim_start_matches("0x"), 16);
+    // tiny JSON reader for the regs files: {"r": [..], "pc": n, "cr": n, "lr": n, "ctr": n, "xer": n, "f": ["hex",..]}
+    fn regs(path: &Path) -> R<(Vec<u32>, u32, u32, u32, u32, u32, Vec<u64>)> {
+        let s = std::fs::read_to_string(path)?;
+        let arr = |k: &str| -> Vec<String> {
+            let i = s.find(&format!("\"{k}\": [")).unwrap() + k.len() + 5;
+            let j = s[i..].find(']').unwrap() + i;
+            s[i..j].split(',').map(|x| x.trim().trim_matches('"').to_string()).collect()
+        };
+        let one = |k: &str| -> u32 {
+            let i = s.find(&format!("\"{k}\": ")).unwrap() + k.len() + 4;
+            s[i..].split(|c: char| c == ',' || c == '}').next().unwrap().trim().parse().unwrap()
+        };
+        let r = arr("r").iter().map(|x| x.parse().unwrap()).collect();
+        let f = arr("f").iter().map(|x| u64::from_str_radix(x, 16).unwrap_or(0)).collect();
+        Ok((r, one("pc"), one("cr"), one("lr"), one("ctr"), one("xer"), f))
+    }
+    let _ = num;
+    let (r, pc, cr, lr, ctr, xer, f) = regs(&d.join("regs_before.json"))?;
+    if let Ok(w) = std::env::var("WATCH") { colo_battle::mem::WATCH.store(u32::from_str_radix(w.trim_start_matches("0x"), 16)?, std::sync::atomic::Ordering::Relaxed); }
+    let mut m = Mem::new();
+    m.map(0x80000000, before);
+    let mut c = Cpu::bare(m);
+    c.dispatch = lifted::dispatch;
+    c.r.copy_from_slice(&r);
+    for (k, b) in f.iter().enumerate() { c.f[k] = f64::from_bits(*b); c.ps1[k] = c.f[k]; }
+    c.cr = cr; c.lr = lr; c.ctr = ctr; c.xer = xer;
+    let func = lifted::LIFTED.iter().find(|(a, _)| *a == pc).ok_or("snapshot pc is not a lifted function")?;
+    outln!("replaying {} ({pc:#010x})", func.1);
+    // log WS commands through the dispatcher: wrap it
+    thread_local! { static WS: std::cell::RefCell<Vec<(u32, u8)>> = const { std::cell::RefCell::new(Vec::new()) }; }
+    fn wrap(c: &mut Cpu, a: u32) {
+        let tbl = 0x8027A00Cu32;
+        let spc = c.m.u32(0x8047B610);
+        if (0x80375E48..0x80379BFF).contains(&spc) {
+            let op = c.m.u8(spc);
+            if c.m.u32(tbl + 4 * op as u32) == a { WS.with(|w| w.borrow_mut().push((spc, op))); }
+        }
+        lifted::dispatch(c, a)
+    }
+    c.dispatch = wrap;
+    stubs::RAND_LOG.with(|l| l.borrow_mut().clear());
+    // feed the game's seed at each battle draw (particles draw from the same seed between them)
+    for line in std::fs::read_to_string(d.join("trace.log"))?.lines() {
+        let x: Vec<&str> = line.split('\t').collect();
+        // draws made by presentation code the headless port does not run (camera shake etc. via
+        // _fadeEffectGetRandom) are not forced or compared
+        if x[0] == "R" && (x[2].starts_with("800e0c20") || x[2].starts_with("800e0c28")) { continue; }
+        if x[0] == "R" && std::env::var("NOFORCE").is_err() {
+            let seed = u32::from_str_radix(x[3], 16)?;
+            stubs::RAND_FORCE.with(|q| q.borrow_mut().push_back(seed));
+        }
+    }
+    let prof_out = std::env::var("PROF").ok();
+    if prof_out.is_some() { c.prof = true; c.hooks = true; c.m.trace = true; }
+    // runtime presentation shim (no rebuild needed): tools/ppclift/shim.txt, or $SHIM
+    let shim = std::env::var("SHIM").unwrap_or_else(|_| "../tools/ppclift/shim.txt".into());
+    if let Ok(t) = std::fs::read_to_string(&shim) { c.load_stubs(&t); outln!("{} runtime stubs from {shim}", c.stubs.len()); }
+    c.step_limit = std::env::var("STEPS").ok().and_then(|s| s.parse().ok()).unwrap_or(2_000_000_000);
+    lifted::dispatch(&mut c, pc);
+    outln!("{} blocks executed", c.steps);
+    c.m.trace = false;
+    if let Some(p) = prof_out { std::fs::write(&p, colo_battle::prof::dump())?; outln!("function facts -> {p}"); }
+    // compare
+    let trace = std::fs::read_to_string(d.join("trace.log"))?;
+    let mut ws_want = vec![]; let mut r_want = vec![];
+    for line in trace.lines() {
+        let x: Vec<&str> = line.split('\t').collect();
+        match x[0] {
+            "WS" => ws_want.push((u32::from_str_radix(x[2], 16)?, u8::from_str_radix(x[3], 16)?)),
+            "R" if x[2].starts_with("800e0c20") || x[2].starts_with("800e0c28") => {}
+            "R" => r_want.push((u32::from_str_radix(x[2].split(',').next().unwrap(), 16)?, u32::from_str_radix(x[3], 16)?)),
+            _ => {}
+        }
+    }
+    // scripts the port runs only because presentation is off (e.g. wsCmd02 runs the 0x20-frame pause
+    // script 0x80378964 when the battler has no model sequence; the game waits on the animation instead)
+    const PRESENTATION_ONLY: [u32; 2] = [0x80378964, 0x80378967];
+    let ws_got: Vec<(u32, u8)> = WS.with(|w| w.borrow().clone()).into_iter().filter(|x| !PRESENTATION_ONLY.contains(&x.0)).collect();
+    let r_got = stubs::RAND_LOG.with(|l| l.borrow().clone());
+    let first_diff = |a: &[(u32, u32)], b: &[(u32, u32)]| a.iter().zip(b).position(|(x, y)| x != y);
+    outln!("WS commands: game {} port {}; first difference at {:?}", ws_want.len(), ws_got.len(),
+        ws_want.iter().zip(&ws_got).position(|(x, y)| x != y));
+    outln!("RNG draws: game {} port {}; first difference at {:?}", r_want.len(), r_got.len(), first_diff(&r_want, &r_got));
+    if std::env::var("SHOW").is_ok() {
+        for k in 0..ws_want.len().max(ws_got.len()) {
+            let a = ws_want.get(k).map(|x| format!("{:08x} {:02x}", x.0, x.1)).unwrap_or_default();
+            let b = ws_got.get(k).map(|x| format!("{:08x} {:02x}", x.0, x.1)).unwrap_or_default();
+            outln!("  ws {k:3}  game {a:<12} port {b:<12}{}", if a != b { "  <<" } else { "" });
+        }
+        for k in 0..r_want.len().max(r_got.len()) {
+            outln!("  rng {k}: game {:x?} port {:x?}", r_want.get(k), r_got.get(k));
+        }
+    }
+    let (ra, _, cra, _, _, _, _) = regs(&d.join("regs_after.json"))?;
+    outln!("r3 game {:#x} port {:#x}; cr game {:#x} port {:#x}", ra[3], c.r[3], cra, c.cr);
+    let got = c.m.read(0x80000000, 0x01800000);
+    let before = std::fs::read(d.join("before.bin"))?;
+    // bytes the port wrote: does the game end with the same value? (the game also runs presentation for
+    // many frames during the call, so bytes only the game changed are expected and reported separately)
+    let sp = r[1];
+    let in_stack = |a: u32| a < sp && a + 0x10000 > sp;
+    let (mut agree, mut disagree, mut game_only) = (0u64, vec![], 0u64);
+    for k in 0..got.len() {
+        let a = 0x80000000 + k as u32;
+        if in_stack(a) { continue; }
+        if got[k] != before[k] {
+            if got[k] == after[k] { agree += 1 } else { disagree.push(a) }
+        } else if after[k] != before[k] { game_only += 1 }
+    }
+    outln!("RAM: port changed {} bytes; {} end equal to the game, {} differ; {} bytes changed only by the game",
+        agree + disagree.len() as u64, agree, disagree.len(), game_only);
+    let mut k = 0;
+    while k < disagree.len() && k < 4000 {
+        let s = disagree[k];
+        let mut e = s;
+        while k + 1 < disagree.len() && disagree[k + 1] <= e + 8 { k += 1; e = disagree[k]; }
+        let o = (s - 0x80000000) as usize;
+        let n = (e - s + 1) as usize;
+        outln!("  {s:#010x} +{n}: before {:02x?} game {:02x?} port {:02x?}", &before[o..o + n.min(12)], &after[o..o + n.min(12)], &got[o..o + n.min(12)]);
+        k += 1;
+    }
+    Ok(())
+}
+
+fn cmd_battle_data(path: &str, what: Option<&str>) -> R<()> {
+    use colo_formats::{battle_data::BattleData, common::Common, dol::Dol};
+    let mut w = World::open(path)?;
+    let common = Common::parse(&w.common_bytes)?;
+    let dol = Dol::parse(match &mut w.disc { Src::Disc(d) => d.read_dol()?, Src::Dir(p) => std::fs::read(p.join("sys/main.dol"))? })?;
+    let bd = BattleData::load(&common, &dol)?;
+    let names: std::collections::HashMap<u32, String> = common.messages().into_iter().map(|m| (m.id, m.render())).collect();
+    let n = |id: u32| names.get(&id).cloned().unwrap_or_else(|| format!("#{id:x}"));
+    outln!("{} moves, {} species, {} item rows ({} ids), {} types", bd.moves.len(), bd.species.len(), bd.items.len(),
+        bd.item_rows.len(), bd.types.len());
+    match what.unwrap_or("") {
+        "moves" => for (i, m) in bd.moves.iter().enumerate() {
+            outln!("{i:3} {:<14} type {:2} pow {:3} acc {:3} pp {:2} pri {:2} range {:2} eff {:3} chance {:3} script {:3} flags {}",
+                n(m.name), m.zokusei, m.iryoku, m.avg, m.pp, m.pri, m.range, m.kouka, m.add_kouka_avg, m.seq,
+                m.flags.iter().map(|f| if *f != 0 { '1' } else { '.' }).collect::<String>());
+        },
+        "species" => for (i, s) in bd.species.iter().enumerate() {
+            outln!("{i:3} {:<12} dex {:3} types {:?} abil {:?} base {:?} grow {} catch {:3}", n(s.name), s.num_pokemon,
+                s.zokusei, s.tokusei, s.basis, s.grow, s.get);
+        },
+        "items" => for id in 0..bd.item_rows.len() as u16 {
+            if let Some(it) = bd.item(id) {
+                outln!("{id:3} {:<16} kind {} price {:5} hold {:3} use {:3}", n(it.name), it.kind, it.price, it.soubi, it.fight_use_kouka);
+            }
+        },
+        "types" => for (i, t) in bd.types.iter().enumerate() {
+            // name ids collide across common_rel's string tables, so print the id
+            outln!("{i:2} name {:#06x} {} | {:02x} {:02x} {:04x}", t.name,
+                t.vs.iter().map(|v| match v { 0x3F => '.', 0x41 => '2', 0x42 => 'h', 0x43 => '0', _ => '?' }).collect::<String>(),
+                t.b24, t.b25, t.h26);
+        },
+        t if t.starts_with("table:") => {
+            // every row of one table: index then name=value fields (arrays joined with /)
+            let def = colo_formats::battle_data::TABLES.iter().find(|d| d.name == &t[6..]).ok_or("unknown table")?;
+            let tb = colo_formats::battle_data::Table::load(def, &common, &dol)?;
+            for i in 0..tb.len() {
+                let v: Vec<String> = def.fields.iter().map(|f| format!("{}={}", f.name,
+                    (0..f.n).map(|k| tb.get(i, f.name, k).unwrap().to_string()).collect::<Vec<_>>().join("/"))).collect();
+                outln!("{i}\t{}", v.join(" "));
+            }
+        }
+        "tables" => for def in colo_formats::battle_data::TABLES {
+            let tb = colo_formats::battle_data::Table::load(def, &common, &dol)?;
+            outln!("{:<26} getptr {:#010x} {:4} x {:#05x}", def.name, def.getptr, tb.len(), def.size);
+            for i in 0..tb.len().min(2) {
+                let v: Vec<String> = def.fields.iter().map(|f| format!("{}={}", f.name,
+                    (0..f.n.min(4)).map(|k| tb.get(i, f.name, k).unwrap().to_string()).collect::<Vec<_>>().join("/"))).collect();
+                outln!("    [{i}] {}", v.join(" "));
+            }
+        },
+        "mem" => {
+            // the battle address space: REL globals as the game's prolog sets them, and a few getters
+            use colo_battle::{data_bios as db, world};
+            let m = world::load(&dol, &w.common_bytes)?;
+            for (g, sym) in world::REL_GLOBALS {
+                outln!("{g:#010x} sym {sym:3}: count ptr {:#010x} (= {}), base {:#010x}", m.u32(g), m.u32(m.u32(g)), m.u32(g + 4));
+            }
+            let pound = db::wazaDataBiosGetPtr(&m, 1);
+            outln!("move 1 @ {pound:#010x}: pp {} power {} acc {}", db::wazaDataBiosGetPp(&m, pound),
+                db::wazaDataBiosGetIryoku(&m, pound), db::wazaDataBiosGetAvg(&m, pound));
+            let b = db::pokemonDataBiosGetPtr(&m, 1);
+            outln!("species 1 @ {b:#010x}: hp {} spe {}", db::pokemonDataBiosGetBasisMaxHp(&m, b), db::pokemonDataBiosGetBasisNimbleness(&m, b));
+        }
+        "lift-check" => {
+            // lifted pokemonGetStatus/wazaGetStatus (machine code -> Rust) vs the generated readable getters
+            use colo_battle::{data_bios as db, lifted, ppc::Cpu, world};
+            let m = world::load(&dol, &w.common_bytes)?;
+            let mut c = Cpu::new(m);
+            c.dispatch = lifted::dispatch;
+            let call = |c: &mut Cpu, f: fn(&mut Cpu), args: &[u32]| -> u32 {
+                for (k, a) in args.iter().enumerate() { c.r[3 + k] = *a; }
+                f(c);
+                c.r[3]
+            };
+            let (mut ok, mut bad) = (0, 0);
+            // species kinds 3..8 (base stats), 0x10 exp, 0x11 growth, 0x12 catch, 0x16 types
+            for sp in [1u32, 4, 25, 150, 251, 277, 386, 412, 413, 0, 9999] {
+                for (kind, idx) in [(3u32, 0u32), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (0x10, 0), (0x11, 0), (0x12, 0), (0x16, 0), (0x16, 1), (0x17, 1), (0x1e, 3)] {
+                    let got = call(&mut c, lifted::f_8012640c, &[0, sp, kind, idx]);
+                    let p = db::pokemonDataBiosGetPtr(&c.m, sp);
+                    let want = if p == 0 { 0 } else { match kind {
+                        3 => db::pokemonDataBiosGetBasisMaxHp(&c.m, p), 4 => db::pokemonDataBiosGetBasisPhyAtk(&c.m, p),
+                        5 => db::pokemonDataBiosGetBasisPhyDef(&c.m, p), 6 => db::pokemonDataBiosGetBasisSpeAtk(&c.m, p),
+                        7 => db::pokemonDataBiosGetBasisSpeDef(&c.m, p), 8 => db::pokemonDataBiosGetBasisNimbleness(&c.m, p),
+                        0x10 => db::pokemonDataBiosGetGiveExp(&c.m, p), 0x11 => db::pokemonDataBiosGetGrowDataId(&c.m, p),
+                        0x12 => db::pokemonDataBiosGetGet(&c.m, p), 0x16 => db::pokemonDataBiosGetZokuseiDataId(&c.m, p, idx),
+                        0x17 => db::pokemonDataBiosGetTokuseiDataId(&c.m, p, idx), 0x1e => db::pokemonDataBiosGetGetWazaDataId(&c.m, p, idx),
+                        _ => unreachable!() } };
+                    if got == want { ok += 1 } else { bad += 1; outln!("species {sp} kind {kind:#x}[{idx}]: lifted {got} readable {want}"); }
+                }
+            }
+            // a party Pokemon on the heap: write fields with the readable setters, read back through lifted pokemonGetStatus
+            let pk = c.m.alloc(0x138);
+            c.m.set_u16(pk, 25);
+            c.m.set_u16(pk + 0x8C, 35); c.m.set_u16(pk + 0x8A, 30); c.m.set_u8(pk + 0x60, 12); c.m.set_u32(pk + 0x5C, 1234);
+            c.m.set_u16(pk + 0x78, 84); c.m.set_u8(pk + 0x7A, 30);
+            for (kind, want) in [(0x6e, 25u32), (0x7a, 12), (0x79, 1234), (0x83, 30), (0x87, 35), (0x7f, 84), (0x80, 30)] {
+                let got = call(&mut c, lifted::f_8012640c, &[pk, 0, kind, 0]);
+                if got == want { ok += 1 } else { bad += 1; outln!("party kind {kind:#x}: lifted {got} want {want}"); }
+            }
+            // wazaGetStatus kinds 2 pp, 3 type, 6 accuracy, 7 power for a few moves
+            for mv in [1u32, 33, 57, 200, 354, 357, 400] {
+                for kind in [2u32, 3, 4, 6, 7, 8] {
+                    let got = call(&mut c, lifted::f_8011beb4, &[0, mv, kind, 0]);
+                    let p = db::wazaDataBiosGetPtr(&c.m, mv);
+                    let want = match kind { 2 => db::wazaDataBiosGetPp(&c.m, p), 3 => db::wazaDataBiosGetZokuseiDataId(&c.m, p),
+                        4 => db::wazaDataBiosGetPri(&c.m, p) as u8 as i8 as i32 as u32, 6 => db::wazaDataBiosGetAvg(&c.m, p),
+                        7 => db::wazaDataBiosGetIryoku(&c.m, p) as u16 as i16 as i32 as u32, 8 => db::wazaDataBiosGetFightKoukaDataId(&c.m, p), _ => 0 };
+                    if got == want { ok += 1 } else { bad += 1; outln!("move {mv} kind {kind}: lifted {got} readable {want}"); }
+                }
+            }
+            outln!("lift-check: {ok} match, {bad} differ");
+        }
+        "syms" => for k in 0..0x6C {
+            if let Ok((o, c)) = common.table(k) { outln!("{k:3} offset {o:#08x} count {c}"); }
+        },
+        _ => {}
+    }
+    Ok(())
+}
+
+fn cmd_ws(spec: &str, trace: Option<&str>) -> R<()> {
+    use colo_formats::{dol::Dol, ws};
+    let bytes = if spec.ends_with(".dol") { std::fs::read(spec)? } else { Disc::open(spec)?.read_dol()? };
+    let dol = Dol::parse(bytes)?;
+    let l = ws::disassemble(&dol)?;
+    if let Some(t) = trace {
+        let (mut ok, mut bad) = (0, 0);
+        for line in std::fs::read_to_string(t)?.lines() {
+            let f: Vec<&str> = line.split('\t').collect();
+            if f.len() == 4 && f[0] == "WS" {
+                let pc = u32::from_str_radix(f[2], 16)?;
+                let op = u8::from_str_radix(f[3], 16)?;
+                if l.insns.get(&pc).map(|i| i.op) == Some(op) { ok += 1 } else {
+                    bad += 1;
+                    if bad <= 20 { outln!("trace: {pc:#010x} op {op:#04x} is not a decoded command"); }
+                }
+            }
+        }
+        outln!("trace {t}: {ok} commands match, {bad} don't");
+        return Ok(());
+    }
+    outln!("{}", l.render());
+    let un: u32 = l.unreferenced.iter().map(|(a, b)| b - a).sum();
+    outln!("; {} commands, {} labels, {} unreferenced bytes in {} ranges, {} problems",
+        l.insns.len(), l.labels.len(), un, l.unreferenced.len(), l.problems.len());
+    for p in &l.problems { outln!("; problem: {p}"); }
     Ok(())
 }
 
@@ -523,8 +814,8 @@ fn cmd_map(path: &str, room_name: &str) -> R<()> {
             fs.entries.iter().find(|en| en.identifier & 0xFFFF_0000 == md.fsys_identifier & 0xFFFF_0000)
                 .map(|en| en.name.clone()).unwrap_or_else(|| format!("id {:#010x}", md.fsys_identifier))
         }).unwrap_or_else(|| "?".into());
-        outln!("  {:>2} {:<16} name {:#06x} {} move_type {} rot {:>4}  pos ({:8.2}, {:7.2}, {:8.2})  talk {}  move {}",
-            c.index, model, c.name_id, if c.visible { "vis" } else { "hid" }, c.move_type, c.rotation_y,
+        outln!("  {:>2} {:<16} name {:#06x} {}{} move_type {} start {} rot {:>4}  pos ({:8.2}, {:7.2}, {:8.2})  talk {}  move {}",
+            c.index, model, c.name_id, if c.visible { "vis" } else { "hid" }, if c.talk_through_walls { " thru" } else { "" }, c.move_type, c.talk_start_type, c.rotation_y,
             c.position[0], c.position[1], c.position[2], sc(c.talk_script), sc(c.move_script));
     }
     if !m.tv.is_empty() {
@@ -543,7 +834,7 @@ fn cmd_map(path: &str, room_name: &str) -> R<()> {
     Ok(())
 }
 
-fn cmd_maps(path: &str) -> R<()> {
+fn cmd_maps(path: &str, list: bool) -> R<()> {
     use colo_formats::{common::Common, maprel::MapRel};
     let mut w = World::open(path)?;
     let common = Common::parse(&w.common_bytes)?;
@@ -557,6 +848,8 @@ fn cmd_maps(path: &str) -> R<()> {
         by_group.entry(u32::from_be_bytes([hdr[8], hdr[9], hdr[10], hdr[11]])).or_insert_with(|| f.clone());
     }
     for room in &rooms {
+        let name = by_group.get(&room.group_id).map_or("-", |f| f.path.trim_end_matches(".fsys"));
+        if list { outln!("  #{:3} floor {:#5x} kind {} area {:2} group {:#6x} {name}", room.index, room.floor_id, room.kind, room.area, room.group_id); }
         let Some(f) = by_group.get(&room.group_id) else { no_fsys += 1; continue };
         let data = w.disc.disc()?.read_at(f.offset, f.size as usize)?;
         let fs = Fsys::parse(&data)?;
@@ -918,6 +1211,22 @@ fn cmd_mats(path: &str) -> R<()> {
         let p = colo_formats::tev::build(mt);
         for (k, n) in p.nodes.iter().enumerate() { outln!("  n{k} layer {:?} chan {:?} c {:?} a {:?}", n.layer, n.chan, n.color.map(|o| o.inputs), n.alpha.map(|o| o.inputs)); }
         outln!("  consts {:?}", p.consts);
+    }
+    Ok(())
+}
+
+/// A `.cam` file's base camera, animations and the pose (eye, interest, fov) at the given frames.
+fn cmd_cam(spec: &str, name: &str, frames: &str) -> R<()> {
+    use colo_formats::{hsd::Archive, hsdanim::load_camera};
+    let data = load(spec)?;
+    let fs = Fsys::parse(&data)?;
+    let e = fs.entries.iter().find(|e| e.name == name && e.file_type == FileType::Cam).ok_or("no such .cam")?;
+    let cam = load_camera(&Archive::parse(&fs.read(e)?)?)?.ok_or("no camera in the archive")?;
+    outln!("{name} ({:#x}): base {:?}, roll {}", e.identifier, cam.base, cam.roll);
+    for (i, a) in cam.anims.iter().enumerate() { outln!("  anim {i}: end frame {}", a.end_frame); }
+    for f in frames.split(',').filter_map(|x| x.trim().parse::<f32>().ok()) {
+        let p = cam.pose(0, f);
+        outln!("  frame {f:6.1}: eye {:?} interest {:?} fov {} roll {}", p.eye, p.interest, p.fov, p.roll);
     }
     Ok(())
 }

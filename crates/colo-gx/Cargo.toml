@@ -1,0 +1,9 @@
+[package]
+name = "colo-gx"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "GameCube GX command stream: parser and register state (no rendering)"
+
+[dependencies]
+colo-formats = { path = "../colo-formats" }

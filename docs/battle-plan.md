@@ -32,15 +32,15 @@ Status 2026-10-12: colo-rs has **no battle code**. The viewer only knows the bat
 
 ### A. Groundwork
 1. **Ghidra pass over the battle range.** Import the applicable XD names, name the 767 `fn_` functions, and define the structs `FightFloor`, `FightTrainer`, `FightPokemon`, `FightOutPokemon`, `FightActionWork`, `FightSideEntry` and the party Pokémon (from `fn_801F54A4`). Add a NOTES.md §16 "Battle". Continue in that section as each later step lands.
-2. **Port the RNG exactly** (`GSrand`: seed, LCG, and which calls consume it). Every later step depends on matching RNG call order.
-3. **Decide the ground truth.** Either install Dolphin and record battle traces (RNG draws, damage, script PCs), or use the matched `_exact_` decomp units as per-function oracles. *Decision for Zach.*
+2. **Port the RNG exactly** (`GSrand`: seed, LCG, and which calls consume it). Every later step depends on matching RNG call order. **Done 2026-10-12** (`colo-battle/src/rng.rs`, NOTES §16).
+3. **Ground truth: Dolphin traces** (decided 2026-10-12; harness in `Working/dolphin/`). Battle RNG shares its seed with the particles' `HSD_Randf`, so checks use the seed recorded before each battle draw.
 
 ### B. Data (colo-formats, zero deps)
-4. Pokémon base stats, the experience curves and the moves table: power, type, accuracy, PP, effect, target, priority and flags.
-5. Type chart, natures and items (held-battle effects and their parameters).
-6. Trainers, trainer Pokémon (including the Shadow flag), the Shadow Pokémon table (heart gauge, Shadow moves), the battles table, battle fields/types/styles and trainer AI data.
+4. Pokémon base stats, the experience curves and the moves table: power, type, accuracy, PP, effect, target, priority and flags. **Done 2026-10-12** (`battle_data.rs`).
+5. Type chart, natures and items (held-battle effects and their parameters). **Done 2026-10-12.**
+6. Trainers, trainer Pokémon (including the Shadow flag), the Shadow Pokémon table (heart gauge, Shadow moves), the battles table, battle fields/types/styles and trainer AI data. **Mostly done 2026-10-12:** all tables load; the trainer record past +2 and the Shadow table are still to decode.
 7. The party Pokémon struct (game layout) and how it is stored in the save. This replaces the viewer's story-only save.
-8. A WS disassembler (`colo-tool ws-dis`): command lengths from the 255 handlers, the move-effect → script table and every script blob. Check that all scripts decode end to end.
+8. A WS disassembler (`colo-tool ws`). **Done 2026-10-12**: 3,794 commands decode cleanly and match the Dolphin trace (NOTES §16).
 
 ### C. Core engine (new zero-dep crate `colo-battle`, headless)
 9. State model mirroring the game structs: floor, sides, trainers and battlers. Stats use the Gen 3 formulas with nature, IVs and EVs. Also stages, status and volatile conditions.
@@ -65,7 +65,7 @@ Status 2026-10-12: colo-rs has **no battle code**. The viewer only knows the bat
 22. `colo-tool battle-sim`: a headless scripted battle that prints an RNG-draw and event log. Compare it with the oracle from step 3, using a regression set per move effect.
 
 ### G. Presentation (viewer)
-23. The natives std 102/103/152/215 and 9/10: the field → battle transition (`fadeEffect*`) and the return to the field with the result.
+23. The natives std 102/103/152/215 and 9/10: the field → battle transition (`fadeEffect*`) and the return to the field with the result. **std 102 done 2026-10-12** (colo-viewer `battle.rs`/`fade.rs`/`wipe.rs`, NOTES §16 "Battle start"): wipe, `_bf` floor push, battle camera, reveal, fade back; the battle in between isn't run yet. std 152/215 open.
 24. Battle text (`fight_common` .msg) through the existing message window.
 25. Battle stages (`fight_floor`/`fight_gsfloor` maps), `battle_grid` placement and `battle_camera`.
 26. PKX battle models and their animation slots (open item in §15), plus send-out and recall.

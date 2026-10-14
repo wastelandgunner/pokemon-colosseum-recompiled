@@ -69,6 +69,55 @@ pub const SE_MSG_KEY: u32 = 36;
 pub const SE_CURSOR: u32 = 35;
 pub const SE_DECIDE: u32 = 36;
 
+/// While set, the output plays this queue (interleaved L, R at 32 kHz) instead of the viewer's sound engine:
+/// the game's own mix during a battle run on its code (`gamebattle.rs`).
+static EXTERNAL: std::sync::Mutex<Option<std::collections::VecDeque<i16>>> = std::sync::Mutex::new(None);
+
+/// Open the output for external audio only (recomp mode: the game's mix, no viewer engine).
+pub fn start_external() { external(true); start_output(); }
+
+pub fn external(on: bool) { *EXTERNAL.lock().unwrap() = if on { Some(Default::default()) } else { None }; }
+
+static DEVICE_RATE: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(GAME_RATE);
+
+/// Resampler / buffering state for the external stream: playing (after the prebuffer), fractional position.
+struct ExtState { playing: bool, pos: f64 }
+static EXT_STATE: std::sync::Mutex<ExtState> = std::sync::Mutex::new(ExtState { playing: false, pos: 0.0 });
+
+/// 32 kHz stereo from the queue to the device rate (linear interpolation). Playback starts once ~100 ms are
+/// queued and pauses (silence) to rebuffer on an underrun, so a slow frame costs a gap only once instead of
+/// tearing every buffer.
+fn external_fill(q: &mut std::collections::VecDeque<i16>, out: &mut [i16]) {
+    let rate = DEVICE_RATE.load(std::sync::atomic::Ordering::Relaxed).max(1) as f64;
+    let step = GAME_RATE as f64 / rate;
+    let mut st = EXT_STATE.lock().unwrap();
+    let need = ((out.len() / 2) as f64 * step) as usize + 2;
+    if !st.playing && q.len() / 2 >= (GAME_RATE as usize / 10).max(need) { st.playing = true; }
+    if !st.playing || q.len() / 2 < need { st.playing = false; out.fill(0); return; }
+    for f in out.chunks_mut(2) {
+        let i = st.pos as usize;
+        let t = (st.pos - i as f64) as f32;
+        for c in 0..2 {
+            let a = q.get(2 * i + c).copied().unwrap_or(0) as f32;
+            let b = q.get(2 * i + 2 + c).copied().unwrap_or(a as i16) as f32;
+            f[c] = (a + (b - a) * t) as i16;
+        }
+        st.pos += step;
+    }
+    let used = st.pos as usize;
+    st.pos -= used as f64;
+    for _ in 0..(2 * used).min(q.len()) { q.pop_front(); }
+}
+
+/// Queue game audio (L, R pairs); keeps at most ~200 ms queued so latency stays bounded.
+pub fn push_external(pcm: &[i16]) {
+    if let Some(q) = EXTERNAL.lock().unwrap().as_mut() {
+        q.extend(pcm.iter().copied());
+        let max = 32000 / 4 * 2;
+        while q.len() > max { q.pop_front(); }
+    }
+}
+
 /// Open the output stream on its own thread (cpal streams are not Send everywhere); returns the mix rate.
 fn start_output() -> u32 {
     let (tx, rx) = std::sync::mpsc::channel::<u32>();
@@ -113,9 +162,14 @@ fn open_stream() -> Result<(cpal::Stream, u32), String> {
     let fmt = cfg.sample_format();
     let config: cpal::StreamConfig = cfg.into();
     let err = |e| eprintln!("sound: stream: {e}");
+    DEVICE_RATE.store(rate, std::sync::atomic::Ordering::Relaxed);
     fn fill(scratch: &mut Vec<i16>, frames: usize) {
         scratch.resize(frames * 2, 0);
-        engine::render(scratch);
+        let mut ext = EXTERNAL.lock().unwrap();
+        match ext.as_mut() {
+            Some(q) => external_fill(q, scratch),
+            None => engine::render(scratch),
+        }
     }
     let mut scratch: Vec<i16> = vec![];
     let stream = match fmt {

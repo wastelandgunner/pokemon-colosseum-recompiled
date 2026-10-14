@@ -1,0 +1,7678 @@
+#![allow(unused_mut, unused_variables, unreachable_code, unused_parens, clippy::all)]
+use crate::ppc::*;
+use super::*;
+use super::stubs_gen;
+
+/// fightTrainerAiDataBiosSetPokemonDataOrderOutFlag (0x801fc268, 16 bytes)
+#[inline(never)]
+pub fn f_801fc268(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc268) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc268); f_801fc268_b(c, 0x801fc268); crate::prof::exit(c, 0x801fc268); return; }
+    }
+    f_801fc268_b(c, 0x801fc268)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc268_at(c: &mut Cpu, pc: u32) { f_801fc268_b(c, pc) }
+#[inline(always)]
+fn f_801fc268_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc268;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc268, pc); }
+        match pc {
+            0x801fc268 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc270;
+            }
+            0x801fc270 => {
+                c.stb(c.r[3].wrapping_add(0x2), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc268: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosSetPokemonSelectWeakPointFlag (0x801fc278, 16 bytes)
+#[inline(never)]
+pub fn f_801fc278(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc278) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc278); f_801fc278_b(c, 0x801fc278); crate::prof::exit(c, 0x801fc278); return; }
+    }
+    f_801fc278_b(c, 0x801fc278)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc278_at(c: &mut Cpu, pc: u32) { f_801fc278_b(c, pc) }
+#[inline(always)]
+fn f_801fc278_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc278;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc278, pc); }
+        match pc {
+            0x801fc278 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc280;
+            }
+            0x801fc280 => {
+                c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc278: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosSetPokemonSelectRandomFlag (0x801fc288, 16 bytes)
+#[inline(never)]
+pub fn f_801fc288(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc288) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc288); f_801fc288_b(c, 0x801fc288); crate::prof::exit(c, 0x801fc288); return; }
+    }
+    f_801fc288_b(c, 0x801fc288)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc288_at(c: &mut Cpu, pc: u32) { f_801fc288_b(c, pc) }
+#[inline(always)]
+fn f_801fc288_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc288;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc288, pc); }
+        match pc {
+            0x801fc288 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc290;
+            }
+            0x801fc290 => {
+                c.stb(c.r[3], c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc288: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetLastValueRevise (0x801fc298, 24 bytes)
+#[inline(never)]
+pub fn f_801fc298(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc298) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc298); f_801fc298_b(c, 0x801fc298); crate::prof::exit(c, 0x801fc298); return; }
+    }
+    f_801fc298_b(c, 0x801fc298)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc298_at(c: &mut Cpu, pc: u32) { f_801fc298_b(c, pc) }
+#[inline(always)]
+fn f_801fc298_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc298;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc298, pc); }
+        match pc {
+            0x801fc298 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc2a8; continue; }
+                pc = 0x801fc2a0;
+            }
+            0x801fc2a0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc2a8;
+            }
+            0x801fc2a8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x19));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc298: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaNokoriPpValue (0x801fc2b0, 24 bytes)
+#[inline(never)]
+pub fn f_801fc2b0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc2b0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc2b0); f_801fc2b0_b(c, 0x801fc2b0); crate::prof::exit(c, 0x801fc2b0); return; }
+    }
+    f_801fc2b0_b(c, 0x801fc2b0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc2b0_at(c: &mut Cpu, pc: u32) { f_801fc2b0_b(c, pc) }
+#[inline(always)]
+fn f_801fc2b0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc2b0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc2b0, pc); }
+        match pc {
+            0x801fc2b0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc2c0; continue; }
+                pc = 0x801fc2b8;
+            }
+            0x801fc2b8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc2c0;
+            }
+            0x801fc2c0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x18));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc2b0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaRiskFlag (0x801fc2c8, 24 bytes)
+#[inline(never)]
+pub fn f_801fc2c8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc2c8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc2c8); f_801fc2c8_b(c, 0x801fc2c8); crate::prof::exit(c, 0x801fc2c8); return; }
+    }
+    f_801fc2c8_b(c, 0x801fc2c8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc2c8_at(c: &mut Cpu, pc: u32) { f_801fc2c8_b(c, pc) }
+#[inline(always)]
+fn f_801fc2c8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc2c8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc2c8, pc); }
+        match pc {
+            0x801fc2c8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc2d8; continue; }
+                pc = 0x801fc2d0;
+            }
+            0x801fc2d0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc2d8;
+            }
+            0x801fc2d8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x17));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc2c8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaAvgValue (0x801fc2e0, 24 bytes)
+#[inline(never)]
+pub fn f_801fc2e0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc2e0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc2e0); f_801fc2e0_b(c, 0x801fc2e0); crate::prof::exit(c, 0x801fc2e0); return; }
+    }
+    f_801fc2e0_b(c, 0x801fc2e0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc2e0_at(c: &mut Cpu, pc: u32) { f_801fc2e0_b(c, pc) }
+#[inline(always)]
+fn f_801fc2e0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc2e0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc2e0, pc); }
+        match pc {
+            0x801fc2e0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc2f0; continue; }
+                pc = 0x801fc2e8;
+            }
+            0x801fc2e8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc2f0;
+            }
+            0x801fc2f0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x16));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc2e0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaHitFlag (0x801fc2f8, 24 bytes)
+#[inline(never)]
+pub fn f_801fc2f8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc2f8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc2f8); f_801fc2f8_b(c, 0x801fc2f8); crate::prof::exit(c, 0x801fc2f8); return; }
+    }
+    f_801fc2f8_b(c, 0x801fc2f8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc2f8_at(c: &mut Cpu, pc: u32) { f_801fc2f8_b(c, pc) }
+#[inline(always)]
+fn f_801fc2f8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc2f8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc2f8, pc); }
+        match pc {
+            0x801fc2f8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc308; continue; }
+                pc = 0x801fc300;
+            }
+            0x801fc300 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc308;
+            }
+            0x801fc308 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x15));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc2f8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaTypeReviseValue (0x801fc310, 84 bytes)
+#[inline(never)]
+pub fn f_801fc310(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc310) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc310); f_801fc310_b(c, 0x801fc310); crate::prof::exit(c, 0x801fc310); return; }
+    }
+    f_801fc310_b(c, 0x801fc310)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc310_at(c: &mut Cpu, pc: u32) { f_801fc310_b(c, pc) }
+#[inline(always)]
+fn f_801fc310_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc310;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc310, pc); }
+        match pc {
+            0x801fc310 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc320; continue; }
+                pc = 0x801fc318;
+            }
+            0x801fc318 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc320;
+            }
+            0x801fc320 => {
+                if !c.crbit(2) { pc = 0x801fc32c; continue; }
+                pc = 0x801fc324;
+            }
+            0x801fc324 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc34c; continue;
+                pc = 0x801fc32c;
+            }
+            0x801fc32c => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xffff;
+                c.cmpu(0, c.r[0], 0x2);
+                if c.crbit(0) { pc = 0x801fc340; continue; }
+                pc = 0x801fc338;
+            }
+            0x801fc338 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc34c; continue;
+                pc = 0x801fc340;
+            }
+            0x801fc340 => {
+                c.r[4] = c.r[4].rotate_left(1) & 0x1fffe;
+                c.r[4] = c.r[4].wrapping_add(0x24);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc34c;
+            }
+            0x801fc34c => {
+                c.cmpu(0, c.r[4], 0x0);
+                if !c.crbit(2) { pc = 0x801fc35c; continue; }
+                pc = 0x801fc354;
+            }
+            0x801fc354 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc35c;
+            }
+            0x801fc35c => {
+                c.r[3] = c.lbz(c.r[4].wrapping_add(0x1));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc310: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaTypeReviseTypeDataId (0x801fc364, 84 bytes)
+#[inline(never)]
+pub fn f_801fc364(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc364) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc364); f_801fc364_b(c, 0x801fc364); crate::prof::exit(c, 0x801fc364); return; }
+    }
+    f_801fc364_b(c, 0x801fc364)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc364_at(c: &mut Cpu, pc: u32) { f_801fc364_b(c, pc) }
+#[inline(always)]
+fn f_801fc364_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc364;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc364, pc); }
+        match pc {
+            0x801fc364 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc374; continue; }
+                pc = 0x801fc36c;
+            }
+            0x801fc36c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc374;
+            }
+            0x801fc374 => {
+                if !c.crbit(2) { pc = 0x801fc380; continue; }
+                pc = 0x801fc378;
+            }
+            0x801fc378 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc3a0; continue;
+                pc = 0x801fc380;
+            }
+            0x801fc380 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xffff;
+                c.cmpu(0, c.r[0], 0x2);
+                if c.crbit(0) { pc = 0x801fc394; continue; }
+                pc = 0x801fc38c;
+            }
+            0x801fc38c => {
+                c.r[4] = 0x0;
+                pc = 0x801fc3a0; continue;
+                pc = 0x801fc394;
+            }
+            0x801fc394 => {
+                c.r[4] = c.r[4].rotate_left(1) & 0x1fffe;
+                c.r[4] = c.r[4].wrapping_add(0x24);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc3a0;
+            }
+            0x801fc3a0 => {
+                c.cmpu(0, c.r[4], 0x0);
+                if !c.crbit(2) { pc = 0x801fc3b0; continue; }
+                pc = 0x801fc3a8;
+            }
+            0x801fc3a8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc3b0;
+            }
+            0x801fc3b0 => {
+                c.r[3] = c.lbz(c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc364: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetPartFlag (0x801fc3b8, 24 bytes)
+#[inline(never)]
+pub fn f_801fc3b8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc3b8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc3b8); f_801fc3b8_b(c, 0x801fc3b8); crate::prof::exit(c, 0x801fc3b8); return; }
+    }
+    f_801fc3b8_b(c, 0x801fc3b8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc3b8_at(c: &mut Cpu, pc: u32) { f_801fc3b8_b(c, pc) }
+#[inline(always)]
+fn f_801fc3b8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc3b8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc3b8, pc); }
+        match pc {
+            0x801fc3b8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc3c8; continue; }
+                pc = 0x801fc3c0;
+            }
+            0x801fc3c0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc3c8;
+            }
+            0x801fc3c8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x14));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc3b8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaInitValueFlag (0x801fc3d0, 24 bytes)
+#[inline(never)]
+pub fn f_801fc3d0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc3d0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc3d0); f_801fc3d0_b(c, 0x801fc3d0); crate::prof::exit(c, 0x801fc3d0); return; }
+    }
+    f_801fc3d0_b(c, 0x801fc3d0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc3d0_at(c: &mut Cpu, pc: u32) { f_801fc3d0_b(c, pc) }
+#[inline(always)]
+fn f_801fc3d0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc3d0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc3d0, pc); }
+        match pc {
+            0x801fc3d0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc3e0; continue; }
+                pc = 0x801fc3d8;
+            }
+            0x801fc3d8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc3e0;
+            }
+            0x801fc3e0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x13));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc3d0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaRndSelectFlag (0x801fc3e8, 24 bytes)
+#[inline(never)]
+pub fn f_801fc3e8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc3e8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc3e8); f_801fc3e8_b(c, 0x801fc3e8); crate::prof::exit(c, 0x801fc3e8); return; }
+    }
+    f_801fc3e8_b(c, 0x801fc3e8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc3e8_at(c: &mut Cpu, pc: u32) { f_801fc3e8_b(c, pc) }
+#[inline(always)]
+fn f_801fc3e8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc3e8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc3e8, pc); }
+        match pc {
+            0x801fc3e8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc3f8; continue; }
+                pc = 0x801fc3f0;
+            }
+            0x801fc3f0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc3f8;
+            }
+            0x801fc3f8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x12));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc3e8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetDefensePokemonRndSelectFlag (0x801fc400, 24 bytes)
+#[inline(never)]
+pub fn f_801fc400(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc400) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc400); f_801fc400_b(c, 0x801fc400); crate::prof::exit(c, 0x801fc400); return; }
+    }
+    f_801fc400_b(c, 0x801fc400)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc400_at(c: &mut Cpu, pc: u32) { f_801fc400_b(c, pc) }
+#[inline(always)]
+fn f_801fc400_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc400;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc400, pc); }
+        match pc {
+            0x801fc400 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc410; continue; }
+                pc = 0x801fc408;
+            }
+            0x801fc408 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc410;
+            }
+            0x801fc410 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x11));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc400: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetAbicntMinValue (0x801fc418, 24 bytes)
+#[inline(never)]
+pub fn f_801fc418(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc418) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc418); f_801fc418_b(c, 0x801fc418); crate::prof::exit(c, 0x801fc418); return; }
+    }
+    f_801fc418_b(c, 0x801fc418)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc418_at(c: &mut Cpu, pc: u32) { f_801fc418_b(c, pc) }
+#[inline(always)]
+fn f_801fc418_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc418;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc418, pc); }
+        match pc {
+            0x801fc418 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc428; continue; }
+                pc = 0x801fc420;
+            }
+            0x801fc420 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc428;
+            }
+            0x801fc428 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x10));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc418: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetAbicntMaxValue (0x801fc430, 24 bytes)
+#[inline(never)]
+pub fn f_801fc430(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc430) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc430); f_801fc430_b(c, 0x801fc430); crate::prof::exit(c, 0x801fc430); return; }
+    }
+    f_801fc430_b(c, 0x801fc430)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc430_at(c: &mut Cpu, pc: u32) { f_801fc430_b(c, pc) }
+#[inline(always)]
+fn f_801fc430_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc430;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc430, pc); }
+        match pc {
+            0x801fc430 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc440; continue; }
+                pc = 0x801fc438;
+            }
+            0x801fc438 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc440;
+            }
+            0x801fc440 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0xf));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc430: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetWazaDamageFlag (0x801fc448, 24 bytes)
+#[inline(never)]
+pub fn f_801fc448(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc448) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc448); f_801fc448_b(c, 0x801fc448); crate::prof::exit(c, 0x801fc448); return; }
+    }
+    f_801fc448_b(c, 0x801fc448)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc448_at(c: &mut Cpu, pc: u32) { f_801fc448_b(c, pc) }
+#[inline(always)]
+fn f_801fc448_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc448;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc448, pc); }
+        match pc {
+            0x801fc448 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc458; continue; }
+                pc = 0x801fc450;
+            }
+            0x801fc450 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc458;
+            }
+            0x801fc458 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0xe));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc448: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetNokoriHpValue (0x801fc460, 24 bytes)
+#[inline(never)]
+pub fn f_801fc460(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc460) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc460); f_801fc460_b(c, 0x801fc460); crate::prof::exit(c, 0x801fc460); return; }
+    }
+    f_801fc460_b(c, 0x801fc460)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc460_at(c: &mut Cpu, pc: u32) { f_801fc460_b(c, pc) }
+#[inline(always)]
+fn f_801fc460_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc460;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc460, pc); }
+        match pc {
+            0x801fc460 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc470; continue; }
+                pc = 0x801fc468;
+            }
+            0x801fc468 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc470;
+            }
+            0x801fc470 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0xd));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc460: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetTokuseiCheckFlag (0x801fc478, 24 bytes)
+#[inline(never)]
+pub fn f_801fc478(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc478) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc478); f_801fc478_b(c, 0x801fc478); crate::prof::exit(c, 0x801fc478); return; }
+    }
+    f_801fc478_b(c, 0x801fc478)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc478_at(c: &mut Cpu, pc: u32) { f_801fc478_b(c, pc) }
+#[inline(always)]
+fn f_801fc478_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc478;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc478, pc); }
+        match pc {
+            0x801fc478 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc488; continue; }
+                pc = 0x801fc480;
+            }
+            0x801fc480 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc488;
+            }
+            0x801fc488 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0xc));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc478: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetZokuseiReviseValue (0x801fc490, 84 bytes)
+#[inline(never)]
+pub fn f_801fc490(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc490) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc490); f_801fc490_b(c, 0x801fc490); crate::prof::exit(c, 0x801fc490); return; }
+    }
+    f_801fc490_b(c, 0x801fc490)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc490_at(c: &mut Cpu, pc: u32) { f_801fc490_b(c, pc) }
+#[inline(always)]
+fn f_801fc490_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc490;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc490, pc); }
+        match pc {
+            0x801fc490 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc4a0; continue; }
+                pc = 0x801fc498;
+            }
+            0x801fc498 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc4a0;
+            }
+            0x801fc4a0 => {
+                if !c.crbit(2) { pc = 0x801fc4ac; continue; }
+                pc = 0x801fc4a4;
+            }
+            0x801fc4a4 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc4cc; continue;
+                pc = 0x801fc4ac;
+            }
+            0x801fc4ac => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xffff;
+                c.cmpu(0, c.r[0], 0x2);
+                if c.crbit(0) { pc = 0x801fc4c0; continue; }
+                pc = 0x801fc4b8;
+            }
+            0x801fc4b8 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc4cc; continue;
+                pc = 0x801fc4c0;
+            }
+            0x801fc4c0 => {
+                c.r[4] = c.r[4].rotate_left(1) & 0x1fffe;
+                c.r[4] = c.r[4].wrapping_add(0x20);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc4cc;
+            }
+            0x801fc4cc => {
+                c.cmpu(0, c.r[4], 0x0);
+                if !c.crbit(2) { pc = 0x801fc4dc; continue; }
+                pc = 0x801fc4d4;
+            }
+            0x801fc4d4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc4dc;
+            }
+            0x801fc4dc => {
+                c.r[3] = c.lbz(c.r[4].wrapping_add(0x1));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc490: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetZokuseiReviseZokuseiDataId (0x801fc4e4, 84 bytes)
+#[inline(never)]
+pub fn f_801fc4e4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc4e4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc4e4); f_801fc4e4_b(c, 0x801fc4e4); crate::prof::exit(c, 0x801fc4e4); return; }
+    }
+    f_801fc4e4_b(c, 0x801fc4e4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc4e4_at(c: &mut Cpu, pc: u32) { f_801fc4e4_b(c, pc) }
+#[inline(always)]
+fn f_801fc4e4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc4e4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc4e4, pc); }
+        match pc {
+            0x801fc4e4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc4f4; continue; }
+                pc = 0x801fc4ec;
+            }
+            0x801fc4ec => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc4f4;
+            }
+            0x801fc4f4 => {
+                if !c.crbit(2) { pc = 0x801fc500; continue; }
+                pc = 0x801fc4f8;
+            }
+            0x801fc4f8 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc520; continue;
+                pc = 0x801fc500;
+            }
+            0x801fc500 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xffff;
+                c.cmpu(0, c.r[0], 0x2);
+                if c.crbit(0) { pc = 0x801fc514; continue; }
+                pc = 0x801fc50c;
+            }
+            0x801fc50c => {
+                c.r[4] = 0x0;
+                pc = 0x801fc520; continue;
+                pc = 0x801fc514;
+            }
+            0x801fc514 => {
+                c.r[4] = c.r[4].rotate_left(1) & 0x1fffe;
+                c.r[4] = c.r[4].wrapping_add(0x20);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc520;
+            }
+            0x801fc520 => {
+                c.cmpu(0, c.r[4], 0x0);
+                if !c.crbit(2) { pc = 0x801fc530; continue; }
+                pc = 0x801fc528;
+            }
+            0x801fc528 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc530;
+            }
+            0x801fc530 => {
+                c.r[3] = c.lbz(c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc4e4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetZokuseiCheckFlag (0x801fc538, 24 bytes)
+#[inline(never)]
+pub fn f_801fc538(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc538) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc538); f_801fc538_b(c, 0x801fc538); crate::prof::exit(c, 0x801fc538); return; }
+    }
+    f_801fc538_b(c, 0x801fc538)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc538_at(c: &mut Cpu, pc: u32) { f_801fc538_b(c, pc) }
+#[inline(always)]
+fn f_801fc538_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc538;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc538, pc); }
+        match pc {
+            0x801fc538 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc548; continue; }
+                pc = 0x801fc540;
+            }
+            0x801fc540 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc548;
+            }
+            0x801fc548 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0xb));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc538: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetParamStoreFlag (0x801fc550, 24 bytes)
+#[inline(never)]
+pub fn f_801fc550(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc550) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc550); f_801fc550_b(c, 0x801fc550); crate::prof::exit(c, 0x801fc550); return; }
+    }
+    f_801fc550_b(c, 0x801fc550)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc550_at(c: &mut Cpu, pc: u32) { f_801fc550_b(c, pc) }
+#[inline(always)]
+fn f_801fc550_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc550;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc550, pc); }
+        match pc {
+            0x801fc550 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc560; continue; }
+                pc = 0x801fc558;
+            }
+            0x801fc558 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc560;
+            }
+            0x801fc560 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0xa));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc550: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetParamExpectFlag (0x801fc568, 24 bytes)
+#[inline(never)]
+pub fn f_801fc568(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc568) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc568); f_801fc568_b(c, 0x801fc568); crate::prof::exit(c, 0x801fc568); return; }
+    }
+    f_801fc568_b(c, 0x801fc568)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc568_at(c: &mut Cpu, pc: u32) { f_801fc568_b(c, pc) }
+#[inline(always)]
+fn f_801fc568_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc568;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc568, pc); }
+        match pc {
+            0x801fc568 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc578; continue; }
+                pc = 0x801fc570;
+            }
+            0x801fc570 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc578;
+            }
+            0x801fc578 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x9));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc568: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetItemValue (0x801fc580, 24 bytes)
+#[inline(never)]
+pub fn f_801fc580(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc580) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc580); f_801fc580_b(c, 0x801fc580); crate::prof::exit(c, 0x801fc580); return; }
+    }
+    f_801fc580_b(c, 0x801fc580)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc580_at(c: &mut Cpu, pc: u32) { f_801fc580_b(c, pc) }
+#[inline(always)]
+fn f_801fc580_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc580;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc580, pc); }
+        match pc {
+            0x801fc580 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc590; continue; }
+                pc = 0x801fc588;
+            }
+            0x801fc588 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc590;
+            }
+            0x801fc590 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x8));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc580: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetIrekaeValue (0x801fc598, 24 bytes)
+#[inline(never)]
+pub fn f_801fc598(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc598) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc598); f_801fc598_b(c, 0x801fc598); crate::prof::exit(c, 0x801fc598); return; }
+    }
+    f_801fc598_b(c, 0x801fc598)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc598_at(c: &mut Cpu, pc: u32) { f_801fc598_b(c, pc) }
+#[inline(always)]
+fn f_801fc598_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc598;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc598, pc); }
+        match pc {
+            0x801fc598 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc5a8; continue; }
+                pc = 0x801fc5a0;
+            }
+            0x801fc5a0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc5a8;
+            }
+            0x801fc5a8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x7));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc598: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetComboValue (0x801fc5b0, 24 bytes)
+#[inline(never)]
+pub fn f_801fc5b0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc5b0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc5b0); f_801fc5b0_b(c, 0x801fc5b0); crate::prof::exit(c, 0x801fc5b0); return; }
+    }
+    f_801fc5b0_b(c, 0x801fc5b0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc5b0_at(c: &mut Cpu, pc: u32) { f_801fc5b0_b(c, pc) }
+#[inline(always)]
+fn f_801fc5b0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc5b0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc5b0, pc); }
+        match pc {
+            0x801fc5b0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc5c0; continue; }
+                pc = 0x801fc5b8;
+            }
+            0x801fc5b8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc5c0;
+            }
+            0x801fc5c0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x6));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc5b0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetPokemonJoutaiFlag (0x801fc5c8, 24 bytes)
+#[inline(never)]
+pub fn f_801fc5c8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc5c8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc5c8); f_801fc5c8_b(c, 0x801fc5c8); crate::prof::exit(c, 0x801fc5c8); return; }
+    }
+    f_801fc5c8_b(c, 0x801fc5c8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc5c8_at(c: &mut Cpu, pc: u32) { f_801fc5c8_b(c, pc) }
+#[inline(always)]
+fn f_801fc5c8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc5c8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc5c8, pc); }
+        match pc {
+            0x801fc5c8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc5d8; continue; }
+                pc = 0x801fc5d0;
+            }
+            0x801fc5d0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc5d8;
+            }
+            0x801fc5d8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x5));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc5c8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetKeyPlayerFlag (0x801fc5e0, 24 bytes)
+#[inline(never)]
+pub fn f_801fc5e0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc5e0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc5e0); f_801fc5e0_b(c, 0x801fc5e0); crate::prof::exit(c, 0x801fc5e0); return; }
+    }
+    f_801fc5e0_b(c, 0x801fc5e0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc5e0_at(c: &mut Cpu, pc: u32) { f_801fc5e0_b(c, pc) }
+#[inline(always)]
+fn f_801fc5e0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc5e0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc5e0, pc); }
+        match pc {
+            0x801fc5e0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc5f0; continue; }
+                pc = 0x801fc5e8;
+            }
+            0x801fc5e8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc5f0;
+            }
+            0x801fc5f0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x4));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc5e0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetPokemonDataOrderAceBossFlag (0x801fc5f8, 24 bytes)
+#[inline(never)]
+pub fn f_801fc5f8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc5f8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc5f8); f_801fc5f8_b(c, 0x801fc5f8); crate::prof::exit(c, 0x801fc5f8); return; }
+    }
+    f_801fc5f8_b(c, 0x801fc5f8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc5f8_at(c: &mut Cpu, pc: u32) { f_801fc5f8_b(c, pc) }
+#[inline(always)]
+fn f_801fc5f8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc5f8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc5f8, pc); }
+        match pc {
+            0x801fc5f8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc608; continue; }
+                pc = 0x801fc600;
+            }
+            0x801fc600 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc608;
+            }
+            0x801fc608 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x3));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc5f8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetPokemonDataOrderOutFlag (0x801fc610, 24 bytes)
+#[inline(never)]
+pub fn f_801fc610(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc610) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc610); f_801fc610_b(c, 0x801fc610); crate::prof::exit(c, 0x801fc610); return; }
+    }
+    f_801fc610_b(c, 0x801fc610)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc610_at(c: &mut Cpu, pc: u32) { f_801fc610_b(c, pc) }
+#[inline(always)]
+fn f_801fc610_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc610;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc610, pc); }
+        match pc {
+            0x801fc610 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc620; continue; }
+                pc = 0x801fc618;
+            }
+            0x801fc618 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc620;
+            }
+            0x801fc620 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x2));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc610: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetPokemonSelectWeakPointFlag (0x801fc628, 24 bytes)
+#[inline(never)]
+pub fn f_801fc628(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc628) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc628); f_801fc628_b(c, 0x801fc628); crate::prof::exit(c, 0x801fc628); return; }
+    }
+    f_801fc628_b(c, 0x801fc628)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc628_at(c: &mut Cpu, pc: u32) { f_801fc628_b(c, pc) }
+#[inline(always)]
+fn f_801fc628_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc628;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc628, pc); }
+        match pc {
+            0x801fc628 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc638; continue; }
+                pc = 0x801fc630;
+            }
+            0x801fc630 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc638;
+            }
+            0x801fc638 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x1));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc628: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetPokemonSelectRandomFlag (0x801fc640, 24 bytes)
+#[inline(never)]
+pub fn f_801fc640(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc640) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc640); f_801fc640_b(c, 0x801fc640); crate::prof::exit(c, 0x801fc640); return; }
+    }
+    f_801fc640_b(c, 0x801fc640)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc640_at(c: &mut Cpu, pc: u32) { f_801fc640_b(c, pc) }
+#[inline(always)]
+fn f_801fc640_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc640;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc640, pc); }
+        match pc {
+            0x801fc640 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc650; continue; }
+                pc = 0x801fc648;
+            }
+            0x801fc648 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc650;
+            }
+            0x801fc650 => {
+                c.r[3] = c.lbz(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc640: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerAiDataBiosGetPtr (0x801fc658, 44 bytes)
+#[inline(never)]
+pub fn f_801fc658(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc658) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc658); f_801fc658_b(c, 0x801fc658); crate::prof::exit(c, 0x801fc658); return; }
+    }
+    f_801fc658_b(c, 0x801fc658)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc658_at(c: &mut Cpu, pc: u32) { f_801fc658_b(c, pc) }
+#[inline(always)]
+fn f_801fc658_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc658;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc658, pc); }
+        match pc {
+            0x801fc658 => {
+                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff8710));
+                c.r[3] = c.r[3].rotate_left(0) & 0xffff;
+                c.r[0] = c.lwz(c.r[4]);
+                c.cmpu(0, c.r[3], c.r[0]);
+                if c.crbit(0) { pc = 0x801fc674; continue; }
+                pc = 0x801fc66c;
+            }
+            0x801fc66c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc674;
+            }
+            0x801fc674 => {
+                c.r[0] = c.r[3].wrapping_mul(0x28);
+                c.r[3] = c.lwz(c.r[13].wrapping_add(0xffff8714));
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc658: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetPartDataId (0x801fc684, 16 bytes)
+#[inline(never)]
+pub fn f_801fc684(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc684) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc684); f_801fc684_b(c, 0x801fc684); crate::prof::exit(c, 0x801fc684); return; }
+    }
+    f_801fc684_b(c, 0x801fc684)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc684_at(c: &mut Cpu, pc: u32) { f_801fc684_b(c, pc) }
+#[inline(always)]
+fn f_801fc684_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc684;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc684, pc); }
+        match pc {
+            0x801fc684 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc68c;
+            }
+            0x801fc68c => {
+                c.stb(c.r[3].wrapping_add(0x6), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc684: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetKeyPlayerFlag (0x801fc694, 16 bytes)
+#[inline(never)]
+pub fn f_801fc694(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc694) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc694); f_801fc694_b(c, 0x801fc694); crate::prof::exit(c, 0x801fc694); return; }
+    }
+    f_801fc694_b(c, 0x801fc694)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc694_at(c: &mut Cpu, pc: u32) { f_801fc694_b(c, pc) }
+#[inline(always)]
+fn f_801fc694_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc694;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc694, pc); }
+        match pc {
+            0x801fc694 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc69c;
+            }
+            0x801fc69c => {
+                c.stb(c.r[3].wrapping_add(0x5), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc694: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetPartDataId (0x801fc6a4, 24 bytes)
+#[inline(never)]
+pub fn f_801fc6a4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc6a4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc6a4); f_801fc6a4_b(c, 0x801fc6a4); crate::prof::exit(c, 0x801fc6a4); return; }
+    }
+    f_801fc6a4_b(c, 0x801fc6a4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc6a4_at(c: &mut Cpu, pc: u32) { f_801fc6a4_b(c, pc) }
+#[inline(always)]
+fn f_801fc6a4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc6a4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc6a4, pc); }
+        match pc {
+            0x801fc6a4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc6b4; continue; }
+                pc = 0x801fc6ac;
+            }
+            0x801fc6ac => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc6b4;
+            }
+            0x801fc6b4 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x6));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc6a4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetKeyPlayerFlag (0x801fc6bc, 24 bytes)
+#[inline(never)]
+pub fn f_801fc6bc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc6bc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc6bc); f_801fc6bc_b(c, 0x801fc6bc); crate::prof::exit(c, 0x801fc6bc); return; }
+    }
+    f_801fc6bc_b(c, 0x801fc6bc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc6bc_at(c: &mut Cpu, pc: u32) { f_801fc6bc_b(c, pc) }
+#[inline(always)]
+fn f_801fc6bc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc6bc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc6bc, pc); }
+        match pc {
+            0x801fc6bc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc6cc; continue; }
+                pc = 0x801fc6c4;
+            }
+            0x801fc6c4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc6cc;
+            }
+            0x801fc6cc => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x5));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc6bc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetSeikakuDataId (0x801fc6d4, 16 bytes)
+#[inline(never)]
+pub fn f_801fc6d4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc6d4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc6d4); f_801fc6d4_b(c, 0x801fc6d4); crate::prof::exit(c, 0x801fc6d4); return; }
+    }
+    f_801fc6d4_b(c, 0x801fc6d4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc6d4_at(c: &mut Cpu, pc: u32) { f_801fc6d4_b(c, pc) }
+#[inline(always)]
+fn f_801fc6d4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc6d4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc6d4, pc); }
+        match pc {
+            0x801fc6d4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc6dc;
+            }
+            0x801fc6dc => {
+                c.stb(c.r[3].wrapping_add(0x2), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc6d4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetSexDataId (0x801fc6e4, 16 bytes)
+#[inline(never)]
+pub fn f_801fc6e4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc6e4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc6e4); f_801fc6e4_b(c, 0x801fc6e4); crate::prof::exit(c, 0x801fc6e4); return; }
+    }
+    f_801fc6e4_b(c, 0x801fc6e4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc6e4_at(c: &mut Cpu, pc: u32) { f_801fc6e4_b(c, pc) }
+#[inline(always)]
+fn f_801fc6e4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc6e4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc6e4, pc); }
+        match pc {
+            0x801fc6e4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc6ec;
+            }
+            0x801fc6ec => {
+                c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc6e4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetFriend (0x801fc6f4, 16 bytes)
+#[inline(never)]
+pub fn f_801fc6f4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc6f4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc6f4); f_801fc6f4_b(c, 0x801fc6f4); crate::prof::exit(c, 0x801fc6f4); return; }
+    }
+    f_801fc6f4_b(c, 0x801fc6f4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc6f4_at(c: &mut Cpu, pc: u32) { f_801fc6f4_b(c, pc) }
+#[inline(always)]
+fn f_801fc6f4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc6f4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc6f4, pc); }
+        match pc {
+            0x801fc6f4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc6fc;
+            }
+            0x801fc6fc => {
+                c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc6f4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetPpCnt (0x801fc704, 64 bytes)
+#[inline(never)]
+pub fn f_801fc704(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc704) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc704); f_801fc704_b(c, 0x801fc704); crate::prof::exit(c, 0x801fc704); return; }
+    }
+    f_801fc704_b(c, 0x801fc704)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc704_at(c: &mut Cpu, pc: u32) { f_801fc704_b(c, pc) }
+#[inline(always)]
+fn f_801fc704_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc704;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc704, pc); }
+        match pc {
+            0x801fc704 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc714; continue; }
+                pc = 0x801fc70c;
+            }
+            0x801fc70c => {
+                c.r[4] = 0x0;
+                pc = 0x801fc734; continue;
+                pc = 0x801fc714;
+            }
+            0x801fc714 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x4);
+                if c.crbit(0) { pc = 0x801fc728; continue; }
+                pc = 0x801fc720;
+            }
+            0x801fc720 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc734; continue;
+                pc = 0x801fc728;
+            }
+            0x801fc728 => {
+                c.r[4] = c.r[4].rotate_left(3) & 0x7f8;
+                c.r[4] = c.r[4].wrapping_add(0x30);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc734;
+            }
+            0x801fc734 => {
+                c.cmpu(0, c.r[4], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc73c;
+            }
+            0x801fc73c => {
+                c.stb(c.r[4], c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc704: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetWazaDataId (0x801fc744, 64 bytes)
+#[inline(never)]
+pub fn f_801fc744(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc744) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc744); f_801fc744_b(c, 0x801fc744); crate::prof::exit(c, 0x801fc744); return; }
+    }
+    f_801fc744_b(c, 0x801fc744)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc744_at(c: &mut Cpu, pc: u32) { f_801fc744_b(c, pc) }
+#[inline(always)]
+fn f_801fc744_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc744;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc744, pc); }
+        match pc {
+            0x801fc744 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc754; continue; }
+                pc = 0x801fc74c;
+            }
+            0x801fc74c => {
+                c.r[4] = 0x0;
+                pc = 0x801fc774; continue;
+                pc = 0x801fc754;
+            }
+            0x801fc754 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x4);
+                if c.crbit(0) { pc = 0x801fc768; continue; }
+                pc = 0x801fc760;
+            }
+            0x801fc760 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc774; continue;
+                pc = 0x801fc768;
+            }
+            0x801fc768 => {
+                c.r[4] = c.r[4].rotate_left(3) & 0x7f8;
+                c.r[4] = c.r[4].wrapping_add(0x30);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc774;
+            }
+            0x801fc774 => {
+                c.cmpu(0, c.r[4], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc77c;
+            }
+            0x801fc77c => {
+                c.stw(c.r[4].wrapping_add(0x4), c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc744: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetItemDataId (0x801fc784, 16 bytes)
+#[inline(never)]
+pub fn f_801fc784(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc784) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc784); f_801fc784_b(c, 0x801fc784); crate::prof::exit(c, 0x801fc784); return; }
+    }
+    f_801fc784_b(c, 0x801fc784)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc784_at(c: &mut Cpu, pc: u32) { f_801fc784_b(c, pc) }
+#[inline(always)]
+fn f_801fc784_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc784;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc784, pc); }
+        match pc {
+            0x801fc784 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc78c;
+            }
+            0x801fc78c => {
+                c.stw(c.r[3].wrapping_add(0x10), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc784: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetPokemonDataId (0x801fc794, 16 bytes)
+#[inline(never)]
+pub fn f_801fc794(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc794) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc794); f_801fc794_b(c, 0x801fc794); crate::prof::exit(c, 0x801fc794); return; }
+    }
+    f_801fc794_b(c, 0x801fc794)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc794_at(c: &mut Cpu, pc: u32) { f_801fc794_b(c, pc) }
+#[inline(always)]
+fn f_801fc794_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc794;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc794, pc); }
+        match pc {
+            0x801fc794 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc79c;
+            }
+            0x801fc79c => {
+                c.sth(c.r[3].wrapping_add(0xa), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc794: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetTokuseiFlag (0x801fc7a4, 16 bytes)
+#[inline(never)]
+pub fn f_801fc7a4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc7a4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc7a4); f_801fc7a4_b(c, 0x801fc7a4); crate::prof::exit(c, 0x801fc7a4); return; }
+    }
+    f_801fc7a4_b(c, 0x801fc7a4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc7a4_at(c: &mut Cpu, pc: u32) { f_801fc7a4_b(c, pc) }
+#[inline(always)]
+fn f_801fc7a4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc7a4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc7a4, pc); }
+        match pc {
+            0x801fc7a4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc7ac;
+            }
+            0x801fc7ac => {
+                c.stb(c.r[3], c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc7a4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetDarkPokemonFlag (0x801fc7b4, 16 bytes)
+#[inline(never)]
+pub fn f_801fc7b4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc7b4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc7b4); f_801fc7b4_b(c, 0x801fc7b4); crate::prof::exit(c, 0x801fc7b4); return; }
+    }
+    f_801fc7b4_b(c, 0x801fc7b4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc7b4_at(c: &mut Cpu, pc: u32) { f_801fc7b4_b(c, pc) }
+#[inline(always)]
+fn f_801fc7b4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc7b4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc7b4, pc); }
+        match pc {
+            0x801fc7b4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc7bc;
+            }
+            0x801fc7bc => {
+                c.stb(c.r[3].wrapping_add(0x3), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc7b4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetItemBallId (0x801fc7c4, 16 bytes)
+#[inline(never)]
+pub fn f_801fc7c4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc7c4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc7c4); f_801fc7c4_b(c, 0x801fc7c4); crate::prof::exit(c, 0x801fc7c4); return; }
+    }
+    f_801fc7c4_b(c, 0x801fc7c4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc7c4_at(c: &mut Cpu, pc: u32) { f_801fc7c4_b(c, pc) }
+#[inline(always)]
+fn f_801fc7c4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc7c4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc7c4, pc); }
+        match pc {
+            0x801fc7c4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc7cc;
+            }
+            0x801fc7cc => {
+                c.sth(c.r[3].wrapping_add(0xc), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc7c4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetLevel (0x801fc7d4, 16 bytes)
+#[inline(never)]
+pub fn f_801fc7d4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc7d4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc7d4); f_801fc7d4_b(c, 0x801fc7d4); crate::prof::exit(c, 0x801fc7d4); return; }
+    }
+    f_801fc7d4_b(c, 0x801fc7d4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc7d4_at(c: &mut Cpu, pc: u32) { f_801fc7d4_b(c, pc) }
+#[inline(always)]
+fn f_801fc7d4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc7d4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc7d4, pc); }
+        match pc {
+            0x801fc7d4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc7dc;
+            }
+            0x801fc7dc => {
+                c.stb(c.r[3].wrapping_add(0x4), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc7d4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetStatusEffort (0x801fc7e4, 36 bytes)
+#[inline(never)]
+pub fn f_801fc7e4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc7e4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc7e4); f_801fc7e4_b(c, 0x801fc7e4); crate::prof::exit(c, 0x801fc7e4); return; }
+    }
+    f_801fc7e4_b(c, 0x801fc7e4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc7e4_at(c: &mut Cpu, pc: u32) { f_801fc7e4_b(c, pc) }
+#[inline(always)]
+fn f_801fc7e4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc7e4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc7e4, pc); }
+        match pc {
+            0x801fc7e4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc7ec;
+            }
+            0x801fc7ec => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x6);
+                if !c.crbit(0) { return; }
+                pc = 0x801fc7f8;
+            }
+            0x801fc7f8 => {
+                c.r[0] = c.r[4].rotate_left(1) & 0x1fe;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.sth(c.r[3].wrapping_add(0x22), c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc7e4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetStatusRnd (0x801fc808, 32 bytes)
+#[inline(never)]
+pub fn f_801fc808(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc808) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc808); f_801fc808_b(c, 0x801fc808); crate::prof::exit(c, 0x801fc808); return; }
+    }
+    f_801fc808_b(c, 0x801fc808)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc808_at(c: &mut Cpu, pc: u32) { f_801fc808_b(c, pc) }
+#[inline(always)]
+fn f_801fc808_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc808;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc808, pc); }
+        match pc {
+            0x801fc808 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc810;
+            }
+            0x801fc810 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x6);
+                if !c.crbit(0) { return; }
+                pc = 0x801fc81c;
+            }
+            0x801fc81c => {
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.stb(c.r[3].wrapping_add(0x1c), c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc808: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosSetNickname (0x801fc828, 16 bytes)
+#[inline(never)]
+pub fn f_801fc828(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc828) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc828); f_801fc828_b(c, 0x801fc828); crate::prof::exit(c, 0x801fc828); return; }
+    }
+    f_801fc828_b(c, 0x801fc828)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc828_at(c: &mut Cpu, pc: u32) { f_801fc828_b(c, pc) }
+#[inline(always)]
+fn f_801fc828_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc828;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc828, pc); }
+        match pc {
+            0x801fc828 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fc830;
+            }
+            0x801fc830 => {
+                c.stw(c.r[3].wrapping_add(0x14), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc828: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetSeikakuDataId (0x801fc838, 28 bytes)
+#[inline(never)]
+pub fn f_801fc838(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc838) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc838); f_801fc838_b(c, 0x801fc838); crate::prof::exit(c, 0x801fc838); return; }
+    }
+    f_801fc838_b(c, 0x801fc838)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc838_at(c: &mut Cpu, pc: u32) { f_801fc838_b(c, pc) }
+#[inline(always)]
+fn f_801fc838_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc838;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc838, pc); }
+        match pc {
+            0x801fc838 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc848; continue; }
+                pc = 0x801fc840;
+            }
+            0x801fc840 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc848;
+            }
+            0x801fc848 => {
+                c.r[0] = c.lbz(c.r[3].wrapping_add(0x2));
+                c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc838: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetSexDataId (0x801fc854, 28 bytes)
+#[inline(never)]
+pub fn f_801fc854(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc854) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc854); f_801fc854_b(c, 0x801fc854); crate::prof::exit(c, 0x801fc854); return; }
+    }
+    f_801fc854_b(c, 0x801fc854)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc854_at(c: &mut Cpu, pc: u32) { f_801fc854_b(c, pc) }
+#[inline(always)]
+fn f_801fc854_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc854;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc854, pc); }
+        match pc {
+            0x801fc854 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc864; continue; }
+                pc = 0x801fc85c;
+            }
+            0x801fc85c => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc864;
+            }
+            0x801fc864 => {
+                c.r[0] = c.lbz(c.r[3].wrapping_add(0x1));
+                c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc854: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetFriend (0x801fc870, 24 bytes)
+#[inline(never)]
+pub fn f_801fc870(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc870) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc870); f_801fc870_b(c, 0x801fc870); crate::prof::exit(c, 0x801fc870); return; }
+    }
+    f_801fc870_b(c, 0x801fc870)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc870_at(c: &mut Cpu, pc: u32) { f_801fc870_b(c, pc) }
+#[inline(always)]
+fn f_801fc870_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc870;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc870, pc); }
+        match pc {
+            0x801fc870 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc880; continue; }
+                pc = 0x801fc878;
+            }
+            0x801fc878 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc880;
+            }
+            0x801fc880 => {
+                c.r[3] = c.lha(c.r[3].wrapping_add(0x8));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc870: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetPpCnt (0x801fc888, 72 bytes)
+#[inline(never)]
+pub fn f_801fc888(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc888) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc888); f_801fc888_b(c, 0x801fc888); crate::prof::exit(c, 0x801fc888); return; }
+    }
+    f_801fc888_b(c, 0x801fc888)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc888_at(c: &mut Cpu, pc: u32) { f_801fc888_b(c, pc) }
+#[inline(always)]
+fn f_801fc888_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc888;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc888, pc); }
+        match pc {
+            0x801fc888 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc898; continue; }
+                pc = 0x801fc890;
+            }
+            0x801fc890 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc8b8; continue;
+                pc = 0x801fc898;
+            }
+            0x801fc898 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x4);
+                if c.crbit(0) { pc = 0x801fc8ac; continue; }
+                pc = 0x801fc8a4;
+            }
+            0x801fc8a4 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc8b8; continue;
+                pc = 0x801fc8ac;
+            }
+            0x801fc8ac => {
+                c.r[4] = c.r[4].rotate_left(3) & 0x7f8;
+                c.r[4] = c.r[4].wrapping_add(0x30);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc8b8;
+            }
+            0x801fc8b8 => {
+                c.cmpu(0, c.r[4], 0x0);
+                if !c.crbit(2) { pc = 0x801fc8c8; continue; }
+                pc = 0x801fc8c0;
+            }
+            0x801fc8c0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc8c8;
+            }
+            0x801fc8c8 => {
+                c.r[3] = c.lbz(c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc888: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetWazaDataId (0x801fc8d0, 72 bytes)
+#[inline(never)]
+pub fn f_801fc8d0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc8d0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc8d0); f_801fc8d0_b(c, 0x801fc8d0); crate::prof::exit(c, 0x801fc8d0); return; }
+    }
+    f_801fc8d0_b(c, 0x801fc8d0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc8d0_at(c: &mut Cpu, pc: u32) { f_801fc8d0_b(c, pc) }
+#[inline(always)]
+fn f_801fc8d0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc8d0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc8d0, pc); }
+        match pc {
+            0x801fc8d0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc8e0; continue; }
+                pc = 0x801fc8d8;
+            }
+            0x801fc8d8 => {
+                c.r[4] = 0x0;
+                pc = 0x801fc900; continue;
+                pc = 0x801fc8e0;
+            }
+            0x801fc8e0 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x4);
+                if c.crbit(0) { pc = 0x801fc8f4; continue; }
+                pc = 0x801fc8ec;
+            }
+            0x801fc8ec => {
+                c.r[4] = 0x0;
+                pc = 0x801fc900; continue;
+                pc = 0x801fc8f4;
+            }
+            0x801fc8f4 => {
+                c.r[4] = c.r[4].rotate_left(3) & 0x7f8;
+                c.r[4] = c.r[4].wrapping_add(0x30);
+                c.r[4] = c.r[3].wrapping_add(c.r[4]);
+                pc = 0x801fc900;
+            }
+            0x801fc900 => {
+                c.cmpu(0, c.r[4], 0x0);
+                if !c.crbit(2) { pc = 0x801fc910; continue; }
+                pc = 0x801fc908;
+            }
+            0x801fc908 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc910;
+            }
+            0x801fc910 => {
+                c.r[3] = c.lwz(c.r[4].wrapping_add(0x4));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc8d0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetItemDataId (0x801fc918, 24 bytes)
+#[inline(never)]
+pub fn f_801fc918(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc918) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc918); f_801fc918_b(c, 0x801fc918); crate::prof::exit(c, 0x801fc918); return; }
+    }
+    f_801fc918_b(c, 0x801fc918)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc918_at(c: &mut Cpu, pc: u32) { f_801fc918_b(c, pc) }
+#[inline(always)]
+fn f_801fc918_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc918;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc918, pc); }
+        match pc {
+            0x801fc918 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc928; continue; }
+                pc = 0x801fc920;
+            }
+            0x801fc920 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc928;
+            }
+            0x801fc928 => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x10));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc918: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetPokemonDataId (0x801fc930, 24 bytes)
+#[inline(never)]
+pub fn f_801fc930(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc930) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc930); f_801fc930_b(c, 0x801fc930); crate::prof::exit(c, 0x801fc930); return; }
+    }
+    f_801fc930_b(c, 0x801fc930)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc930_at(c: &mut Cpu, pc: u32) { f_801fc930_b(c, pc) }
+#[inline(always)]
+fn f_801fc930_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc930;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc930, pc); }
+        match pc {
+            0x801fc930 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc940; continue; }
+                pc = 0x801fc938;
+            }
+            0x801fc938 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc940;
+            }
+            0x801fc940 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0xa));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc930: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetTokuseiFlag (0x801fc948, 28 bytes)
+#[inline(never)]
+pub fn f_801fc948(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc948) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc948); f_801fc948_b(c, 0x801fc948); crate::prof::exit(c, 0x801fc948); return; }
+    }
+    f_801fc948_b(c, 0x801fc948)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc948_at(c: &mut Cpu, pc: u32) { f_801fc948_b(c, pc) }
+#[inline(always)]
+fn f_801fc948_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc948;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc948, pc); }
+        match pc {
+            0x801fc948 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc958; continue; }
+                pc = 0x801fc950;
+            }
+            0x801fc950 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc958;
+            }
+            0x801fc958 => {
+                c.r[0] = c.lbz(c.r[3]);
+                c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc948: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetDarkPokemonFlag (0x801fc964, 24 bytes)
+#[inline(never)]
+pub fn f_801fc964(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc964) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc964); f_801fc964_b(c, 0x801fc964); crate::prof::exit(c, 0x801fc964); return; }
+    }
+    f_801fc964_b(c, 0x801fc964)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc964_at(c: &mut Cpu, pc: u32) { f_801fc964_b(c, pc) }
+#[inline(always)]
+fn f_801fc964_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc964;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc964, pc); }
+        match pc {
+            0x801fc964 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc974; continue; }
+                pc = 0x801fc96c;
+            }
+            0x801fc96c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc974;
+            }
+            0x801fc974 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x3));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc964: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetItemBallId (0x801fc97c, 24 bytes)
+#[inline(never)]
+pub fn f_801fc97c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc97c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc97c); f_801fc97c_b(c, 0x801fc97c); crate::prof::exit(c, 0x801fc97c); return; }
+    }
+    f_801fc97c_b(c, 0x801fc97c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc97c_at(c: &mut Cpu, pc: u32) { f_801fc97c_b(c, pc) }
+#[inline(always)]
+fn f_801fc97c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc97c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc97c, pc); }
+        match pc {
+            0x801fc97c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc98c; continue; }
+                pc = 0x801fc984;
+            }
+            0x801fc984 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc98c;
+            }
+            0x801fc98c => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0xc));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc97c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetLevel (0x801fc994, 24 bytes)
+#[inline(never)]
+pub fn f_801fc994(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc994) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc994); f_801fc994_b(c, 0x801fc994); crate::prof::exit(c, 0x801fc994); return; }
+    }
+    f_801fc994_b(c, 0x801fc994)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc994_at(c: &mut Cpu, pc: u32) { f_801fc994_b(c, pc) }
+#[inline(always)]
+fn f_801fc994_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc994;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc994, pc); }
+        match pc {
+            0x801fc994 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc9a4; continue; }
+                pc = 0x801fc99c;
+            }
+            0x801fc99c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fc9a4;
+            }
+            0x801fc9a4 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x4));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc994: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetStatusEffort (0x801fc9ac, 52 bytes)
+#[inline(never)]
+pub fn f_801fc9ac(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc9ac) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc9ac); f_801fc9ac_b(c, 0x801fc9ac); crate::prof::exit(c, 0x801fc9ac); return; }
+    }
+    f_801fc9ac_b(c, 0x801fc9ac)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc9ac_at(c: &mut Cpu, pc: u32) { f_801fc9ac_b(c, pc) }
+#[inline(always)]
+fn f_801fc9ac_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc9ac;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc9ac, pc); }
+        match pc {
+            0x801fc9ac => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc9bc; continue; }
+                pc = 0x801fc9b4;
+            }
+            0x801fc9b4 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc9bc;
+            }
+            0x801fc9bc => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x6);
+                if c.crbit(0) { pc = 0x801fc9d0; continue; }
+                pc = 0x801fc9c8;
+            }
+            0x801fc9c8 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc9d0;
+            }
+            0x801fc9d0 => {
+                c.r[0] = c.r[4].rotate_left(1) & 0x1fe;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.r[3] = c.lha(c.r[3].wrapping_add(0x22));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc9ac: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetStatusRnd (0x801fc9e0, 52 bytes)
+#[inline(never)]
+pub fn f_801fc9e0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fc9e0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fc9e0); f_801fc9e0_b(c, 0x801fc9e0); crate::prof::exit(c, 0x801fc9e0); return; }
+    }
+    f_801fc9e0_b(c, 0x801fc9e0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fc9e0_at(c: &mut Cpu, pc: u32) { f_801fc9e0_b(c, pc) }
+#[inline(always)]
+fn f_801fc9e0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fc9e0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fc9e0, pc); }
+        match pc {
+            0x801fc9e0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fc9f0; continue; }
+                pc = 0x801fc9e8;
+            }
+            0x801fc9e8 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fc9f0;
+            }
+            0x801fc9f0 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x6);
+                if c.crbit(0) { pc = 0x801fca04; continue; }
+                pc = 0x801fc9fc;
+            }
+            0x801fc9fc => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fca04;
+            }
+            0x801fca04 => {
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.r[0] = c.lbz(c.r[3].wrapping_add(0x1c));
+                c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fc9e0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetNickname (0x801fca14, 24 bytes)
+#[inline(never)]
+pub fn f_801fca14(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fca14) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fca14); f_801fca14_b(c, 0x801fca14); crate::prof::exit(c, 0x801fca14); return; }
+    }
+    f_801fca14_b(c, 0x801fca14)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fca14_at(c: &mut Cpu, pc: u32) { f_801fca14_b(c, pc) }
+#[inline(always)]
+fn f_801fca14_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fca14;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fca14, pc); }
+        match pc {
+            0x801fca14 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fca24; continue; }
+                pc = 0x801fca1c;
+            }
+            0x801fca1c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fca24;
+            }
+            0x801fca24 => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x14));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fca14: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonDataBiosGetPtr (0x801fca2c, 44 bytes)
+#[inline(never)]
+pub fn f_801fca2c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fca2c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fca2c); f_801fca2c_b(c, 0x801fca2c); crate::prof::exit(c, 0x801fca2c); return; }
+    }
+    f_801fca2c_b(c, 0x801fca2c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fca2c_at(c: &mut Cpu, pc: u32) { f_801fca2c_b(c, pc) }
+#[inline(always)]
+fn f_801fca2c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fca2c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fca2c, pc); }
+        match pc {
+            0x801fca2c => {
+                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff86f0));
+                c.r[3] = c.r[3].rotate_left(0) & 0xffff;
+                c.r[0] = c.lwz(c.r[4]);
+                c.cmpu(0, c.r[3], c.r[0]);
+                if c.crbit(0) { pc = 0x801fca48; continue; }
+                pc = 0x801fca40;
+            }
+            0x801fca40 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fca48;
+            }
+            0x801fca48 => {
+                c.r[0] = c.r[3].wrapping_mul(0x50);
+                c.r[3] = c.lwz(c.r[13].wrapping_add(0xffff86f4));
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fca2c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonPartDataBiosSetWazaTypeRevise (0x801fca58, 32 bytes)
+#[inline(never)]
+pub fn f_801fca58(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fca58) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fca58); f_801fca58_b(c, 0x801fca58); crate::prof::exit(c, 0x801fca58); return; }
+    }
+    f_801fca58_b(c, 0x801fca58)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fca58_at(c: &mut Cpu, pc: u32) { f_801fca58_b(c, pc) }
+#[inline(always)]
+fn f_801fca58_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fca58;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fca58, pc); }
+        match pc {
+            0x801fca58 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fca60;
+            }
+            0x801fca60 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0xc);
+                if !c.crbit(0) { return; }
+                pc = 0x801fca6c;
+            }
+            0x801fca6c => {
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.stb(c.r[3].wrapping_add(0x8), c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fca58: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonPartDataBiosSetName (0x801fca78, 16 bytes)
+#[inline(never)]
+pub fn f_801fca78(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fca78) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fca78); f_801fca78_b(c, 0x801fca78); crate::prof::exit(c, 0x801fca78); return; }
+    }
+    f_801fca78_b(c, 0x801fca78)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fca78_at(c: &mut Cpu, pc: u32) { f_801fca78_b(c, pc) }
+#[inline(always)]
+fn f_801fca78_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fca78;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fca78, pc); }
+        match pc {
+            0x801fca78 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fca80;
+            }
+            0x801fca80 => {
+                c.stw(c.r[3], c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fca78: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonPartDataBiosGetWazaTypeRevise (0x801fca88, 48 bytes)
+#[inline(never)]
+pub fn f_801fca88(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fca88) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fca88); f_801fca88_b(c, 0x801fca88); crate::prof::exit(c, 0x801fca88); return; }
+    }
+    f_801fca88_b(c, 0x801fca88)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fca88_at(c: &mut Cpu, pc: u32) { f_801fca88_b(c, pc) }
+#[inline(always)]
+fn f_801fca88_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fca88;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fca88, pc); }
+        match pc {
+            0x801fca88 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fca98; continue; }
+                pc = 0x801fca90;
+            }
+            0x801fca90 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fca98;
+            }
+            0x801fca98 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0xc);
+                if c.crbit(0) { pc = 0x801fcaac; continue; }
+                pc = 0x801fcaa4;
+            }
+            0x801fcaa4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcaac;
+            }
+            0x801fcaac => {
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x8));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fca88: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonPartDataBiosGetName (0x801fcab8, 24 bytes)
+#[inline(never)]
+pub fn f_801fcab8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcab8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcab8); f_801fcab8_b(c, 0x801fcab8); crate::prof::exit(c, 0x801fcab8); return; }
+    }
+    f_801fcab8_b(c, 0x801fcab8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcab8_at(c: &mut Cpu, pc: u32) { f_801fcab8_b(c, pc) }
+#[inline(always)]
+fn f_801fcab8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcab8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcab8, pc); }
+        match pc {
+            0x801fcab8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcac8; continue; }
+                pc = 0x801fcac0;
+            }
+            0x801fcac0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcac8;
+            }
+            0x801fcac8 => {
+                c.r[3] = c.lwz(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcab8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerPokemonPartDataBiosGetPtr (0x801fcad0, 44 bytes)
+#[inline(never)]
+pub fn f_801fcad0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcad0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcad0); f_801fcad0_b(c, 0x801fcad0); crate::prof::exit(c, 0x801fcad0); return; }
+    }
+    f_801fcad0_b(c, 0x801fcad0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcad0_at(c: &mut Cpu, pc: u32) { f_801fcad0_b(c, pc) }
+#[inline(always)]
+fn f_801fcad0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcad0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcad0, pc); }
+        match pc {
+            0x801fcad0 => {
+                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff86e8));
+                c.r[3] = c.r[3].rotate_left(0) & 0xffff;
+                c.r[0] = c.lwz(c.r[4]);
+                c.cmpu(0, c.r[3], c.r[0]);
+                if c.crbit(0) { pc = 0x801fcaec; continue; }
+                pc = 0x801fcae4;
+            }
+            0x801fcae4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcaec;
+            }
+            0x801fcaec => {
+                c.r[0] = c.r[3].wrapping_mul(0x14);
+                c.r[3] = c.lwz(c.r[13].wrapping_add(0xffff86ec));
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcad0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCAFC (0x801fcafc, 16 bytes)
+#[inline(never)]
+pub fn f_801fcafc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcafc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcafc); f_801fcafc_b(c, 0x801fcafc); crate::prof::exit(c, 0x801fcafc); return; }
+    }
+    f_801fcafc_b(c, 0x801fcafc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcafc_at(c: &mut Cpu, pc: u32) { f_801fcafc_b(c, pc) }
+#[inline(always)]
+fn f_801fcafc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcafc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcafc, pc); }
+        match pc {
+            0x801fcafc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb04;
+            }
+            0x801fcb04 => {
+                c.stw(c.r[3].wrapping_add(0x10), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcafc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCB0C (0x801fcb0c, 36 bytes)
+#[inline(never)]
+pub fn f_801fcb0c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcb0c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcb0c); f_801fcb0c_b(c, 0x801fcb0c); crate::prof::exit(c, 0x801fcb0c); return; }
+    }
+    f_801fcb0c_b(c, 0x801fcb0c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcb0c_at(c: &mut Cpu, pc: u32) { f_801fcb0c_b(c, pc) }
+#[inline(always)]
+fn f_801fcb0c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcb0c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcb0c, pc); }
+        match pc {
+            0x801fcb0c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb14;
+            }
+            0x801fcb14 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x4);
+                if !c.crbit(0) { return; }
+                pc = 0x801fcb20;
+            }
+            0x801fcb20 => {
+                c.r[0] = c.r[4].rotate_left(2) & 0x3fc;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.stw(c.r[3].wrapping_add(0x24), c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcb0c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCB30 (0x801fcb30, 16 bytes)
+#[inline(never)]
+pub fn f_801fcb30(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcb30) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcb30); f_801fcb30_b(c, 0x801fcb30); crate::prof::exit(c, 0x801fcb30); return; }
+    }
+    f_801fcb30_b(c, 0x801fcb30)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcb30_at(c: &mut Cpu, pc: u32) { f_801fcb30_b(c, pc) }
+#[inline(always)]
+fn f_801fcb30_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcb30;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcb30, pc); }
+        match pc {
+            0x801fcb30 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb38;
+            }
+            0x801fcb38 => {
+                c.stw(c.r[3].wrapping_add(0xc), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcb30: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCB40 (0x801fcb40, 36 bytes)
+#[inline(never)]
+pub fn f_801fcb40(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcb40) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcb40); f_801fcb40_b(c, 0x801fcb40); crate::prof::exit(c, 0x801fcb40); return; }
+    }
+    f_801fcb40_b(c, 0x801fcb40)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcb40_at(c: &mut Cpu, pc: u32) { f_801fcb40_b(c, pc) }
+#[inline(always)]
+fn f_801fcb40_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcb40;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcb40, pc); }
+        match pc {
+            0x801fcb40 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb48;
+            }
+            0x801fcb48 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x8);
+                if !c.crbit(0) { return; }
+                pc = 0x801fcb54;
+            }
+            0x801fcb54 => {
+                c.r[0] = c.r[4].rotate_left(1) & 0x1fe;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.sth(c.r[3].wrapping_add(0x14), c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcb40: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCB64 (0x801fcb64, 16 bytes)
+#[inline(never)]
+pub fn f_801fcb64(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcb64) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcb64); f_801fcb64_b(c, 0x801fcb64); crate::prof::exit(c, 0x801fcb64); return; }
+    }
+    f_801fcb64_b(c, 0x801fcb64)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcb64_at(c: &mut Cpu, pc: u32) { f_801fcb64_b(c, pc) }
+#[inline(always)]
+fn f_801fcb64_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcb64;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcb64, pc); }
+        match pc {
+            0x801fcb64 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb6c;
+            }
+            0x801fcb6c => {
+                c.sth(c.r[3].wrapping_add(0x4), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcb64: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCB74 (0x801fcb74, 16 bytes)
+#[inline(never)]
+pub fn f_801fcb74(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcb74) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcb74); f_801fcb74_b(c, 0x801fcb74); crate::prof::exit(c, 0x801fcb74); return; }
+    }
+    f_801fcb74_b(c, 0x801fcb74)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcb74_at(c: &mut Cpu, pc: u32) { f_801fcb74_b(c, pc) }
+#[inline(always)]
+fn f_801fcb74_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcb74;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcb74, pc); }
+        match pc {
+            0x801fcb74 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb7c;
+            }
+            0x801fcb7c => {
+                c.stw(c.r[3].wrapping_add(0x8), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcb74: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCB84 (0x801fcb84, 16 bytes)
+#[inline(never)]
+pub fn f_801fcb84(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcb84) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcb84); f_801fcb84_b(c, 0x801fcb84); crate::prof::exit(c, 0x801fcb84); return; }
+    }
+    f_801fcb84_b(c, 0x801fcb84)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcb84_at(c: &mut Cpu, pc: u32) { f_801fcb84_b(c, pc) }
+#[inline(always)]
+fn f_801fcb84_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcb84;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcb84, pc); }
+        match pc {
+            0x801fcb84 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb8c;
+            }
+            0x801fcb8c => {
+                c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcb84: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCB94 (0x801fcb94, 16 bytes)
+#[inline(never)]
+pub fn f_801fcb94(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcb94) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcb94); f_801fcb94_b(c, 0x801fcb94); crate::prof::exit(c, 0x801fcb94); return; }
+    }
+    f_801fcb94_b(c, 0x801fcb94)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcb94_at(c: &mut Cpu, pc: u32) { f_801fcb94_b(c, pc) }
+#[inline(always)]
+fn f_801fcb94_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcb94;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcb94, pc); }
+        match pc {
+            0x801fcb94 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcb9c;
+            }
+            0x801fcb9c => {
+                c.stb(c.r[3], c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcb94: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCBA4 (0x801fcba4, 24 bytes)
+#[inline(never)]
+pub fn f_801fcba4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcba4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcba4); f_801fcba4_b(c, 0x801fcba4); crate::prof::exit(c, 0x801fcba4); return; }
+    }
+    f_801fcba4_b(c, 0x801fcba4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcba4_at(c: &mut Cpu, pc: u32) { f_801fcba4_b(c, pc) }
+#[inline(always)]
+fn f_801fcba4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcba4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcba4, pc); }
+        match pc {
+            0x801fcba4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcbb4; continue; }
+                pc = 0x801fcbac;
+            }
+            0x801fcbac => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcbb4;
+            }
+            0x801fcbb4 => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x10));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcba4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCBBC (0x801fcbbc, 52 bytes)
+#[inline(never)]
+pub fn f_801fcbbc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcbbc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcbbc); f_801fcbbc_b(c, 0x801fcbbc); crate::prof::exit(c, 0x801fcbbc); return; }
+    }
+    f_801fcbbc_b(c, 0x801fcbbc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcbbc_at(c: &mut Cpu, pc: u32) { f_801fcbbc_b(c, pc) }
+#[inline(always)]
+fn f_801fcbbc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcbbc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcbbc, pc); }
+        match pc {
+            0x801fcbbc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcbcc; continue; }
+                pc = 0x801fcbc4;
+            }
+            0x801fcbc4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcbcc;
+            }
+            0x801fcbcc => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x4);
+                if c.crbit(0) { pc = 0x801fcbe0; continue; }
+                pc = 0x801fcbd8;
+            }
+            0x801fcbd8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcbe0;
+            }
+            0x801fcbe0 => {
+                c.r[0] = c.r[4].rotate_left(2) & 0x3fc;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x24));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcbbc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCBF0 (0x801fcbf0, 24 bytes)
+#[inline(never)]
+pub fn f_801fcbf0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcbf0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcbf0); f_801fcbf0_b(c, 0x801fcbf0); crate::prof::exit(c, 0x801fcbf0); return; }
+    }
+    f_801fcbf0_b(c, 0x801fcbf0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcbf0_at(c: &mut Cpu, pc: u32) { f_801fcbf0_b(c, pc) }
+#[inline(always)]
+fn f_801fcbf0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcbf0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcbf0, pc); }
+        match pc {
+            0x801fcbf0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcc00; continue; }
+                pc = 0x801fcbf8;
+            }
+            0x801fcbf8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcc00;
+            }
+            0x801fcc00 => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0xc));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcbf0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCC08 (0x801fcc08, 52 bytes)
+#[inline(never)]
+pub fn f_801fcc08(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcc08) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcc08); f_801fcc08_b(c, 0x801fcc08); crate::prof::exit(c, 0x801fcc08); return; }
+    }
+    f_801fcc08_b(c, 0x801fcc08)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcc08_at(c: &mut Cpu, pc: u32) { f_801fcc08_b(c, pc) }
+#[inline(always)]
+fn f_801fcc08_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcc08;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcc08, pc); }
+        match pc {
+            0x801fcc08 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcc18; continue; }
+                pc = 0x801fcc10;
+            }
+            0x801fcc10 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcc18;
+            }
+            0x801fcc18 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x8);
+                if c.crbit(0) { pc = 0x801fcc2c; continue; }
+                pc = 0x801fcc24;
+            }
+            0x801fcc24 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcc2c;
+            }
+            0x801fcc2c => {
+                c.r[0] = c.r[4].rotate_left(1) & 0x1fe;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x14));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcc08: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCC3C (0x801fcc3c, 24 bytes)
+#[inline(never)]
+pub fn f_801fcc3c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcc3c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcc3c); f_801fcc3c_b(c, 0x801fcc3c); crate::prof::exit(c, 0x801fcc3c); return; }
+    }
+    f_801fcc3c_b(c, 0x801fcc3c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcc3c_at(c: &mut Cpu, pc: u32) { f_801fcc3c_b(c, pc) }
+#[inline(always)]
+fn f_801fcc3c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcc3c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcc3c, pc); }
+        match pc {
+            0x801fcc3c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcc4c; continue; }
+                pc = 0x801fcc44;
+            }
+            0x801fcc44 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcc4c;
+            }
+            0x801fcc4c => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x4));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcc3c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerDataBiosSetKindDataId (0x801fcc54, 16 bytes)
+#[inline(never)]
+pub fn f_801fcc54(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcc54) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcc54); f_801fcc54_b(c, 0x801fcc54); crate::prof::exit(c, 0x801fcc54); return; }
+    }
+    f_801fcc54_b(c, 0x801fcc54)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcc54_at(c: &mut Cpu, pc: u32) { f_801fcc54_b(c, pc) }
+#[inline(always)]
+fn f_801fcc54_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcc54;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcc54, pc); }
+        match pc {
+            0x801fcc54 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcc5c;
+            }
+            0x801fcc5c => {
+                c.sth(c.r[3].wrapping_add(0x2), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcc54: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerDataBiosGetKindDataId (0x801fcc64, 24 bytes)
+#[inline(never)]
+pub fn f_801fcc64(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcc64) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcc64); f_801fcc64_b(c, 0x801fcc64); crate::prof::exit(c, 0x801fcc64); return; }
+    }
+    f_801fcc64_b(c, 0x801fcc64)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcc64_at(c: &mut Cpu, pc: u32) { f_801fcc64_b(c, pc) }
+#[inline(always)]
+fn f_801fcc64_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcc64;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcc64, pc); }
+        match pc {
+            0x801fcc64 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcc74; continue; }
+                pc = 0x801fcc6c;
+            }
+            0x801fcc6c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcc74;
+            }
+            0x801fcc74 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x2));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcc64: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCC7C (0x801fcc7c, 24 bytes)
+#[inline(never)]
+pub fn f_801fcc7c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcc7c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcc7c); f_801fcc7c_b(c, 0x801fcc7c); crate::prof::exit(c, 0x801fcc7c); return; }
+    }
+    f_801fcc7c_b(c, 0x801fcc7c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcc7c_at(c: &mut Cpu, pc: u32) { f_801fcc7c_b(c, pc) }
+#[inline(always)]
+fn f_801fcc7c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcc7c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcc7c, pc); }
+        match pc {
+            0x801fcc7c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcc8c; continue; }
+                pc = 0x801fcc84;
+            }
+            0x801fcc84 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcc8c;
+            }
+            0x801fcc8c => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x8));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcc7c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCC94 (0x801fcc94, 24 bytes)
+#[inline(never)]
+pub fn f_801fcc94(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcc94) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcc94); f_801fcc94_b(c, 0x801fcc94); crate::prof::exit(c, 0x801fcc94); return; }
+    }
+    f_801fcc94_b(c, 0x801fcc94)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcc94_at(c: &mut Cpu, pc: u32) { f_801fcc94_b(c, pc) }
+#[inline(always)]
+fn f_801fcc94_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcc94;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcc94, pc); }
+        match pc {
+            0x801fcc94 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcca4; continue; }
+                pc = 0x801fcc9c;
+            }
+            0x801fcc9c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcca4;
+            }
+            0x801fcca4 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x6));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcc94: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCCAC (0x801fccac, 24 bytes)
+#[inline(never)]
+pub fn f_801fccac(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fccac) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fccac); f_801fccac_b(c, 0x801fccac); crate::prof::exit(c, 0x801fccac); return; }
+    }
+    f_801fccac_b(c, 0x801fccac)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fccac_at(c: &mut Cpu, pc: u32) { f_801fccac_b(c, pc) }
+#[inline(always)]
+fn f_801fccac_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fccac;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fccac, pc); }
+        match pc {
+            0x801fccac => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fccbc; continue; }
+                pc = 0x801fccb4;
+            }
+            0x801fccb4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fccbc;
+            }
+            0x801fccbc => {
+                c.r[3] = c.lbz(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fccac: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainerDataBiosGetPtr (0x801fccc4, 44 bytes)
+#[inline(never)]
+pub fn f_801fccc4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fccc4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fccc4); f_801fccc4_b(c, 0x801fccc4); crate::prof::exit(c, 0x801fccc4); return; }
+    }
+    f_801fccc4_b(c, 0x801fccc4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fccc4_at(c: &mut Cpu, pc: u32) { f_801fccc4_b(c, pc) }
+#[inline(always)]
+fn f_801fccc4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fccc4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fccc4, pc); }
+        match pc {
+            0x801fccc4 => {
+                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff8700));
+                c.r[3] = c.r[3].rotate_left(0) & 0xffff;
+                c.r[0] = c.lwz(c.r[4]);
+                c.cmpu(0, c.r[3], c.r[0]);
+                if c.crbit(0) { pc = 0x801fcce0; continue; }
+                pc = 0x801fccd8;
+            }
+            0x801fccd8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcce0;
+            }
+            0x801fcce0 => {
+                c.r[0] = c.r[3].wrapping_mul(0x34);
+                c.r[3] = c.lwz(c.r[13].wrapping_add(0xffff8704));
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fccc4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetFightActionBuffPtr (0x801fccf0, 24 bytes)
+#[inline(never)]
+pub fn f_801fccf0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fccf0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fccf0); f_801fccf0_b(c, 0x801fccf0); crate::prof::exit(c, 0x801fccf0); return; }
+    }
+    f_801fccf0_b(c, 0x801fccf0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fccf0_at(c: &mut Cpu, pc: u32) { f_801fccf0_b(c, pc) }
+#[inline(always)]
+fn f_801fccf0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fccf0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fccf0, pc); }
+        match pc {
+            0x801fccf0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcd00; continue; }
+                pc = 0x801fccf8;
+            }
+            0x801fccf8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcd00;
+            }
+            0x801fcd00 => {
+                c.r[3] = c.r[3].wrapping_add(0x27c4);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fccf0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_SetControllerId (0x801fcd08, 16 bytes)
+#[inline(never)]
+pub fn f_801fcd08(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd08) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd08); f_801fcd08_b(c, 0x801fcd08); crate::prof::exit(c, 0x801fcd08); return; }
+    }
+    f_801fcd08_b(c, 0x801fcd08)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd08_at(c: &mut Cpu, pc: u32) { f_801fcd08_b(c, pc) }
+#[inline(always)]
+fn f_801fcd08_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd08;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd08, pc); }
+        match pc {
+            0x801fcd08 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcd10;
+            }
+            0x801fcd10 => {
+                c.stb(c.r[3].wrapping_add(0x27bc), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd08: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_SetNigeruCount (0x801fcd18, 16 bytes)
+#[inline(never)]
+pub fn f_801fcd18(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd18) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd18); f_801fcd18_b(c, 0x801fcd18); crate::prof::exit(c, 0x801fcd18); return; }
+    }
+    f_801fcd18_b(c, 0x801fcd18)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd18_at(c: &mut Cpu, pc: u32) { f_801fcd18_b(c, pc) }
+#[inline(always)]
+fn f_801fcd18_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd18;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd18, pc); }
+        match pc {
+            0x801fcd18 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcd20;
+            }
+            0x801fcd20 => {
+                c.stb(c.r[3].wrapping_add(0x27b5), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd18: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_SetKoban (0x801fcd28, 16 bytes)
+#[inline(never)]
+pub fn f_801fcd28(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd28) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd28); f_801fcd28_b(c, 0x801fcd28); crate::prof::exit(c, 0x801fcd28); return; }
+    }
+    f_801fcd28_b(c, 0x801fcd28)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd28_at(c: &mut Cpu, pc: u32) { f_801fcd28_b(c, pc) }
+#[inline(always)]
+fn f_801fcd28_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd28;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd28, pc); }
+        match pc {
+            0x801fcd28 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcd30;
+            }
+            0x801fcd30 => {
+                c.stw(c.r[3].wrapping_add(0x27b8), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd28: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_SetOkaneBai (0x801fcd38, 16 bytes)
+#[inline(never)]
+pub fn f_801fcd38(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd38) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd38); f_801fcd38_b(c, 0x801fcd38); crate::prof::exit(c, 0x801fcd38); return; }
+    }
+    f_801fcd38_b(c, 0x801fcd38)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd38_at(c: &mut Cpu, pc: u32) { f_801fcd38_b(c, pc) }
+#[inline(always)]
+fn f_801fcd38_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd38;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd38, pc); }
+        match pc {
+            0x801fcd38 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcd40;
+            }
+            0x801fcd40 => {
+                c.stb(c.r[3].wrapping_add(0x27b4), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd38: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_SetFightTrainerDataId (0x801fcd48, 16 bytes)
+#[inline(never)]
+pub fn f_801fcd48(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd48) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd48); f_801fcd48_b(c, 0x801fcd48); crate::prof::exit(c, 0x801fcd48); return; }
+    }
+    f_801fcd48_b(c, 0x801fcd48)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd48_at(c: &mut Cpu, pc: u32) { f_801fcd48_b(c, pc) }
+#[inline(always)]
+fn f_801fcd48_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd48;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd48, pc); }
+        match pc {
+            0x801fcd48 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcd50;
+            }
+            0x801fcd50 => {
+                c.sth(c.r[3], c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd48: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetFightTrainerEnemyPokemonAryPtr (0x801fcd58, 52 bytes)
+#[inline(never)]
+pub fn f_801fcd58(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd58) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd58); f_801fcd58_b(c, 0x801fcd58); crate::prof::exit(c, 0x801fcd58); return; }
+    }
+    f_801fcd58_b(c, 0x801fcd58)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd58_at(c: &mut Cpu, pc: u32) { f_801fcd58_b(c, pc) }
+#[inline(always)]
+fn f_801fcd58_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd58;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd58, pc); }
+        match pc {
+            0x801fcd58 => {
+                c.r[5] = c.r[3] | c.r[3];
+                c.rc(c.r[5]);
+                if !c.crbit(2) { pc = 0x801fcd68; continue; }
+                pc = 0x801fcd60;
+            }
+            0x801fcd60 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcd68;
+            }
+            0x801fcd68 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0xc);
+                if c.crbit(0) { pc = 0x801fcd7c; continue; }
+                pc = 0x801fcd74;
+            }
+            0x801fcd74 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcd7c;
+            }
+            0x801fcd7c => {
+                c.r[3] = c.r[0].wrapping_mul(0x14);
+                c.r[3] = c.r[3].wrapping_add(0x27f4);
+                c.r[3] = c.r[5].wrapping_add(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd58: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_SetSequencePtr (0x801fcd8c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcd8c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd8c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd8c); f_801fcd8c_b(c, 0x801fcd8c); crate::prof::exit(c, 0x801fcd8c); return; }
+    }
+    f_801fcd8c_b(c, 0x801fcd8c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd8c_at(c: &mut Cpu, pc: u32) { f_801fcd8c_b(c, pc) }
+#[inline(always)]
+fn f_801fcd8c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd8c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd8c, pc); }
+        match pc {
+            0x801fcd8c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcd94;
+            }
+            0x801fcd94 => {
+                c.stw(c.r[3].wrapping_add(0x27c0), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd8c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetSequencePtr (0x801fcd9c, 24 bytes)
+#[inline(never)]
+pub fn f_801fcd9c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcd9c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcd9c); f_801fcd9c_b(c, 0x801fcd9c); crate::prof::exit(c, 0x801fcd9c); return; }
+    }
+    f_801fcd9c_b(c, 0x801fcd9c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcd9c_at(c: &mut Cpu, pc: u32) { f_801fcd9c_b(c, pc) }
+#[inline(always)]
+fn f_801fcd9c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcd9c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcd9c, pc); }
+        match pc {
+            0x801fcd9c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcdac; continue; }
+                pc = 0x801fcda4;
+            }
+            0x801fcda4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcdac;
+            }
+            0x801fcdac => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x27c0));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcd9c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetControllerId (0x801fcdb4, 24 bytes)
+#[inline(never)]
+pub fn f_801fcdb4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcdb4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcdb4); f_801fcdb4_b(c, 0x801fcdb4); crate::prof::exit(c, 0x801fcdb4); return; }
+    }
+    f_801fcdb4_b(c, 0x801fcdb4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcdb4_at(c: &mut Cpu, pc: u32) { f_801fcdb4_b(c, pc) }
+#[inline(always)]
+fn f_801fcdb4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcdb4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcdb4, pc); }
+        match pc {
+            0x801fcdb4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcdc4; continue; }
+                pc = 0x801fcdbc;
+            }
+            0x801fcdbc => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcdc4;
+            }
+            0x801fcdc4 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x27bc));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcdb4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetNigeruCount (0x801fcdcc, 24 bytes)
+#[inline(never)]
+pub fn f_801fcdcc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcdcc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcdcc); f_801fcdcc_b(c, 0x801fcdcc); crate::prof::exit(c, 0x801fcdcc); return; }
+    }
+    f_801fcdcc_b(c, 0x801fcdcc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcdcc_at(c: &mut Cpu, pc: u32) { f_801fcdcc_b(c, pc) }
+#[inline(always)]
+fn f_801fcdcc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcdcc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcdcc, pc); }
+        match pc {
+            0x801fcdcc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcddc; continue; }
+                pc = 0x801fcdd4;
+            }
+            0x801fcdd4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcddc;
+            }
+            0x801fcddc => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x27b5));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcdcc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetKoban (0x801fcde4, 24 bytes)
+#[inline(never)]
+pub fn f_801fcde4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcde4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcde4); f_801fcde4_b(c, 0x801fcde4); crate::prof::exit(c, 0x801fcde4); return; }
+    }
+    f_801fcde4_b(c, 0x801fcde4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcde4_at(c: &mut Cpu, pc: u32) { f_801fcde4_b(c, pc) }
+#[inline(always)]
+fn f_801fcde4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcde4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcde4, pc); }
+        match pc {
+            0x801fcde4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcdf4; continue; }
+                pc = 0x801fcdec;
+            }
+            0x801fcdec => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcdf4;
+            }
+            0x801fcdf4 => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x27b8));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcde4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetOkaneBai (0x801fcdfc, 24 bytes)
+#[inline(never)]
+pub fn f_801fcdfc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcdfc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcdfc); f_801fcdfc_b(c, 0x801fcdfc); crate::prof::exit(c, 0x801fcdfc); return; }
+    }
+    f_801fcdfc_b(c, 0x801fcdfc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcdfc_at(c: &mut Cpu, pc: u32) { f_801fcdfc_b(c, pc) }
+#[inline(always)]
+fn f_801fcdfc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcdfc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcdfc, pc); }
+        match pc {
+            0x801fcdfc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fce0c; continue; }
+                pc = 0x801fce04;
+            }
+            0x801fce04 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fce0c;
+            }
+            0x801fce0c => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x27b4));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcdfc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetFightoutPokemonBuffPtr (0x801fce14, 24 bytes)
+#[inline(never)]
+pub fn f_801fce14(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fce14) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fce14); f_801fce14_b(c, 0x801fce14); crate::prof::exit(c, 0x801fce14); return; }
+    }
+    f_801fce14_b(c, 0x801fce14)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fce14_at(c: &mut Cpu, pc: u32) { f_801fce14_b(c, pc) }
+#[inline(always)]
+fn f_801fce14_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fce14;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fce14, pc); }
+        match pc {
+            0x801fce14 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fce24; continue; }
+                pc = 0x801fce1c;
+            }
+            0x801fce1c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fce24;
+            }
+            0x801fce24 => {
+                c.r[3] = c.r[3].wrapping_add(0x20d4);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fce14: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetFightoutPokemonPtr (0x801fce2c, 52 bytes)
+#[inline(never)]
+pub fn f_801fce2c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fce2c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fce2c); f_801fce2c_b(c, 0x801fce2c); crate::prof::exit(c, 0x801fce2c); return; }
+    }
+    f_801fce2c_b(c, 0x801fce2c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fce2c_at(c: &mut Cpu, pc: u32) { f_801fce2c_b(c, pc) }
+#[inline(always)]
+fn f_801fce2c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fce2c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fce2c, pc); }
+        match pc {
+            0x801fce2c => {
+                c.r[5] = c.r[3] | c.r[3];
+                c.rc(c.r[5]);
+                if !c.crbit(2) { pc = 0x801fce3c; continue; }
+                pc = 0x801fce34;
+            }
+            0x801fce34 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fce3c;
+            }
+            0x801fce3c => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xffff;
+                c.cmpu(0, c.r[0], 0x2);
+                if c.crbit(0) { pc = 0x801fce50; continue; }
+                pc = 0x801fce48;
+            }
+            0x801fce48 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fce50;
+            }
+            0x801fce50 => {
+                c.r[3] = c.r[0].wrapping_mul(0x6e0);
+                c.r[3] = c.r[3].wrapping_add(0x1314);
+                c.r[3] = c.r[5].wrapping_add(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fce2c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetFightPokemonPtr (0x801fce60, 52 bytes)
+#[inline(never)]
+pub fn f_801fce60(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fce60) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fce60); f_801fce60_b(c, 0x801fce60); crate::prof::exit(c, 0x801fce60); return; }
+    }
+    f_801fce60_b(c, 0x801fce60)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fce60_at(c: &mut Cpu, pc: u32) { f_801fce60_b(c, pc) }
+#[inline(always)]
+fn f_801fce60_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fce60;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fce60, pc); }
+        match pc {
+            0x801fce60 => {
+                c.r[5] = c.r[3] | c.r[3];
+                c.rc(c.r[5]);
+                if !c.crbit(2) { pc = 0x801fce70; continue; }
+                pc = 0x801fce68;
+            }
+            0x801fce68 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fce70;
+            }
+            0x801fce70 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xffff;
+                c.cmpu(0, c.r[0], 0x6);
+                if c.crbit(0) { pc = 0x801fce84; continue; }
+                pc = 0x801fce7c;
+            }
+            0x801fce7c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fce84;
+            }
+            0x801fce84 => {
+                c.r[3] = c.r[0].wrapping_mul(0x154);
+                c.r[3] = c.r[3].wrapping_add(0xb1c);
+                c.r[3] = c.r[5].wrapping_add(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fce60: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetFightTrainerDataId (0x801fce94, 24 bytes)
+#[inline(never)]
+pub fn f_801fce94(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fce94) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fce94); f_801fce94_b(c, 0x801fce94); crate::prof::exit(c, 0x801fce94); return; }
+    }
+    f_801fce94_b(c, 0x801fce94)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fce94_at(c: &mut Cpu, pc: u32) { f_801fce94_b(c, pc) }
+#[inline(always)]
+fn f_801fce94_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fce94;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fce94, pc); }
+        match pc {
+            0x801fce94 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcea4; continue; }
+                pc = 0x801fce9c;
+            }
+            0x801fce9c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcea4;
+            }
+            0x801fcea4 => {
+                c.r[3] = c.lhz(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fce94: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightTrainer_GetHeroPtr (0x801fceac, 24 bytes)
+#[inline(never)]
+pub fn f_801fceac(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fceac) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fceac); f_801fceac_b(c, 0x801fceac); crate::prof::exit(c, 0x801fceac); return; }
+    }
+    f_801fceac_b(c, 0x801fceac)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fceac_at(c: &mut Cpu, pc: u32) { f_801fceac_b(c, pc) }
+#[inline(always)]
+fn f_801fceac_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fceac;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fceac, pc); }
+        match pc {
+            0x801fceac => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcebc; continue; }
+                pc = 0x801fceb4;
+            }
+            0x801fceb4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcebc;
+            }
+            0x801fcebc => {
+                c.r[3] = c.r[3].wrapping_add(0x4);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fceac: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fn_801FCEC4 (0x801fcec4, 56 bytes)
+#[inline(never)]
+pub fn f_801fcec4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcec4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcec4); f_801fcec4_b(c, 0x801fcec4); crate::prof::exit(c, 0x801fcec4); return; }
+    }
+    f_801fcec4_b(c, 0x801fcec4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcec4_at(c: &mut Cpu, pc: u32) { f_801fcec4_b(c, pc) }
+#[inline(always)]
+fn f_801fcec4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcec4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcec4, pc); }
+        match pc {
+            0x801fcec4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcecc;
+            }
+            0x801fcecc => {
+                c.cmpu(0, c.r[4], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fced4;
+            }
+            0x801fced4 => {
+                c.r[0] = 0xdc;
+                c.r[5] = c.r[3].wrapping_add(0xfffffffc);
+                c.r[4] = c.r[4].wrapping_add(0xfffffffc);
+                c.mtspr(9, c.r[0]);
+                pc = 0x801fcee4;
+            }
+            0x801fcee4 => {
+                c.r[3] = c.lwz(c.r[4].wrapping_add(0x4));
+                { let ea = c.r[4].wrapping_add(0x8); c.r[0] = c.lwz(ea); c.r[4] = ea; }
+                c.stw(c.r[5].wrapping_add(0x4), c.r[3]);
+                { let ea = c.r[5].wrapping_add(0x8); c.stw(ea, c.r[0]); c.r[5] = ea; }
+                c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x801fcee4; continue; }
+                pc = 0x801fcef8;
+            }
+            0x801fcef8 => {
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcec4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetOumuWazaDataId (0x801fcefc, 16 bytes)
+#[inline(never)]
+pub fn f_801fcefc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcefc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcefc); f_801fcefc_b(c, 0x801fcefc); crate::prof::exit(c, 0x801fcefc); return; }
+    }
+    f_801fcefc_b(c, 0x801fcefc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcefc_at(c: &mut Cpu, pc: u32) { f_801fcefc_b(c, pc) }
+#[inline(always)]
+fn f_801fcefc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcefc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcefc, pc); }
+        match pc {
+            0x801fcefc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf04;
+            }
+            0x801fcf04 => {
+                c.sth(c.r[3].wrapping_add(0x678), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcefc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetGamanDamageTargetId (0x801fcf0c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf0c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf0c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf0c); f_801fcf0c_b(c, 0x801fcf0c); crate::prof::exit(c, 0x801fcf0c); return; }
+    }
+    f_801fcf0c_b(c, 0x801fcf0c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf0c_at(c: &mut Cpu, pc: u32) { f_801fcf0c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf0c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf0c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf0c, pc); }
+        match pc {
+            0x801fcf0c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf14;
+            }
+            0x801fcf14 => {
+                c.sth(c.r[3].wrapping_add(0x676), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf0c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetGamanDamageValue (0x801fcf1c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf1c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf1c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf1c); f_801fcf1c_b(c, 0x801fcf1c); crate::prof::exit(c, 0x801fcf1c); return; }
+    }
+    f_801fcf1c_b(c, 0x801fcf1c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf1c_at(c: &mut Cpu, pc: u32) { f_801fcf1c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf1c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf1c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf1c, pc); }
+        match pc {
+            0x801fcf1c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf24;
+            }
+            0x801fcf24 => {
+                c.sth(c.r[3].wrapping_add(0x674), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf1c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetHitWazaZokuseiDataId (0x801fcf2c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf2c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf2c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf2c); f_801fcf2c_b(c, 0x801fcf2c); crate::prof::exit(c, 0x801fcf2c); return; }
+    }
+    f_801fcf2c_b(c, 0x801fcf2c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf2c_at(c: &mut Cpu, pc: u32) { f_801fcf2c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf2c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf2c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf2c, pc); }
+        match pc {
+            0x801fcf2c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf34;
+            }
+            0x801fcf34 => {
+                c.sth(c.r[3].wrapping_add(0x672), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf2c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetHitWazaDataId (0x801fcf3c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf3c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf3c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf3c); f_801fcf3c_b(c, 0x801fcf3c); crate::prof::exit(c, 0x801fcf3c); return; }
+    }
+    f_801fcf3c_b(c, 0x801fcf3c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf3c_at(c: &mut Cpu, pc: u32) { f_801fcf3c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf3c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf3c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf3c, pc); }
+        match pc {
+            0x801fcf3c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf44;
+            }
+            0x801fcf44 => {
+                c.sth(c.r[3].wrapping_add(0x670), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf3c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetLastReceiveWazaTargetDataId (0x801fcf4c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf4c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf4c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf4c); f_801fcf4c_b(c, 0x801fcf4c); crate::prof::exit(c, 0x801fcf4c); return; }
+    }
+    f_801fcf4c_b(c, 0x801fcf4c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf4c_at(c: &mut Cpu, pc: u32) { f_801fcf4c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf4c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf4c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf4c, pc); }
+        match pc {
+            0x801fcf4c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf54;
+            }
+            0x801fcf54 => {
+                c.sth(c.r[3].wrapping_add(0x66e), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf4c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetLastUseWazaDataId (0x801fcf5c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf5c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf5c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf5c); f_801fcf5c_b(c, 0x801fcf5c); crate::prof::exit(c, 0x801fcf5c); return; }
+    }
+    f_801fcf5c_b(c, 0x801fcf5c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf5c_at(c: &mut Cpu, pc: u32) { f_801fcf5c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf5c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf5c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf5c, pc); }
+        match pc {
+            0x801fcf5c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf64;
+            }
+            0x801fcf64 => {
+                c.sth(c.r[3].wrapping_add(0x66c), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf5c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetLastSelectWazaDataId (0x801fcf6c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf6c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf6c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf6c); f_801fcf6c_b(c, 0x801fcf6c); crate::prof::exit(c, 0x801fcf6c); return; }
+    }
+    f_801fcf6c_b(c, 0x801fcf6c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf6c_at(c: &mut Cpu, pc: u32) { f_801fcf6c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf6c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf6c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf6c, pc); }
+        match pc {
+            0x801fcf6c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf74;
+            }
+            0x801fcf74 => {
+                c.sth(c.r[3].wrapping_add(0x66a), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf6c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetSketchWazaDataId (0x801fcf7c, 16 bytes)
+#[inline(never)]
+pub fn f_801fcf7c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf7c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf7c); f_801fcf7c_b(c, 0x801fcf7c); crate::prof::exit(c, 0x801fcf7c); return; }
+    }
+    f_801fcf7c_b(c, 0x801fcf7c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf7c_at(c: &mut Cpu, pc: u32) { f_801fcf7c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf7c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf7c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf7c, pc); }
+        match pc {
+            0x801fcf7c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fcf84;
+            }
+            0x801fcf84 => {
+                c.sth(c.r[3].wrapping_add(0x668), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf7c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetKeepFightWazaPtr (0x801fcf8c, 24 bytes)
+#[inline(never)]
+pub fn f_801fcf8c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcf8c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcf8c); f_801fcf8c_b(c, 0x801fcf8c); crate::prof::exit(c, 0x801fcf8c); return; }
+    }
+    f_801fcf8c_b(c, 0x801fcf8c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcf8c_at(c: &mut Cpu, pc: u32) { f_801fcf8c_b(c, pc) }
+#[inline(always)]
+fn f_801fcf8c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcf8c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcf8c, pc); }
+        match pc {
+            0x801fcf8c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcf9c; continue; }
+                pc = 0x801fcf94;
+            }
+            0x801fcf94 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcf9c;
+            }
+            0x801fcf9c => {
+                c.r[3] = c.r[3].wrapping_add(0x548);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcf8c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetOumuWazaDataId (0x801fcfa4, 24 bytes)
+#[inline(never)]
+pub fn f_801fcfa4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcfa4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcfa4); f_801fcfa4_b(c, 0x801fcfa4); crate::prof::exit(c, 0x801fcfa4); return; }
+    }
+    f_801fcfa4_b(c, 0x801fcfa4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcfa4_at(c: &mut Cpu, pc: u32) { f_801fcfa4_b(c, pc) }
+#[inline(always)]
+fn f_801fcfa4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcfa4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcfa4, pc); }
+        match pc {
+            0x801fcfa4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcfb4; continue; }
+                pc = 0x801fcfac;
+            }
+            0x801fcfac => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcfb4;
+            }
+            0x801fcfb4 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x678));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcfa4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetGamanDamageTargetId (0x801fcfbc, 24 bytes)
+#[inline(never)]
+pub fn f_801fcfbc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcfbc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcfbc); f_801fcfbc_b(c, 0x801fcfbc); crate::prof::exit(c, 0x801fcfbc); return; }
+    }
+    f_801fcfbc_b(c, 0x801fcfbc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcfbc_at(c: &mut Cpu, pc: u32) { f_801fcfbc_b(c, pc) }
+#[inline(always)]
+fn f_801fcfbc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcfbc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcfbc, pc); }
+        match pc {
+            0x801fcfbc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcfcc; continue; }
+                pc = 0x801fcfc4;
+            }
+            0x801fcfc4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcfcc;
+            }
+            0x801fcfcc => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x676));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcfbc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetGamanDamageValue (0x801fcfd4, 24 bytes)
+#[inline(never)]
+pub fn f_801fcfd4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcfd4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcfd4); f_801fcfd4_b(c, 0x801fcfd4); crate::prof::exit(c, 0x801fcfd4); return; }
+    }
+    f_801fcfd4_b(c, 0x801fcfd4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcfd4_at(c: &mut Cpu, pc: u32) { f_801fcfd4_b(c, pc) }
+#[inline(always)]
+fn f_801fcfd4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcfd4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcfd4, pc); }
+        match pc {
+            0x801fcfd4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcfe4; continue; }
+                pc = 0x801fcfdc;
+            }
+            0x801fcfdc => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fcfe4;
+            }
+            0x801fcfe4 => {
+                c.r[3] = c.lha(c.r[3].wrapping_add(0x674));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcfd4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetHitWazaZokuseiDataId (0x801fcfec, 24 bytes)
+#[inline(never)]
+pub fn f_801fcfec(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fcfec) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fcfec); f_801fcfec_b(c, 0x801fcfec); crate::prof::exit(c, 0x801fcfec); return; }
+    }
+    f_801fcfec_b(c, 0x801fcfec)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fcfec_at(c: &mut Cpu, pc: u32) { f_801fcfec_b(c, pc) }
+#[inline(always)]
+fn f_801fcfec_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fcfec;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fcfec, pc); }
+        match pc {
+            0x801fcfec => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fcffc; continue; }
+                pc = 0x801fcff4;
+            }
+            0x801fcff4 => {
+                c.r[3] = 0x9;
+                if true { return; }
+                pc = 0x801fcffc;
+            }
+            0x801fcffc => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x672));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fcfec: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetHitWazaDataId (0x801fd004, 24 bytes)
+#[inline(never)]
+pub fn f_801fd004(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd004) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd004); f_801fd004_b(c, 0x801fd004); crate::prof::exit(c, 0x801fd004); return; }
+    }
+    f_801fd004_b(c, 0x801fd004)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd004_at(c: &mut Cpu, pc: u32) { f_801fd004_b(c, pc) }
+#[inline(always)]
+fn f_801fd004_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd004;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd004, pc); }
+        match pc {
+            0x801fd004 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd014; continue; }
+                pc = 0x801fd00c;
+            }
+            0x801fd00c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd014;
+            }
+            0x801fd014 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x670));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd004: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetLastReceiveWazaTargetDataId (0x801fd01c, 24 bytes)
+#[inline(never)]
+pub fn f_801fd01c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd01c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd01c); f_801fd01c_b(c, 0x801fd01c); crate::prof::exit(c, 0x801fd01c); return; }
+    }
+    f_801fd01c_b(c, 0x801fd01c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd01c_at(c: &mut Cpu, pc: u32) { f_801fd01c_b(c, pc) }
+#[inline(always)]
+fn f_801fd01c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd01c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd01c, pc); }
+        match pc {
+            0x801fd01c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd02c; continue; }
+                pc = 0x801fd024;
+            }
+            0x801fd024 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd02c;
+            }
+            0x801fd02c => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x66e));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd01c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetLastUseWazaDataId (0x801fd034, 24 bytes)
+#[inline(never)]
+pub fn f_801fd034(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd034) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd034); f_801fd034_b(c, 0x801fd034); crate::prof::exit(c, 0x801fd034); return; }
+    }
+    f_801fd034_b(c, 0x801fd034)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd034_at(c: &mut Cpu, pc: u32) { f_801fd034_b(c, pc) }
+#[inline(always)]
+fn f_801fd034_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd034;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd034, pc); }
+        match pc {
+            0x801fd034 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd044; continue; }
+                pc = 0x801fd03c;
+            }
+            0x801fd03c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd044;
+            }
+            0x801fd044 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x66c));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd034: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetLastSelectWazaDataId (0x801fd04c, 24 bytes)
+#[inline(never)]
+pub fn f_801fd04c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd04c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd04c); f_801fd04c_b(c, 0x801fd04c); crate::prof::exit(c, 0x801fd04c); return; }
+    }
+    f_801fd04c_b(c, 0x801fd04c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd04c_at(c: &mut Cpu, pc: u32) { f_801fd04c_b(c, pc) }
+#[inline(always)]
+fn f_801fd04c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd04c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd04c, pc); }
+        match pc {
+            0x801fd04c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd05c; continue; }
+                pc = 0x801fd054;
+            }
+            0x801fd054 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd05c;
+            }
+            0x801fd05c => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x66a));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd04c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetSketchWazaDataId (0x801fd064, 24 bytes)
+#[inline(never)]
+pub fn f_801fd064(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd064) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd064); f_801fd064_b(c, 0x801fd064); crate::prof::exit(c, 0x801fd064); return; }
+    }
+    f_801fd064_b(c, 0x801fd064)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd064_at(c: &mut Cpu, pc: u32) { f_801fd064_b(c, pc) }
+#[inline(always)]
+fn f_801fd064_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd064;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd064, pc); }
+        match pc {
+            0x801fd064 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd074; continue; }
+                pc = 0x801fd06c;
+            }
+            0x801fd06c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd074;
+            }
+            0x801fd074 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x668));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd064: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosSetDamage (0x801fd07c, 16 bytes)
+#[inline(never)]
+pub fn f_801fd07c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd07c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd07c); f_801fd07c_b(c, 0x801fd07c); crate::prof::exit(c, 0x801fd07c); return; }
+    }
+    f_801fd07c_b(c, 0x801fd07c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd07c_at(c: &mut Cpu, pc: u32) { f_801fd07c_b(c, pc) }
+#[inline(always)]
+fn f_801fd07c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd07c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd07c, pc); }
+        match pc {
+            0x801fd07c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd084;
+            }
+            0x801fd084 => {
+                c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd07c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosSetInitHp (0x801fd08c, 16 bytes)
+#[inline(never)]
+pub fn f_801fd08c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd08c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd08c); f_801fd08c_b(c, 0x801fd08c); crate::prof::exit(c, 0x801fd08c); return; }
+    }
+    f_801fd08c_b(c, 0x801fd08c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd08c_at(c: &mut Cpu, pc: u32) { f_801fd08c_b(c, pc) }
+#[inline(always)]
+fn f_801fd08c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd08c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd08c, pc); }
+        match pc {
+            0x801fd08c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd094;
+            }
+            0x801fd094 => {
+                c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd08c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosSetOumuWazaDataId (0x801fd09c, 16 bytes)
+#[inline(never)]
+pub fn f_801fd09c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd09c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd09c); f_801fd09c_b(c, 0x801fd09c); crate::prof::exit(c, 0x801fd09c); return; }
+    }
+    f_801fd09c_b(c, 0x801fd09c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd09c_at(c: &mut Cpu, pc: u32) { f_801fd09c_b(c, pc) }
+#[inline(always)]
+fn f_801fd09c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd09c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd09c, pc); }
+        match pc {
+            0x801fd09c => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd0a4;
+            }
+            0x801fd0a4 => {
+                c.sth(c.r[3].wrapping_add(0x4), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd09c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosSetTargetFightOutPokemonPtr (0x801fd0ac, 16 bytes)
+#[inline(never)]
+pub fn f_801fd0ac(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd0ac) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd0ac); f_801fd0ac_b(c, 0x801fd0ac); crate::prof::exit(c, 0x801fd0ac); return; }
+    }
+    f_801fd0ac_b(c, 0x801fd0ac)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd0ac_at(c: &mut Cpu, pc: u32) { f_801fd0ac_b(c, pc) }
+#[inline(always)]
+fn f_801fd0ac_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd0ac;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd0ac, pc); }
+        match pc {
+            0x801fd0ac => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd0b4;
+            }
+            0x801fd0b4 => {
+                c.stw(c.r[3], c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd0ac: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosGetDamage (0x801fd0bc, 24 bytes)
+#[inline(never)]
+pub fn f_801fd0bc(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd0bc) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd0bc); f_801fd0bc_b(c, 0x801fd0bc); crate::prof::exit(c, 0x801fd0bc); return; }
+    }
+    f_801fd0bc_b(c, 0x801fd0bc)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd0bc_at(c: &mut Cpu, pc: u32) { f_801fd0bc_b(c, pc) }
+#[inline(always)]
+fn f_801fd0bc_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd0bc;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd0bc, pc); }
+        match pc {
+            0x801fd0bc => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd0cc; continue; }
+                pc = 0x801fd0c4;
+            }
+            0x801fd0c4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd0cc;
+            }
+            0x801fd0cc => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x8));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd0bc: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosGetInitHp (0x801fd0d4, 24 bytes)
+#[inline(never)]
+pub fn f_801fd0d4(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd0d4) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd0d4); f_801fd0d4_b(c, 0x801fd0d4); crate::prof::exit(c, 0x801fd0d4); return; }
+    }
+    f_801fd0d4_b(c, 0x801fd0d4)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd0d4_at(c: &mut Cpu, pc: u32) { f_801fd0d4_b(c, pc) }
+#[inline(always)]
+fn f_801fd0d4_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd0d4;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd0d4, pc); }
+        match pc {
+            0x801fd0d4 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd0e4; continue; }
+                pc = 0x801fd0dc;
+            }
+            0x801fd0dc => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd0e4;
+            }
+            0x801fd0e4 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x6));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd0d4: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosGetOumuWazaDataId (0x801fd0ec, 24 bytes)
+#[inline(never)]
+pub fn f_801fd0ec(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd0ec) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd0ec); f_801fd0ec_b(c, 0x801fd0ec); crate::prof::exit(c, 0x801fd0ec); return; }
+    }
+    f_801fd0ec_b(c, 0x801fd0ec)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd0ec_at(c: &mut Cpu, pc: u32) { f_801fd0ec_b(c, pc) }
+#[inline(always)]
+fn f_801fd0ec_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd0ec;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd0ec, pc); }
+        match pc {
+            0x801fd0ec => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd0fc; continue; }
+                pc = 0x801fd0f4;
+            }
+            0x801fd0f4 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd0fc;
+            }
+            0x801fd0fc => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x4));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd0ec: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonEnemyBiosGetTargetFightOutPokemonPtr (0x801fd104, 24 bytes)
+#[inline(never)]
+pub fn f_801fd104(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd104) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd104); f_801fd104_b(c, 0x801fd104); crate::prof::exit(c, 0x801fd104); return; }
+    }
+    f_801fd104_b(c, 0x801fd104)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd104_at(c: &mut Cpu, pc: u32) { f_801fd104_b(c, pc) }
+#[inline(always)]
+fn f_801fd104_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd104;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd104, pc); }
+        match pc {
+            0x801fd104 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd114; continue; }
+                pc = 0x801fd10c;
+            }
+            0x801fd10c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd114;
+            }
+            0x801fd114 => {
+                c.r[3] = c.lwz(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd104: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetFightOutPokemonEnemyPtr (0x801fd11c, 52 bytes)
+#[inline(never)]
+pub fn f_801fd11c(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd11c) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd11c); f_801fd11c_b(c, 0x801fd11c); crate::prof::exit(c, 0x801fd11c); return; }
+    }
+    f_801fd11c_b(c, 0x801fd11c)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd11c_at(c: &mut Cpu, pc: u32) { f_801fd11c_b(c, pc) }
+#[inline(always)]
+fn f_801fd11c_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd11c;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd11c, pc); }
+        match pc {
+            0x801fd11c => {
+                c.r[5] = c.r[3] | c.r[3];
+                c.rc(c.r[5]);
+                if !c.crbit(2) { pc = 0x801fd12c; continue; }
+                pc = 0x801fd124;
+            }
+            0x801fd124 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd12c;
+            }
+            0x801fd12c => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xffff;
+                c.cmpu(0, c.r[0], 0x4);
+                if c.crbit(0) { pc = 0x801fd140; continue; }
+                pc = 0x801fd138;
+            }
+            0x801fd138 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd140;
+            }
+            0x801fd140 => {
+                c.r[3] = c.r[0].wrapping_mul(0xc);
+                c.r[3] = c.r[3].wrapping_add(0x6b0);
+                c.r[3] = c.r[5].wrapping_add(c.r[3]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd11c: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetIrekaeTargetEntryId (0x801fd150, 16 bytes)
+#[inline(never)]
+pub fn f_801fd150(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd150) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd150); f_801fd150_b(c, 0x801fd150); crate::prof::exit(c, 0x801fd150); return; }
+    }
+    f_801fd150_b(c, 0x801fd150)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd150_at(c: &mut Cpu, pc: u32) { f_801fd150_b(c, pc) }
+#[inline(always)]
+fn f_801fd150_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd150;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd150, pc); }
+        match pc {
+            0x801fd150 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd158;
+            }
+            0x801fd158 => {
+                c.sth(c.r[3].wrapping_add(0x6ae), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd150: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetIrekaeTargetEntryId (0x801fd160, 24 bytes)
+#[inline(never)]
+pub fn f_801fd160(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd160) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd160); f_801fd160_b(c, 0x801fd160); crate::prof::exit(c, 0x801fd160); return; }
+    }
+    f_801fd160_b(c, 0x801fd160)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd160_at(c: &mut Cpu, pc: u32) { f_801fd160_b(c, pc) }
+#[inline(always)]
+fn f_801fd160_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd160;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd160, pc); }
+        match pc {
+            0x801fd160 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd170; continue; }
+                pc = 0x801fd168;
+            }
+            0x801fd168 => {
+                c.r[3] = 0xffffffff;
+                if true { return; }
+                pc = 0x801fd170;
+            }
+            0x801fd170 => {
+                c.r[3] = c.lha(c.r[3].wrapping_add(0x6ae));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd160: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetKizetuFlag (0x801fd178, 16 bytes)
+#[inline(never)]
+pub fn f_801fd178(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd178) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd178); f_801fd178_b(c, 0x801fd178); crate::prof::exit(c, 0x801fd178); return; }
+    }
+    f_801fd178_b(c, 0x801fd178)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd178_at(c: &mut Cpu, pc: u32) { f_801fd178_b(c, pc) }
+#[inline(always)]
+fn f_801fd178_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd178;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd178, pc); }
+        match pc {
+            0x801fd178 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd180;
+            }
+            0x801fd180 => {
+                c.stb(c.r[3].wrapping_add(0x6ac), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd178: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetKizetuFlag (0x801fd188, 24 bytes)
+#[inline(never)]
+pub fn f_801fd188(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd188) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd188); f_801fd188_b(c, 0x801fd188); crate::prof::exit(c, 0x801fd188); return; }
+    }
+    f_801fd188_b(c, 0x801fd188)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd188_at(c: &mut Cpu, pc: u32) { f_801fd188_b(c, pc) }
+#[inline(always)]
+fn f_801fd188_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd188;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd188, pc); }
+        match pc {
+            0x801fd188 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd198; continue; }
+                pc = 0x801fd190;
+            }
+            0x801fd190 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd198;
+            }
+            0x801fd198 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x6ac));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd188: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetMyselfDamageSpeTargetId (0x801fd1a0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd1a0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd1a0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd1a0); f_801fd1a0_b(c, 0x801fd1a0); crate::prof::exit(c, 0x801fd1a0); return; }
+    }
+    f_801fd1a0_b(c, 0x801fd1a0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd1a0_at(c: &mut Cpu, pc: u32) { f_801fd1a0_b(c, pc) }
+#[inline(always)]
+fn f_801fd1a0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd1a0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd1a0, pc); }
+        match pc {
+            0x801fd1a0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd1a8;
+            }
+            0x801fd1a8 => {
+                c.sth(c.r[3].wrapping_add(0x6aa), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd1a0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetMyselfDamageSpeValue (0x801fd1b0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd1b0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd1b0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd1b0); f_801fd1b0_b(c, 0x801fd1b0); crate::prof::exit(c, 0x801fd1b0); return; }
+    }
+    f_801fd1b0_b(c, 0x801fd1b0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd1b0_at(c: &mut Cpu, pc: u32) { f_801fd1b0_b(c, pc) }
+#[inline(always)]
+fn f_801fd1b0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd1b0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd1b0, pc); }
+        match pc {
+            0x801fd1b0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd1b8;
+            }
+            0x801fd1b8 => {
+                c.sth(c.r[3].wrapping_add(0x6a8), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd1b0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetMyselfDamageAtkTargetId (0x801fd1c0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd1c0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd1c0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd1c0); f_801fd1c0_b(c, 0x801fd1c0); crate::prof::exit(c, 0x801fd1c0); return; }
+    }
+    f_801fd1c0_b(c, 0x801fd1c0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd1c0_at(c: &mut Cpu, pc: u32) { f_801fd1c0_b(c, pc) }
+#[inline(always)]
+fn f_801fd1c0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd1c0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd1c0, pc); }
+        match pc {
+            0x801fd1c0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd1c8;
+            }
+            0x801fd1c8 => {
+                c.sth(c.r[3].wrapping_add(0x6a6), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd1c0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetMyselfDamageAtkValue (0x801fd1d0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd1d0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd1d0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd1d0); f_801fd1d0_b(c, 0x801fd1d0); crate::prof::exit(c, 0x801fd1d0); return; }
+    }
+    f_801fd1d0_b(c, 0x801fd1d0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd1d0_at(c: &mut Cpu, pc: u32) { f_801fd1d0_b(c, pc) }
+#[inline(always)]
+fn f_801fd1d0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd1d0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd1d0, pc); }
+        match pc {
+            0x801fd1d0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd1d8;
+            }
+            0x801fd1d8 => {
+                c.sth(c.r[3].wrapping_add(0x6a4), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd1d0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetKaigaraDamageValue (0x801fd1e0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd1e0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd1e0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd1e0); f_801fd1e0_b(c, 0x801fd1e0); crate::prof::exit(c, 0x801fd1e0); return; }
+    }
+    f_801fd1e0_b(c, 0x801fd1e0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd1e0_at(c: &mut Cpu, pc: u32) { f_801fd1e0_b(c, pc) }
+#[inline(always)]
+fn f_801fd1e0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd1e0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd1e0, pc); }
+        match pc {
+            0x801fd1e0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd1e8;
+            }
+            0x801fd1e8 => {
+                c.stw(c.r[3].wrapping_add(0x6a0), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd1e0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetItemKoraetaFlag (0x801fd1f0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd1f0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd1f0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd1f0); f_801fd1f0_b(c, 0x801fd1f0); crate::prof::exit(c, 0x801fd1f0); return; }
+    }
+    f_801fd1f0_b(c, 0x801fd1f0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd1f0_at(c: &mut Cpu, pc: u32) { f_801fd1f0_b(c, pc) }
+#[inline(always)]
+fn f_801fd1f0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd1f0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd1f0, pc); }
+        match pc {
+            0x801fd1f0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd1f8;
+            }
+            0x801fd1f8 => {
+                c.stb(c.r[3].wrapping_add(0x69e), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd1f0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetIrekaetaFlag (0x801fd200, 16 bytes)
+#[inline(never)]
+pub fn f_801fd200(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd200) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd200); f_801fd200_b(c, 0x801fd200); crate::prof::exit(c, 0x801fd200); return; }
+    }
+    f_801fd200_b(c, 0x801fd200)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd200_at(c: &mut Cpu, pc: u32) { f_801fd200_b(c, pc) }
+#[inline(always)]
+fn f_801fd200_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd200;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd200, pc); }
+        match pc {
+            0x801fd200 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd208;
+            }
+            0x801fd208 => {
+                c.stb(c.r[3].wrapping_add(0x69d), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd200: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetNoPressureFlag (0x801fd210, 16 bytes)
+#[inline(never)]
+pub fn f_801fd210(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd210) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd210); f_801fd210_b(c, 0x801fd210); crate::prof::exit(c, 0x801fd210); return; }
+    }
+    f_801fd210_b(c, 0x801fd210)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd210_at(c: &mut Cpu, pc: u32) { f_801fd210_b(c, pc) }
+#[inline(always)]
+fn f_801fd210_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd210;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd210, pc); }
+        match pc {
+            0x801fd210 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd218;
+            }
+            0x801fd218 => {
+                c.stb(c.r[3].wrapping_add(0x69c), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd210: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetDoTraceFlag (0x801fd220, 16 bytes)
+#[inline(never)]
+pub fn f_801fd220(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd220) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd220); f_801fd220_b(c, 0x801fd220); crate::prof::exit(c, 0x801fd220); return; }
+    }
+    f_801fd220_b(c, 0x801fd220)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd220_at(c: &mut Cpu, pc: u32) { f_801fd220_b(c, pc) }
+#[inline(always)]
+fn f_801fd220_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd220;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd220, pc); }
+        match pc {
+            0x801fd220 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd228;
+            }
+            0x801fd228 => {
+                c.stb(c.r[3].wrapping_add(0x69b), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd220: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetDoIkakuFlag (0x801fd230, 16 bytes)
+#[inline(never)]
+pub fn f_801fd230(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd230) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd230); f_801fd230_b(c, 0x801fd230); crate::prof::exit(c, 0x801fd230); return; }
+    }
+    f_801fd230_b(c, 0x801fd230)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd230_at(c: &mut Cpu, pc: u32) { f_801fd230_b(c, pc) }
+#[inline(always)]
+fn f_801fd230_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd230;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd230, pc); }
+        match pc {
+            0x801fd230 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd238;
+            }
+            0x801fd238 => {
+                c.stb(c.r[3].wrapping_add(0x69a), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd230: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetVanishoffFlag (0x801fd240, 16 bytes)
+#[inline(never)]
+pub fn f_801fd240(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd240) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd240); f_801fd240_b(c, 0x801fd240); crate::prof::exit(c, 0x801fd240); return; }
+    }
+    f_801fd240_b(c, 0x801fd240)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd240_at(c: &mut Cpu, pc: u32) { f_801fd240_b(c, pc) }
+#[inline(always)]
+fn f_801fd240_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd240;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd240, pc); }
+        match pc {
+            0x801fd240 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd248;
+            }
+            0x801fd248 => {
+                c.stb(c.r[3].wrapping_add(0x699), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd240: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetReceivesWazaHiraishinFlag (0x801fd250, 16 bytes)
+#[inline(never)]
+pub fn f_801fd250(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd250) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd250); f_801fd250_b(c, 0x801fd250); crate::prof::exit(c, 0x801fd250); return; }
+    }
+    f_801fd250_b(c, 0x801fd250)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd250_at(c: &mut Cpu, pc: u32) { f_801fd250_b(c, pc) }
+#[inline(always)]
+fn f_801fd250_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd250;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd250, pc); }
+        match pc {
+            0x801fd250 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd258;
+            }
+            0x801fd258 => {
+                c.stb(c.r[3].wrapping_add(0x698), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd250: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetDoClearbodyFlag (0x801fd260, 16 bytes)
+#[inline(never)]
+pub fn f_801fd260(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd260) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd260); f_801fd260_b(c, 0x801fd260); crate::prof::exit(c, 0x801fd260); return; }
+    }
+    f_801fd260_b(c, 0x801fd260)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd260_at(c: &mut Cpu, pc: u32) { f_801fd260_b(c, pc) }
+#[inline(always)]
+fn f_801fd260_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd260;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd260, pc); }
+        match pc {
+            0x801fd260 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd268;
+            }
+            0x801fd268 => {
+                c.stb(c.r[3].wrapping_add(0x697), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd260: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetFightActionFlag (0x801fd270, 16 bytes)
+#[inline(never)]
+pub fn f_801fd270(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd270) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd270); f_801fd270_b(c, 0x801fd270); crate::prof::exit(c, 0x801fd270); return; }
+    }
+    f_801fd270_b(c, 0x801fd270)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd270_at(c: &mut Cpu, pc: u32) { f_801fd270_b(c, pc) }
+#[inline(always)]
+fn f_801fd270_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd270;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd270, pc); }
+        match pc {
+            0x801fd270 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd278;
+            }
+            0x801fd278 => {
+                c.stb(c.r[3].wrapping_add(0x696), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd270: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetPassPpdecFlag (0x801fd280, 16 bytes)
+#[inline(never)]
+pub fn f_801fd280(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd280) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd280); f_801fd280_b(c, 0x801fd280); crate::prof::exit(c, 0x801fd280); return; }
+    }
+    f_801fd280_b(c, 0x801fd280)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd280_at(c: &mut Cpu, pc: u32) { f_801fd280_b(c, pc) }
+#[inline(always)]
+fn f_801fd280_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd280;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd280, pc); }
+        match pc {
+            0x801fd280 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd288;
+            }
+            0x801fd288 => {
+                c.stb(c.r[3].wrapping_add(0x695), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd280: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetHirumuNoAttackFlag (0x801fd290, 16 bytes)
+#[inline(never)]
+pub fn f_801fd290(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd290) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd290); f_801fd290_b(c, 0x801fd290); crate::prof::exit(c, 0x801fd290); return; }
+    }
+    f_801fd290_b(c, 0x801fd290)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd290_at(c: &mut Cpu, pc: u32) { f_801fd290_b(c, pc) }
+#[inline(always)]
+fn f_801fd290_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd290;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd290, pc); }
+        match pc {
+            0x801fd290 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd298;
+            }
+            0x801fd298 => {
+                c.stb(c.r[3].wrapping_add(0x694), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd290: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetIchamonNoAttackFlag (0x801fd2a0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd2a0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd2a0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd2a0); f_801fd2a0_b(c, 0x801fd2a0); crate::prof::exit(c, 0x801fd2a0); return; }
+    }
+    f_801fd2a0_b(c, 0x801fd2a0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd2a0_at(c: &mut Cpu, pc: u32) { f_801fd2a0_b(c, pc) }
+#[inline(always)]
+fn f_801fd2a0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd2a0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd2a0, pc); }
+        match pc {
+            0x801fd2a0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd2a8;
+            }
+            0x801fd2a8 => {
+                c.stb(c.r[3].wrapping_add(0x693), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd2a0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetChouhatsuNoAttackFlag (0x801fd2b0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd2b0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd2b0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd2b0); f_801fd2b0_b(c, 0x801fd2b0); crate::prof::exit(c, 0x801fd2b0); return; }
+    }
+    f_801fd2b0_b(c, 0x801fd2b0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd2b0_at(c: &mut Cpu, pc: u32) { f_801fd2b0_b(c, pc) }
+#[inline(always)]
+fn f_801fd2b0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd2b0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd2b0, pc); }
+        match pc {
+            0x801fd2b0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd2b8;
+            }
+            0x801fd2b8 => {
+                c.stb(c.r[3].wrapping_add(0x692), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd2b0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetKanashibariNoAttackFlag (0x801fd2c0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd2c0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd2c0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd2c0); f_801fd2c0_b(c, 0x801fd2c0); crate::prof::exit(c, 0x801fd2c0); return; }
+    }
+    f_801fd2c0_b(c, 0x801fd2c0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd2c0_at(c: &mut Cpu, pc: u32) { f_801fd2c0_b(c, pc) }
+#[inline(always)]
+fn f_801fd2c0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd2c0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd2c0, pc); }
+        match pc {
+            0x801fd2c0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd2c8;
+            }
+            0x801fd2c8 => {
+                c.stb(c.r[3].wrapping_add(0x691), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd2c0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetMeroMeroNoAttackFlag (0x801fd2d0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd2d0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd2d0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd2d0); f_801fd2d0_b(c, 0x801fd2d0); crate::prof::exit(c, 0x801fd2d0); return; }
+    }
+    f_801fd2d0_b(c, 0x801fd2d0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd2d0_at(c: &mut Cpu, pc: u32) { f_801fd2d0_b(c, pc) }
+#[inline(always)]
+fn f_801fd2d0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd2d0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd2d0, pc); }
+        match pc {
+            0x801fd2d0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd2d8;
+            }
+            0x801fd2d8 => {
+                c.stb(c.r[3].wrapping_add(0x690), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd2d0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetHuuinNoAttackFlag (0x801fd2e0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd2e0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd2e0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd2e0); f_801fd2e0_b(c, 0x801fd2e0); crate::prof::exit(c, 0x801fd2e0); return; }
+    }
+    f_801fd2e0_b(c, 0x801fd2e0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd2e0_at(c: &mut Cpu, pc: u32) { f_801fd2e0_b(c, pc) }
+#[inline(always)]
+fn f_801fd2e0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd2e0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd2e0, pc); }
+        match pc {
+            0x801fd2e0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd2e8;
+            }
+            0x801fd2e8 => {
+                c.stb(c.r[3].wrapping_add(0x68f), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd2e0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetItemNigeruFlag (0x801fd2f0, 16 bytes)
+#[inline(never)]
+pub fn f_801fd2f0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd2f0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd2f0); f_801fd2f0_b(c, 0x801fd2f0); crate::prof::exit(c, 0x801fd2f0); return; }
+    }
+    f_801fd2f0_b(c, 0x801fd2f0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd2f0_at(c: &mut Cpu, pc: u32) { f_801fd2f0_b(c, pc) }
+#[inline(always)]
+fn f_801fd2f0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd2f0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd2f0, pc); }
+        match pc {
+            0x801fd2f0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd2f8;
+            }
+            0x801fd2f8 => {
+                c.stb(c.r[3].wrapping_add(0x68e), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd2f0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetTameWazaFlag (0x801fd300, 16 bytes)
+#[inline(never)]
+pub fn f_801fd300(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd300) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd300); f_801fd300_b(c, 0x801fd300); crate::prof::exit(c, 0x801fd300); return; }
+    }
+    f_801fd300_b(c, 0x801fd300)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd300_at(c: &mut Cpu, pc: u32) { f_801fd300_b(c, pc) }
+#[inline(always)]
+fn f_801fd300_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd300;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd300, pc); }
+        match pc {
+            0x801fd300 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd308;
+            }
+            0x801fd308 => {
+                c.stb(c.r[3].wrapping_add(0x68d), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd300: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetOutWazaKoukanaiFlag (0x801fd310, 16 bytes)
+#[inline(never)]
+pub fn f_801fd310(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd310) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd310); f_801fd310_b(c, 0x801fd310); crate::prof::exit(c, 0x801fd310); return; }
+    }
+    f_801fd310_b(c, 0x801fd310)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd310_at(c: &mut Cpu, pc: u32) { f_801fd310_b(c, pc) }
+#[inline(always)]
+fn f_801fd310_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd310;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd310, pc); }
+        match pc {
+            0x801fd310 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd318;
+            }
+            0x801fd318 => {
+                c.stb(c.r[3].wrapping_add(0x68c), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd310: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetKonranMyselfAttackFlag (0x801fd320, 16 bytes)
+#[inline(never)]
+pub fn f_801fd320(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd320) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd320); f_801fd320_b(c, 0x801fd320); crate::prof::exit(c, 0x801fd320); return; }
+    }
+    f_801fd320_b(c, 0x801fd320)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd320_at(c: &mut Cpu, pc: u32) { f_801fd320_b(c, pc) }
+#[inline(always)]
+fn f_801fd320_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd320;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd320, pc); }
+        match pc {
+            0x801fd320 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd328;
+            }
+            0x801fd328 => {
+                c.stb(c.r[3].wrapping_add(0x68b), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd320: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetMahiNoAttackFlag (0x801fd330, 16 bytes)
+#[inline(never)]
+pub fn f_801fd330(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd330) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd330); f_801fd330_b(c, 0x801fd330); crate::prof::exit(c, 0x801fd330); return; }
+    }
+    f_801fd330_b(c, 0x801fd330)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd330_at(c: &mut Cpu, pc: u32) { f_801fd330_b(c, pc) }
+#[inline(always)]
+fn f_801fd330_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd330;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd330, pc); }
+        match pc {
+            0x801fd330 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd338;
+            }
+            0x801fd338 => {
+                c.stb(c.r[3].wrapping_add(0x68a), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd330: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetMyselfDamageSpeTargetId (0x801fd340, 24 bytes)
+#[inline(never)]
+pub fn f_801fd340(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd340) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd340); f_801fd340_b(c, 0x801fd340); crate::prof::exit(c, 0x801fd340); return; }
+    }
+    f_801fd340_b(c, 0x801fd340)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd340_at(c: &mut Cpu, pc: u32) { f_801fd340_b(c, pc) }
+#[inline(always)]
+fn f_801fd340_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd340;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd340, pc); }
+        match pc {
+            0x801fd340 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd350; continue; }
+                pc = 0x801fd348;
+            }
+            0x801fd348 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd350;
+            }
+            0x801fd350 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x6aa));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd340: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetMyselfDamageSpeValue (0x801fd358, 24 bytes)
+#[inline(never)]
+pub fn f_801fd358(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd358) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd358); f_801fd358_b(c, 0x801fd358); crate::prof::exit(c, 0x801fd358); return; }
+    }
+    f_801fd358_b(c, 0x801fd358)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd358_at(c: &mut Cpu, pc: u32) { f_801fd358_b(c, pc) }
+#[inline(always)]
+fn f_801fd358_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd358;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd358, pc); }
+        match pc {
+            0x801fd358 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd368; continue; }
+                pc = 0x801fd360;
+            }
+            0x801fd360 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd368;
+            }
+            0x801fd368 => {
+                c.r[3] = c.lha(c.r[3].wrapping_add(0x6a8));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd358: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetMyselfDamageAtkTargetId (0x801fd370, 24 bytes)
+#[inline(never)]
+pub fn f_801fd370(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd370) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd370); f_801fd370_b(c, 0x801fd370); crate::prof::exit(c, 0x801fd370); return; }
+    }
+    f_801fd370_b(c, 0x801fd370)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd370_at(c: &mut Cpu, pc: u32) { f_801fd370_b(c, pc) }
+#[inline(always)]
+fn f_801fd370_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd370;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd370, pc); }
+        match pc {
+            0x801fd370 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd380; continue; }
+                pc = 0x801fd378;
+            }
+            0x801fd378 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd380;
+            }
+            0x801fd380 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x6a6));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd370: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetMyselfDamageAtkValue (0x801fd388, 24 bytes)
+#[inline(never)]
+pub fn f_801fd388(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd388) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd388); f_801fd388_b(c, 0x801fd388); crate::prof::exit(c, 0x801fd388); return; }
+    }
+    f_801fd388_b(c, 0x801fd388)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd388_at(c: &mut Cpu, pc: u32) { f_801fd388_b(c, pc) }
+#[inline(always)]
+fn f_801fd388_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd388;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd388, pc); }
+        match pc {
+            0x801fd388 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd398; continue; }
+                pc = 0x801fd390;
+            }
+            0x801fd390 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd398;
+            }
+            0x801fd398 => {
+                c.r[3] = c.lha(c.r[3].wrapping_add(0x6a4));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd388: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetKaigaraDamageValue (0x801fd3a0, 24 bytes)
+#[inline(never)]
+pub fn f_801fd3a0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd3a0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd3a0); f_801fd3a0_b(c, 0x801fd3a0); crate::prof::exit(c, 0x801fd3a0); return; }
+    }
+    f_801fd3a0_b(c, 0x801fd3a0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd3a0_at(c: &mut Cpu, pc: u32) { f_801fd3a0_b(c, pc) }
+#[inline(always)]
+fn f_801fd3a0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd3a0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd3a0, pc); }
+        match pc {
+            0x801fd3a0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd3b0; continue; }
+                pc = 0x801fd3a8;
+            }
+            0x801fd3a8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd3b0;
+            }
+            0x801fd3b0 => {
+                c.r[3] = c.lwz(c.r[3].wrapping_add(0x6a0));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd3a0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetItemKoraetaFlag (0x801fd3b8, 24 bytes)
+#[inline(never)]
+pub fn f_801fd3b8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd3b8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd3b8); f_801fd3b8_b(c, 0x801fd3b8); crate::prof::exit(c, 0x801fd3b8); return; }
+    }
+    f_801fd3b8_b(c, 0x801fd3b8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd3b8_at(c: &mut Cpu, pc: u32) { f_801fd3b8_b(c, pc) }
+#[inline(always)]
+fn f_801fd3b8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd3b8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd3b8, pc); }
+        match pc {
+            0x801fd3b8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd3c8; continue; }
+                pc = 0x801fd3c0;
+            }
+            0x801fd3c0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd3c8;
+            }
+            0x801fd3c8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x69e));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd3b8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetIrekaetaFlag (0x801fd3d0, 24 bytes)
+#[inline(never)]
+pub fn f_801fd3d0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd3d0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd3d0); f_801fd3d0_b(c, 0x801fd3d0); crate::prof::exit(c, 0x801fd3d0); return; }
+    }
+    f_801fd3d0_b(c, 0x801fd3d0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd3d0_at(c: &mut Cpu, pc: u32) { f_801fd3d0_b(c, pc) }
+#[inline(always)]
+fn f_801fd3d0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd3d0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd3d0, pc); }
+        match pc {
+            0x801fd3d0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd3e0; continue; }
+                pc = 0x801fd3d8;
+            }
+            0x801fd3d8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd3e0;
+            }
+            0x801fd3e0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x69d));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd3d0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetNoPressureFlag (0x801fd3e8, 24 bytes)
+#[inline(never)]
+pub fn f_801fd3e8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd3e8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd3e8); f_801fd3e8_b(c, 0x801fd3e8); crate::prof::exit(c, 0x801fd3e8); return; }
+    }
+    f_801fd3e8_b(c, 0x801fd3e8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd3e8_at(c: &mut Cpu, pc: u32) { f_801fd3e8_b(c, pc) }
+#[inline(always)]
+fn f_801fd3e8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd3e8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd3e8, pc); }
+        match pc {
+            0x801fd3e8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd3f8; continue; }
+                pc = 0x801fd3f0;
+            }
+            0x801fd3f0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd3f8;
+            }
+            0x801fd3f8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x69c));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd3e8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetDoTraceFlag (0x801fd400, 24 bytes)
+#[inline(never)]
+pub fn f_801fd400(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd400) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd400); f_801fd400_b(c, 0x801fd400); crate::prof::exit(c, 0x801fd400); return; }
+    }
+    f_801fd400_b(c, 0x801fd400)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd400_at(c: &mut Cpu, pc: u32) { f_801fd400_b(c, pc) }
+#[inline(always)]
+fn f_801fd400_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd400;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd400, pc); }
+        match pc {
+            0x801fd400 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd410; continue; }
+                pc = 0x801fd408;
+            }
+            0x801fd408 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd410;
+            }
+            0x801fd410 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x69b));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd400: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetDoIkakuFlag (0x801fd418, 24 bytes)
+#[inline(never)]
+pub fn f_801fd418(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd418) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd418); f_801fd418_b(c, 0x801fd418); crate::prof::exit(c, 0x801fd418); return; }
+    }
+    f_801fd418_b(c, 0x801fd418)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd418_at(c: &mut Cpu, pc: u32) { f_801fd418_b(c, pc) }
+#[inline(always)]
+fn f_801fd418_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd418;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd418, pc); }
+        match pc {
+            0x801fd418 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd428; continue; }
+                pc = 0x801fd420;
+            }
+            0x801fd420 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd428;
+            }
+            0x801fd428 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x69a));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd418: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetVanishoffFlag (0x801fd430, 24 bytes)
+#[inline(never)]
+pub fn f_801fd430(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd430) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd430); f_801fd430_b(c, 0x801fd430); crate::prof::exit(c, 0x801fd430); return; }
+    }
+    f_801fd430_b(c, 0x801fd430)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd430_at(c: &mut Cpu, pc: u32) { f_801fd430_b(c, pc) }
+#[inline(always)]
+fn f_801fd430_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd430;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd430, pc); }
+        match pc {
+            0x801fd430 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd440; continue; }
+                pc = 0x801fd438;
+            }
+            0x801fd438 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd440;
+            }
+            0x801fd440 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x699));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd430: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetReceivesWazaHiraishinFlag (0x801fd448, 24 bytes)
+#[inline(never)]
+pub fn f_801fd448(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd448) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd448); f_801fd448_b(c, 0x801fd448); crate::prof::exit(c, 0x801fd448); return; }
+    }
+    f_801fd448_b(c, 0x801fd448)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd448_at(c: &mut Cpu, pc: u32) { f_801fd448_b(c, pc) }
+#[inline(always)]
+fn f_801fd448_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd448;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd448, pc); }
+        match pc {
+            0x801fd448 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd458; continue; }
+                pc = 0x801fd450;
+            }
+            0x801fd450 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd458;
+            }
+            0x801fd458 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x698));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd448: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetDoClearbodyFlag (0x801fd460, 24 bytes)
+#[inline(never)]
+pub fn f_801fd460(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd460) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd460); f_801fd460_b(c, 0x801fd460); crate::prof::exit(c, 0x801fd460); return; }
+    }
+    f_801fd460_b(c, 0x801fd460)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd460_at(c: &mut Cpu, pc: u32) { f_801fd460_b(c, pc) }
+#[inline(always)]
+fn f_801fd460_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd460;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd460, pc); }
+        match pc {
+            0x801fd460 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd470; continue; }
+                pc = 0x801fd468;
+            }
+            0x801fd468 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd470;
+            }
+            0x801fd470 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x697));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd460: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetFightActionFlag (0x801fd478, 24 bytes)
+#[inline(never)]
+pub fn f_801fd478(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd478) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd478); f_801fd478_b(c, 0x801fd478); crate::prof::exit(c, 0x801fd478); return; }
+    }
+    f_801fd478_b(c, 0x801fd478)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd478_at(c: &mut Cpu, pc: u32) { f_801fd478_b(c, pc) }
+#[inline(always)]
+fn f_801fd478_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd478;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd478, pc); }
+        match pc {
+            0x801fd478 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd488; continue; }
+                pc = 0x801fd480;
+            }
+            0x801fd480 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd488;
+            }
+            0x801fd488 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x696));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd478: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetPassPpdecFlag (0x801fd490, 24 bytes)
+#[inline(never)]
+pub fn f_801fd490(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd490) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd490); f_801fd490_b(c, 0x801fd490); crate::prof::exit(c, 0x801fd490); return; }
+    }
+    f_801fd490_b(c, 0x801fd490)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd490_at(c: &mut Cpu, pc: u32) { f_801fd490_b(c, pc) }
+#[inline(always)]
+fn f_801fd490_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd490;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd490, pc); }
+        match pc {
+            0x801fd490 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd4a0; continue; }
+                pc = 0x801fd498;
+            }
+            0x801fd498 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd4a0;
+            }
+            0x801fd4a0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x695));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd490: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetHirumuNoAttackFlag (0x801fd4a8, 24 bytes)
+#[inline(never)]
+pub fn f_801fd4a8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd4a8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd4a8); f_801fd4a8_b(c, 0x801fd4a8); crate::prof::exit(c, 0x801fd4a8); return; }
+    }
+    f_801fd4a8_b(c, 0x801fd4a8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd4a8_at(c: &mut Cpu, pc: u32) { f_801fd4a8_b(c, pc) }
+#[inline(always)]
+fn f_801fd4a8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd4a8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd4a8, pc); }
+        match pc {
+            0x801fd4a8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd4b8; continue; }
+                pc = 0x801fd4b0;
+            }
+            0x801fd4b0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd4b8;
+            }
+            0x801fd4b8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x694));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd4a8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetIchamonNoAttackFlag (0x801fd4c0, 24 bytes)
+#[inline(never)]
+pub fn f_801fd4c0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd4c0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd4c0); f_801fd4c0_b(c, 0x801fd4c0); crate::prof::exit(c, 0x801fd4c0); return; }
+    }
+    f_801fd4c0_b(c, 0x801fd4c0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd4c0_at(c: &mut Cpu, pc: u32) { f_801fd4c0_b(c, pc) }
+#[inline(always)]
+fn f_801fd4c0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd4c0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd4c0, pc); }
+        match pc {
+            0x801fd4c0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd4d0; continue; }
+                pc = 0x801fd4c8;
+            }
+            0x801fd4c8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd4d0;
+            }
+            0x801fd4d0 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x693));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd4c0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetChouhatsuNoAttackFlag (0x801fd4d8, 24 bytes)
+#[inline(never)]
+pub fn f_801fd4d8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd4d8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd4d8); f_801fd4d8_b(c, 0x801fd4d8); crate::prof::exit(c, 0x801fd4d8); return; }
+    }
+    f_801fd4d8_b(c, 0x801fd4d8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd4d8_at(c: &mut Cpu, pc: u32) { f_801fd4d8_b(c, pc) }
+#[inline(always)]
+fn f_801fd4d8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd4d8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd4d8, pc); }
+        match pc {
+            0x801fd4d8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd4e8; continue; }
+                pc = 0x801fd4e0;
+            }
+            0x801fd4e0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd4e8;
+            }
+            0x801fd4e8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x692));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd4d8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetKanashibariNoAttackFlag (0x801fd4f0, 24 bytes)
+#[inline(never)]
+pub fn f_801fd4f0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd4f0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd4f0); f_801fd4f0_b(c, 0x801fd4f0); crate::prof::exit(c, 0x801fd4f0); return; }
+    }
+    f_801fd4f0_b(c, 0x801fd4f0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd4f0_at(c: &mut Cpu, pc: u32) { f_801fd4f0_b(c, pc) }
+#[inline(always)]
+fn f_801fd4f0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd4f0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd4f0, pc); }
+        match pc {
+            0x801fd4f0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd500; continue; }
+                pc = 0x801fd4f8;
+            }
+            0x801fd4f8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd500;
+            }
+            0x801fd500 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x691));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd4f0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetMeroMeroNoAttackFlag (0x801fd508, 24 bytes)
+#[inline(never)]
+pub fn f_801fd508(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd508) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd508); f_801fd508_b(c, 0x801fd508); crate::prof::exit(c, 0x801fd508); return; }
+    }
+    f_801fd508_b(c, 0x801fd508)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd508_at(c: &mut Cpu, pc: u32) { f_801fd508_b(c, pc) }
+#[inline(always)]
+fn f_801fd508_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd508;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd508, pc); }
+        match pc {
+            0x801fd508 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd518; continue; }
+                pc = 0x801fd510;
+            }
+            0x801fd510 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd518;
+            }
+            0x801fd518 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x690));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd508: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetHuuinNoAttackFlag (0x801fd520, 24 bytes)
+#[inline(never)]
+pub fn f_801fd520(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd520) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd520); f_801fd520_b(c, 0x801fd520); crate::prof::exit(c, 0x801fd520); return; }
+    }
+    f_801fd520_b(c, 0x801fd520)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd520_at(c: &mut Cpu, pc: u32) { f_801fd520_b(c, pc) }
+#[inline(always)]
+fn f_801fd520_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd520;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd520, pc); }
+        match pc {
+            0x801fd520 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd530; continue; }
+                pc = 0x801fd528;
+            }
+            0x801fd528 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd530;
+            }
+            0x801fd530 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x68f));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd520: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetItemNigeruFlag (0x801fd538, 24 bytes)
+#[inline(never)]
+pub fn f_801fd538(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd538) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd538); f_801fd538_b(c, 0x801fd538); crate::prof::exit(c, 0x801fd538); return; }
+    }
+    f_801fd538_b(c, 0x801fd538)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd538_at(c: &mut Cpu, pc: u32) { f_801fd538_b(c, pc) }
+#[inline(always)]
+fn f_801fd538_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd538;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd538, pc); }
+        match pc {
+            0x801fd538 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd548; continue; }
+                pc = 0x801fd540;
+            }
+            0x801fd540 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd548;
+            }
+            0x801fd548 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x68e));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd538: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetTameWazaFlag (0x801fd550, 24 bytes)
+#[inline(never)]
+pub fn f_801fd550(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd550) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd550); f_801fd550_b(c, 0x801fd550); crate::prof::exit(c, 0x801fd550); return; }
+    }
+    f_801fd550_b(c, 0x801fd550)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd550_at(c: &mut Cpu, pc: u32) { f_801fd550_b(c, pc) }
+#[inline(always)]
+fn f_801fd550_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd550;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd550, pc); }
+        match pc {
+            0x801fd550 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd560; continue; }
+                pc = 0x801fd558;
+            }
+            0x801fd558 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd560;
+            }
+            0x801fd560 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x68d));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd550: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetOutWazaKoukanaiFlag (0x801fd568, 24 bytes)
+#[inline(never)]
+pub fn f_801fd568(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd568) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd568); f_801fd568_b(c, 0x801fd568); crate::prof::exit(c, 0x801fd568); return; }
+    }
+    f_801fd568_b(c, 0x801fd568)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd568_at(c: &mut Cpu, pc: u32) { f_801fd568_b(c, pc) }
+#[inline(always)]
+fn f_801fd568_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd568;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd568, pc); }
+        match pc {
+            0x801fd568 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd578; continue; }
+                pc = 0x801fd570;
+            }
+            0x801fd570 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd578;
+            }
+            0x801fd578 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x68c));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd568: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetKonranMyselfAttackFlag (0x801fd580, 24 bytes)
+#[inline(never)]
+pub fn f_801fd580(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd580) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd580); f_801fd580_b(c, 0x801fd580); crate::prof::exit(c, 0x801fd580); return; }
+    }
+    f_801fd580_b(c, 0x801fd580)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd580_at(c: &mut Cpu, pc: u32) { f_801fd580_b(c, pc) }
+#[inline(always)]
+fn f_801fd580_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd580;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd580, pc); }
+        match pc {
+            0x801fd580 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd590; continue; }
+                pc = 0x801fd588;
+            }
+            0x801fd588 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd590;
+            }
+            0x801fd590 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x68b));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd580: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetMahiNoAttackFlag (0x801fd598, 24 bytes)
+#[inline(never)]
+pub fn f_801fd598(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd598) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd598); f_801fd598_b(c, 0x801fd598); crate::prof::exit(c, 0x801fd598); return; }
+    }
+    f_801fd598_b(c, 0x801fd598)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd598_at(c: &mut Cpu, pc: u32) { f_801fd598_b(c, pc) }
+#[inline(always)]
+fn f_801fd598_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd598;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd598, pc); }
+        match pc {
+            0x801fd598 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd5a8; continue; }
+                pc = 0x801fd5a0;
+            }
+            0x801fd5a0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd5a8;
+            }
+            0x801fd5a8 => {
+                c.r[3] = c.lbz(c.r[3].wrapping_add(0x68a));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd598: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetWazaMenuCurPtr (0x801fd5b0, 24 bytes)
+#[inline(never)]
+pub fn f_801fd5b0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd5b0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd5b0); f_801fd5b0_b(c, 0x801fd5b0); crate::prof::exit(c, 0x801fd5b0); return; }
+    }
+    f_801fd5b0_b(c, 0x801fd5b0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd5b0_at(c: &mut Cpu, pc: u32) { f_801fd5b0_b(c, pc) }
+#[inline(always)]
+fn f_801fd5b0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd5b0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd5b0, pc); }
+        match pc {
+            0x801fd5b0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd5c0; continue; }
+                pc = 0x801fd5b8;
+            }
+            0x801fd5b8 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd5c0;
+            }
+            0x801fd5c0 => {
+                c.r[3] = c.r[3].wrapping_add(0x664);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd5b0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetTokuseiDataId (0x801fd5c8, 16 bytes)
+#[inline(never)]
+pub fn f_801fd5c8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd5c8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd5c8); f_801fd5c8_b(c, 0x801fd5c8); crate::prof::exit(c, 0x801fd5c8); return; }
+    }
+    f_801fd5c8_b(c, 0x801fd5c8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd5c8_at(c: &mut Cpu, pc: u32) { f_801fd5c8_b(c, pc) }
+#[inline(always)]
+fn f_801fd5c8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd5c8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd5c8, pc); }
+        match pc {
+            0x801fd5c8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd5d0;
+            }
+            0x801fd5d0 => {
+                c.sth(c.r[3].wrapping_add(0x660), c.r[4]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd5c8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetTokuseiDataId (0x801fd5d8, 24 bytes)
+#[inline(never)]
+pub fn f_801fd5d8(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd5d8) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd5d8); f_801fd5d8_b(c, 0x801fd5d8); crate::prof::exit(c, 0x801fd5d8); return; }
+    }
+    f_801fd5d8_b(c, 0x801fd5d8)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd5d8_at(c: &mut Cpu, pc: u32) { f_801fd5d8_b(c, pc) }
+#[inline(always)]
+fn f_801fd5d8_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd5d8;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd5d8, pc); }
+        match pc {
+            0x801fd5d8 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd5e8; continue; }
+                pc = 0x801fd5e0;
+            }
+            0x801fd5e0 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd5e8;
+            }
+            0x801fd5e8 => {
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x660));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd5d8: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosSetZokuseiDataId (0x801fd5f0, 36 bytes)
+#[inline(never)]
+pub fn f_801fd5f0(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd5f0) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd5f0); f_801fd5f0_b(c, 0x801fd5f0); crate::prof::exit(c, 0x801fd5f0); return; }
+    }
+    f_801fd5f0_b(c, 0x801fd5f0)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd5f0_at(c: &mut Cpu, pc: u32) { f_801fd5f0_b(c, pc) }
+#[inline(always)]
+fn f_801fd5f0_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd5f0;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd5f0, pc); }
+        match pc {
+            0x801fd5f0 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if c.crbit(2) { return; }
+                pc = 0x801fd5f8;
+            }
+            0x801fd5f8 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x2);
+                if !c.crbit(0) { return; }
+                pc = 0x801fd604;
+            }
+            0x801fd604 => {
+                c.r[0] = c.r[4].rotate_left(1) & 0x1fe;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.sth(c.r[3].wrapping_add(0x65c), c.r[5]);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd5f0: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetZokuseiDataId (0x801fd614, 52 bytes)
+#[inline(never)]
+pub fn f_801fd614(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd614) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd614); f_801fd614_b(c, 0x801fd614); crate::prof::exit(c, 0x801fd614); return; }
+    }
+    f_801fd614_b(c, 0x801fd614)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd614_at(c: &mut Cpu, pc: u32) { f_801fd614_b(c, pc) }
+#[inline(always)]
+fn f_801fd614_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd614;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd614, pc); }
+        match pc {
+            0x801fd614 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd624; continue; }
+                pc = 0x801fd61c;
+            }
+            0x801fd61c => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd624;
+            }
+            0x801fd624 => {
+                c.r[0] = c.r[4].rotate_left(0) & 0xff;
+                c.cmpu(0, c.r[0], 0x2);
+                if c.crbit(0) { pc = 0x801fd638; continue; }
+                pc = 0x801fd630;
+            }
+            0x801fd630 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd638;
+            }
+            0x801fd638 => {
+                c.r[0] = c.r[4].rotate_left(1) & 0x1fe;
+                c.r[3] = c.r[3].wrapping_add(c.r[0]);
+                c.r[3] = c.lhz(c.r[3].wrapping_add(0x65c));
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd614: bad pc {:#x}", pc),
+        }
+    }
+}
+
+/// fightOutPokemonBiosGetFightActionBuffPtr (0x801fd648, 24 bytes)
+#[inline(never)]
+pub fn f_801fd648(c: &mut Cpu) {
+    if c.hooks {
+        if c.stub_hit(0x801fd648) { return; }
+        if c.prof { crate::prof::enter(c, 0x801fd648); f_801fd648_b(c, 0x801fd648); crate::prof::exit(c, 0x801fd648); return; }
+    }
+    f_801fd648_b(c, 0x801fd648)
+}
+/// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
+pub fn f_801fd648_at(c: &mut Cpu, pc: u32) { f_801fd648_b(c, pc) }
+#[inline(always)]
+fn f_801fd648_b(c: &mut Cpu, mut pc: u32) {
+    c.last_fn = 0x801fd648;
+    loop {
+        c.steps += 1;
+        if c.steps > c.step_limit { c.step_event(0x801fd648, pc); }
+        match pc {
+            0x801fd648 => {
+                c.cmpu(0, c.r[3], 0x0);
+                if !c.crbit(2) { pc = 0x801fd658; continue; }
+                pc = 0x801fd650;
+            }
+            0x801fd650 => {
+                c.r[3] = 0x0;
+                if true { return; }
+                pc = 0x801fd658;
+            }
+            0x801fd658 => {
+                c.r[3] = c.r[3].wrapping_add(0x62c);
+                if true { return; }
+                return;
+            }
+            _ => panic!("f_801fd648: bad pc {:#x}", pc),
+        }
+    }
+}
+

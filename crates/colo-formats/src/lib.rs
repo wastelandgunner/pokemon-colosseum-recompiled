@@ -23,5 +23,7 @@ pub mod rel;
 pub mod scd;
 pub mod tev;
 pub mod worldmap;
+pub mod ws;
+pub mod battle_data;
 
 pub use error::{Error, Result};

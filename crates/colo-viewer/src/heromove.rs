@@ -221,8 +221,8 @@ pub struct Ctx<'a> {
     pub cam_rot_y: f32,
     /// Is a box around this point (radius, 17 high) on screen (`fn_800E3C64`)?
     pub on_screen: &'a dyn Fn(Vec3, f32) -> bool,
-    /// People the hero can talk to: (index, talk-able) — NPCs with a talk script.
-    pub talkable: &'a dyn Fn(u32) -> bool,
+    /// A floor character's (talk through walls, talk start type) from the map REL; None for other people.
+    pub talk_info: &'a dyn Fn(u32) -> Option<(bool, u8)>,
     pub partner_active: bool,
 }
 
@@ -430,41 +430,57 @@ fn partner_apply(hs: &HeroState, actors: &mut [Actor], hi: usize, pi: usize, mv:
     p.amount = Some(amount);
 }
 
-/// `fn_8018CD08(1.2, 40)`: the person the hero talks to: within 10·1.2 + both radii, within 40° of the
-/// hero's move direction, no wall in between, not hidden behind the partner; lowest dist²·|angle|.
+/// `peopleFindTalkTarget` 0x8018CD08 (1.2, 40), called by `updateChat` for the leader. Candidates: every
+/// people but the hero that is visible (+0x21), without people flag 1, not a floor character with talk start
+/// type 3, and with a CharacterModels entry. Rui (group 0, not a floor character) is one too. The target point
+/// is the head part's x/z at the people's y (`peopleGetHeadGroundPos`). Accepted when:
+/// - distance ≤ 10·1.2 + hero radius + target radius;
+/// - |angle| ≤ 40° from the hero's turn target (+0x40);
+/// - a floor character without talk-through-walls (map REL flag 0x10; nearly every NPC has it): no wall in a
+///   hero-radius sweep from the hero's feet to the target point (`colsysWallSweep` 0x8010F320);
+/// - with Rui in the party: Rui not "between": (Rui − midpoint) rotated by +atan2(target − hero) about Y must have
+///   |x| > the target's radius or |z| > half the distance. (The game rotates by +θ, not −θ, so this frame is
+///   not aligned with the hero→target line; ported as is.)
+///
+/// Score = dist²·|angle|·0.5, starting from 10000; lower wins, ties go to the smaller |angle|, then the positive one.
 fn talk_target(actors: &[Actor], hi: usize, ctx: &Ctx) -> Option<u32> {
     let h = &actors[hi];
     let reach = 10.0 * 1.2 + h.radius;
-    let max_ang = 0.017_453_29 * 40.0;
-    let partner = actors.iter().find(|a| a.index == PARTNER && a.visible && ctx.partner_active);
-    let mut best: Option<(f32, f32, u32)> = None;
+    let max_ang = 0.017_453_292 * 40.0;
+    let partner = actors.iter().find(|a| a.index == PARTNER && ctx.partner_active);
+    let wrap = |a: f32| -> f32 {
+        let v = ((TAU as f64 + a as f64) % TAU as f64) as f32;
+        if v as f64 > PI as f64 { v - TAU } else if (v as f64) < -(PI as f64) { v + TAU } else { v }
+    };
+    let (mut best, mut best_ang, mut out) = (10000.0f32, 0.0f32, None);
     for p in actors {
-        if p.index == HERO || p.index == PARTNER || !p.visible || !(ctx.talkable)(p.index) { continue; }
-        let target = p.pos;
+        if p.index == HERO || !p.visible || p.flags & 1 != 0 { continue; }
+        if p.index == PARTNER && !ctx.partner_active { continue; }
+        let info = if p.index == PARTNER { None } else { (ctx.talk_info)(p.index) };
+        if info.is_some_and(|(_, start)| start == 3) { continue; }
+        let head = if p.head_part >= 0 { p.head_pos } else { None };
+        let target = head.map_or(p.pos, |q| Vec3::new(q.x, p.pos.y, q.z));
         let dist = h.pos.distance(target);
         if dist > reach + p.radius { continue; }
         let to = target - h.pos;
-        let ang = wrap_pi(to.x.atan2(to.z) - h.dir);
+        let ang = wrap(to.x.atan2(to.z) - h.dir);
         if ang.abs() > max_ang { continue; }
-        if ctx.cs.wall_sweep(h.radius, h.pos, target).is_some() { continue; }
+        if info.is_some_and(|(thru, _)| !thru) && ctx.cs.wall_sweep(h.radius, h.pos, target).is_some() { continue; }
         if let Some(r) = partner {
-            // the partner stands between: in the hero→target frame, |x| ≤ the target's radius and |z| ≤ half the gap
             let mid = (h.pos + target) * 0.5;
-            let a = (h.pos.x - target.x).atan2(h.pos.z - target.z);
+            let th = wrap(to.x.atan2(to.z));
             let rel = r.pos - mid;
-            let (s, c) = (-a).sin_cos();
+            let (s, c) = th.sin_cos();
             let lx = rel.x * c + rel.z * s;
             let lz = -rel.x * s + rel.z * c;
             if !(p.radius < lx.abs() || mid.distance(target) < lz.abs()) { continue; }
         }
         let score = dist * dist * ang.abs() * 0.5;
-        let better = match best {
-            None => true,
-            Some((bs, ba, _)) => score < bs || (score == bs && (ang.abs() < ba.abs() || (ang.abs() == ba.abs() && ang > 0.0))),
-        };
-        if better { best = Some((score, ang, p.index)); }
+        let better = score < best
+            || (score == best && (ang.abs() < best_ang.abs() || (ang.abs() == best_ang.abs() && ang > 0.0)));
+        if better { best = score; best_ang = ang; out = Some(p.index); }
     }
-    best.map(|b| b.2)
+    out
 }
 
 /// `initFloor__Fv` 0x8012F610: the partner starts 9 behind the leader (along its facing), on the floor

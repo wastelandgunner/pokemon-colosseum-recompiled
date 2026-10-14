@@ -415,6 +415,15 @@ pub struct ScriptWorld {
     started: HashSet<u16>,
     rng: u32,
     pub trace: bool,
+    /// The game's fade layer (`fadeSet*`, battle wipes; fade.rs).
+    pub fade_gs: crate::fade::Fade,
+    /// A battle started by std 102 (battle.rs) and its tables.
+    pub battle: Option<crate::battle::Encounter>,
+    pub battle_tables: Option<std::sync::Arc<crate::battle::BattleTables>>,
+    /// The last battle's result (`battleGetResult`; 2 = won).
+    pub battle_result: u32,
+    /// The battle floor's camera (eye, interest, fov°, near, far, aspect) while it is pushed.
+    pub battle_cam: Option<(Vec3, Vec3, f32, f32, f32, f32)>,
 }
 
 impl ScriptWorld {
@@ -422,7 +431,7 @@ impl ScriptWorld {
         ScriptWorld {
             floor_id: 0, doors: vec![], prev_floor: 0, return_map: None, menu_room: None, group_id: 0, messages: HashMap::new(), flags, actors: vec![], char_disp: vec![], dialog: Dialog::default(), cmds: vec![],
             warp: None, hero_locked: false, hm: Default::default(), blocking: false, map_busy: false, event_cam: None, anim_cam: None, fade: 0.0, fade_target: 0.0, fade_speed: 1.0, cam_ends: HashMap::new(), cam_now: (Vec3::ZERO, Vec3::ZERO), tv_list: vec![], tv: None, shadow_flags: Default::default(), tv_events: HashMap::new(), timers: HashMap::new(), snd_tasks: HashMap::new(), started: HashSet::new(), rng: 0x1234_5678,
-            trace: std::env::var("COLO_TRACE").is_ok(),
+            trace: std::env::var("COLO_TRACE").is_ok(), fade_gs: crate::fade::Fade::new(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0x1234_5678, |d| d.subsec_nanos())), battle: None, battle_tables: None, battle_result: 2, battle_cam: None,
         }
     }
     pub fn actor(&mut self, index: u32) -> Option<&mut Actor> { self.actors.iter_mut().find(|a| a.index == index) }
@@ -555,6 +564,25 @@ impl ScriptRt {
     pub fn event_running(&self) -> bool { !self.events.is_empty() || !self.ip_queue.is_empty() }
     /// One 60 Hz game frame.
     pub fn tick(&mut self) {
+        // a pushed battle floor: the field's threads are blocked (GSthreadBlockGroup); the battle runs
+        if self.w.battle.as_ref().is_some_and(|b| b.pushed) {
+            let mut b = self.w.battle.take();
+            let t = self.w.battle_tables.clone();
+            let frame = match (b.as_mut(), t) { (Some(b), Some(t)) => b.tick(&mut self.w, &t), _ => false };
+            let delta = b.as_ref().map_or(1, |b| b.delta());
+            self.w.battle = b;
+            colo_audio::layer::with(|l| l.service());
+            if frame { self.w.fade_gs.daemon(delta); }
+            return;
+        }
+        self.field_tick();
+        let mut b = self.w.battle.take();
+        if let (Some(b), Some(t)) = (b.as_mut(), self.w.battle_tables.clone()) { b.tick(&mut self.w, &t); }
+        self.w.battle = b;
+        self.w.fade_gs.daemon(1);
+    }
+
+    fn field_tick(&mut self) {
         // interaction points run one after another
         if self.events.is_empty() {
             if let Some((script, params)) = self.ip_queue.pop_front() { self.start_event(script, &params); }
@@ -615,8 +643,29 @@ impl Host for WorldHost<'_> {
                 if let Some(a) = w.actor(idx(1)) { a.talking = false; }
                 done
             }
-            // ---- battles aren't implemented: say so and count it as a win (battleGetResult 2 = won)
-            "battleStart" | "battleStartBattleWithOptions" => {
+            // ---- std 102: the wipe, the battle floor, back (battle.rs); returns battleGetResult
+            "battleStart" => {
+                if !w.started.contains(&serial) {
+                    if !w.dialog.free() || w.battle.is_some() { return NativeResult::Pending; }
+                    let Some(t) = w.battle_tables.clone() else { return NativeResult::Done(2) };
+                    let enc = idx(0) & 0xFFFF;
+                    if enc == 0 { return NativeResult::Done(0); }
+                    // characterEndSpeech waited for the window to close
+                    w.dialog.clear();
+                    let e = crate::battle::Encounter::start(w, &t, enc);
+                    w.battle = Some(e);
+                    w.started.insert(serial);
+                }
+                if w.battle.as_ref().is_some_and(|b| b.phase == crate::battle::Phase::Done && !b.rerun_modify) {
+                    let b = w.battle.take().unwrap();
+                    w.battle_result = b.result;
+                    w.started.remove(&serial);
+                    return NativeResult::Done(b.result);
+                }
+                NativeResult::Pending
+            }
+            // ---- std 152 isn't ported yet: say so and count it as a win (battleGetResult 2 = won)
+            "battleStartBattleWithOptions" => {
                 if !w.started.contains(&serial) {
                     if !w.dialog.free() { return NativeResult::Pending; }
                     w.dialog.open(&format!("[Battle {} - battles aren't implemented yet; counted as a win]", idx(0)));
@@ -624,7 +673,7 @@ impl Host for WorldHost<'_> {
                 }
                 if w.dialog.free() { w.started.remove(&serial); w.dialog.close(); done } else { NativeResult::Pending }
             }
-            "battleGetResult" => NativeResult::Done(2),
+            "battleGetResult" => NativeResult::Done(w.battle_result),
             // ---- flags (std 78 = set, 79 = clear; see NOTES)
             "flagCheckTrue" | "flagGetValue" => NativeResult::Done(w.flags.contains(&idx(0)) as u32),
             "flagSetTrue" => { w.flags.insert(idx(0)); done }

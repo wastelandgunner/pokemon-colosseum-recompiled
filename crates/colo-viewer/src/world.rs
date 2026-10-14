@@ -96,6 +96,8 @@ pub struct Game {
     /// `COLO_PKX=<name>`: a Pokémon battle model (`pkx_<name>.fsys`) shown in front of Wes, for checking
     /// materials (bump maps etc.).
     pub test_model: Option<(Model, Arc<Vec<Animation>>)>,
+    /// Battle tables and the wipe textures (battle.rs, wipe.rs).
+    pub battle: Arc<crate::battle::BattleTables>,
 }
 
 fn model_with_anims(bytes: &[u8]) -> Res2<(Model, Vec<Animation>)> {
@@ -154,7 +156,16 @@ impl Game {
                 None => println!("{who}: no CharacterModels entry found"),
             }
         }
-        let group_names = source.fsys_groups().into_iter().map(|(n, g)| (g, n)).collect();
+        let group_names: HashMap<u32, String> = source.fsys_groups().into_iter().map(|(n, g)| (g, n)).collect();
+        let mut battle = crate::battle::BattleTables::load(&common, &dol, &cfs);
+        battle.party_cam = source.read("fight_common.fsys").ok().and_then(|b| {
+            let fs = Fsys::parse(&b).ok()?;
+            let e = fs.entries.iter().find(|e| e.identifier == 0x007B_1800)?;
+            let cam = hsd::Archive::parse(&fs.read(e).ok()?).ok().and_then(|a| hsdanim::load_camera(&a).ok().flatten());
+            cam
+        });
+        battle.floor_rooms = rooms.iter().filter_map(|r| group_names.get(&r.group_id).map(|n| (r.floor_id, n.clone()))).collect();
+        let battle = Arc::new(battle);
         let test_model = std::env::var("COLO_PKX").ok().and_then(|n| {
             let r = source.read(&format!("pkx_{n}.fsys")).and_then(|b| {
                 let fs = Fsys::parse(&b)?;
@@ -169,7 +180,7 @@ impl Game {
         Ok(Game {
             source, rooms, models_table, group_names, field_common, interaction_points, doors, common_script, shadow_flags,
             player_model, player_anims: Arc::new(player_anims), partner_model, partner_anims: Arc::new(partner_anims),
-            player_info, partner_info, messages, ui, test_model,
+            player_info, partner_info, messages, ui, test_model, battle,
         })
     }
 

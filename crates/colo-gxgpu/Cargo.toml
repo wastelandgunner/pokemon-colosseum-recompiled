@@ -1,0 +1,11 @@
+[package]
+name = "colo-gxgpu"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "GameCube GX draw lists (colo-gx cmd) on the graphics card (wgpu)"
+
+[dependencies]
+colo-gx = { path = "../colo-gx" }
+wgpu = { version = "29", default-features = false, features = ["vulkan", "metal", "dx12", "wgsl"] }
+bytemuck = { version = "1", features = ["derive"] }

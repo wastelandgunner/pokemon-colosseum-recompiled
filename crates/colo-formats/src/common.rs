@@ -161,6 +161,9 @@ impl<'a> Common<'a> {
         Ok(Common { rel, symbols })
     }
 
+    /// File offset of symbol slot `sym`.
+    pub fn symbol(&self, sym: usize) -> Option<usize> { self.symbols.get(sym).copied() }
+
     /// (file offset of table, entry count) for a table symbol index.
     pub fn table(&self, sym: usize) -> Result<(usize, usize)> {
         let base = *self.symbols.get(sym).ok_or_else(|| Error::Invalid(format!("common_rel: no symbol {sym}")))?;

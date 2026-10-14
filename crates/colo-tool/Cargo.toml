@@ -6,6 +6,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
+colo-battle = { path = "../colo-battle" }
 colo-formats = { path = "../colo-formats" }
 colo-script = { path = "../colo-script" }
 colo-export = { path = "../colo-export" }

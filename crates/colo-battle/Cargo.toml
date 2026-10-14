@@ -1,0 +1,14 @@
+[package]
+name = "colo-battle"
+description = "Pokemon Colosseum battle engine, ported 1:1 from GC6E01 (headless, no dependencies)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+colo-formats = { path = "../colo-formats" }
+colo-gx = { path = "../colo-gx" }
+
+[features]
+wip-status = []
+

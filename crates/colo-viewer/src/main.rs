@@ -29,6 +29,11 @@ mod story_start;
 mod tv;
 mod flare;
 mod audio;
+mod battle;
+mod gamebattle;
+mod recomp;
+mod fade;
+mod wipe;
 mod menu;
 mod model;
 mod save;
@@ -107,6 +112,7 @@ fn main() {
         eprintln!("usage: colo-viewer <image.gcm | dir> [room | continue]   (e.g. M2_out; no room = continue the save)");
         std::process::exit(2);
     }
+    if args.get(1).map(String::as_str) == Some("recomp") { return recomp::run(&args[0]); }
     // story progress: the save's flags (unless COLO_NEW_GAME=1), plus COLO_FLAGS overrides
     let saved = if std::env::var("COLO_NEW_GAME").is_ok() { None } else { save::load() };
     let cont = args.len() < 2 || args[1] == "continue";
@@ -144,7 +150,7 @@ fn main() {
             primary_window: Some(Window { title: "colo-viewer".into(), ..default() }),
             ..default()
         }))
-        .add_plugins((flare::FlarePlugin, tevmat::TevPlugin, shadow::ShadowPlugin, particles::ParticlePlugin))
+        .add_plugins((flare::FlarePlugin, tevmat::TevPlugin, shadow::ShadowPlugin, particles::ParticlePlugin, wipe::WipePlugin))
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(ScriptRt::new(flags))
         .insert_resource(tevmat::RoomLights::new(&room.lights, &room.light_anims))
@@ -153,20 +159,72 @@ fn main() {
         .insert_resource(ViewState { walk_path, spawn_at, spawn_entry, spawn_prev, free_cam: std::env::var("COLO_CAM").is_ok(), ..default() })
         .insert_resource(game)
         .insert_resource(room)
-        .add_systems(Startup, (setup_static, setup_dialogue, spawn_room).chain())
+        .insert_resource(GcmPath(std::path::PathBuf::from(&args[0])))
+        .insert_non_send_resource(GameBattleSlot(None))
+        .add_systems(Startup, (setup_static, setup_dialogue, spawn_room, wipe::setup).chain())
         .add_systems(Update, (
             inject_keys, toggles, menu_input,
             input.run_if(menu::world_running),
-            script_tick.run_if(menu::world_running), (worldmap::update, shadow::update, particles::update).chain(), actor_move.run_if(menu::world_running), actor_sync, game_viewport, (camera_follow, worldmap::zoom_sync, particles::draw).chain(),
+            script_tick.run_if(menu::world_running), (worldmap::update, shadow::update, particles::update).chain(), actor_move.run_if(menu::world_running), actor_sync, (game_viewport, battle_floor, game_battle).chain(), (camera_follow, worldmap::zoom_sync, particles::draw, wipe::update).chain(),
             (animate.run_if(menu::world_running), animate_materials.run_if(menu::world_running), tevmat::apply_room_lights).chain(), tv::update, flare::update, do_warp, draw_collision, update_dialogue, menu::update, update_fade, update_status, test_hooks,
         ).chain())
         .run();
 }
 
+#[derive(Resource)]
+struct GcmPath(std::path::PathBuf);
+struct GameBattleSlot(Option<gamebattle::GameBattle>);
+#[derive(Component)]
+struct GameScreen;
+#[derive(Component)]
+struct GameScreenCam;
+#[derive(Resource)]
+struct GameScreenImage(Handle<Image>);
+
+/// A battle on the game's own code: start it when the battle floor is pushed (if its snapshot exists), run it
+/// at 30 Hz with the pad, show its frames, and hand its result to the field script.
+fn game_battle(mut slot: NonSendMut<GameBattleSlot>, mut rt: ResMut<ScriptRt>, gcm: Res<GcmPath>, time: Res<Time>, keys: Res<ButtonInput<KeyCode>>,
+               pads: Query<&Gamepad>, screen: Res<GameScreenImage>, mut images: ResMut<Assets<Image>>, mut vis: Query<&mut Visibility, With<GameScreen>>,
+               mut cams: Query<&mut Camera, With<GameScreenCam>>) {
+    let phase = rt.w.battle.as_ref().map(|b| (b.phase, b.id, b.game));
+    match phase {
+        Some((battle::Phase::LoadInit(_), id, false)) if slot.0.is_none() && std::env::var("COLO_NO_GAME_BATTLE").is_err() => {
+            if let Some(dir) = gamebattle::snapshot_dir(id) {
+                println!("battle {id}: running on the game's code from {}", dir.display());
+                slot.0 = Some(gamebattle::GameBattle::start(dir, gcm.0.clone()));
+                if let Some(b) = rt.w.battle.as_mut() { b.game = true; }
+            }
+        }
+        Some((battle::Phase::Pop | battle::Phase::FadeBack | battle::Phase::Done, _, true)) | None => {
+            if slot.0.take().is_some() {
+                for mut v in &mut vis { *v = Visibility::Hidden; }
+                for mut c in &mut cams { c.is_active = false; }
+            }
+            return;
+        }
+        _ => {}
+    }
+    let Some(gb) = slot.0.as_mut() else { return };
+    gb.update(time.delta_secs(), gamebattle::pad(&keys, &pads));
+    if let Some(f) = gb.frame.take() {
+        if std::env::var("COLO_GB_LOG").is_ok() { let m: u64 = f.iter().map(|&x| x as u64).sum(); println!("game frame mean {}", m / f.len() as u64); }
+        if let Some(mut img) = images.get_mut(&screen.0) { img.data = Some(f); }
+        for mut v in &mut vis { *v = Visibility::Visible; }
+        for mut c in &mut cams { c.is_active = true; }
+    }
+    if let Some(r) = gb.result {
+        if let Some(b) = rt.w.battle.as_mut() {
+            if !b.end_request && b.phase == battle::Phase::Battle { println!("battle {}: the game's result {r}", b.id); b.result = r; b.end_request = true; }
+        }
+    }
+}
+
 fn setup_static(mut commands: Commands, game: Res<Game>, mut assets: ModelAssets) {
     // the game draws into a 640x480 viewport (shown 4:3) with the CObj's own aspect: `game_viewport` keeps
     // the view in a height-matched 4:3 frame, `camera_follow` sets the aspect
-    commands.spawn((Camera3d::default(), Projection::custom(tv::FixedAspect(PerspectiveProjection { fov: 30f32.to_radians(), near: 1.0, far: 32768.0, aspect_ratio: 4.0 / 3.0, ..default() })),
+    // UI (message layer, menus, fade overlay) draws with this camera: Bevy otherwise picks the highest-order
+    // window camera, which is the wipe display camera (inactive outside a wipe)
+    commands.spawn((Camera3d::default(), IsDefaultUiCamera, Projection::custom(tv::FixedAspect(PerspectiveProjection { fov: 30f32.to_radians(), near: 1.0, far: 32768.0, aspect_ratio: 4.0 / 3.0, ..default() })),
         Transform::default(), GameCam { distance: if game.test_model.is_some() { 45.0 } else { 100.0 }, height: if game.test_model.is_some() { 15.0 } else { 60.0 }, rot_y: 0.0, ready: false, fly: Vec3::ZERO, fly_yaw: 0.0, fly_pitch: -0.3 }));
     // Wes
     let (root, mut anim) = spawn_model(&mut commands, &mut assets, &game.player_model, Arc::clone(&game.player_anims));
@@ -186,6 +244,16 @@ fn setup_static(mut commands: Commands, game: Res<Game>, mut assets: ModelAssets
         commands.entity(root).insert((anim, Transform::from_xyz(-22.0, 0.0, 0.0).with_rotation(Quat::from_rotation_y(std::f32::consts::PI))));
         commands.entity(player).add_child(root);
     }
+    // the TV image of a battle run on the game's own code (gamebattle.rs), shown 4:3 over everything
+    let screen = assets.add_image(Image::new_fill(bevy::render::render_resource::Extent3d { width: 640, height: 480, depth_or_array_layers: 1 },
+        bevy::render::render_resource::TextureDimension::D2, &[0, 0, 0, 255], bevy::render::render_resource::TextureFormat::Rgba8UnormSrgb,
+        bevy::asset::RenderAssetUsages::default()));
+    // its own camera above the wipe display camera (order 5), active only while a game battle shows
+    let gcam = commands.spawn((Camera2d, Camera { order: 10, is_active: false, clear_color: ClearColorConfig::None, ..default() }, GameScreenCam)).id();
+    commands.spawn((Node { position_type: PositionType::Absolute, width: Val::Percent(100.0), height: Val::Percent(100.0), justify_content: JustifyContent::Center, ..default() },
+        BackgroundColor(Color::BLACK), GlobalZIndex(1000), Visibility::Hidden, GameScreen, UiTargetCamera(gcam)))
+        .with_children(|p| { p.spawn((ImageNode::new(screen.clone()), Node { height: Val::Percent(100.0), aspect_ratio: Some(4.0 / 3.0), ..default() })); });
+    commands.insert_resource(GameScreenImage(screen));
     commands.spawn((Text::new(""), StatusText, Node { position_type: PositionType::Absolute, top: Val::Px(8.0), left: Val::Px(10.0), ..default() }));
 }
 
@@ -251,6 +319,7 @@ fn spawn_room(mut commands: Commands, mut room: ResMut<RoomData>, game: Res<Game
     // FUN_80117E58 at floor setup: TV channel 0, if the room has TVs
     rt.w.tv_list = room.tv.clone();
     rt.w.shadow_flags = Arc::clone(&game.shadow_flags);
+    rt.w.battle_tables = Some(Arc::clone(&game.battle));
     rt.w.tv = None;
     if room.tv.iter().any(|c| c.id == 0) { rt.w.tv = Some(0); }
     // _floorInitialize: doors of types 1/3 come back opened (mode 1) if their open flag is set, else closed (3);
@@ -349,6 +418,47 @@ fn spawn_room(mut commands: Commands, mut room: ResMut<RoomData>, game: Res<Game
     }
 }
 
+/// The battle floor pushed over the field (`floorWorker` state 4) and popped back (state 6), for std 102.
+#[derive(Component)]
+struct BattleRoot;
+
+#[allow(clippy::too_many_arguments)]
+fn battle_floor(mut commands: Commands, mut rt: ResMut<ScriptRt>, mut game: ResMut<Game>, room: Res<RoomData>, mut assets: ModelAssets,
+                mut roots: Query<&mut Visibility, With<RoomRoot>>, broots: Query<Entity, With<BattleRoot>>) {
+    let Some((phase, name, floor_id)) = rt.w.battle.as_ref().map(|b| (b.phase, b.room.clone(), b.floor_id)) else { return };
+    match phase {
+        battle::Phase::Push => {
+            let loaded = name.as_deref().map(|n| game.load_room(n));
+            for mut v in &mut roots { *v = Visibility::Hidden; }
+            match loaded {
+                Some(Ok(r)) => {
+                    let root = commands.spawn((Transform::default(), Visibility::default(), BattleRoot, Name::new(r.name.clone()))).id();
+                    let (map, mut anim) = spawn_model(&mut commands, &mut assets, &r.map, Arc::clone(&r.map_anims));
+                    for set in anim.model_sets() { anim.play_set(set, 0, 0.0, MAP_ANIM_RATE, true); }
+                    commands.entity(map).insert(anim);
+                    commands.entity(root).add_child(map);
+                    commands.insert_resource(tevmat::RoomLights::new(&r.lights, &r.light_anims));
+                    println!("battle floor {} pushed", r.name);
+                }
+                Some(Err(e)) => println!("battle floor {}: {e}", name.unwrap_or_default()),
+                None => println!("battle floor {floor_id:#x}: no room archive"),
+            }
+            if let Some(b) = rt.w.battle.as_mut() { b.pushed(); }
+        }
+        battle::Phase::Pop => {
+            for e in &broots { commands.entity(e).despawn(); }
+            for mut v in &mut roots { *v = Visibility::Inherited; }
+            commands.insert_resource(tevmat::RoomLights::new(&room.lights, &room.light_anims));
+            rt.w.battle_cam = None;
+            let mut b = rt.w.battle.take();
+            if let Some(b) = b.as_mut() { b.popped(&mut rt.w); }
+            rt.w.battle = b;
+            println!("battle floor popped");
+        }
+        _ => {}
+    }
+}
+
 /// Message window input: A advances (or completes the page), up/down move the YES/NO cursor.
 fn input(keys: Res<ButtonInput<KeyCode>>, pads: Query<&Gamepad>, mut rt: ResMut<ScriptRt>, mut state: ResMut<ViewState>) {
     let rt = &mut *rt;
@@ -379,22 +489,34 @@ fn dispatch_event(rt: &mut ScriptRt, game: &Game, room: &RoomData, method: u8, i
 /// script may turn it or its head), the NPC's wandering pauses (`fn_801812E8`) and the NPC's talk script runs with (group, index, 0, 0); when it ends,
 /// `characterEndSpeech` and `heroMoveTermEvent` follow (see `script_tick`).
 fn begin_talk(rt: &mut ScriptRt, room: &RoomData, idx: u32) {
-    let Some(c) = room.characters.get(idx as usize) else { return };
-    if c.talk_script == 0 { println!("NPC {idx} has no talk script"); return; }
-    let npc_pos = rt.w.actors.iter().find(|a| a.index == idx).map(|a| a.pos).unwrap_or_default();
+    // Rui (group 0) can be the target too: no floor character, so no talk script (`fn_8018397C` → 0)
+    let script = if idx == PARTNER { 0 } else { room.characters.get(idx as usize).map_or(0, |c| c.talk_script) };
+    // `peopleGetHeadGroundPos`: the head part's x/z at the people's y
+    let npc_pos = rt.w.actors.iter().find(|a| a.index == idx)
+        .map(|a| match a.head_pos.filter(|_| a.head_part >= 0) { Some(q) => Vec3::new(q.x, a.pos.y, q.z), None => a.pos })
+        .unwrap_or_default();
     for a in rt.w.actors.iter_mut().filter(|a| a.index == HERO || a.index == PARTNER) {
         a.amount = Some(0.0);
         a.flags = (a.flags | 0x8000_0008) & !(0x100 | 0x400);
         a.human_on = false;
     }
     if let Some(h) = rt.w.actor(HERO) { let d = npc_pos - h.pos; h.start_turn(d.x.atan2(d.z), 1.0); }
+    if script == 0 {
+        // nothing to run: heroMoveTermEvent's unlock follows in the same frame
+        println!("talk to {idx}: no talk script");
+        for a in rt.w.actors.iter_mut().filter(|a| a.index == HERO || a.index == PARTNER) {
+            a.human_on = true;
+            a.flags = (a.flags | 0x700) & !0x8000_0008;
+        }
+        return;
+    }
     if let Some(a) = rt.w.actor(idx) {
         a.talking = true;
         a.path.clear();
     }
-    println!("talk to NPC {idx} (script {:#x})", c.talk_script);
+    println!("talk to NPC {idx} (script {:#x})", script);
     rt.talk = Some(idx);
-    rt.run_event_now(c.talk_script, &[room.group_id, idx, 0, 0]);
+    rt.run_event_now(script, &[room.group_id, idx, 0, 0]);
 }
 
 /// The controller as the game reads it: main stick (WASD = full tilt, Shift = half; gamepad stick),
@@ -443,6 +565,10 @@ fn script_tick(time: Res<Time>, keys: Res<ButtonInput<KeyCode>>, pads: Query<&Ga
         }
     }
     if std::mem::take(&mut state.force_a) { pad.a = true; }
+    // no battle logic yet: A ends a battle once its floor is up
+    if let Some(b) = rt.w.battle.as_mut() {
+        if pad.a && b.phase == battle::Phase::Battle && !b.game { b.end_request = true; }
+    }
     let on_screen = |p: Vec3, r: f32| -> bool {
         let Some((camera, gt, _)) = cam else { return true };
         let aspect = camera.logical_viewport_size().map_or(4.0 / 3.0, |v| v.x / v.y.max(1.0));
@@ -469,10 +595,10 @@ fn script_tick(time: Res<Time>, keys: Res<ButtonInput<KeyCode>>, pads: Query<&Ga
                 a.flags = (a.flags | 0x700) & !0x8000_0008;
             }
         }
-        if std::mem::take(&mut rt.w.hm.process) && !menu.is_open() {
-            let talkable = |i: u32| room.characters.get(i as usize).is_some_and(|c| c.talk_script != 0);
+        if std::mem::take(&mut rt.w.hm.process) && !menu.is_open() && rt.w.battle.is_none() {
+            let talk_info = |i: u32| room.characters.get(i as usize).map(|c| (c.talk_through_walls, c.talk_start_type));
             let partner_active = std::env::var("COLO_NO_RUI").is_err();
-            let ctx = heromove::Ctx { cs: &room.colsys, pad, cam_rot_y, on_screen: &on_screen, talkable: &talkable, partner_active };
+            let ctx = heromove::Ctx { cs: &room.colsys, pad, cam_rot_y, on_screen: &on_screen, talk_info: &talk_info, partner_active };
             if let Some(events) = heromove::hero_begin(&mut rt.w.hm, &rt.w.actors) {
                 // events run synchronously (fn_800F7434); if one blocks, the main loop waits for it
                 for (m, id) in events { dispatch_event(rt, &game, &room, m, id); }
@@ -491,6 +617,15 @@ fn script_tick(time: Res<Time>, keys: Res<ButtonInput<KeyCode>>, pads: Query<&Ga
         }
         if !rt.event_running() { for a in rt.w.actors.iter_mut() { if a.index != HERO && a.index != PARTNER { a.talking = false; } } }
         rt.w.people_frame();
+    }
+    // battleStart (fn_80112700, floorStartSoundScript): the field's sound script (+0x28) starts again as a thread,
+    // and its std104 restarts the field BGM
+    if rt.w.battle.as_ref().is_some_and(|b| b.rerun_modify) {
+        if let Some(b) = rt.w.battle.as_mut() { b.rerun_modify = false; }
+        if room.scripts[0] != 0 {
+            let (vm, mut host) = rt.host();
+            vm.spawn(room.scripts[0], &[], &mut host);
+        }
     }
     let Ok(mut map_anim) = map.single_mut() else { return };
     if !rt.w.cmds.is_empty() {
@@ -555,13 +690,15 @@ fn actor_move(time: Res<Time>, room: Res<RoomData>, mut rt: ResMut<ScriptRt>) {
 /// Copy actor state to the ECS: transforms, visibility, and the animation each character should play.
 fn actor_sync(mut rt: ResMut<ScriptRt>, mut links: Query<(&ActorLink, &mut Transform, &mut Visibility)>,
               mut anims: Query<&mut Animator, Without<MapModel>>, globals: Query<&GlobalTransform>) {
+    // the battle floor hides the field's characters (their Visibility::Visible ignores the hidden room root)
+    let in_battle = rt.w.battle.as_ref().is_some_and(|b| b.pushed);
     for (link, mut t, mut vis) in links.iter_mut() {
         let Some(a) = rt.w.actor(link.index) else { continue };
         t.translation = a.pos;
         a.teleported = false;
         // the body's rotation is the people rotation as `fn_80184A90` turned it (no extra smoothing)
         t.rotation = Quat::from_rotation_y(a.yaw);
-        *vis = if a.visible { Visibility::Visible } else { Visibility::Hidden };
+        *vis = if a.visible && !in_battle { Visibility::Visible } else { Visibility::Hidden };
         let Ok(mut an) = anims.get_mut(link.anim) else { continue };
         // head look: GSpartRegisterRotation(head, (pitch, yaw, 0), 3) while a look is set; the head's world
         // position (last frame's) feeds the next look update
@@ -611,6 +748,13 @@ fn camera_follow(time: Res<Time>, mouse: Res<ButtonInput<MouseButton>>, motion: 
         p.fov = deg.clamp(3.0, 120.0).to_radians();
         (p.near, p.far, p.aspect_ratio) = (near, far, aspect);
     };
+    // a pushed battle floor: its camera
+    if let Some((eye, at, fov, near, far, aspect)) = rt.w.battle_cam {
+        *ct = Transform::from_translation(eye).looking_at(at, Vec3::Y);
+        set_fov(&mut proj, fov, (near, far, aspect));
+        gc.ready = false;
+        return;
+    }
     // an animated event camera (.cam, mode 4) plays at rate 0.5 and holds its last frame until the script
     // returns the camera (cameraReturn / GSscene_SetMode(0))
     if !state.free_cam {
@@ -985,10 +1129,12 @@ fn test_hooks(mut commands: Commands, frames: Res<bevy::diagnostic::FrameCount>,
         let p = |i| rt.w.actors.iter().find(|a| a.index == i).map(|a| a.pos);
         if let (Some(h), Some(r)) = (p(HERO), p(PARTNER)) { println!("f{f} gap {:.1} hero {:.1} {:.1} {:.1} rui {:.1} {:.1} {:.1}", Vec2::new(h.x - r.x, h.z - r.z).length(), h.x, h.y, h.z, r.x, r.y, r.z); }
     }
-    // COLO_CHECK="x,z,yaw_deg": stand there facing that way and press A at frame 20
-    if f == 18 {
-        if let Some(n) = std::env::var("COLO_CHECK").ok().map(|v| v.split(',').filter_map(|x| x.trim().parse::<f32>().ok()).collect::<Vec<_>>()) {
-            if let (3, Some(h)) = (n.len(), rt.w.actor(HERO)) {
+    // COLO_CHECK="x,z,yaw_deg[,frame]": stand there facing that way and press A at that frame (default 20)
+    let check = std::env::var("COLO_CHECK").ok().map(|v| v.split(',').filter_map(|x| x.trim().parse::<f32>().ok()).collect::<Vec<_>>());
+    let check_at = check.as_ref().and_then(|n| n.get(3)).map_or(20, |&v| v as u32);
+    if f + 2 == check_at {
+        if let Some(n) = check {
+            if let (3 | 4, Some(h)) = (n.len(), rt.w.actor(HERO)) {
                 h.pos = Vec3::new(n[0], h.pos.y, n[1]);
                 h.pos.y = room.collision.floor_height(h.pos, 30.0, 60.0).unwrap_or(h.pos.y);
                 h.yaw = n[2].to_radians();
@@ -998,7 +1144,7 @@ fn test_hooks(mut commands: Commands, frames: Res<bevy::diagnostic::FrameCount>,
         }
     }
     // the A press goes through heroMoveMain like a real one (talk, else the check ray)
-    if f == 20 && std::env::var("COLO_CHECK").is_ok() { state.force_a = true; }
+    if f == check_at && std::env::var("COLO_CHECK").is_ok() { state.force_a = true; }
     if f == 20 {
         if let Some(i) = std::env::var("COLO_TALK").ok().and_then(|v| v.parse::<u32>().ok()) { begin_talk(&mut rt, &room, i); }
     }
@@ -1009,12 +1155,13 @@ fn test_hooks(mut commands: Commands, frames: Res<bevy::diagnostic::FrameCount>,
             rt.w.dialog.press();
         }
     }
+    // COLO_SHOT=path (a "{}" in it is replaced by the frame), COLO_SHOT_FRAME=90 or a list "90,120,150"
     if let Ok(path) = std::env::var("COLO_SHOT") {
-        let at: u32 = std::env::var("COLO_SHOT_FRAME").ok().and_then(|v| v.parse().ok()).unwrap_or(90);
-        if f == at {
+        let at: Vec<u32> = std::env::var("COLO_SHOT_FRAME").ok().map(|v| v.split(',').filter_map(|x| x.trim().parse().ok()).collect()).unwrap_or_else(|| vec![90]);
+        if at.contains(&f) {
             commands.spawn(bevy::render::view::screenshot::Screenshot::primary_window())
-                .observe(bevy::render::view::screenshot::save_to_disk(path));
+                .observe(bevy::render::view::screenshot::save_to_disk(path.replace("{}", &format!("{f:05}"))));
         }
-        if f == at + 40 { exit.write(AppExit::Success); }
+        if at.iter().max().is_some_and(|&m| f == m + 40) { exit.write(AppExit::Success); }
     }
 }
