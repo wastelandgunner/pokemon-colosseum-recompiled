@@ -226,7 +226,7 @@ pub struct Ctx<'a> {
     pub partner_active: bool,
 }
 
-fn humans(actors: &[Actor]) -> Vec<Human> {
+pub fn humans(actors: &[Actor]) -> Vec<Human> {
     actors.iter().filter(|a| a.human && a.human_on && a.visible).map(|a| Human { index: a.index, pos: a.pos, radius: a.radius }).collect()
 }
 

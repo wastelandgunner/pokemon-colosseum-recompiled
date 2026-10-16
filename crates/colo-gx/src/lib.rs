@@ -181,7 +181,11 @@ impl Gx {
         for base in [0u32, 60 * 4, 0x500 + 61 * 4] {
             for r in 0..3 { for c in 0..4 { self.xf_write(base + 4 * r + c, if r == c { 1.0f32.to_bits() } else { 0 }); } }
         }
-        // scissor box offset (0, 0)
+        // GXInit also enables the dual texture transform once (XF 0x1012 = 1, __GXInitGX); it is never shadowed.
+        // Without it every texgen skipped its post matrix: the battle floor's projected shadows (texgen = eye-space
+        // position through post matrices 3/6) landed in front of the camera instead of under the characters
+        self.xf_write(0x1012, 1);
+                // scissor box offset (0, 0)
         self.bp_write(0x59 << 24 | (171 | 171 << 10), &mut f);
         self.s.cp[0x50] = u(0x14);
         self.s.cp[0x60] = u(0x18);

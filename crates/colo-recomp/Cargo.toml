@@ -1,0 +1,10 @@
+[package]
+name = "colo-recomp"
+description = "Pokemon Colosseum static recompilation: main.dol lifted to Rust (tools/ppclift) and the runtime it boots on (Gekko CPU, memory, GS threads, EXI, memory card, DSP)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+colo-lifted = { path = "../colo-lifted" }
+colo-gx = { path = "../colo-gx" }

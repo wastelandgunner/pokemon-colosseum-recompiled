@@ -4,7 +4,7 @@
 //! location (`gamedatasaveBiosSetFloorid` / `...Prevfloorid` / `...Floorposindex`), so a continued game
 //! starts at that room's entry point in front of the PC, not at an exact position.
 //!
-//! Plain text, one item per line: `room <name>`, `entry <index>`, `prev <floor>`, `flag <id>` (older saves
+//! Plain text, one item per line: `room <name>`, `entry <index>`, `prev <floor>`, `partner <0|1>`, `flag <id>` (older saves
 //! may have `pos <x> <y> <z> <yaw>` instead of `entry`). Location: `$COLO_SAVE`, else
 //! `$XDG_DATA_HOME/colo-viewer/save.txt`, else `~/.local/share/colo-viewer/save.txt`.
 //! (The game's own memory card format isn't decoded yet; this only stands in for its flag block.)
@@ -20,6 +20,8 @@ pub struct Save {
     pub prev_floor: Option<u32>,
     pub pos: Option<(Vec3, f32)>,
     pub flags: HashSet<u32>,
+    /// `partner 0|1`: hero status 0x18 (RUI in the party).
+    pub partner: Option<bool>,
 }
 
 pub fn path() -> Option<PathBuf> {
@@ -43,6 +45,7 @@ pub fn load() -> Option<Save> {
             }
             Some("entry") => s.entry = it.next().and_then(|x| x.parse().ok()),
             Some("prev") => s.prev_floor = it.next().and_then(|x| x.parse().ok()),
+            Some("partner") => s.partner = it.next().map(|x| x == "1"),
             Some("flag") => { if let Some(f) = it.next().and_then(|x| x.parse().ok()) { s.flags.insert(f); } }
             _ => {}
         }
@@ -53,12 +56,12 @@ pub fn load() -> Option<Save> {
 /// Whether a save file exists (the PC asks before overwriting it).
 pub fn exists() -> bool { path().is_some_and(|p| p.exists()) }
 
-pub fn write(room: &str, entry: usize, prev_floor: u32, flags: &HashSet<u32>) -> Result<(), String> {
+pub fn write(room: &str, entry: usize, prev_floor: u32, partner: bool, flags: &HashSet<u32>) -> Result<(), String> {
     let p = path().ok_or("no save location (set COLO_SAVE or HOME)")?;
     if let Some(dir) = p.parent() { let _ = std::fs::create_dir_all(dir); }
     let mut sorted: Vec<&u32> = flags.iter().collect();
     sorted.sort();
-    let mut out = format!("# colo-viewer save\nroom {room}\nentry {entry}\nprev {prev_floor}\n");
+    let mut out = format!("# colo-viewer save\nroom {room}\nentry {entry}\nprev {prev_floor}\npartner {}\n", partner as u8);
     for f in sorted { out.push_str(&format!("flag {f}\n")); }
     std::fs::write(&p, out).map_err(|e| format!("{}: {e}", p.display()))?;
     println!("saved to {}", p.display());

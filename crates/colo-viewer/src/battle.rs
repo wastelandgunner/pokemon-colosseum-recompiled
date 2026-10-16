@@ -59,6 +59,9 @@ impl BattleTables {
         (ff, floor, Self::get(&self.encount, enc as usize, "WipeId", 0) as usize)
     }
 
+    /// `fightEncountDataBiosGetZenmetuFlag`: losing this encounter is a whiteout (`battleStart` +2).
+    pub fn zenmetu(&self, enc: u32) -> bool { Self::get(&self.encount, enc as usize, "ZenmetuFlag", 0) != 0 }
+
     /// `fightEncountWipe` record: (snapshot, SE, time, init function).
     pub fn wipe(&self, id: usize) -> (bool, u32, f32, u32) {
         (Self::get(&self.wipe, id, "WipeSnapshotUse", 0) != 0, Self::get(&self.wipe, id, "WipeEffectSndID", 0) as u32,
@@ -143,9 +146,11 @@ pub struct Encounter {
     /// Sound operations the battle thread is doing (they can take several frames: a song fades out for
     /// 50 ms before the next loads), run one after another every 60 Hz tick.
     snd: std::collections::VecDeque<colo_audio::SoundTask>,
-    /// The battle runs on the game's own code (`gamebattle.rs`): its frames, audio and fades replace the
-    /// viewer's battle-floor flow; `end_request` comes with its result.
+    /// The battle runs on the game's own code (`gamebattle.rs`, a snapshot exists): its frames, audio and fades
+    /// replace the viewer's battle-floor flow from `fightMainThread` on; `end_request` comes with its result.
     pub game: bool,
+    /// The snapshot's wipe time (`hookElapsed`): the viewer's wipe runs until then, then the game takes over.
+    pub game_at: f32,
     /// The field's modify script must be re-run (`floorReadScriptPostFunc`) before the thread resumes.
     pub rerun_modify: bool,
 }
@@ -159,11 +164,15 @@ impl Encounter {
         snd.push_back(colo_audio::layer::with(|l| colo_audio::SoundTask::stop_sub(l, 1000)));
         let (_, floor_id, wipe_id) = tables.encounter(id);
         let (snap, se, time, init) = tables.wipe(wipe_id);
+        // a battle on the game's code: the wipe makes the snapshot's random picks
+        let game = crate::gamebattle::snapshot_dir(id);
+        if let Some(d) = &game { w.fade_gs.forced = crate::gamebattle::wipe_picks(d, init).into(); }
+        let game_at = game.as_deref().map_or(0.0, crate::gamebattle::wipe_elapsed);
         w.fade_gs.set_ex(9, init, snap, FADE_WIPE, time);
         let room = tables.floor_rooms.get(&floor_id).cloned();
         println!("battleStart({id}): wipe {wipe_id} (init {init:#x}, {time} s, SE {se:#x}), battle floor {floor_id:#x} {}",
             room.as_deref().unwrap_or("(no room)"));
-        Encounter { id, phase: Phase::Start, wipe_se: se, room, floor_id, bgm: tables.bgm(id), result: 2, pushed: false, tick: 0, end_request: false, rerun_modify: false, cam_frame: None, snd, game: false }
+        Encounter { id, phase: Phase::Start, wipe_se: se, room, floor_id, bgm: tables.bgm(id), result: 2, pushed: false, tick: 0, end_request: false, rerun_modify: false, cam_frame: None, snd, game: game.is_some(), game_at }
     }
 
     /// The fade layer's frames per game frame: the battle floor runs at 30 Hz.
@@ -195,7 +204,11 @@ impl Encounter {
                 self.phase = Phase::Push;
             }
             Phase::Push => {} // the viewer pushes the floor and moves on to LoadInit
-            Phase::LoadInit(_) | Phase::LoadMain(_) | Phase::Main(_) if self.game => self.phase = Phase::Battle,
+            // the snapshot point (`fightMainThread`'s first run; floors load at their own speed): when the viewer's wipe
+            // has run as long as the snapshot's, gamebattle.rs boots it with the wipe image
+            Phase::LoadInit(_) | Phase::LoadMain(_) if self.game => {
+                if w.fade_gs.hook.is_none() || w.fade_gs.hook_elapsed + 1e-4 >= self.game_at { self.phase = Phase::Battle; }
+            }
             Phase::Battle if self.game => if std::mem::take(&mut self.end_request) { self.phase = Phase::Pop; },
             Phase::LoadInit(n) => self.phase = if n > 1 { Phase::LoadInit(n - 1) } else { Phase::LoadMain(LOAD_MAIN) },
             Phase::LoadMain(n) => {
@@ -251,6 +264,10 @@ impl Encounter {
         self.rerun_modify = true;
         // the field BGM comes back from the re-run sound script (std104), not from battleStart
         self.phase = Phase::FadeBack;
+        // a battle on the game's code ran its own fades (the wipe's fadeSet(1.0, 8), then fadeSet(1.0, 3) to black);
+        // the viewer's layer still holds the wipe: end it black, as the game's is when the floor pops (std 152 with
+        // flag 0xE05 then fades in itself)
+        if self.game { w.fade_gs.set(3, 0.0); }
         if !w.flags.contains(&FLAG_NO_FADE_BACK) {
             w.fade_gs.set(2, FADE_BACK);
         }

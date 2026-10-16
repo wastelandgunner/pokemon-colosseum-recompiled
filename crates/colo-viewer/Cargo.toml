@@ -9,7 +9,7 @@ license.workspace = true
 colo-formats = { path = "../colo-formats" }
 colo-script = { path = "../colo-script" }
 colo-audio = { path = "../colo-audio" }
-colo-battle = { path = "../colo-battle" }
+colo-recomp = { path = "../colo-recomp" }
 colo-gx = { path = "../colo-gx" }
 colo-gxgpu = { path = "../colo-gxgpu" }
 wgpu = { version = "29", default-features = false, features = ["vulkan", "metal", "dx12", "wgsl"] }

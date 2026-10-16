@@ -8,7 +8,7 @@
 //! (winit + wgpu) and its AX mix to the audio output (audio.rs, buffered and resampled to the device). Keyboard:
 //! Space/X/Enter A, Backspace/C B, V X, F Y, Tab Start, arrows d-pad, WASD stick, Z/Q/E Z/L/R; gamepads via gilrs.
 
-use colo_battle::run::{Machine, Pad};
+use colo_recomp::run::{Machine, Pad};
 use std::collections::HashSet;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{sync_channel, Receiver};
@@ -46,16 +46,16 @@ pub fn run(gcm: &str) {
             // paced by the game's own clock (time base, 40.5 MHz): 60 or 30 updates a second, whichever the
             // game runs, and the AX mix comes out at its real rate
             const TB_HZ: f64 = 40_500_000.0;
-            let mut t0 = (std::time::Instant::now(), colo_battle::run::time_base(&m.c));
+            let mut t0 = (std::time::Instant::now(), colo_recomp::run::time_base(&m.c));
             while !quit.load(Ordering::Relaxed) {
                 m.set_pad(*pad.lock().unwrap());
                 m.frame();
                 let g = m.gpu_cmds(&mut b);
-                let mut audio = colo_battle::run::take_audio();
+                let mut audio = colo_recomp::run::take_audio();
                 for p in audio.chunks_mut(2) { p.swap(0, 1); }
                 crate::audio::push_external(&audio);
                 if tx.send(g).is_err() { break; }
-                let tb = colo_battle::run::time_base(&m.c);
+                let tb = colo_recomp::run::time_base(&m.c);
                 let next = t0.0 + std::time::Duration::from_secs_f64(tb.saturating_sub(t0.1) as f64 / TB_HZ);
                 let now = std::time::Instant::now();
                 if next > now { std::thread::sleep(next - now); }

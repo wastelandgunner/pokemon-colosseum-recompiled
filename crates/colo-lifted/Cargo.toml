@@ -1,0 +1,6 @@
+[package]
+name = "colo-lifted"
+description = "Pokemon Colosseum static recompilation: every main.dol function lifted to Rust (tools/ppclift) and the Gekko CPU core it runs on. Its own crate so runtime edits in colo-recomp skip this slow build"
+version.workspace = true
+edition.workspace = true
+license.workspace = true

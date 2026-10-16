@@ -94,6 +94,9 @@ struct Player;
 /// Links a character entity (NPC root or the player) to its script actor and its animated model.
 #[derive(Component)]
 struct ActorLink { index: u32, anim: Entity }
+/// A character riding another's model part (std 70): the parent it had before.
+#[derive(Component)]
+struct Rider(Option<Entity>);
 
 /// The field camera (height/distance/yaw around the player, like `cameraUpdate` mode 0) plus free-fly state.
 #[derive(Component)]
@@ -123,6 +126,9 @@ fn main() {
         None => Default::default(),
     };
     save::apply_overrides(&mut flags);
+    // hero status 0x18 (RUI in the party): the save's, else (older saves, story presets) whether her joining in
+    // Phenac (M1_out func_6: std 35(1), then flag 996) has happened
+    let partner = saved.as_ref().and_then(|s| s.partner).unwrap_or(flags.contains(&996));
     let room_name = if cont {
         match saved.as_ref().and_then(|s| s.room.clone()) {
             Some(r) => r,
@@ -152,7 +158,7 @@ fn main() {
         }))
         .add_plugins((flare::FlarePlugin, tevmat::TevPlugin, shadow::ShadowPlugin, particles::ParticlePlugin, wipe::WipePlugin))
         .insert_resource(ClearColor(Color::BLACK))
-        .insert_resource(ScriptRt::new(flags))
+        .insert_resource({ let mut rt = ScriptRt::new(flags); rt.w.partner = partner; rt })
         .insert_resource(tevmat::RoomLights::new(&room.lights, &room.light_anims))
         .insert_resource(Menu::default())
         .insert_resource(worldmap::Wmap::default())
@@ -160,7 +166,7 @@ fn main() {
         .insert_resource(game)
         .insert_resource(room)
         .insert_resource(GcmPath(std::path::PathBuf::from(&args[0])))
-        .insert_non_send_resource(GameBattleSlot(None))
+        .insert_non_send_resource(GameBattleSlot(None, None))
         .add_systems(Startup, (setup_static, setup_dialogue, spawn_room, wipe::setup).chain())
         .add_systems(Update, (
             inject_keys, toggles, menu_input,
@@ -173,7 +179,7 @@ fn main() {
 
 #[derive(Resource)]
 struct GcmPath(std::path::PathBuf);
-struct GameBattleSlot(Option<gamebattle::GameBattle>);
+struct GameBattleSlot(Option<gamebattle::GameBattle>, Option<std::sync::Arc<std::sync::Mutex<Option<Vec<u8>>>>>);
 #[derive(Component)]
 struct GameScreen;
 #[derive(Component)]
@@ -181,21 +187,42 @@ struct GameScreenCam;
 #[derive(Resource)]
 struct GameScreenImage(Handle<Image>);
 
-/// A battle on the game's own code: start it when the battle floor is pushed (if its snapshot exists), run it
-/// at 30 Hz with the pad, show its frames, and hand its result to the field script.
-fn game_battle(mut slot: NonSendMut<GameBattleSlot>, mut rt: ResMut<ScriptRt>, gcm: Res<GcmPath>, time: Res<Time>, keys: Res<ButtonInput<KeyCode>>,
+/// A battle on the game's own code: at the snapshot point (`fightMainThread`'s first run) read the viewer's wipe
+/// image back, boot the snapshot with it as the fade texture, run it at 30 Hz with the pad, show its frames, and
+/// hand its result to the field script.
+fn game_battle(mut commands: Commands, mut slot: NonSendMut<GameBattleSlot>, mut rt: ResMut<ScriptRt>, gcm: Res<GcmPath>, time: Res<Time>, keys: Res<ButtonInput<KeyCode>>,
                pads: Query<&Gamepad>, screen: Res<GameScreenImage>, mut images: ResMut<Assets<Image>>, mut vis: Query<&mut Visibility, With<GameScreen>>,
-               mut cams: Query<&mut Camera, With<GameScreenCam>>) {
+               mut cams: Query<&mut Camera, With<GameScreenCam>>, wipe: Res<wipe::Wipe>) {
     let phase = rt.w.battle.as_ref().map(|b| (b.phase, b.id, b.game));
     match phase {
-        Some((battle::Phase::LoadInit(_), id, false)) if slot.0.is_none() && std::env::var("COLO_NO_GAME_BATTLE").is_err() => {
-            if let Some(dir) = gamebattle::snapshot_dir(id) {
-                println!("battle {id}: running on the game's code from {}", dir.display());
-                slot.0 = Some(gamebattle::GameBattle::start(dir, gcm.0.clone()));
-                if let Some(b) = rt.w.battle.as_mut() { b.game = true; }
+        Some((battle::Phase::Battle, id, true)) if slot.0.is_none() => {
+            let Some(dir) = gamebattle::snapshot_dir(id) else { return };
+            match (&slot.1, wipe.current()) {
+                (None, Some(img)) => {
+                    let cell = std::sync::Arc::new(std::sync::Mutex::new(None));
+                    let c = cell.clone();
+                    commands.spawn(bevy::render::gpu_readback::Readback::texture(img)).observe(
+                        move |ev: On<bevy::render::gpu_readback::ReadbackComplete>, mut commands: Commands| {
+                            *c.lock().unwrap() = Some(ev.data.clone());
+                            commands.entity(ev.entity).despawn();
+                        });
+                    slot.1 = Some(cell);
+                    return;
+                }
+                (Some(cell), _) => {
+                    let Some(data) = cell.lock().unwrap().take() else { return };
+                    slot.1 = None;
+                    println!("battle {id}: running on the game's code from {}", dir.display());
+                    slot.0 = Some(gamebattle::GameBattle::start(dir, gcm.0.clone(), Some(data)));
+                }
+                (None, None) => {
+                    println!("battle {id}: running on the game's code from {}", dir.display());
+                    slot.0 = Some(gamebattle::GameBattle::start(dir, gcm.0.clone(), None));
+                }
             }
         }
         Some((battle::Phase::Pop | battle::Phase::FadeBack | battle::Phase::Done, _, true)) | None => {
+            slot.1 = None;
             if slot.0.take().is_some() {
                 for mut v in &mut vis { *v = Visibility::Hidden; }
                 for mut c in &mut cams { c.is_active = false; }
@@ -288,8 +315,12 @@ fn spawn_room(mut commands: Commands, mut room: ResMut<RoomData>, game: Res<Game
               mut player: Query<&mut Transform, With<Player>>, mut cam: Query<&mut GameCam>, mut state: ResMut<ViewState>) {
     // fresh VM and world for the room; flags carry over
     let flags = std::mem::take(&mut rt.w.flags);
+    let partner = rt.w.partner;
     let prev_floor = state.spawn_prev.take().unwrap_or(rt.w.floor_id);
     *rt = ScriptRt::new(flags);
+    // heroMoveSyncWithHero: member 1 = hero status 0x18 unless flag 0x8AE; initFloor shows RUI only as a member
+    rt.w.partner = partner;
+    rt.w.partner_member = partner && !rt.w.flags.contains(&0x8AE);
     rt.w.prev_floor = prev_floor;
     rt.vm.load(game.common_script.clone());
     rt.vm.load(room.room_script.clone());
@@ -329,6 +360,7 @@ fn spawn_room(mut commands: Commands, mut room: ResMut<RoomData>, game: Res<Game
         Cmd::Door { index: d.index, mode: if open { 1 } else { 3 } }
     }).collect();
     apply(&init, &game, &mut room, &mut map_anim, &mut rt.w.flags);
+    rt.w.colsys = Some(room.colsys.clone());
 
     // characters: the hero, then the room's NPCs
     let entry = state.pending_warp.map(|w| w.1).or(state.spawn_entry.take()).unwrap_or(0);
@@ -344,7 +376,7 @@ fn spawn_room(mut commands: Commands, mut room: ResMut<RoomData>, game: Res<Game
     rt.w.actors.push(hero);
     // initFloor: Rui starts 9 behind Wes, facing the same way
     let behind = heromove::place_partner(&room.colsys, pos, yaw);
-    let mut rui = Actor::new(PARTNER, behind, yaw, std::env::var("COLO_NO_RUI").is_err(), partner_slots, 0);
+    let mut rui = Actor::new(PARTNER, behind, yaw, rt.w.partner_member && std::env::var("COLO_NO_RUI").is_err(), partner_slots, 0);
     rui.set_speeds(strides(&game.partner_info), &game.partner_anims);
     if let Some(m) = &game.partner_info { rui.set_body(m); }
     rui.flags = heromove::PARTNER_FLAGS;
@@ -355,6 +387,8 @@ fn spawn_room(mut commands: Commands, mut room: ResMut<RoomData>, game: Res<Game
         let slots = room.npc_anim_slots.get(c.index).copied().unwrap_or([1, 2, 3, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]);
         let p = Vec3::from_array(c.position);
         let mut actor = Actor::new(c.index as u32, p, (c.rotation_y as f32).to_radians(), c.visible, slots, c.move_type);
+        // peopleOpenSub writes flags 0x700 (walls, floor, human collision); _floorInitCharacters adds 4 and 8
+        actor.flags = 0x700 | 4 | 8;
         if let Some(loaded) = model { actor.set_speeds(room.npc_strides.get(c.index).copied().unwrap_or((9.0, 13.0)), &loaded.1); }
         if let Some(Some(m)) = room.npc_info.get(c.index) { actor.set_body(m); }
         rt.w.actors.push(actor);
@@ -391,6 +425,7 @@ fn spawn_room(mut commands: Commands, mut room: ResMut<RoomData>, game: Res<Game
     }
     let cmds = std::mem::take(&mut rt.w.cmds);
     apply(&cmds, &game, &mut room, &mut map_anim, &mut rt.w.flags);
+    rt.w.colsys = Some(room.colsys.clone());
     commands.entity(map).insert((map_anim, MapModel));
     commands.entity(root).add_child(map);
 
@@ -516,7 +551,20 @@ fn begin_talk(rt: &mut ScriptRt, room: &RoomData, idx: u32) {
     }
     println!("talk to NPC {idx} (script {:#x})", script);
     rt.talk = Some(idx);
-    rt.run_event_now(script, &[room.group_id, idx, 0, 0]);
+    // updateChat runs the talk script synchronously and ends the talk at once when it doesn't block, before the
+    // room's main loop goes on (a main-loop message opened next must not be closed by this talk's end)
+    if !rt.run_event_now(script, &[room.group_id, idx, 0, 0]) { end_talk(rt); }
+}
+
+/// The end of a talk started by heroMoveMain: `characterEndSpeech` + `heroMoveTermEvent`.
+fn end_talk(rt: &mut ScriptRt) {
+    let npc = rt.talk.take().unwrap_or(0);
+    rt.w.dialog.close();
+    if let Some(a) = rt.w.actor(npc) { a.talking = false; }
+    for a in rt.w.actors.iter_mut().filter(|a| a.index == HERO || a.index == PARTNER) {
+        a.human_on = true;
+        a.flags = (a.flags | 0x700) & !0x8000_0008;
+    }
 }
 
 /// The controller as the game reads it: main stick (WASD = full tilt, Shift = half; gamepad stick),
@@ -586,18 +634,10 @@ fn script_tick(time: Res<Time>, keys: Res<ButtonInput<KeyCode>>, pads: Query<&Ga
         rt.tick();
         if no_main_loop && !rt.event_running() && !menu.is_open() { rt.w.hm.process = true; }
         // a talk ended: characterEndSpeech + heroMoveTermEvent
-        if rt.talk.is_some() && !rt.event_running() {
-            let npc = rt.talk.take().unwrap_or(0);
-            rt.w.dialog.close();
-            if let Some(a) = rt.w.actor(npc) { a.talking = false; }
-            for a in rt.w.actors.iter_mut().filter(|a| a.index == HERO || a.index == PARTNER) {
-                a.human_on = true;
-                a.flags = (a.flags | 0x700) & !0x8000_0008;
-            }
-        }
+        if rt.talk.is_some() && !rt.event_running() { end_talk(rt); }
         if std::mem::take(&mut rt.w.hm.process) && !menu.is_open() && rt.w.battle.is_none() {
             let talk_info = |i: u32| room.characters.get(i as usize).map(|c| (c.talk_through_walls, c.talk_start_type));
-            let partner_active = std::env::var("COLO_NO_RUI").is_err();
+            let partner_active = rt.w.partner_member && std::env::var("COLO_NO_RUI").is_err();
             let ctx = heromove::Ctx { cs: &room.colsys, pad, cam_rot_y, on_screen: &on_screen, talk_info: &talk_info, partner_active };
             if let Some(events) = heromove::hero_begin(&mut rt.w.hm, &rt.w.actors) {
                 // events run synchronously (fn_800F7434); if one blocks, the main loop waits for it
@@ -632,6 +672,7 @@ fn script_tick(time: Res<Time>, keys: Res<ButtonInput<KeyCode>>, pads: Query<&Ga
         let cmds = std::mem::take(&mut rt.w.cmds);
         println!("script: {cmds:?}");
         apply(&cmds, &game, &mut room, &mut map_anim, &mut rt.w.flags);
+        rt.w.colsys = Some(room.colsys.clone());
     }
     rt.w.map_busy = map_anim.busy();
     if let Some(w) = rt.w.warp.take() {
@@ -646,6 +687,7 @@ fn actor_move(time: Res<Time>, room: Res<RoomData>, mut rt: ResMut<ScriptRt>) {
     let rt = &mut *rt;
     let locked = rt.event_running() || rt.w.dialog.visible();
     let mut rolls: Vec<u32> = (0..rt.w.actors.len() * 2).map(|_| rt.w.random()).collect();
+    let humans = heromove::humans(&rt.w.actors);
     for a in rt.w.actors.iter_mut() {
         // wandering (move type 2): stroll to a random spot near home, pause, repeat
         if a.move_type == 2 && a.path.is_empty() && !a.talking && !locked && a.visible {
@@ -665,13 +707,18 @@ fn actor_move(time: Res<Time>, room: Res<RoomData>, mut rt: ResMut<ScriptRt>) {
             // scripted moves use moveSpeed 1.0 (walk) or the run speed
             let speed = if a.run { a.run_speed } else { a.walk_speed } * 60.0;
             let step = speed * dt;
+            // each step goes through `peopleMove` (fn_8018E9B4) by the people flags: NPCs start with 0x700
+            // (walls, floor, human); std 76 (characterEventFlagsClear) drops walls and human collision but the
+            // floor still carries them (S1_out: WILLIE down the stand's stairs past the railing). Without the floor
+            // flag the height follows the target's
             if to.length() <= step.max(0.5) {
-                a.pos = Vec3::new(goal.x, a.pos.y, goal.z);
-                a.pos.y = room.collision.floor_height(a.pos, 8.0, 30.0).unwrap_or(goal.y);
+                a.pos = heromove::people_move(&room.colsys, &humans, a, a.pos, goal).pos;
                 a.path.pop_front();
             } else {
                 let dir = to.normalize();
-                let next = room.collision.move_player(a.pos, a.pos + dir * step);
+                let mut target = a.pos + dir * step;
+                target.y += (goal.y - a.pos.y) * (step / to.length()).min(1.0);
+                let next = heromove::people_move(&room.colsys, &humans, a, a.pos, target).pos;
                 if next.distance(a.pos) < step * 0.2 {
                     a.stuck += dt;
                     if a.stuck > 1.0 { a.path.pop_front(); a.stuck = 0.0; } // blocked: give up this step
@@ -688,11 +735,35 @@ fn actor_move(time: Res<Time>, room: Res<RoomData>, mut rt: ResMut<ScriptRt>) {
 }
 
 /// Copy actor state to the ECS: transforms, visibility, and the animation each character should play.
-fn actor_sync(mut rt: ResMut<ScriptRt>, mut links: Query<(&ActorLink, &mut Transform, &mut Visibility)>,
+#[allow(clippy::type_complexity)]
+fn actor_sync(mut commands: Commands, mut rt: ResMut<ScriptRt>,
+              mut links: Query<(Entity, &ActorLink, &mut Transform, &mut Visibility, Option<&ChildOf>, Option<&Rider>)>,
               mut anims: Query<&mut Animator, Without<MapModel>>, globals: Query<&GlobalTransform>) {
     // the battle floor hides the field's characters (their Visibility::Visible ignores the hidden room root)
     let in_battle = rt.w.battle.as_ref().is_some_and(|b| b.pushed);
-    for (link, mut t, mut vis) in links.iter_mut() {
+    // std 70 riders: GSmodelAttachToGSpart(model, part, 7, 0, 1) makes the part's joint the model's parent
+    // (translation, rotation and scale inherited); the people position/rotation are then local to it
+    let models: Vec<(u32, Entity)> = links.iter().map(|l| (l.1.index, l.1.anim)).collect();
+    for (e, link, _, _, parent, rider) in links.iter() {
+        let Some(a) = rt.w.actors.iter().find(|a| a.index == link.index) else { continue };
+        let want = a.attach.and_then(|(to, part)| {
+            let m = models.iter().find(|m| m.0 == to)?;
+            anims.get(m.1).ok()?.joints.get(part).copied()
+        });
+        let now = parent.map(|p| p.parent());
+        match (want, rider) {
+            (Some(j), _) if now != Some(j) => {
+                let home = rider.map_or(now, |r| r.0);
+                commands.entity(e).insert((ChildOf(j), Rider(home)));
+            }
+            (None, Some(r)) => {
+                match r.0 { Some(h) => { commands.entity(e).insert(ChildOf(h)); } None => { commands.entity(e).remove::<ChildOf>(); } }
+                commands.entity(e).remove::<Rider>();
+            }
+            _ => {}
+        }
+    }
+    for (_, link, mut t, mut vis, ..) in links.iter_mut() {
         let Some(a) = rt.w.actor(link.index) else { continue };
         t.translation = a.pos;
         a.teleported = false;
@@ -715,7 +786,11 @@ fn actor_sync(mut rt: ResMut<ScriptRt>, mut links: Query<(&ActorLink, &mut Trans
             let moving = !a.path.is_empty() || a.follow.is_some();
             let run = a.follow.unwrap_or(a.run);
             let want = if moving { if run { a.run_anim() } else { a.walk_anim() } } else { a.base_anim };
-            if an.current() != Some(want) || an.active.iter().any(|p| !p.looping) { an.set(want); }
+            // a finished one-shot (std 51 with loop 0 = GSmodel anim type 0) holds its last frame: std 53 only waits
+            // for GSmodelHasAnimationEnded and nothing restarts the idle, so scripts set the next loop themselves
+            // (the S1_out truck stays where its drive-off animation left it until the script hides it)
+            let held = !moving && an.active.iter().any(|p| !p.looping);
+            if !held && an.current() != Some(want) { an.set(want); }
         }
         a.anim_busy = an.busy();
     }
@@ -943,7 +1018,7 @@ fn menu_input(time: Res<Time>, keys: Res<ButtonInput<KeyCode>>, pads: Query<&Gam
                         // the save's location is the return map: (floor, previous floor, entry index)
                         let (floor, prev, entry) = w.return_map.unwrap_or((room.floor_id, w.prev_floor, 0));
                         let name = game.room_name_for_floor(floor).unwrap_or_else(|| room.name.clone());
-                        if let Err(e) = save::write(&name, entry, prev, &w.flags) {
+                        if let Err(e) = save::write(&name, entry, prev, w.partner, &w.flags) {
                             println!("save failed: {e}");
                             w.dialog.open(&w.message(menu::SAVE_FAILED));
                             *menu = pc(cursor, PcStep::Saved);

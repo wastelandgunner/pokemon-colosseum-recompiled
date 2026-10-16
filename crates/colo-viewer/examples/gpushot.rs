@@ -1,7 +1,7 @@
 //! Headless check of the recompile's graphics-card path: boot, run `n` frames (A tapped every 20 frames unless
 //! NOA), render each with colo-gxgpu, save PNGs of the XFB at frames listed in SHOT to OUT (default /tmp/claude-1000).
 //! `cargo run --release -p colo-viewer --example gpushot <gcm> <n>`
-use colo_battle::run::{Machine, Pad};
+use colo_recomp::run::{Machine, Pad};
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     let n: u32 = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(300);
@@ -11,6 +11,7 @@ fn main() {
     let f = std::sync::Mutex::new(std::fs::File::open(&a[1]).unwrap());
     m.set_disc(Box::new(move |off, buf| { use std::io::{Read, Seek, SeekFrom}; let mut f = f.lock().unwrap(); f.seek(SeekFrom::Start(off)).unwrap(); f.read_exact(buf).unwrap(); }));
     if snap.is_none() { m.insert_card(&[std::fs::read(format!("{dol}/cards/story-2021.gci")).unwrap()]); m.boot(); }
+    for a in std::env::var("TRACE_FNS").unwrap_or_default().split(',').filter_map(|x| u32::from_str_radix(x.trim_start_matches("0x"), 16).ok()) { m.c.trace_fns.insert(a); }
     let inst = wgpu::Instance::default();
     let ad = futures_lite::future::block_on(inst.request_adapter(&Default::default())).unwrap();
     eprintln!("adapter {:?}", ad.get_info().name);
@@ -26,12 +27,12 @@ fn main() {
         let t = std::time::Instant::now(); m.frame(); tc += t.elapsed();
         static AU: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
         static PCM: std::sync::Mutex<Vec<i16>> = std::sync::Mutex::new(Vec::new());
-        let a = colo_battle::run::take_audio();
+        let a = colo_recomp::run::take_audio();
         let au = AU.fetch_add(a.len(), std::sync::atomic::Ordering::Relaxed);
         if let Ok(path) = std::env::var("WAV") {
             let mut p = PCM.lock().unwrap(); p.extend(a.chunks(2).flat_map(|x| [x[1], x[0]]));
             if fr + 1 == n { let mut b = Vec::new(); for v in p.iter() { b.extend_from_slice(&v.to_le_bytes()); } std::fs::write(&path, b).unwrap(); }
-        } if fr % 100 == 0 { eprintln!("audio: {} stereo frames total, tb {} = {:.3} s", au / 2, colo_battle::run::time_base(&m.c), colo_battle::run::time_base(&m.c) as f64 / 40.5e6); }
+        } if fr % 100 == 0 { eprintln!("audio: {} stereo frames total, tb {} = {:.3} s", au / 2, colo_recomp::run::time_base(&m.c), colo_recomp::run::time_base(&m.c) as f64 / 40.5e6); }
         let t = std::time::Instant::now(); let g = if std::env::var("SOFT").is_ok() { m.gpu_cmds_soft(&mut b) } else { m.gpu_cmds(&mut b) }; tb += t.elapsed();
         let t = std::time::Instant::now(); gpu.render(&g); tr += t.elapsed();
         if std::env::var("EFB").is_ok() && shots.split(',').any(|x| x == fr.to_string()) { if let Some((mut px, w, h)) = gpu.read_efb() { for p in px.chunks_mut(4) { p[3] = 255; } image::save_buffer(format!("{out}/efb{fr}.png"), &px, w, h, image::ColorType::Rgba8).unwrap(); } }
@@ -49,6 +50,8 @@ if std::env::var("OPS").unwrap() == k.to_string() { eprintln!("{st:#x?}"); for i
                 colo_gx::cmd::GOp::Copy(c) => eprintln!("{k} copy {c:?}") } } }
             eprintln!("frame {fr}: {} verts {} ops", g.verts.len(), g.ops.len());
         }
+        if std::env::var("FRAMELOG").is_ok() { eprintln!("F {fr} tb {}", colo_recomp::run::time_base(&m.c)); }
+        if let Ok(w) = std::env::var("PEEK") { if fr % 50 == 0 { let a = u32::from_str_radix(w.trim_start_matches("0x"), 16).unwrap(); let b = m.c.m.read(a, 0x4000); eprintln!("peek {a:#x} frame {fr}: nonzero {} first {:02x?}", b.iter().filter(|x| **x != 0).count(), &b[..16]); } }
         if fr % 100 == 99 { eprintln!("frame {fr}: cpu {:?} build {:?} render {:?} per frame", tc / 100, tb / 100, tr / 100); tc = Default::default(); tb = tc; tr = tc; }
     }
 }

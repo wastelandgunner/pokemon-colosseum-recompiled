@@ -77,12 +77,16 @@ pub struct Wipe {
     disp_mat: Handle<WipeMat>,
     /// The fade serial last composited (one composite per game frame).
     done: u64,
-    /// The scene copy rendered last frame / a composite has been shown since the layer came up.
-    scene_live: bool,
+    /// A composite has been shown since the layer came up.
     shown: bool,
     /// Test hook `COLO_WIPE_SNAPSHOT=file.rgba` (640x480 RGBA8, gamma values): use this image as the snapshot,
     /// e.g. a Dolphin frame, to compare the wipe against the game's trace.
     snapshot_override: Option<Handle<Image>>,
+}
+
+impl Wipe {
+    /// The image holding the fade texture now (the newest composite while a capture runs).
+    pub fn current(&self) -> Option<Handle<Image>> { self.tex.map(|t| self.efb[t].clone()) }
 }
 
 pub struct WipePlugin;
@@ -106,7 +110,12 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>, mut mats
              game: Res<crate::world::Game>) {
     let target = |images: &mut Assets<Image>, f: TextureFormat| images.add(Image::new_target_texture(640, 480, f, None));
     let scene = target(&mut images, TextureFormat::Rgba8UnormSrgb);
-    let efb = [target(&mut images, TextureFormat::Rgba8Unorm), target(&mut images, TextureFormat::Rgba8Unorm)];
+    // COPY_SRC: gamebattle.rs reads the newest one back as the game's fade texture
+    let efb = [0, 1].map(|_| {
+        let mut i = Image::new_target_texture(640, 480, TextureFormat::Rgba8Unorm, None);
+        i.texture_descriptor.usage |= bevy::render::render_resource::TextureUsages::COPY_SRC;
+        images.add(i)
+    });
     let blank = colo_formats::gtx::Image { width: 1, height: 1, rgba: vec![255; 4] };
     let ball0 = images.add(ui_image(game.battle.wipe_tex.first().unwrap_or(&blank)));
     let ball1 = images.add(ui_image(game.battle.wipe_tex.get(1).unwrap_or(&blank)));
@@ -121,16 +130,16 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>, mut mats
     let disp_mat = mats.add(mat(efb[0].clone(), true));
     let rect = meshes.add(Rectangle::new(640.0, 480.0));
     let ortho = || Projection::Orthographic(OrthographicProjection { scaling_mode: ScalingMode::Fixed { width: 640.0, height: 480.0 }, near: -10.0, far: 10.0, ..OrthographicProjection::default_3d() });
-    let scene_cam = commands.spawn((Camera3d::default(), Camera { order: -1, is_active: false, clear_color: ClearColorConfig::Custom(Color::BLACK), ..default() },
+    let scene_cam = commands.spawn((Camera3d::default(), Camera { order: -1, is_active: true, clear_color: ClearColorConfig::Custom(Color::BLACK), ..default() },
         RenderTarget::Image(scene.clone().into()), Transform::default(), Projection::custom(crate::tv::FixedAspect(PerspectiveProjection::default())), Name::new("wipe scene"))).id();
-    let comp_cam = commands.spawn((Camera3d::default(), Camera { order: 4, is_active: false, clear_color: ClearColorConfig::None, ..default() },
+    let comp_cam = commands.spawn((Camera3d::default(), Camera { order: 4, is_active: true, clear_color: ClearColorConfig::None, ..default() },
         RenderTarget::Image(efb[0].clone().into()), Tonemapping::None, Msaa::Off, ortho(), Transform::default(),
         RenderLayers::layer(LAYER_COMPOSITE), Name::new("wipe composite"))).id();
     let disp_cam = commands.spawn((Camera3d::default(), Camera { order: 5, is_active: false, clear_color: ClearColorConfig::None, ..default() },
         Tonemapping::None, Msaa::Off, ortho(), Transform::default(), RenderLayers::layer(LAYER_DISPLAY), Name::new("wipe display"))).id();
     commands.spawn((Mesh3d(rect.clone()), MeshMaterial3d(comp_mat.clone()), Transform::from_xyz(0.0, 0.0, -1.0), RenderLayers::layer(LAYER_COMPOSITE)));
     commands.spawn((Mesh3d(rect), MeshMaterial3d(disp_mat.clone()), Transform::from_xyz(0.0, 0.0, -1.0), RenderLayers::layer(LAYER_DISPLAY)));
-    commands.insert_resource(Wipe { scene, efb, tex: None, scene_cam, comp_cam, disp_cam, comp_mat, disp_mat, done: 0, scene_live: false, shown: false, snapshot_override });
+    commands.insert_resource(Wipe { scene, efb, tex: None, scene_cam, comp_cam, disp_cam, comp_mat, disp_mat, done: 0, shown: false, snapshot_override });
 }
 
 fn quad_u(q: &Quad) -> QuadU {
@@ -154,20 +163,22 @@ pub fn update(mut wipe: ResMut<Wipe>, mut rt: ResMut<ScriptRt>, mut mats: ResMut
     let viewport = mc.viewport.clone();
     let (scene_cam, comp_cam, disp_cam) = (wipe.scene_cam, wipe.comp_cam, wipe.disp_cam);
     if let Ok((mut c, _, t, p, tm)) = cams.get_mut(scene_cam) {
-        c.is_active = up;
+        // always on (640x480 is cheap), like the composite: the snapshot is this frame's
+        c.is_active = true;
         if let (Some(mut t), Some(mut p)) = (t, p) { *t = *mt; *p = mp.clone(); }
         if let (Some(mut tm), Some(m)) = (tm, mtm) { *tm = *m; }
     }
     if !up {
-        (wipe.tex, wipe.shown, wipe.scene_live) = (None, false, false);
-        for e in [comp_cam, disp_cam] { if let Ok((mut c, ..)) = cams.get_mut(e) { c.is_active = false; } }
+        (wipe.tex, wipe.shown) = (None, false);
+        if let Ok((mut c, ..)) = cams.get_mut(disp_cam) { c.is_active = false; }
         return;
     }
     if !fade.texture { wipe.tex = None; }
-    // the scene copy only renders while the layer is up: a snapshot waits for its first image
-    let run = fade.serial != wipe.done && (wipe.scene_live || !fade.snapshot);
-    wipe.scene_live = true;
-    if let Ok((mut c, ..)) = cams.get_mut(comp_cam) { c.is_active = run; }
+    let run = fade.serial != wipe.done;
+    // the composite camera stays on (re-running a composite with the same inputs gives the same image): a camera
+    // just switched on draws nothing in its first frame, which blacked out every snapshot taken without a fade
+    // shortly before (Phenac's trainer and ball wipes)
+    if let Ok((mut c, ..)) = cams.get_mut(comp_cam) { c.is_active = true; }
     if run { wipe.shown = true; }
     let shown = wipe.shown;
     if let Ok((mut c, ..)) = cams.get_mut(disp_cam) { c.is_active = shown; c.viewport = viewport; }

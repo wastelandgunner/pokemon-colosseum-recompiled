@@ -96,6 +96,10 @@ pub struct Actor {
     pub head_rot: (f32, f32),
     /// World position of the head joint (`GSpartGetTransform`), written by the ECS sync.
     pub head_pos: Option<Vec3>,
+    /// `characterAttachToCharacter` (std 70): riding another character's model part (people +0xC8/+0xCC/+0xD0 =
+    /// group, index, part). `GSmodelAttachToGSpart(model, part, 7, 0, 1)` parents the model to the part's joint
+    /// with its own translation/rotation reset, so `pos`/`yaw` are then local to that joint.
+    pub attach: Option<(u32, usize)>,
 }
 
 /// What a head look follows: a character's position (std 181 keeps the pointer, so it tracks) or a point.
@@ -116,7 +120,7 @@ impl Actor {
             index, pos, yaw, visible, slots, anim_request: None, base_anim: idle, anim_busy: false, path: VecDeque::new(),
             run: false, turn_to: None, move_type, home: pos, wander_wait: 1.0 + (index % 5) as f32 * 0.7, talking: false, stuck: 0.0, teleported: false, walk_speed: 0.3, run_speed: 0.75, follow: None,
             flags: 0, radius: 4.0, dir: yaw, amount: None, human: false, human_on: true, head_yaw: (0.0, 0.0), talk_se: 0,
-            turn_rate: 1.0, turn_speed: 1.0, head_part: -1, look: None, head_target: (0.0, 0.0), head_rot: (0.0, 0.0), head_pos: None,
+            turn_rate: 1.0, turn_speed: 1.0, head_part: -1, look: None, head_target: (0.0, 0.0), head_rot: (0.0, 0.0), head_pos: None, attach: None,
         }
     }
     /// Speeds from the CharacterModels strides and the model's walk/run animation lengths.
@@ -374,7 +378,15 @@ pub struct ScriptWorld {
     pub messages: HashMap<u32, String>,
     /// Story flags (kept across rooms; no save file yet).
     pub flags: HashSet<u32>,
+    /// Hero status 0x18 (`heroSetStatus(0, 0x18, on)`): RUI is in the party; saved with the game. Set by std 35.
+    pub partner: bool,
+    /// HEROMOVE member 1 (`0x80426BF4` bit 0): RUI is shown and follows (`initFloor`, `heroMoveMain`'s
+    /// `partnerMove`). `heroMoveSyncWithHero` 0x80130054 sets it from `partner` (unless flag 0x8AE) on room entry;
+    /// std 35 adds/dismisses it.
+    pub partner_member: bool,
     pub actors: Vec<Actor>,
+    /// The room's GScolsys2 collision (sight checks).
+    pub colsys: Option<crate::colsys::ColSys>,
     /// `scriptFloorCharSetDisp` (std 100) writes: (NPC index, visible) for the floor data's NPC record bit 7
     /// (`floorCharacterBiosSetVisibility`). The game reads that bit only when `_floorInitCharacters` creates the
     /// characters, after the modify script ran at script load, so the viewer applies these after the modify script.
@@ -429,7 +441,7 @@ pub struct ScriptWorld {
 impl ScriptWorld {
     pub fn new(flags: HashSet<u32>) -> Self {
         ScriptWorld {
-            floor_id: 0, doors: vec![], prev_floor: 0, return_map: None, menu_room: None, group_id: 0, messages: HashMap::new(), flags, actors: vec![], char_disp: vec![], dialog: Dialog::default(), cmds: vec![],
+            floor_id: 0, doors: vec![], prev_floor: 0, return_map: None, menu_room: None, group_id: 0, messages: HashMap::new(), flags, partner: false, partner_member: false, actors: vec![], colsys: None, char_disp: vec![], dialog: Dialog::default(), cmds: vec![],
             warp: None, hero_locked: false, hm: Default::default(), blocking: false, map_busy: false, event_cam: None, anim_cam: None, fade: 0.0, fade_target: 0.0, fade_speed: 1.0, cam_ends: HashMap::new(), cam_now: (Vec3::ZERO, Vec3::ZERO), tv_list: vec![], tv: None, shadow_flags: Default::default(), tv_events: HashMap::new(), timers: HashMap::new(), snd_tasks: HashMap::new(), started: HashSet::new(), rng: 0x1234_5678,
             trace: std::env::var("COLO_TRACE").is_ok(), fade_gs: crate::fade::Fade::new(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0x1234_5678, |d| d.subsec_nanos())), battle: None, battle_tables: None, battle_result: 2, battle_cam: None,
         }
@@ -605,6 +617,31 @@ impl ScriptRt {
     }
 }
 
+/// Flag 0xE05: `battleStart` skips its `fadeSet(0.5, 2)` back on the field (std 152 sets it).
+const FLAG_NO_FADE_BACK: u32 = 0xE05;
+
+/// std 102 `battleStart` (0x8020DAD0) for the calling thread: the first call starts the wipe and the battle
+/// (battle.rs); `Some(battleGetResult)` once it is over and back on the field.
+fn battle_start(w: &mut ScriptWorld, serial: u16, enc: u32) -> Option<u32> {
+    if !w.started.contains(&serial) {
+        if !w.dialog.free() || w.battle.is_some() { return None; }
+        let Some(t) = w.battle_tables.clone() else { return Some(2) };
+        if enc == 0 { return Some(0); }
+        // characterEndSpeech waited for the window to close
+        w.dialog.clear();
+        let e = crate::battle::Encounter::start(w, &t, enc);
+        w.battle = Some(e);
+        w.started.insert(serial);
+    }
+    if w.battle.as_ref().is_some_and(|b| b.phase == crate::battle::Phase::Done && !b.rerun_modify) {
+        let b = w.battle.take()?;
+        w.battle_result = b.result;
+        w.started.remove(&serial);
+        return Some(b.result);
+    }
+    None
+}
+
 pub struct WorldHost<'a>(pub &'a mut ScriptWorld);
 
 impl Host for WorldHost<'_> {
@@ -644,34 +681,33 @@ impl Host for WorldHost<'_> {
                 done
             }
             // ---- std 102: the wipe, the battle floor, back (battle.rs); returns battleGetResult
-            "battleStart" => {
-                if !w.started.contains(&serial) {
-                    if !w.dialog.free() || w.battle.is_some() { return NativeResult::Pending; }
-                    let Some(t) = w.battle_tables.clone() else { return NativeResult::Done(2) };
-                    let enc = idx(0) & 0xFFFF;
-                    if enc == 0 { return NativeResult::Done(0); }
-                    // characterEndSpeech waited for the window to close
-                    w.dialog.clear();
-                    let e = crate::battle::Encounter::start(w, &t, enc);
-                    w.battle = Some(e);
-                    w.started.insert(serial);
-                }
-                if w.battle.as_ref().is_some_and(|b| b.phase == crate::battle::Phase::Done && !b.rerun_modify) {
-                    let b = w.battle.take().unwrap();
-                    w.battle_result = b.result;
-                    w.started.remove(&serial);
-                    return NativeResult::Done(b.result);
-                }
-                NativeResult::Pending
-            }
-            // ---- std 152 isn't ported yet: say so and count it as a win (battleGetResult 2 = won)
+            "battleStart" => match battle_start(w, serial, idx(0) & 0xFFFF) { Some(r) => NativeResult::Done(r), None => NativeResult::Pending },
+            // ---- std 152 `fieldStartEncount` (0x801CA5C4)(enc, fade, keep): flag 0xE05 off; with flag 0x8AE off: 0xE05 on
+            // if fade or keep (battleStart then skips its fadeSet(0.5, 2)), battleStart(enc); a lost battle of a
+            // Zenmetu encounter (fightFloorIsGcHeroWin(0, result) false) waits 3 frames and skips the fade; else
+            // fade && !keep → fadeSet(0.5, 2) (DAT_8047E108). 0xE05 off again; returns battleStart's result.
+            // (With flag 0x8AE the game runs the menu-room battle FUN_8006A65C instead: not ported.)
             "battleStartBattleWithOptions" => {
-                if !w.started.contains(&serial) {
-                    if !w.dialog.free() { return NativeResult::Pending; }
-                    w.dialog.open(&format!("[Battle {} - battles aren't implemented yet; counted as a win]", idx(0)));
-                    w.started.insert(serial);
+                let (enc, fade, keep) = (idx(0) & 0xFFFF, c.int(1) & 0xFF != 0, c.int(2) != 0);
+                if let Some(t) = w.timers.get_mut(&serial) {
+                    *t -= 1.0;
+                    if *t > 0.0 { return NativeResult::Pending; }
+                    w.timers.remove(&serial);
+                    return NativeResult::Done(w.battle_result);
                 }
-                if w.dialog.free() { w.started.remove(&serial); w.dialog.close(); done } else { NativeResult::Pending }
+                if !w.started.contains(&serial) {
+                    w.flags.remove(&FLAG_NO_FADE_BACK);
+                    if w.flags.contains(&0x8AE) { println!("battleStartBattleWithOptions({enc}): flag 0x8AE (menu-room battle) not ported; running battleStart"); }
+                    else if fade || keep { w.flags.insert(FLAG_NO_FADE_BACK); }
+                }
+                let Some(r) = battle_start(w, serial, enc) else { return NativeResult::Pending };
+                // fightFloorIsGcHeroWin: result 2 = the host side (the field hero's) won
+                let zenmetu = w.battle_tables.as_ref().is_some_and(|t| t.zenmetu(enc));
+                let lost = zenmetu && r != 2;
+                if !keep && !lost && fade { w.fade_gs.set(2, 0.5); }
+                w.flags.remove(&FLAG_NO_FADE_BACK);
+                if lost { w.timers.insert(serial, 3.0); return NativeResult::Pending; }
+                NativeResult::Done(r)
             }
             "battleGetResult" => NativeResult::Done(w.battle_result),
             // ---- flags (std 78 = set, 79 = clear; see NOTES)
@@ -783,15 +819,15 @@ impl Host for WorldHost<'_> {
             // ---- event camera
             "GSscene_SetMode" => { if c.int(0) == 0 { w.event_cam = None; w.anim_cam = None; } done }
             "cameraReturn" => { w.event_cam = None; w.anim_cam = None; done }
-            // transitionBegin(type, seconds): 3 fades to black, 2 fades back in (as used around event camera
-            // cuts); transitionWait blocks until it's done
-            "transitionBegin" => {
-                let secs = c.float(1).max(0.01);
-                w.fade_target = if c.int(0) == 3 || c.int(0) == 1 { 1.0 } else { 0.0 };
-                w.fade_speed = 1.0 / secs;
-                done
+            // std 28 = `fadeSet(seconds, type)` (0x801C41C8; type 3 fades to black, 2 back in) on the game's fade layer;
+            // std 29 = `fadeCheck(wait)` (0x801C40F0): with wait, loop on _threadSwitch while the fade is pending, then
+            // one more frame; returns the pending flag
+            "transitionBegin" => { w.fade_gs.set(c.int(0) as u16, c.float(1)); done }
+            "transitionWait" => {
+                if c.int(0) & 0xFF == 0 { return NativeResult::Done(w.fade_gs.busy() as u32); }
+                if w.fade_gs.busy() { return NativeResult::Pending; }
+                if w.started.insert(serial) { NativeResult::Pending } else { w.started.remove(&serial); NativeResult::Done(0) }
             }
-            "transitionWait" => if (w.fade - w.fade_target).abs() > 0.001 { NativeResult::Pending } else { done },
             // cameraPresetFromFile(group, resource, flag, start frame) (0x80176E0C): camera mode 4, rate 0.5
             "cameraPresetFromFile" => {
                 let resource = idx(1);
@@ -888,6 +924,27 @@ impl Host for WorldHost<'_> {
             }
             // ---- characters
             "scriptFloorCharSetDisp" => { w.char_disp.retain(|d| d.0 != idx(0)); w.char_disp.push((idx(0), c.int(1) & 1 != 0)); NativeResult::Done(1) }
+            // std 70 characterAttachToCharacter(g, i, g2, i2, part) (0x801845E4): detach from any earlier part, then
+            // ride (g2, i2)'s model part `part`; the ECS sync parents the model to that joint
+            "characterAttachToCharacter" => {
+                let (to, part) = (idx(3), c.int(4));
+                // (the arrival's bike attach passes modelGetResourceID handles, which the viewer doesn't model: 0)
+                if to != idx(1) && w.actors.iter().any(|a| a.index == to) {
+                    if let Some(a) = w.actor(idx(1)) { a.attach = (part >= 0).then_some((to, part as usize)); }
+                }
+                done
+            }
+            // std 35 setPartnerFollowing(on) 0x801C9F00: heroSetStatus(0, 0x18, on), then add (FUN_8012F1FC: member bit,
+            // RUI looks at the hero, shown) or dismiss (`heroMoveDismissMember`: bit cleared, she stays visible) member 1
+            "setPartnerFollowing" => {
+                let on = c.int(0) & 0xFF != 0;
+                w.partner = on;
+                if on && !w.partner_member {
+                    if let Some(a) = w.actor(PARTNER) { a.look = Some(LookAt::Actor(HERO)); a.visible = true; }
+                }
+                w.partner_member = on;
+                done
+            }
             "characterSetVisibility" => { if let Some(a) = w.actor(idx(1)) { a.visible = c.int(2) != 0; } done }
             "characterSetAnimation" => {
                 if let Some(a) = w.actor(idx(1)) {
@@ -953,6 +1010,21 @@ impl Host for WorldHost<'_> {
                 let busy = w.actor(idx(1)).is_some_and(|a| a.head_rot != a.head_target);
                 // std 155: 0 once the head reached its target; 1 if not and not waiting
                 if !busy { done } else if c.int(2) != 0 { NativeResult::Pending } else { NativeResult::Done(1) }
+            }
+            // std 169 peopleGazeHeroCheck(g, i) 0x80186254 = peopleCanSee(3.0, 30.0, g, i, 0, 100) 0x80186284: (g, i) sees
+            // the hero within 10·3 = 30 units, within ±0.5·30° of its facing, and no wall between them (FUN_8010F188:
+            // the wall sweep from it to the hero with its CharacterModels radius)
+            "peopleGazeHeroCheck" => {
+                use std::f32::consts::{PI, TAU};
+                let hero = w.hero_pos();
+                let Some(a) = w.actors.iter().find(|a| a.index == idx(1)) else { return NativeResult::Done(0) };
+                let d = hero - a.pos;
+                if d.length() > 30.0 { return NativeResult::Done(0); }
+                let mut ang = ((TAU as f64 + (d.x.atan2(d.z) - a.yaw) as f64) % TAU as f64) as f32;
+                if ang > PI { ang -= TAU; } else if ang < -PI { ang += TAU; }
+                if ang.abs() > 0.5 * 30.0f32.to_radians() { return NativeResult::Done(0); }
+                let blocked = w.colsys.as_ref().is_some_and(|cs| cs.wall_sweep(a.radius, a.pos, hero).is_some());
+                NativeResult::Done(!blocked as u32)
             }
             "characterCheckWithinBounds" => {
                 let inside = w.actors.iter().find(|a| a.index == idx(1)).is_some_and(|a| {

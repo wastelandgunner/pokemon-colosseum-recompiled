@@ -11,6 +11,8 @@ pub struct Vertex {
     pub texmtx: [u8; 8],
     pub pos: [f32; 3],
     pub nrm: Option<[f32; 3]>,
+    /// NBT normals' binormal and tangent (GX_VA_NBT), for emboss texgens and the binormal texgen sources.
+    pub nbt: Option<[[f32; 3]; 2]>,
     pub clr: [Option<[u8; 4]>; 2],
     pub tex: [Option<[f32; 2]>; 8],
 }
@@ -147,18 +149,20 @@ impl Format {
             // normals: 1.0 = 1 << 6 (s8) or 1 << 14 (s16)
             let shift = match self.nrm.fmt { 1 => 6, 3 => 14, _ => 0 };
             if self.nrm.kind != 1 && self.nrm.cnt == 1 && self.nrm_index3 {
-                // three indices (N, B, T); only N is kept
-                let b = Self::fetch(self.nrm.kind, d, &mut i, 3 * cs, 1, cp, mem, &mut buf).to_vec();
-                let mut o = [0f32; 3];
-                Self::comps(self.nrm.fmt, shift, &b, 3, &mut o);
-                v.nrm = Some(o);
-                let skip = if self.nrm.kind == 2 { 2 } else { 4 };
-                i += skip;
+                // three indices (N, B, T): vector k of the element at index k (as Dolphin)
+                let mut o = [[0f32; 3]; 3];
+                for k in 0..3 {
+                    let b = Self::fetch(self.nrm.kind, d, &mut i, 9 * cs, 1, cp, mem, &mut buf);
+                    Self::comps(self.nrm.fmt, shift, &b[3 * cs * k..], 3, &mut o[k]);
+                }
+                v.nrm = Some(o[0]);
+                v.nbt = Some([o[1], o[2]]);
             } else {
                 let b = Self::fetch(self.nrm.kind, d, &mut i, n * cs, 1, cp, mem, &mut buf);
                 let mut o = [0f32; 9];
                 Self::comps(self.nrm.fmt, shift, b, n, &mut o);
                 v.nrm = Some([o[0], o[1], o[2]]);
+                if n == 9 { v.nbt = Some([[o[3], o[4], o[5]], [o[6], o[7], o[8]]]); }
             }
         }
         for k in 0..2 {

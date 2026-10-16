@@ -74,9 +74,10 @@ pub struct CObj {
     pub sun: Option<CList>,
 }
 
-#[derive(Default)]
+/// Clone is cheap (the objects are shared); `disabled` is the per-copy state.
+#[derive(Default, Clone)]
 pub struct ColSys {
-    pub objs: Vec<CObj>,
+    pub objs: std::sync::Arc<Vec<CObj>>,
     /// Objects switched off (`scriptSetCol(id, 0)`).
     pub disabled: HashSet<u16>,
 }
@@ -181,7 +182,7 @@ impl ColSys {
             }
             objs.push(o);
         }
-        ColSys { objs, disabled: HashSet::new() }
+        ColSys { objs: std::sync::Arc::new(objs), disabled: HashSet::new() }
     }
 
     fn enabled(&self) -> impl Iterator<Item = &CObj> {
@@ -380,7 +381,7 @@ mod tests {
         // wall in the plane z = 0 facing +z (normal (0,0,1))
         let t = tri([[-10.0, 0.0, 0.0], [10.0, 0.0, 0.0], [0.0, 20.0, 0.0]], 0);
         assert!(t.n.z > 0.9);
-        let cs = ColSys { objs: vec![CObj { wall: Some(CList { tris: vec![t], grid: None }), ..default() }], disabled: default() };
+        let cs = ColSys { objs: std::sync::Arc::new(vec![CObj { wall: Some(CList { tris: vec![t], grid: None }), ..default() }]), disabled: default() };
         // from the front: pushed back to radius 4
         let hit = cs.wall_sweep(4.0, Vec3::new(0.0, 5.0, 10.0), Vec3::new(0.0, 5.0, 1.0)).unwrap();
         assert!((hit.z - 4.0001).abs() < 1e-3, "{hit:?}");
@@ -398,7 +399,7 @@ mod real_tests {
         let c = ccd::Collision::parse(&b).unwrap();
         let cs = ColSys::from_ccd(&c);
         let (mut faces, mut inside) = (0, 0);
-        for o in &cs.objs {
+        for o in cs.objs.iter() {
             let Some(l) = &o.wall else { continue };
             for t in &l.tris {
                 faces += 1;

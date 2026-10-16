@@ -1,8 +1,8 @@
 [workspace]
 resolver = "2"
-members = ["crates/colo-formats", "crates/colo-script", "crates/colo-battle", "crates/colo-export", "crates/colo-tool", "crates/colo-viewer", "crates/colo-audio", "crates/colo-gx", "crates/colo-gxgpu"]
+members = ["crates/colo-formats", "crates/colo-script", "crates/colo-battle", "crates/colo-lifted", "crates/colo-recomp", "crates/colo-export", "crates/colo-tool", "crates/colo-viewer", "crates/colo-audio", "crates/colo-gx", "crates/colo-gxgpu"]
 # `cargo build` skips the Bevy viewer; build it with `cargo run -p colo-viewer --release -- ...`
-default-members = ["crates/colo-formats", "crates/colo-script", "crates/colo-battle", "crates/colo-export", "crates/colo-tool", "crates/colo-gx", "crates/colo-gxgpu"]
+default-members = ["crates/colo-formats", "crates/colo-script", "crates/colo-battle", "crates/colo-lifted", "crates/colo-recomp", "crates/colo-export", "crates/colo-tool", "crates/colo-gx", "crates/colo-gxgpu"]
 
 [workspace.package]
 version = "0.1.0"
@@ -15,3 +15,8 @@ opt-level = 1
 # dependencies (Bevy) optimized even in dev builds
 [profile.dev.package."*"]
 opt-level = 3
+
+# colo-lifted (~1.5M generated lines) dominates release builds. The partitioner keeps each lifted module
+# (lifted/mNNN.rs) in one unit, so give it a unit per module (44) to spread LLVM over the cores.
+[profile.release.package.colo-lifted]
+codegen-units = 48

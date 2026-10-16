@@ -634,6 +634,12 @@ pub(crate) fn transform(d: &Draw, s: &State) -> Vec<V> {
             let l = (o[0] * o[0] + o[1] * o[1] + o[2] * o[2]).sqrt();
             if l > 0.0 { [o[0] / l, o[1] / l, o[2] / l] } else { o }
         }).unwrap_or([0.0, 0.0, 1.0]);
+        // binormal and tangent by the same 3x3, not normalized (as Dolphin)
+        let nbt = v.nbt.map(|bt| bt.map(|n| {
+            let b = 0x400 + (v.pnmtx as usize % 32) * 3;
+            let r = |k: usize| f(xm[b + 3 * k]) * n[0] + f(xm[b + 3 * k + 1]) * n[1] + f(xm[b + 3 * k + 2]) * n[2];
+            [r(0), r(1), r(2)]
+        }));
         let mut out = V { c, ..V::default() };
         for ch in 0..2 {
             let vc = v.clr[ch].map(|c| c.map(|x| x as f32)).unwrap_or([255.0; 4]);
@@ -645,6 +651,7 @@ pub(crate) fn transform(d: &Draw, s: &State) -> Vec<V> {
             let src: [f32; 4] = match src_row {
                 0 => [v.pos[0], v.pos[1], v.pos[2], 1.0],
                 1 => { let n = v.nrm.unwrap_or([0.0; 3]); [n[0], n[1], n[2], 1.0] }
+                3 | 4 => { let n = v.nbt.map(|b| b[(src_row - 3) as usize]).unwrap_or([0.0; 3]); [n[0], n[1], n[2], 1.0] }
                 5..=12 => { let tc = v.tex[(src_row - 5) as usize].unwrap_or([0.0; 2]); [tc[0], tc[1], 1.0, 1.0] }
                 _ => [0.0, 0.0, 1.0, 1.0],
             };
@@ -655,6 +662,22 @@ pub(crate) fn transform(d: &Draw, s: &State) -> Vec<V> {
                     let tm = v.texmtx[t] as usize * 4;
                     let r = |k: usize| f(xm[tm + 4 * k]) * src[0] + f(xm[tm + 4 * k + 1]) * src[1] + f(xm[tm + 4 * k + 2]) * src[2] + f(xm[tm + 4 * k + 3]) * src[3];
                     if info >> 1 & 1 != 0 { [r(0), r(1), r(2)] } else { [r(0), r(1), 1.0] }
+                }
+                // emboss: an earlier texgen's coordinates shifted by the light direction in the binormal/tangent
+                // frame (info bits 12-14 source texgen, 15-17 light)
+                1 => {
+                    let src = out.tc[(info >> 12 & 7) as usize];
+                    match nbt {
+                        Some([b, t]) => {
+                            let lb = 0x600 + 0x10 * (info >> 15 & 7) as usize;
+                            let l = [f(xm[lb + 10]) - e[0], f(xm[lb + 11]) - e[1], f(xm[lb + 12]) - e[2]];
+                            let len = (l[0] * l[0] + l[1] * l[1] + l[2] * l[2]).sqrt();
+                            let l = if len > 0.0 { [l[0] / len, l[1] / len, l[2] / len] } else { l };
+                            let dot = |a: [f32; 3]| a[0] * l[0] + a[1] * l[1] + a[2] * l[2];
+                            [src[0] + dot(b), src[1] + dot(t), src[2]]
+                        }
+                        None => src,
+                    }
                 }
                 2 | 3 => { let c = out.col[(ty - 2) as usize]; [c[0] / 255.0, c[1] / 255.0, 1.0] }
                 _ => [0.0, 0.0, 1.0],
@@ -701,13 +724,10 @@ fn light(s: &State, ch: usize, vc: [f32; 4], pos: [f32; 3], n: [f32; 3]) -> [f32
             let ld = [f(xm[b + 13]), f(xm[b + 14]), f(xm[b + 15])];
             let dot = |a: [f32; 3], b: [f32; 3]| a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
             let diff_fn = ctrl >> 7 & 3;
-            let atten_on = ctrl >> 10 & 1 != 0;
-            let spot = ctrl >> 9 & 1 != 0;
-            let (dir, attn) = if !atten_on {
-                let v = [lp[0] - pos[0], lp[1] - pos[1], lp[2] - pos[2]];
-                let l = dot(v, v).sqrt().max(1e-20);
-                ([v[0] / l, v[1] / l, v[2] / l], 1.0)
-            } else if spot {
+            // attenuation function (bit 9 | bit 10 << 1, as GXSetChanCtrl writes it: bit 9 = not NONE, bit 10 = not
+            // SPEC): 1 specular, 3 spot, 0/2 none
+            let attn_fn = (ctrl >> 9 & 1) | (ctrl >> 10 & 1) << 1;
+            let (dir, attn) = if attn_fn == 3 {
                 let v = [lp[0] - pos[0], lp[1] - pos[1], lp[2] - pos[2]];
                 let d2 = dot(v, v);
                 let d = d2.sqrt().max(1e-20);
@@ -716,14 +736,21 @@ fn light(s: &State, ch: usize, vc: [f32; 4], pos: [f32; 3], n: [f32; 3]) -> [f32
                 let cosatt = (ca[0] + ca[1] * cs + ca[2] * cs * cs).max(0.0);
                 let distatt = ka[0] + ka[1] * d + ka[2] * d2;
                 (dir, if distatt != 0.0 { cosatt / distatt } else { 0.0 })
+            } else if attn_fn == 1 {
+                // specular (as Dolphin): the light direction register holds the half-angle vector; the attenuation
+                // polynomials run on n.h, the distance one normalized unless the diffuse function is none
+                let v = [lp[0] - pos[0], lp[1] - pos[1], lp[2] - pos[2]];
+                let l = dot(v, v).sqrt().max(1e-20);
+                let dir = [v[0] / l, v[1] / l, v[2] / l];
+                let a = if dot(n, dir) >= 0.0 { dot(n, ld).max(0.0) } else { 0.0 };
+                let k = if diff_fn == 0 { ka } else { let m = dot(ka, ka).sqrt(); if m > 0.0 { [ka[0] / m, ka[1] / m, ka[2] / m] } else { ka } };
+                let cosatt = (ca[0] + ca[1] * a + ca[2] * a * a).max(0.0);
+                let distatt = k[0] + k[1] * a + k[2] * a * a;
+                (dir, if distatt != 0.0 { cosatt / distatt } else { 0.0 })
             } else {
-                // specular: the light position is a direction, the light direction the half-angle vector
-                let l = dot(lp, lp).sqrt().max(1e-20);
-                let dir = [lp[0] / l, lp[1] / l, lp[2] / l];
-                let a = if dot(dir, n) >= 0.0 { dot(ld, n).max(0.0) } else { 0.0 };
-                let cosatt = ca[0] + ca[1] * a + ca[2] * a * a;
-                let distatt = ka[0] + ka[1] * a + ka[2] * a * a;
-                (dir, if distatt != 0.0 { (cosatt / distatt).max(0.0) } else { 0.0 })
+                let v = [lp[0] - pos[0], lp[1] - pos[1], lp[2] - pos[2]];
+                let l = dot(v, v).sqrt();
+                (if l > 0.0 { [v[0] / l, v[1] / l, v[2] / l] } else { n }, 1.0)
             };
             let nd = dot(dir, n);
             let diff = match diff_fn { 0 => 1.0, 1 => nd, _ => nd.max(0.0) };

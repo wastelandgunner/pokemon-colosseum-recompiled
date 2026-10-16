@@ -309,7 +309,7 @@ fn cmd_ips(spec: &str, script: Option<&str>) -> R<()> {
 }
 
 fn cmd_battle_replay(dir: &str) -> R<()> {
-    use colo_battle::{lifted, mem::Mem, ppc::Cpu, stubs};
+    use colo_recomp::{lifted, mem::Mem, ppc::Cpu, stubs};
     let d = Path::new(dir);
     let before = std::fs::read(d.join("before.bin"))?;
     let after = std::fs::read(d.join("after.bin"))?;
@@ -332,7 +332,7 @@ fn cmd_battle_replay(dir: &str) -> R<()> {
     }
     let _ = num;
     let (r, pc, cr, lr, ctr, xer, f) = regs(&d.join("regs_before.json"))?;
-    if let Ok(w) = std::env::var("WATCH") { colo_battle::mem::WATCH.store(u32::from_str_radix(w.trim_start_matches("0x"), 16)?, std::sync::atomic::Ordering::Relaxed); }
+    if let Ok(w) = std::env::var("WATCH") { colo_recomp::mem::WATCH.store(u32::from_str_radix(w.trim_start_matches("0x"), 16)?, std::sync::atomic::Ordering::Relaxed); }
     let mut m = Mem::new();
     m.map(0x80000000, before);
     let mut c = Cpu::bare(m);
@@ -375,7 +375,7 @@ fn cmd_battle_replay(dir: &str) -> R<()> {
     lifted::dispatch(&mut c, pc);
     outln!("{} blocks executed", c.steps);
     c.m.trace = false;
-    if let Some(p) = prof_out { std::fs::write(&p, colo_battle::prof::dump())?; outln!("function facts -> {p}"); }
+    if let Some(p) = prof_out { std::fs::write(&p, colo_recomp::prof::dump())?; outln!("function facts -> {p}"); }
     // compare
     let trace = std::fs::read_to_string(d.join("trace.log"))?;
     let mut ws_want = vec![]; let mut r_want = vec![];
@@ -503,7 +503,8 @@ fn cmd_battle_data(path: &str, what: Option<&str>) -> R<()> {
         }
         "lift-check" => {
             // lifted pokemonGetStatus/wazaGetStatus (machine code -> Rust) vs the generated readable getters
-            use colo_battle::{data_bios as db, lifted, ppc::Cpu, world};
+            use colo_battle::{data_bios as db, world};
+            use colo_recomp::{lifted, ppc::Cpu};
             let m = world::load(&dol, &w.common_bytes)?;
             let mut c = Cpu::new(m);
             c.dispatch = lifted::dispatch;

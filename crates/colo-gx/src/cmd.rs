@@ -9,6 +9,10 @@ use crate::raster::{transform, konst_alpha, konst_color, swap};
 use crate::{Frame, GpuMem, Prim, State};
 use std::collections::{HashMap, HashSet};
 
+/// Debug: while set, `Builder::build` prints one line per draw (primitive, texgens, channels, textures, indirect
+/// stages, fog) to stderr. Hosts set it for chosen frames (colo-viewer movieperf GXDUMP=frames).
+pub static DUMP: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
 #[repr(C)]
 #[derive(Clone, Copy, Default, Debug)]
 pub struct GVertex {
@@ -94,6 +98,12 @@ pub struct Builder {
 }
 
 fn fnv(h: &mut u64, b: &[u8]) { for &x in b { *h ^= x as u64; *h = h.wrapping_mul(0x100_0000_01B3); } }
+/// FNV-1a over 8-byte words (texture data: hashed every frame for the decode cache; ~8x faster than per byte).
+fn fnv_words(h: &mut u64, b: &[u8]) {
+    let mut it = b.chunks_exact(8);
+    for w in &mut it { *h ^= u64::from_le_bytes([w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7]]); *h = h.wrapping_mul(0x100_0000_01B3); }
+    fnv(h, it.remainder());
+}
 
 impl Builder {
     pub fn new() -> Builder { Builder { tmem: vec![0; 1 << 20], ..Default::default() } }
@@ -127,6 +137,7 @@ impl Builder {
     fn draw(&mut self, d: &crate::Draw, s: &State, mem: &dyn GpuMem, g: &mut GFrame) {
         let vs = transform(d, s);
         let n = vs.len();
+        if DUMP.load(std::sync::atomic::Ordering::Relaxed) { dump(d, s, g.ops.len()); }
         let first = g.verts.len() as u32;
         let mut push = |k: usize| {
             let v = &vs[k];
@@ -139,7 +150,34 @@ impl Builder {
             Prim::Triangles => for k in 0..n / 3 * 3 { push(k); },
             Prim::TriStrip => for k in 2..n { let t = if k % 2 == 0 { [k - 2, k - 1, k] } else { [k - 1, k - 2, k] }; for x in t { push(x); } },
             Prim::TriFan => for k in 2..n { for x in [0, k - 1, k] { push(x); } },
-            _ => return,
+            Prim::Lines | Prim::LineStrip | Prim::Points => {
+                // lines and points as screen-space quads (SU line/point size 0x22, in 1/6 pixel; lines widen across
+                // their minor axis, as Dolphin)
+                let su = s.bp[0x22];
+                let (vx, vy) = (f32::from_bits(s.xf_reg[0x1A]).abs().max(1e-6), f32::from_bits(s.xf_reg[0x1B]).abs().max(1e-6));
+                let quad = |g: &mut GFrame, v: &[&crate::raster::V; 4], off: [[f32; 2]; 4]| {
+                    for k in [0usize, 1, 2, 0, 2, 3] {
+                        let p = v[k].c;
+                        let mut tc = [[0f32; 4]; 8];
+                        for t in 0..8 { tc[t] = [v[k].tc[t][0], v[k].tc[t][1], v[k].tc[t][2], 0.0]; }
+                        g.verts.push(GVertex { pos: [p[0] + off[k][0] / vx * p[3], p[1] + off[k][1] / vy * p[3], p[2], p[3]], col: v[k].col, tc });
+                    }
+                };
+                if d.prim == Prim::Points {
+                    let h = (su >> 8 & 0xFF) as f32 / 12.0;
+                    for v in &vs { quad(g, &[v, v, v, v], [[-h, h], [h, h], [h, -h], [-h, -h]]); }
+                } else {
+                    let h = (su & 0xFF) as f32 / 12.0;
+                    let pairs: Vec<(usize, usize)> = if d.prim == Prim::Lines { (0..n / 2).map(|k| (2 * k, 2 * k + 1)).collect() } else { (1..n).map(|k| (k - 1, k)).collect() };
+                    for (a, b) in pairs {
+                        let (pa, pb) = (vs[a].c, vs[b].c);
+                        let dx = (pb[0] / pb[3] - pa[0] / pa[3]) * vx;
+                        let dy = (pb[1] / pb[3] - pa[1] / pa[3]) * vy;
+                        let o = if dx.abs() > dy.abs() { [0.0, h] } else { [h, 0.0] };
+                        quad(g, &[&vs[a], &vs[b], &vs[b], &vs[a]], [[o[0], o[1]], [o[0], o[1]], [-o[0], -o[1]], [-o[0], -o[1]]]);
+                    }
+                }
+            }
         }
         let count = g.verts.len() as u32 - first;
         if count == 0 { return; }
@@ -232,7 +270,7 @@ impl Builder {
         fnv(&mut hsh, &w.to_le_bytes());
         fnv(&mut hsh, &h.to_le_bytes());
         fnv(&mut hsh, &(raw.len() as u32).to_le_bytes());
-        for b in &raw { fnv(&mut hsh, b); }
+        for b in &raw { fnv_words(&mut hsh, b); }
         fnv(&mut hsh, &pal_bytes);
         if !self.sent.contains(&hsh) {
             let pal = if pal_bytes.is_empty() { None } else { colo_formats::gx::decode_palette(&pal_bytes, tlut >> 10 & 3, pal_bytes.len() / 2).ok() };
@@ -268,4 +306,24 @@ impl Builder {
         if to_xfb { g.xfb = Some(id); } else { self.copies.insert(dst, id); }
         g.ops.push(GOp::Copy(c));
     }
+}
+
+fn dump(d: &crate::Draw, s: &State, op: usize) {
+    let xr = &s.xf_reg;
+    let gm = s.bp[0x00];
+    let ntex = (xr[0x3F] & 0xF) as usize;
+    let tg: Vec<String> = (0..ntex).map(|t| format!("{:x}/{:x}", xr[0x40 + t], xr[0x50 + t])).collect();
+    let nst = ((gm >> 10) & 0xF) as usize + 1;
+    let tex: Vec<String> = (0..nst).filter_map(|st| {
+        let order = (s.bp[0x28 + st / 2] >> (12 * (st & 1))) & 0x3FF;
+        if order >> 6 & 1 == 0 { return None; }
+        let map = (order & 7) as usize;
+        let img0 = s.bp[if map < 4 { 0x88 + map } else { 0xA8 + map - 4 }];
+        Some(format!("s{st}:m{map}c{}f{}({}x{})", order >> 3 & 7, img0 >> 20 & 0xF, (img0 & 0x3FF) + 1, (img0 >> 10 & 0x3FF) + 1))
+    }).collect();
+    let ind: Vec<String> = (0..nst).filter(|&st| s.bp[0x10 + st] != 0).map(|st| format!("{st}:{:x}", s.bp[0x10 + st])).collect();
+    let v = d.verts.first();
+    eprintln!("gx op{op} {:?} n{} dual{} nchan{} cc[{:x} {:x} {:x} {:x}] tg[{}] st{nst} ntex{} tex[{}] ind[{}] fog{:x} nrm{} nbt{}",
+        d.prim, d.verts.len(), xr[0x12] & 1, xr[0x09] & 3, xr[0x0E], xr[0x0F], xr[0x10], xr[0x11], tg.join(" "), gm & 0xF, tex.join(" "), ind.join(" "),
+        s.bp[0xF1] >> 21 & 7, v.is_some_and(|v| v.nrm.is_some()), v.is_some_and(|v| v.nbt.is_some()));
 }

@@ -2051,7 +2051,7 @@ name = "colo-battle"
 version = "0.1.0"
 dependencies = [
  "colo-formats",
- "colo-gx",
+ "colo-recomp",
 ]
 
 [[package]]
@@ -2082,6 +2082,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "colo-lifted"
+version = "0.1.0"
+
+[[package]]
+name = "colo-recomp"
+version = "0.1.0"
+dependencies = [
+ "colo-gx",
+ "colo-lifted",
+]
+
+[[package]]
 name = "colo-script"
 version = "0.1.0"
 dependencies = [
@@ -2096,6 +2108,7 @@ dependencies = [
  "colo-battle",
  "colo-export",
  "colo-formats",
+ "colo-recomp",
  "colo-script",
 ]
 
@@ -2105,10 +2118,10 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "colo-audio",
- "colo-battle",
  "colo-formats",
  "colo-gx",
  "colo-gxgpu",
+ "colo-recomp",
  "colo-script",
  "cpal",
  "futures-lite",

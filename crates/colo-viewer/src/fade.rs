@@ -151,6 +151,8 @@ pub struct Fade {
     /// `fadeSet` of a snapshotting `fadeSetEX` happen at the next frame.
     deferred: Option<(u32, u16, f32)>,
     picks: usize,
+    /// The next `_fadeEffectGetRandom` results, used before the LCG (a game-code battle replays its snapshot's picks).
+    pub forced: std::collections::VecDeque<u32>,
 }
 
 impl Fade {
@@ -167,6 +169,7 @@ impl Fade {
             let picks: Vec<u32> = v.split(',').filter_map(|x| x.trim().parse().ok()).collect();
             if let Some(&p) = picks.get(self.picks) { self.picks += 1; return p % n; }
         }
+        if let Some(p) = self.forced.pop_front() { return p % n; }
         let lo = self.hsd_rand();
         let hi = self.hsd_rand();
         ((hi << 16) | lo) % n
