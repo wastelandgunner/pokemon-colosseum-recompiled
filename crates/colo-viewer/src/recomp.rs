@@ -90,6 +90,8 @@ pub fn run(gcm: &str, opts: perf::Opts) {
             let mut t0 = (std::time::Instant::now(), colo_recomp::run::time_base(&m.c));
             let mut n = 0u32;
             let lead = lead;
+            // textures new in a dropped frame: the builder sends each texture once, so they ride on the next frame
+            let mut carry: Vec<(u64, colo_gx::cmd::GTex)> = Vec::new();
             while !quit.load(Ordering::Relaxed) {
                 let mut p = *pad.lock().unwrap();
                 if tap_a && n % 20 >= 10 && n % 20 < 13 { p.buttons |= 0x100; }
@@ -99,7 +101,8 @@ pub fn run(gcm: &str, opts: perf::Opts) {
                 let t_cpu = Instant::now();
                 n += 1;
                 if n % 30 == 0 { if let Some(p) = &card { save_card(&mut m, p); } }
-                let g = m.gpu_cmds_deferred(&mut b);
+                let mut g = m.gpu_cmds_deferred(&mut b);
+                if !carry.is_empty() { carry.append(&mut g.new_tex); g.new_tex = std::mem::take(&mut carry); }
                 let t_build = Instant::now();
                 let mut audio = colo_recomp::run::take_audio();
                 for p in audio.chunks_mut(2) { p.swap(0, 1); }
@@ -111,7 +114,7 @@ pub fn run(gcm: &str, opts: perf::Opts) {
                 // its time (until `next`, when the next frame starts anyway). Past that, presenting is what's slow (the
                 // window hidden or the screen locked: the compositor takes frames slowly or not at all), and the frame
                 // is dropped so the game keeps its time and sound. (A dropped frame's EFB copies are lost too; the game
-                // makes most of them every frame.)
+                // makes most of them every frame; its new textures are kept for the next one.)
                 let (mut dropped, mut gone) = (false, false);
                 let mut item = Some((g, next + lead));
                 let give_up = next;
@@ -122,7 +125,7 @@ pub fn run(gcm: &str, opts: perf::Opts) {
                             item = Some(it);
                             std::thread::sleep(Duration::from_micros(500));
                         }
-                        Err(std::sync::mpsc::TrySendError::Full(_)) => dropped = true,
+                        Err(std::sync::mpsc::TrySendError::Full(it)) => { dropped = true; carry = it.0.new_tex; }
                         Err(std::sync::mpsc::TrySendError::Disconnected(_)) => gone = true,
                     }
                 }
