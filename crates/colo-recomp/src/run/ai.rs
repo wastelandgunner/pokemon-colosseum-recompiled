@@ -42,8 +42,9 @@ pub(super) fn ai_due(c: &mut Cpu) {
 pub(super) static AI_START: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(u64::MAX);
 
 /// Live register reads: the AI sample counter (AISCNT 0xCC006C08) counts at the AI rate while playing.
-pub(super) fn mmio_read(c: &Cpu, a: u32, _n: u32) -> Option<u32> {
+pub(super) fn mmio_read(c: &Cpu, a: u32, n: u32) -> Option<u32> {
     use std::sync::atomic::Ordering::Relaxed;
+    if let Some(v) = ar_dspcr_read(c, a, n) { return Some(v); }
     if (0xCC00_6C08..0xCC00_6C0C).contains(&a) {
         let cr = c.m.u32(0xCC00_6C00);
         if cr & 1 == 0 { return Some(c.m.u32(0xCC00_6C08)); }

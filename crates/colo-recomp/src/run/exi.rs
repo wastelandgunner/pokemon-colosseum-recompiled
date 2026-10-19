@@ -36,12 +36,20 @@ pub(super) fn exi_deselect(c: &mut Cpu) {
     let ch = c.r[3] as usize;
     call_original(c, EXI_DESELECT);
     if ch < 3 && exi_with(|e| { e.select(c, ch); std::mem::take(&mut e.card_irq) }) {
-        // the card's EXI interrupt (EXI_0_EXI, __OSInterrupt 9): CSR EXIINT, delivered if EXIINTMASK
+        // the card's EXI interrupt (EXI_0_EXI, __OSInterrupt 9): CSR EXIINT, taken once EXIINTMASK is on. The
+        // SDK deselects with the EXI bus still locked (EXI interrupts masked) and unmasks in `EXIUnlock`; on the
+        // console the erase / program finishes well after that, so the interrupt waits for the unmask (csr_write).
         let csr = c.m.u32(0xCC00_6800);
+        let was = CARD_INT.swap(0, Relaxed); // (so this write isn't taken as the guest acknowledging it)
         c.m.set_u32(0xCC00_6800, csr | 2);
-        if csr & 1 != 0 { PENDING.lock().unwrap().push(9); }
+        CARD_INT.store(was.max(1), Relaxed);
+        if csr & 1 != 0 && was != 2 { CARD_INT.store(2, Relaxed); PENDING.lock().unwrap().push(9); }
     }
 }
+
+/// The card's EXI interrupt: 0 none, 1 raised (EXIINT set, masked), 2 raised and queued for delivery.
+static CARD_INT: std::sync::atomic::AtomicU8 = std::sync::atomic::AtomicU8::new(0);
+use std::sync::atomic::Ordering::Relaxed;
 
 /// EXI channel 0 CSR writes.
 pub(super) fn csr_write(m: &mut crate::mem::Mem, a: u32, n: usize) {
@@ -50,6 +58,16 @@ if covers(a, n, 0xCC00_6800) || covers(a, n, 0xCC00_6803) {
     if CARD_A.load(std::sync::atomic::Ordering::Relaxed) {
         let v = m.u32(0xCC00_6800);
         if v & 0x1000 == 0 { m.set_u32(0xCC00_6800, v | 0x1000); }
+    }
+    // EXIINT (bit 1) is write-1-to-clear: a write with it set acknowledges the card's interrupt
+    // (EXIClearInterrupts); any other write leaves it raised, and unmasking it (EXIINTMASK, bit 0) takes it
+    if CARD_INT.load(Relaxed) != 0 {
+        let v = m.u32(0xCC00_6800);
+        if v & 2 != 0 { m.set_u32(0xCC00_6800, v & !2); CARD_INT.store(0, Relaxed); }
+        else {
+            m.set_u32(0xCC00_6800, v | 2);
+            if v & 1 != 0 && CARD_INT.load(Relaxed) == 1 { CARD_INT.store(2, Relaxed); PENDING.lock().unwrap().push(9); }
+        }
     }
 }
 }

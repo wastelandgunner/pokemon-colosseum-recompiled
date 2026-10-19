@@ -3,6 +3,7 @@
 use super::*;
 
 pub(super) static DSPCR: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+static RESET_PENDING: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 pub(super) const DSPCR_W1C: u32 = 0xA8; // AIDINT 0x08, ARINT 0x20, DSPINT 0x80: written 1 = acknowledge
 
 /// DSPCR (0xCC00500A) writes.
@@ -11,11 +12,16 @@ pub(super) fn control_write(m: &mut crate::mem::Mem, a: u32, n: usize) {
 if covers(a, n, 0xCC00_500A) || covers(a, n, 0xCC00_500B) {
     let w = m.u16(0xCC00_500A) as u32;
     let old = DSPCR.load(std::sync::atomic::Ordering::Relaxed);
-    let v = (w & !DSPCR_W1C) | (old & DSPCR_W1C & !w);
+    // RES (bit 0) clears itself once the DSP has reset
+    // DMAState (bit 9) is the ARAM DMA's busy flag, read-only
+    let v = (w & !DSPCR_W1C & !1 & !0x200) | (old & DSPCR_W1C & !w) | (old & 0x200);
     m.set_u16(0xCC00_500A, v);
     DSPCR.store(v, std::sync::atomic::Ordering::Relaxed);
-    // DSPINIT (bit 11, DSPInit writes it 1 then 0): the DSP restarts in its ROM, which greets with a mail
-    if w & 0x800 != 0 && old & 0x800 == 0 {
+    // DSPINIT (bit 11, DSPInit writes it 1 then 0): the DSP restarts in its ROM, which greets with a mail once it
+    // runs (HALT, bit 2, clear: OSInit's __OSInitAudioSystem resets it halted and waits for the mailbox to be empty
+    // first, then releases it and waits for the greeting)
+    if w & 0x800 != 0 && old & 0x800 == 0 { RESET_PENDING.store(true, std::sync::atomic::Ordering::Relaxed); }
+    if v & 4 == 0 && RESET_PENDING.swap(false, std::sync::atomic::Ordering::Relaxed) {
         let r = AX.lock().unwrap().get_or_insert_with(crate::dsp_ax::Ax::new).reset();
         m.set_u16(0xCC00_5004, r >> 16);
         m.set_u16(0xCC00_5006, r & 0xFFFF);

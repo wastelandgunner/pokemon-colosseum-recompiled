@@ -41,6 +41,13 @@ pub(super) fn set_ee(c: &mut Cpu, on: bool) {
     if on && !was { interrupt_point(c); }
 }
 
+/// The next disc command or ARAM DMA completion (time base).
+pub(super) fn dev_next(c: &Cpu) -> Option<u64> {
+    match (di_next(c), ar_next(c)) { (Some(a), Some(b)) => Some(a.min(b)), (a, b) => a.or(b) }
+}
+/// Disc commands and ARAM DMAs whose time has come complete.
+pub(super) fn dev_due(c: &mut Cpu) { di_due(c); ar_due(c); }
+
 /// OS alarms (OSAlarm.c): the decrementer exception runs `DecrementerExceptionCallback` 0x8009A6AC, which
 /// fires the due alarms at the head of AlarmQueue (0x8047A6E0, fire time u64 at +8), reprograms the decrementer
 /// and returns through OSLoadContext(interrupted context). Here the decrementer is "due" whenever the queue's
@@ -53,6 +60,22 @@ pub(super) struct AlarmReturn;
 pub(super) fn idle_advance(c: &mut Cpu) {
     use std::sync::atomic::Ordering::Relaxed;
     let next_field = FIELD_TB.load(Relaxed) + TB_PER_FIELD;
+    // a disc command or ARAM DMA finishing before every other event
+    if let Some(di) = dev_next(c) {
+        let ai = AI_NEXT.load(Relaxed);
+        let head = c.m.u32(ALARM_QUEUE);
+        let alarm = (head != 0).then(|| {
+            let fire = (c.m.u32(head + 8) as u64) << 32 | c.m.u32(head + 12) as u64;
+            let off = (c.m.u32(0x8000_30D8) as u64) << 32 | c.m.u32(0x8000_30DC) as u64;
+            fire.wrapping_sub(off) as i64
+        });
+        if di <= next_field && (ai == 0 || di <= ai) && alarm.is_none_or(|a| (di as i64) <= a) {
+            if di > time_base(c) { TB_BASE.store(di, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
+            dev_due(c);
+            raise_pending(c);
+            return;
+        }
+    }
     let ai = AI_NEXT.load(Relaxed);
     if ai != 0 && ai < next_field {
         let head = c.m.u32(ALARM_QUEUE);
@@ -62,7 +85,7 @@ pub(super) fn idle_advance(c: &mut Cpu) {
             (fire.wrapping_sub(off) as i64) < ai as i64
         };
         if !alarm_first {
-            if ai > time_base(c) { TB_BASE.store(ai, Relaxed); TB_MARK.store(c.steps, Relaxed); }
+            if ai > time_base(c) { TB_BASE.store(ai, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
             ai_due(c);
             // the DSP's answer (its frame for the next block) comes back before the next block, as on hardware
             raise_pending(c);
@@ -75,7 +98,7 @@ pub(super) fn idle_advance(c: &mut Cpu) {
         let off = (c.m.u32(0x8000_30D8) as u64) << 32 | c.m.u32(0x8000_30DC) as u64;
         let at = fire.wrapping_sub(off);
         if (at as i64) < next_field as i64 {
-            if (at as i64) > time_base(c) as i64 { TB_BASE.store(at, Relaxed); TB_MARK.store(c.steps, Relaxed); }
+            if (at as i64) > time_base(c) as i64 { TB_BASE.store(at, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
             alarms(c);
             return;
         }
@@ -119,6 +142,7 @@ pub(super) fn interrupt_point(c: &mut Cpu) {
     let save = (c.r, c.cr, c.lr, c.ctr, c.xer, c.f, c.ps1, c.fpscr, c.gqr);
     while time_base(c) >= FIELD_TB.load(Relaxed) + TB_PER_FIELD { field(c); }
     ai_due(c);
+    dev_due(c);
     raise_pending(c);
     alarms(c);
     let cur = c.m.u32(0x8000_00E4);
@@ -330,7 +354,8 @@ pub(super) fn bg_fast_forward(c: &mut Cpu) {
     }
     let ai = AI_NEXT.load(Relaxed);
     if ai != 0 && ai < next { next = ai; }
-    if (next as i64) > time_base(c) as i64 { TB_BASE.store(next, Relaxed); TB_MARK.store(c.steps, Relaxed); }
+    if let Some(di) = dev_next(c) { if di < next { next = di; } }
+    if (next as i64) > time_base(c) as i64 { TB_BASE.store(next, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
 }
 
 pub(super) fn os_restore_interrupts(c: &mut Cpu) {
@@ -341,12 +366,15 @@ pub(super) fn os_restore_interrupts(c: &mut Cpu) {
     c.r[3] = if was { 0x8000 } else { 0 };
 }
 
-/// Emulated time: the time base runs at 40.5 MHz (bus/4). Between video fields it advances with the work
-/// done (TB_PER_BLOCK per lifted block, ~ a 486 MHz CPU doing a few instructions per block); a field that
-/// waits jumps it to the field's start (675675 ticks per NTSC field).
+/// Emulated time: the time base runs at 40.5 MHz (bus/4, one tick per 12 cycles of the 486 MHz CPU). Between video
+/// fields it advances with the instructions executed (`Cpu::instrs`) at CYCLES_PER_INSTR_X100 / 100 cycles each, as
+/// Dolphin counts by default (one cycle an instruction); a field that waits jumps it to the field's start (675675
+/// ticks per NTSC field). Until 2026-10-19 it was 0.4 ticks per lifted block (lifted blocks average 2.9 instructions:
+/// ~1.65 cycles an instruction), which made heavy battle frames (wide shots at Phenac) overrun two fields in game
+/// time and drop to 20 fps where Dolphin stays at 30.
 pub(super) const TB_HZ: u64 = 40_500_000;
 pub(super) const TB_PER_FIELD: u64 = 675_675;
-pub(super) const TB_PER_BLOCK_X100: u64 = 40;
+pub(super) const CYCLES_PER_INSTR_X100: u64 = 100;
 pub(super) static TB_BASE: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 pub(super) static TB_MARK: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 pub(super) static FIELD_TB: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
@@ -354,7 +382,7 @@ pub(super) static FIELD_TB: std::sync::atomic::AtomicU64 = std::sync::atomic::At
 
 pub fn time_base(c: &Cpu) -> u64 {
     use std::sync::atomic::Ordering::Relaxed;
-    TB_BASE.load(Relaxed) + c.steps.saturating_sub(TB_MARK.load(Relaxed)) * TB_PER_BLOCK_X100 / 100
+    TB_BASE.load(Relaxed) + c.instrs.saturating_sub(TB_MARK.load(Relaxed)) * CYCLES_PER_INSTR_X100 / 1200
 }
 
 /// A video field begins: time is at least the field's start.
@@ -362,7 +390,7 @@ pub(super) fn tb_field(c: &Cpu) {
     use std::sync::atomic::Ordering::Relaxed;
     let f = FIELD_TB.load(Relaxed) + TB_PER_FIELD;
     FIELD_TB.store(f, Relaxed);
-    if time_base(c) < f { TB_BASE.store(f, Relaxed); TB_MARK.store(c.steps, Relaxed); }
+    if time_base(c) < f { TB_BASE.store(f, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
 }
 
 /// `OSGetTime` 0x800A2778 (r3:r4) and `OSGetTick` 0x800A2790 (r3): the time base.

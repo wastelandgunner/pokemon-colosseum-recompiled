@@ -18,25 +18,28 @@ pub fn f_8011c570(c: &mut Cpu) {
 pub fn f_8011c570_at(c: &mut Cpu, pc: u32) { f_8011c570_b(c, pc) }
 #[inline(always)]
 fn f_8011c570_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c570;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c570, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c570, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c570 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c580; continue; }
+            0x8011c570 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c580; continue; }
                 pc = 0x8011c578;
             }
-            0x8011c578 => {
+            0x8011c578 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c580;
             }
-            0x8011c580 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x13));
-                if true { return; }
-                return;
+            0x8011c580 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x13));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c570: bad pc {:#x}", pc),
         }
@@ -58,37 +61,40 @@ pub fn f_8011c588(c: &mut Cpu) {
 pub fn f_8011c588_at(c: &mut Cpu, pc: u32) { f_8011c588_b(c, pc) }
 #[inline(always)]
 fn f_8011c588_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c588;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c588, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c588, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c588 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c598; continue; }
+            0x8011c588 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c598; continue; }
                 pc = 0x8011c590;
             }
-            0x8011c590 => {
+            0x8011c590 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c598;
             }
-            0x8011c598 => {
+            0x8011c598 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x3);
-                if c.crbit(0) { pc = 0x8011c5ac; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x3);
+                if cr_bit(cr, 0) { pc = 0x8011c5ac; continue; }
                 pc = 0x8011c5a4;
             }
-            0x8011c5a4 => {
+            0x8011c5a4 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c5ac;
             }
-            0x8011c5ac => {
+            0x8011c5ac => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x34));
-                if true { return; }
-                return;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x34));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c588: bad pc {:#x}", pc),
         }
@@ -110,20 +116,23 @@ pub fn f_8011c5b8(c: &mut Cpu) {
 pub fn f_8011c5b8_at(c: &mut Cpu, pc: u32) { f_8011c5b8_b(c, pc) }
 #[inline(always)]
 fn f_8011c5b8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c5b8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c5b8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c5b8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c5b8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c5b8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c5c0;
             }
-            0x8011c5c0 => {
+            0x8011c5c0 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x12), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c5b8: bad pc {:#x}", pc),
         }
@@ -145,25 +154,28 @@ pub fn f_8011c5c8(c: &mut Cpu) {
 pub fn f_8011c5c8_at(c: &mut Cpu, pc: u32) { f_8011c5c8_b(c, pc) }
 #[inline(always)]
 fn f_8011c5c8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c5c8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c5c8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c5c8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c5c8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c5d8; continue; }
+            0x8011c5c8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c5d8; continue; }
                 pc = 0x8011c5d0;
             }
-            0x8011c5d0 => {
+            0x8011c5d0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c5d8;
             }
-            0x8011c5d8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x12));
-                if true { return; }
-                return;
+            0x8011c5d8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x12));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c5c8: bad pc {:#x}", pc),
         }
@@ -185,20 +197,23 @@ pub fn f_8011c5e0(c: &mut Cpu) {
 pub fn f_8011c5e0_at(c: &mut Cpu, pc: u32) { f_8011c5e0_b(c, pc) }
 #[inline(always)]
 fn f_8011c5e0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c5e0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c5e0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c5e0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c5e0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c5e0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c5e8;
             }
-            0x8011c5e8 => {
+            0x8011c5e8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x15), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c5e0: bad pc {:#x}", pc),
         }
@@ -220,20 +235,23 @@ pub fn f_8011c5f0(c: &mut Cpu) {
 pub fn f_8011c5f0_at(c: &mut Cpu, pc: u32) { f_8011c5f0_b(c, pc) }
 #[inline(always)]
 fn f_8011c5f0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c5f0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c5f0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c5f0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c5f0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c5f0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c5f8;
             }
-            0x8011c5f8 => {
+            0x8011c5f8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x14), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c5f0: bad pc {:#x}", pc),
         }
@@ -255,20 +273,23 @@ pub fn f_8011c600(c: &mut Cpu) {
 pub fn f_8011c600_at(c: &mut Cpu, pc: u32) { f_8011c600_b(c, pc) }
 #[inline(always)]
 fn f_8011c600_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c600;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c600, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c600, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c600 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c600 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c608;
             }
-            0x8011c608 => {
+            0x8011c608 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x2c), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c600: bad pc {:#x}", pc),
         }
@@ -290,20 +311,23 @@ pub fn f_8011c610(c: &mut Cpu) {
 pub fn f_8011c610_at(c: &mut Cpu, pc: u32) { f_8011c610_b(c, pc) }
 #[inline(always)]
 fn f_8011c610_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c610;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c610, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c610, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c610 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c610 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c618;
             }
-            0x8011c618 => {
+            0x8011c618 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x30), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c610: bad pc {:#x}", pc),
         }
@@ -325,20 +349,23 @@ pub fn f_8011c620(c: &mut Cpu) {
 pub fn f_8011c620_at(c: &mut Cpu, pc: u32) { f_8011c620_b(c, pc) }
 #[inline(always)]
 fn f_8011c620_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c620;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c620, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c620, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c620 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c620 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c628;
             }
-            0x8011c628 => {
+            0x8011c628 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x11), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c620: bad pc {:#x}", pc),
         }
@@ -360,20 +387,23 @@ pub fn f_8011c630(c: &mut Cpu) {
 pub fn f_8011c630_at(c: &mut Cpu, pc: u32) { f_8011c630_b(c, pc) }
 #[inline(always)]
 fn f_8011c630_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c630;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c630, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c630, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c630 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c630 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c638;
             }
-            0x8011c638 => {
+            0x8011c638 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x10), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c630: bad pc {:#x}", pc),
         }
@@ -395,20 +425,23 @@ pub fn f_8011c640(c: &mut Cpu) {
 pub fn f_8011c640_at(c: &mut Cpu, pc: u32) { f_8011c640_b(c, pc) }
 #[inline(always)]
 fn f_8011c640_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c640;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c640, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c640, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c640 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c640 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c648;
             }
-            0x8011c648 => {
+            0x8011c648 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xf), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c640: bad pc {:#x}", pc),
         }
@@ -430,20 +463,23 @@ pub fn f_8011c650(c: &mut Cpu) {
 pub fn f_8011c650_at(c: &mut Cpu, pc: u32) { f_8011c650_b(c, pc) }
 #[inline(always)]
 fn f_8011c650_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c650;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c650, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c650, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c650 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c650 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c658;
             }
-            0x8011c658 => {
+            0x8011c658 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xe), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c650: bad pc {:#x}", pc),
         }
@@ -465,20 +501,23 @@ pub fn f_8011c660(c: &mut Cpu) {
 pub fn f_8011c660_at(c: &mut Cpu, pc: u32) { f_8011c660_b(c, pc) }
 #[inline(always)]
 fn f_8011c660_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c660;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c660, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c660, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c660 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c660 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c668;
             }
-            0x8011c668 => {
+            0x8011c668 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xd), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c660: bad pc {:#x}", pc),
         }
@@ -500,20 +539,23 @@ pub fn f_8011c670(c: &mut Cpu) {
 pub fn f_8011c670_at(c: &mut Cpu, pc: u32) { f_8011c670_b(c, pc) }
 #[inline(always)]
 fn f_8011c670_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c670;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c670, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c670, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c670 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c670 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c678;
             }
-            0x8011c678 => {
+            0x8011c678 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xc), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c670: bad pc {:#x}", pc),
         }
@@ -535,20 +577,23 @@ pub fn f_8011c680(c: &mut Cpu) {
 pub fn f_8011c680_at(c: &mut Cpu, pc: u32) { f_8011c680_b(c, pc) }
 #[inline(always)]
 fn f_8011c680_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c680;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c680, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c680, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c680 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c680 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c688;
             }
-            0x8011c688 => {
+            0x8011c688 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xb), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c680: bad pc {:#x}", pc),
         }
@@ -570,20 +615,23 @@ pub fn f_8011c690(c: &mut Cpu) {
 pub fn f_8011c690_at(c: &mut Cpu, pc: u32) { f_8011c690_b(c, pc) }
 #[inline(always)]
 fn f_8011c690_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c690;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c690, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c690, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c690 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c690 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c698;
             }
-            0x8011c698 => {
+            0x8011c698 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c690: bad pc {:#x}", pc),
         }
@@ -605,20 +653,23 @@ pub fn f_8011c6a0(c: &mut Cpu) {
 pub fn f_8011c6a0_at(c: &mut Cpu, pc: u32) { f_8011c6a0_b(c, pc) }
 #[inline(always)]
 fn f_8011c6a0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c6a0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c6a0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c6a0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c6a0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c6a0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c6a8;
             }
-            0x8011c6a8 => {
+            0x8011c6a8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x9), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c6a0: bad pc {:#x}", pc),
         }
@@ -640,20 +691,23 @@ pub fn f_8011c6b0(c: &mut Cpu) {
 pub fn f_8011c6b0_at(c: &mut Cpu, pc: u32) { f_8011c6b0_b(c, pc) }
 #[inline(always)]
 fn f_8011c6b0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c6b0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c6b0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c6b0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c6b0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c6b0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c6b8;
             }
-            0x8011c6b8 => {
+            0x8011c6b8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c6b0: bad pc {:#x}", pc),
         }
@@ -675,20 +729,23 @@ pub fn f_8011c6c0(c: &mut Cpu) {
 pub fn f_8011c6c0_at(c: &mut Cpu, pc: u32) { f_8011c6c0_b(c, pc) }
 #[inline(always)]
 fn f_8011c6c0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c6c0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c6c0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c6c0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c6c0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c6c0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c6c8;
             }
-            0x8011c6c8 => {
+            0x8011c6c8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x7), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c6c0: bad pc {:#x}", pc),
         }
@@ -710,20 +767,23 @@ pub fn f_8011c6d0(c: &mut Cpu) {
 pub fn f_8011c6d0_at(c: &mut Cpu, pc: u32) { f_8011c6d0_b(c, pc) }
 #[inline(always)]
 fn f_8011c6d0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c6d0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c6d0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c6d0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c6d0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c6d0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c6d8;
             }
-            0x8011c6d8 => {
+            0x8011c6d8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c6d0: bad pc {:#x}", pc),
         }
@@ -745,20 +805,23 @@ pub fn f_8011c6e0(c: &mut Cpu) {
 pub fn f_8011c6e0_at(c: &mut Cpu, pc: u32) { f_8011c6e0_b(c, pc) }
 #[inline(always)]
 fn f_8011c6e0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c6e0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c6e0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c6e0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c6e0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c6e0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c6e8;
             }
-            0x8011c6e8 => {
+            0x8011c6e8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x5), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c6e0: bad pc {:#x}", pc),
         }
@@ -780,20 +843,23 @@ pub fn f_8011c6f0(c: &mut Cpu) {
 pub fn f_8011c6f0_at(c: &mut Cpu, pc: u32) { f_8011c6f0_b(c, pc) }
 #[inline(always)]
 fn f_8011c6f0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c6f0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c6f0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c6f0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c6f0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c6f0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c6f8;
             }
-            0x8011c6f8 => {
+            0x8011c6f8 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x28), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c6f0: bad pc {:#x}", pc),
         }
@@ -815,20 +881,23 @@ pub fn f_8011c700(c: &mut Cpu) {
 pub fn f_8011c700_at(c: &mut Cpu, pc: u32) { f_8011c700_b(c, pc) }
 #[inline(always)]
 fn f_8011c700_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c700;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c700, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c700, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c700 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c700 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c708;
             }
-            0x8011c708 => {
+            0x8011c708 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x1a), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c700: bad pc {:#x}", pc),
         }
@@ -850,20 +919,23 @@ pub fn f_8011c710(c: &mut Cpu) {
 pub fn f_8011c710_at(c: &mut Cpu, pc: u32) { f_8011c710_b(c, pc) }
 #[inline(always)]
 fn f_8011c710_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c710;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c710, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c710, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c710 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c710 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c718;
             }
-            0x8011c718 => {
+            0x8011c718 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x18), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c710: bad pc {:#x}", pc),
         }
@@ -885,20 +957,23 @@ pub fn f_8011c720(c: &mut Cpu) {
 pub fn f_8011c720_at(c: &mut Cpu, pc: u32) { f_8011c720_b(c, pc) }
 #[inline(always)]
 fn f_8011c720_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c720;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c720, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c720, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c720 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c720 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c728;
             }
-            0x8011c728 => {
+            0x8011c728 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x16), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c720: bad pc {:#x}", pc),
         }
@@ -920,20 +995,23 @@ pub fn f_8011c730(c: &mut Cpu) {
 pub fn f_8011c730_at(c: &mut Cpu, pc: u32) { f_8011c730_b(c, pc) }
 #[inline(always)]
 fn f_8011c730_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c730;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c730, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c730, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c730 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c730 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c738;
             }
-            0x8011c738 => {
+            0x8011c738 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c730: bad pc {:#x}", pc),
         }
@@ -955,20 +1033,23 @@ pub fn f_8011c740(c: &mut Cpu) {
 pub fn f_8011c740_at(c: &mut Cpu, pc: u32) { f_8011c740_b(c, pc) }
 #[inline(always)]
 fn f_8011c740_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c740;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c740, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c740, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c740 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c740 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c748;
             }
-            0x8011c748 => {
+            0x8011c748 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x3), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c740: bad pc {:#x}", pc),
         }
@@ -990,20 +1071,23 @@ pub fn f_8011c750(c: &mut Cpu) {
 pub fn f_8011c750_at(c: &mut Cpu, pc: u32) { f_8011c750_b(c, pc) }
 #[inline(always)]
 fn f_8011c750_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c750;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c750, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c750, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c750 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c750 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c758;
             }
-            0x8011c758 => {
+            0x8011c758 => { ins += 2;
                 c.stb(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c750: bad pc {:#x}", pc),
         }
@@ -1025,20 +1109,23 @@ pub fn f_8011c760(c: &mut Cpu) {
 pub fn f_8011c760_at(c: &mut Cpu, pc: u32) { f_8011c760_b(c, pc) }
 #[inline(always)]
 fn f_8011c760_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c760;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c760, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c760, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c760 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c760 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c768;
             }
-            0x8011c768 => {
+            0x8011c768 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c760: bad pc {:#x}", pc),
         }
@@ -1060,20 +1147,23 @@ pub fn f_8011c770(c: &mut Cpu) {
 pub fn f_8011c770_at(c: &mut Cpu, pc: u32) { f_8011c770_b(c, pc) }
 #[inline(always)]
 fn f_8011c770_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c770;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c770, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c770, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c770 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c770 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c778;
             }
-            0x8011c778 => {
+            0x8011c778 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c770: bad pc {:#x}", pc),
         }
@@ -1095,20 +1185,23 @@ pub fn f_8011c780(c: &mut Cpu) {
 pub fn f_8011c780_at(c: &mut Cpu, pc: u32) { f_8011c780_b(c, pc) }
 #[inline(always)]
 fn f_8011c780_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c780;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c780, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c780, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c780 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011c780 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c788;
             }
-            0x8011c788 => {
+            0x8011c788 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x20), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c780: bad pc {:#x}", pc),
         }
@@ -1130,25 +1223,28 @@ pub fn f_8011c790(c: &mut Cpu) {
 pub fn f_8011c790_at(c: &mut Cpu, pc: u32) { f_8011c790_b(c, pc) }
 #[inline(always)]
 fn f_8011c790_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c790;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c790, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c790, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c790 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c7a0; continue; }
+            0x8011c790 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c7a0; continue; }
                 pc = 0x8011c798;
             }
-            0x8011c798 => {
+            0x8011c798 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c7a0;
             }
-            0x8011c7a0 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x15));
-                if true { return; }
-                return;
+            0x8011c7a0 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x15));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c790: bad pc {:#x}", pc),
         }
@@ -1170,25 +1266,28 @@ pub fn f_8011c7a8(c: &mut Cpu) {
 pub fn f_8011c7a8_at(c: &mut Cpu, pc: u32) { f_8011c7a8_b(c, pc) }
 #[inline(always)]
 fn f_8011c7a8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c7a8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c7a8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c7a8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c7a8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c7b8; continue; }
+            0x8011c7a8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c7b8; continue; }
                 pc = 0x8011c7b0;
             }
-            0x8011c7b0 => {
+            0x8011c7b0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c7b8;
             }
-            0x8011c7b8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x14));
-                if true { return; }
-                return;
+            0x8011c7b8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x14));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c7a8: bad pc {:#x}", pc),
         }
@@ -1210,25 +1309,28 @@ pub fn f_8011c7c0(c: &mut Cpu) {
 pub fn f_8011c7c0_at(c: &mut Cpu, pc: u32) { f_8011c7c0_b(c, pc) }
 #[inline(always)]
 fn f_8011c7c0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c7c0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c7c0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c7c0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c7c0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c7d0; continue; }
+            0x8011c7c0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c7d0; continue; }
                 pc = 0x8011c7c8;
             }
-            0x8011c7c8 => {
+            0x8011c7c8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c7d0;
             }
-            0x8011c7d0 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x2c));
-                if true { return; }
-                return;
+            0x8011c7d0 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x2c));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c7c0: bad pc {:#x}", pc),
         }
@@ -1250,25 +1352,28 @@ pub fn f_8011c7d8(c: &mut Cpu) {
 pub fn f_8011c7d8_at(c: &mut Cpu, pc: u32) { f_8011c7d8_b(c, pc) }
 #[inline(always)]
 fn f_8011c7d8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c7d8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c7d8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c7d8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c7d8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c7e8; continue; }
+            0x8011c7d8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c7e8; continue; }
                 pc = 0x8011c7e0;
             }
-            0x8011c7e0 => {
+            0x8011c7e0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c7e8;
             }
-            0x8011c7e8 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x30));
-                if true { return; }
-                return;
+            0x8011c7e8 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x30));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c7d8: bad pc {:#x}", pc),
         }
@@ -1290,25 +1395,28 @@ pub fn f_8011c7f0(c: &mut Cpu) {
 pub fn f_8011c7f0_at(c: &mut Cpu, pc: u32) { f_8011c7f0_b(c, pc) }
 #[inline(always)]
 fn f_8011c7f0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c7f0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c7f0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c7f0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c7f0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c800; continue; }
+            0x8011c7f0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c800; continue; }
                 pc = 0x8011c7f8;
             }
-            0x8011c7f8 => {
+            0x8011c7f8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c800;
             }
-            0x8011c800 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x11));
-                if true { return; }
-                return;
+            0x8011c800 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x11));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c7f0: bad pc {:#x}", pc),
         }
@@ -1330,25 +1438,28 @@ pub fn f_8011c808(c: &mut Cpu) {
 pub fn f_8011c808_at(c: &mut Cpu, pc: u32) { f_8011c808_b(c, pc) }
 #[inline(always)]
 fn f_8011c808_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c808;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c808, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c808, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c808 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c818; continue; }
+            0x8011c808 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c818; continue; }
                 pc = 0x8011c810;
             }
-            0x8011c810 => {
+            0x8011c810 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c818;
             }
-            0x8011c818 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x10));
-                if true { return; }
-                return;
+            0x8011c818 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x10));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c808: bad pc {:#x}", pc),
         }
@@ -1370,25 +1481,28 @@ pub fn f_8011c820(c: &mut Cpu) {
 pub fn f_8011c820_at(c: &mut Cpu, pc: u32) { f_8011c820_b(c, pc) }
 #[inline(always)]
 fn f_8011c820_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c820;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c820, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c820, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c820 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c830; continue; }
+            0x8011c820 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c830; continue; }
                 pc = 0x8011c828;
             }
-            0x8011c828 => {
+            0x8011c828 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c830;
             }
-            0x8011c830 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xf));
-                if true { return; }
-                return;
+            0x8011c830 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xf));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c820: bad pc {:#x}", pc),
         }
@@ -1410,25 +1524,28 @@ pub fn f_8011c838(c: &mut Cpu) {
 pub fn f_8011c838_at(c: &mut Cpu, pc: u32) { f_8011c838_b(c, pc) }
 #[inline(always)]
 fn f_8011c838_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c838;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c838, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c838, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c838 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c848; continue; }
+            0x8011c838 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c848; continue; }
                 pc = 0x8011c840;
             }
-            0x8011c840 => {
+            0x8011c840 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c848;
             }
-            0x8011c848 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xe));
-                if true { return; }
-                return;
+            0x8011c848 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xe));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c838: bad pc {:#x}", pc),
         }
@@ -1450,25 +1567,28 @@ pub fn f_8011c850(c: &mut Cpu) {
 pub fn f_8011c850_at(c: &mut Cpu, pc: u32) { f_8011c850_b(c, pc) }
 #[inline(always)]
 fn f_8011c850_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c850;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c850, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c850, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c850 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c860; continue; }
+            0x8011c850 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c860; continue; }
                 pc = 0x8011c858;
             }
-            0x8011c858 => {
+            0x8011c858 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c860;
             }
-            0x8011c860 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xd));
-                if true { return; }
-                return;
+            0x8011c860 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xd));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c850: bad pc {:#x}", pc),
         }
@@ -1490,25 +1610,28 @@ pub fn f_8011c868(c: &mut Cpu) {
 pub fn f_8011c868_at(c: &mut Cpu, pc: u32) { f_8011c868_b(c, pc) }
 #[inline(always)]
 fn f_8011c868_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c868;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c868, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c868, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c868 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c878; continue; }
+            0x8011c868 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c878; continue; }
                 pc = 0x8011c870;
             }
-            0x8011c870 => {
+            0x8011c870 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c878;
             }
-            0x8011c878 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xc));
-                if true { return; }
-                return;
+            0x8011c878 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xc));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c868: bad pc {:#x}", pc),
         }
@@ -1530,25 +1653,28 @@ pub fn f_8011c880(c: &mut Cpu) {
 pub fn f_8011c880_at(c: &mut Cpu, pc: u32) { f_8011c880_b(c, pc) }
 #[inline(always)]
 fn f_8011c880_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c880;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c880, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c880, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c880 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c890; continue; }
+            0x8011c880 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c890; continue; }
                 pc = 0x8011c888;
             }
-            0x8011c888 => {
+            0x8011c888 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c890;
             }
-            0x8011c890 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xb));
-                if true { return; }
-                return;
+            0x8011c890 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xb));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c880: bad pc {:#x}", pc),
         }
@@ -1570,25 +1696,28 @@ pub fn f_8011c898(c: &mut Cpu) {
 pub fn f_8011c898_at(c: &mut Cpu, pc: u32) { f_8011c898_b(c, pc) }
 #[inline(always)]
 fn f_8011c898_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c898;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c898, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c898, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c898 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c8a8; continue; }
+            0x8011c898 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c8a8; continue; }
                 pc = 0x8011c8a0;
             }
-            0x8011c8a0 => {
+            0x8011c8a0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c8a8;
             }
-            0x8011c8a8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xa));
-                if true { return; }
-                return;
+            0x8011c8a8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xa));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c898: bad pc {:#x}", pc),
         }
@@ -1610,25 +1739,28 @@ pub fn f_8011c8b0(c: &mut Cpu) {
 pub fn f_8011c8b0_at(c: &mut Cpu, pc: u32) { f_8011c8b0_b(c, pc) }
 #[inline(always)]
 fn f_8011c8b0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c8b0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c8b0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c8b0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c8b0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c8c0; continue; }
+            0x8011c8b0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c8c0; continue; }
                 pc = 0x8011c8b8;
             }
-            0x8011c8b8 => {
+            0x8011c8b8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c8c0;
             }
-            0x8011c8c0 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x9));
-                if true { return; }
-                return;
+            0x8011c8c0 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x9));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c8b0: bad pc {:#x}", pc),
         }
@@ -1650,25 +1782,28 @@ pub fn f_8011c8c8(c: &mut Cpu) {
 pub fn f_8011c8c8_at(c: &mut Cpu, pc: u32) { f_8011c8c8_b(c, pc) }
 #[inline(always)]
 fn f_8011c8c8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c8c8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c8c8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c8c8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c8c8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c8d8; continue; }
+            0x8011c8c8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c8d8; continue; }
                 pc = 0x8011c8d0;
             }
-            0x8011c8d0 => {
+            0x8011c8d0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c8d8;
             }
-            0x8011c8d8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x8));
-                if true { return; }
-                return;
+            0x8011c8d8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x8));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c8c8: bad pc {:#x}", pc),
         }
@@ -1690,25 +1825,28 @@ pub fn f_8011c8e0(c: &mut Cpu) {
 pub fn f_8011c8e0_at(c: &mut Cpu, pc: u32) { f_8011c8e0_b(c, pc) }
 #[inline(always)]
 fn f_8011c8e0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c8e0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c8e0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c8e0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c8e0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c8f0; continue; }
+            0x8011c8e0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c8f0; continue; }
                 pc = 0x8011c8e8;
             }
-            0x8011c8e8 => {
+            0x8011c8e8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c8f0;
             }
-            0x8011c8f0 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x7));
-                if true { return; }
-                return;
+            0x8011c8f0 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x7));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c8e0: bad pc {:#x}", pc),
         }
@@ -1730,25 +1868,28 @@ pub fn f_8011c8f8(c: &mut Cpu) {
 pub fn f_8011c8f8_at(c: &mut Cpu, pc: u32) { f_8011c8f8_b(c, pc) }
 #[inline(always)]
 fn f_8011c8f8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c8f8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c8f8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c8f8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c8f8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c908; continue; }
+            0x8011c8f8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c908; continue; }
                 pc = 0x8011c900;
             }
-            0x8011c900 => {
+            0x8011c900 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c908;
             }
-            0x8011c908 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x6));
-                if true { return; }
-                return;
+            0x8011c908 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x6));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c8f8: bad pc {:#x}", pc),
         }
@@ -1770,25 +1911,28 @@ pub fn f_8011c910(c: &mut Cpu) {
 pub fn f_8011c910_at(c: &mut Cpu, pc: u32) { f_8011c910_b(c, pc) }
 #[inline(always)]
 fn f_8011c910_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c910;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c910, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c910, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c910 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c920; continue; }
+            0x8011c910 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c920; continue; }
                 pc = 0x8011c918;
             }
-            0x8011c918 => {
+            0x8011c918 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c920;
             }
-            0x8011c920 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x5));
-                if true { return; }
-                return;
+            0x8011c920 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x5));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c910: bad pc {:#x}", pc),
         }
@@ -1810,25 +1954,28 @@ pub fn f_8011c928(c: &mut Cpu) {
 pub fn f_8011c928_at(c: &mut Cpu, pc: u32) { f_8011c928_b(c, pc) }
 #[inline(always)]
 fn f_8011c928_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c928;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c928, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c928, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c928 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c938; continue; }
+            0x8011c928 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c938; continue; }
                 pc = 0x8011c930;
             }
-            0x8011c930 => {
+            0x8011c930 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c938;
             }
-            0x8011c938 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x28));
-                if true { return; }
-                return;
+            0x8011c938 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x28));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c928: bad pc {:#x}", pc),
         }
@@ -1850,25 +1997,28 @@ pub fn f_8011c940(c: &mut Cpu) {
 pub fn f_8011c940_at(c: &mut Cpu, pc: u32) { f_8011c940_b(c, pc) }
 #[inline(always)]
 fn f_8011c940_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c940;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c940, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c940, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c940 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c950; continue; }
+            0x8011c940 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c950; continue; }
                 pc = 0x8011c948;
             }
-            0x8011c948 => {
+            0x8011c948 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c950;
             }
-            0x8011c950 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x24));
-                if true { return; }
-                return;
+            0x8011c950 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x24));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c940: bad pc {:#x}", pc),
         }
@@ -1890,25 +2040,28 @@ pub fn f_8011c958(c: &mut Cpu) {
 pub fn f_8011c958_at(c: &mut Cpu, pc: u32) { f_8011c958_b(c, pc) }
 #[inline(always)]
 fn f_8011c958_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c958;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c958, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c958, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c958 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c968; continue; }
+            0x8011c958 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c968; continue; }
                 pc = 0x8011c960;
             }
-            0x8011c960 => {
+            0x8011c960 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c968;
             }
-            0x8011c968 => {
-                c.r[3] = c.lhz(c.r[3].wrapping_add(0x1a));
-                if true { return; }
-                return;
+            0x8011c968 => { ins += 2;
+                c.r[3] = c.lhz_t(ins, c.r[3].wrapping_add(0x1a));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c958: bad pc {:#x}", pc),
         }
@@ -1930,25 +2083,28 @@ pub fn f_8011c970(c: &mut Cpu) {
 pub fn f_8011c970_at(c: &mut Cpu, pc: u32) { f_8011c970_b(c, pc) }
 #[inline(always)]
 fn f_8011c970_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c970;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c970, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c970, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c970 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c980; continue; }
+            0x8011c970 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c980; continue; }
                 pc = 0x8011c978;
             }
-            0x8011c978 => {
+            0x8011c978 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c980;
             }
-            0x8011c980 => {
-                c.r[3] = c.lhz(c.r[3].wrapping_add(0x18));
-                if true { return; }
-                return;
+            0x8011c980 => { ins += 2;
+                c.r[3] = c.lhz_t(ins, c.r[3].wrapping_add(0x18));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c970: bad pc {:#x}", pc),
         }
@@ -1970,25 +2126,28 @@ pub fn f_8011c988(c: &mut Cpu) {
 pub fn f_8011c988_at(c: &mut Cpu, pc: u32) { f_8011c988_b(c, pc) }
 #[inline(always)]
 fn f_8011c988_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c988;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c988, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c988, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c988 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c998; continue; }
+            0x8011c988 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c998; continue; }
                 pc = 0x8011c990;
             }
-            0x8011c990 => {
+            0x8011c990 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c998;
             }
-            0x8011c998 => {
-                c.r[3] = c.lha(c.r[3].wrapping_add(0x16));
-                if true { return; }
-                return;
+            0x8011c998 => { ins += 2;
+                c.r[3] = c.lha_t(ins, c.r[3].wrapping_add(0x16));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c988: bad pc {:#x}", pc),
         }
@@ -2010,25 +2169,28 @@ pub fn f_8011c9a0(c: &mut Cpu) {
 pub fn f_8011c9a0_at(c: &mut Cpu, pc: u32) { f_8011c9a0_b(c, pc) }
 #[inline(always)]
 fn f_8011c9a0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c9a0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c9a0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c9a0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c9a0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c9b0; continue; }
+            0x8011c9a0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c9b0; continue; }
                 pc = 0x8011c9a8;
             }
-            0x8011c9a8 => {
+            0x8011c9a8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c9b0;
             }
-            0x8011c9b0 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x4));
-                if true { return; }
-                return;
+            0x8011c9b0 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x4));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c9a0: bad pc {:#x}", pc),
         }
@@ -2050,25 +2212,28 @@ pub fn f_8011c9b8(c: &mut Cpu) {
 pub fn f_8011c9b8_at(c: &mut Cpu, pc: u32) { f_8011c9b8_b(c, pc) }
 #[inline(always)]
 fn f_8011c9b8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c9b8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c9b8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c9b8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c9b8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c9c8; continue; }
+            0x8011c9b8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c9c8; continue; }
                 pc = 0x8011c9c0;
             }
-            0x8011c9c0 => {
+            0x8011c9c0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c9c8;
             }
-            0x8011c9c8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x3));
-                if true { return; }
-                return;
+            0x8011c9c8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x3));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c9b8: bad pc {:#x}", pc),
         }
@@ -2090,26 +2255,29 @@ pub fn f_8011c9d0(c: &mut Cpu) {
 pub fn f_8011c9d0_at(c: &mut Cpu, pc: u32) { f_8011c9d0_b(c, pc) }
 #[inline(always)]
 fn f_8011c9d0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c9d0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c9d0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c9d0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c9d0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c9e0; continue; }
+            0x8011c9d0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c9e0; continue; }
                 pc = 0x8011c9d8;
             }
-            0x8011c9d8 => {
+            0x8011c9d8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c9e0;
             }
-            0x8011c9e0 => {
-                c.r[0] = c.lbz(c.r[3]);
+            0x8011c9e0 => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3]);
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c9d0: bad pc {:#x}", pc),
         }
@@ -2131,25 +2299,28 @@ pub fn f_8011c9ec(c: &mut Cpu) {
 pub fn f_8011c9ec_at(c: &mut Cpu, pc: u32) { f_8011c9ec_b(c, pc) }
 #[inline(always)]
 fn f_8011c9ec_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011c9ec;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011c9ec, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011c9ec, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011c9ec => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011c9fc; continue; }
+            0x8011c9ec => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011c9fc; continue; }
                 pc = 0x8011c9f4;
             }
-            0x8011c9f4 => {
+            0x8011c9f4 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011c9fc;
             }
-            0x8011c9fc => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x2));
-                if true { return; }
-                return;
+            0x8011c9fc => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x2));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011c9ec: bad pc {:#x}", pc),
         }
@@ -2171,25 +2342,28 @@ pub fn f_8011ca04(c: &mut Cpu) {
 pub fn f_8011ca04_at(c: &mut Cpu, pc: u32) { f_8011ca04_b(c, pc) }
 #[inline(always)]
 fn f_8011ca04_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ca04;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ca04, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ca04, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ca04 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ca14; continue; }
+            0x8011ca04 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ca14; continue; }
                 pc = 0x8011ca0c;
             }
-            0x8011ca0c => {
+            0x8011ca0c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ca14;
             }
-            0x8011ca14 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x1));
-                if true { return; }
-                return;
+            0x8011ca14 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x1));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ca04: bad pc {:#x}", pc),
         }
@@ -2211,25 +2385,28 @@ pub fn f_8011ca1c(c: &mut Cpu) {
 pub fn f_8011ca1c_at(c: &mut Cpu, pc: u32) { f_8011ca1c_b(c, pc) }
 #[inline(always)]
 fn f_8011ca1c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ca1c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ca1c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ca1c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ca1c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ca2c; continue; }
+            0x8011ca1c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ca2c; continue; }
                 pc = 0x8011ca24;
             }
-            0x8011ca24 => {
+            0x8011ca24 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ca2c;
             }
-            0x8011ca2c => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x20));
-                if true { return; }
-                return;
+            0x8011ca2c => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x20));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ca1c: bad pc {:#x}", pc),
         }
@@ -2251,30 +2428,33 @@ pub fn f_8011ca34(c: &mut Cpu) {
 pub fn f_8011ca34_at(c: &mut Cpu, pc: u32) { f_8011ca34_b(c, pc) }
 #[inline(always)]
 fn f_8011ca34_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ca34;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ca34, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ca34, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ca34 => {
-                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff85d8));
+            0x8011ca34 => { ins += 5;
+                c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff85d8));
                 c.r[3] = c.r[3].rotate_left(0) & 0xffff;
-                c.r[0] = c.lwz(c.r[4]);
-                c.cmpu(0, c.r[3], c.r[0]);
-                if c.crbit(0) { pc = 0x8011ca50; continue; }
+                c.r[0] = c.lwz_t(ins, c.r[4]);
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011ca50; continue; }
                 pc = 0x8011ca48;
             }
-            0x8011ca48 => {
-                c.r[3] = c.lwz(c.r[13].wrapping_add(0xffff85dc));
-                if true { return; }
+            0x8011ca48 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff85dc));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ca50;
             }
-            0x8011ca50 => {
+            0x8011ca50 => { ins += 4;
                 c.r[0] = c.r[3].wrapping_mul(0x38);
-                c.r[3] = c.lwz(c.r[13].wrapping_add(0xffff85dc));
+                c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff85dc));
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ca34: bad pc {:#x}", pc),
         }
@@ -2296,40 +2476,43 @@ pub fn f_8011ca60(c: &mut Cpu) {
 pub fn f_8011ca60_at(c: &mut Cpu, pc: u32) { f_8011ca60_b(c, pc) }
 #[inline(always)]
 fn f_8011ca60_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ca60;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ca60, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ca60, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ca60 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ca70; continue; }
+            0x8011ca60 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ca70; continue; }
                 pc = 0x8011ca68;
             }
-            0x8011ca68 => {
+            0x8011ca68 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ca70;
             }
-            0x8011ca70 => {
-                c.r[4] = c.lhz(c.r[3].wrapping_add(0x10));
-                c.r[0] = c.lwz(c.r[13].wrapping_add(0xffff8358));
-                c.cmpu(0, c.r[4], c.r[0]);
-                if c.crbit(0) { pc = 0x8011ca88; continue; }
+            0x8011ca70 => { ins += 4;
+                c.r[4] = c.lhz_t(ins, c.r[3].wrapping_add(0x10));
+                c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8358));
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011ca88; continue; }
                 pc = 0x8011ca80;
             }
-            0x8011ca80 => {
+            0x8011ca80 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ca88;
             }
-            0x8011ca88 => {
+            0x8011ca88 => { ins += 5;
                 c.r[3] = 0x80360000;
                 c.r[0] = c.r[4].rotate_left(2) & 0x3fffc;
                 c.r[3] = c.r[3].wrapping_add(0xfffff9a8);
-                c.r[3] = c.lwz(c.r[3].wrapping_add(c.r[0]));
-                if true { return; }
-                return;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ca60: bad pc {:#x}", pc),
         }
@@ -2351,26 +2534,29 @@ pub fn f_8011ca9c(c: &mut Cpu) {
 pub fn f_8011ca9c_at(c: &mut Cpu, pc: u32) { f_8011ca9c_b(c, pc) }
 #[inline(always)]
 fn f_8011ca9c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ca9c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ca9c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ca9c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ca9c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011caac; continue; }
+            0x8011ca9c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011caac; continue; }
                 pc = 0x8011caa4;
             }
-            0x8011caa4 => {
+            0x8011caa4 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011caac;
             }
-            0x8011caac => {
-                c.r[0] = c.lbz(c.r[3]);
+            0x8011caac => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3]);
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ca9c: bad pc {:#x}", pc),
         }
@@ -2392,29 +2578,32 @@ pub fn f_8011cab8(c: &mut Cpu) {
 pub fn f_8011cab8_at(c: &mut Cpu, pc: u32) { f_8011cab8_b(c, pc) }
 #[inline(always)]
 fn f_8011cab8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cab8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cab8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cab8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cab8 => {
-                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff8648));
+            0x8011cab8 => { ins += 5;
+                c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8648));
                 c.r[3] = c.r[3].rotate_left(0) & 0xffff;
-                c.r[0] = c.lwz(c.r[4]);
-                c.cmpu(0, c.r[3], c.r[0]);
-                if c.crbit(0) { pc = 0x8011cad4; continue; }
+                c.r[0] = c.lwz_t(ins, c.r[4]);
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011cad4; continue; }
                 pc = 0x8011cacc;
             }
-            0x8011cacc => {
+            0x8011cacc => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cad4;
             }
-            0x8011cad4 => {
-                c.r[0] = c.lwz(c.r[13].wrapping_add(0xffff864c));
+            0x8011cad4 => { ins += 3;
+                c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff864c));
                 c.r[3] = c.r[0].wrapping_add(c.r[3]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cab8: bad pc {:#x}", pc),
         }
@@ -2436,37 +2625,40 @@ pub fn f_8011cae0(c: &mut Cpu) {
 pub fn f_8011cae0_at(c: &mut Cpu, pc: u32) { f_8011cae0_b(c, pc) }
 #[inline(always)]
 fn f_8011cae0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cae0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cae0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cae0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cae0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011caf0; continue; }
+            0x8011cae0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011caf0; continue; }
                 pc = 0x8011cae8;
             }
-            0x8011cae8 => {
+            0x8011cae8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011caf0;
             }
-            0x8011caf0 => {
+            0x8011caf0 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[0], 0x3);
-                if c.crbit(0) { pc = 0x8011cb04; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x3);
+                if cr_bit(cr, 0) { pc = 0x8011cb04; continue; }
                 pc = 0x8011cafc;
             }
-            0x8011cafc => {
+            0x8011cafc => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cb04;
             }
-            0x8011cb04 => {
-                c.r[0] = c.lbz(c.r[3].wrapping_add(c.r[0]));
+            0x8011cb04 => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cae0: bad pc {:#x}", pc),
         }
@@ -2488,30 +2680,33 @@ pub fn f_8011cb10(c: &mut Cpu) {
 pub fn f_8011cb10_at(c: &mut Cpu, pc: u32) { f_8011cb10_b(c, pc) }
 #[inline(always)]
 fn f_8011cb10_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cb10;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cb10, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cb10, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cb10 => {
-                c.r[0] = c.lwz(c.r[13].wrapping_add(0xffff8350));
+            0x8011cb10 => { ins += 4;
+                c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8350));
                 c.r[3] = c.r[3].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[3], c.r[0]);
-                if c.crbit(0) { pc = 0x8011cb28; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011cb28; continue; }
                 pc = 0x8011cb20;
             }
-            0x8011cb20 => {
+            0x8011cb20 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cb28;
             }
-            0x8011cb28 => {
+            0x8011cb28 => { ins += 5;
                 c.r[4] = c.r[3].wrapping_mul(0x3);
                 c.r[3] = 0x80360000;
                 c.r[0] = c.r[3].wrapping_add(0xfffff988);
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cb10: bad pc {:#x}", pc),
         }
@@ -2533,25 +2728,28 @@ pub fn f_8011cb3c(c: &mut Cpu) {
 pub fn f_8011cb3c_at(c: &mut Cpu, pc: u32) { f_8011cb3c_b(c, pc) }
 #[inline(always)]
 fn f_8011cb3c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cb3c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cb3c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cb3c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cb3c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cb4c; continue; }
+            0x8011cb3c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cb4c; continue; }
                 pc = 0x8011cb44;
             }
-            0x8011cb44 => {
+            0x8011cb44 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cb4c;
             }
-            0x8011cb4c => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x8));
-                if true { return; }
-                return;
+            0x8011cb4c => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x8));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cb3c: bad pc {:#x}", pc),
         }
@@ -2573,25 +2771,28 @@ pub fn f_8011cb54(c: &mut Cpu) {
 pub fn f_8011cb54_at(c: &mut Cpu, pc: u32) { f_8011cb54_b(c, pc) }
 #[inline(always)]
 fn f_8011cb54_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cb54;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cb54, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cb54, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cb54 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cb64; continue; }
+            0x8011cb54 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cb64; continue; }
                 pc = 0x8011cb5c;
             }
-            0x8011cb5c => {
+            0x8011cb5c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cb64;
             }
-            0x8011cb64 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x4));
-                if true { return; }
-                return;
+            0x8011cb64 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x4));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cb54: bad pc {:#x}", pc),
         }
@@ -2613,30 +2814,33 @@ pub fn f_8011cb6c(c: &mut Cpu) {
 pub fn f_8011cb6c_at(c: &mut Cpu, pc: u32) { f_8011cb6c_b(c, pc) }
 #[inline(always)]
 fn f_8011cb6c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cb6c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cb6c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cb6c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cb6c => {
-                c.r[0] = c.lwz(c.r[13].wrapping_add(0xffff8348));
+            0x8011cb6c => { ins += 4;
+                c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8348));
                 c.r[3] = c.r[3].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[3], c.r[0]);
-                if c.crbit(0) { pc = 0x8011cb84; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011cb84; continue; }
                 pc = 0x8011cb7c;
             }
-            0x8011cb7c => {
+            0x8011cb7c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cb84;
             }
-            0x8011cb84 => {
+            0x8011cb84 => { ins += 5;
                 c.r[4] = c.r[3].wrapping_mul(0xc);
                 c.r[3] = 0x80360000;
                 c.r[0] = c.r[3].wrapping_add(0xfffff5e0);
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cb6c: bad pc {:#x}", pc),
         }
@@ -2658,25 +2862,28 @@ pub fn f_8011cb98(c: &mut Cpu) {
 pub fn f_8011cb98_at(c: &mut Cpu, pc: u32) { f_8011cb98_b(c, pc) }
 #[inline(always)]
 fn f_8011cb98_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cb98;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cb98, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cb98, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cb98 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cba8; continue; }
+            0x8011cb98 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cba8; continue; }
                 pc = 0x8011cba0;
             }
-            0x8011cba0 => {
+            0x8011cba0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cba8;
             }
-            0x8011cba8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x1));
-                if true { return; }
-                return;
+            0x8011cba8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x1));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cb98: bad pc {:#x}", pc),
         }
@@ -2698,25 +2905,28 @@ pub fn f_8011cbb0(c: &mut Cpu) {
 pub fn f_8011cbb0_at(c: &mut Cpu, pc: u32) { f_8011cbb0_b(c, pc) }
 #[inline(always)]
 fn f_8011cbb0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cbb0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cbb0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cbb0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cbb0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cbc0; continue; }
+            0x8011cbb0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cbc0; continue; }
                 pc = 0x8011cbb8;
             }
-            0x8011cbb8 => {
+            0x8011cbb8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cbc0;
             }
-            0x8011cbc0 => {
-                c.r[3] = c.lbz(c.r[3]);
-                if true { return; }
-                return;
+            0x8011cbc0 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3]);
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cbb0: bad pc {:#x}", pc),
         }
@@ -2738,30 +2948,33 @@ pub fn f_8011cbc8(c: &mut Cpu) {
 pub fn f_8011cbc8_at(c: &mut Cpu, pc: u32) { f_8011cbc8_b(c, pc) }
 #[inline(always)]
 fn f_8011cbc8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cbc8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cbc8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cbc8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cbc8 => {
-                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff8638));
+            0x8011cbc8 => { ins += 5;
+                c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8638));
                 c.r[5] = c.r[3].rotate_left(0) & 0xff;
-                c.r[0] = c.lwz(c.r[4]);
-                c.cmpu(0, c.r[5], c.r[0]);
-                if c.crbit(0) { pc = 0x8011cbe4; continue; }
+                c.r[0] = c.lwz_t(ins, c.r[4]);
+                cr_cmpu(&mut cr, c.xer, 0, c.r[5], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011cbe4; continue; }
                 pc = 0x8011cbdc;
             }
-            0x8011cbdc => {
+            0x8011cbdc => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cbe4;
             }
-            0x8011cbe4 => {
-                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff863c));
+            0x8011cbe4 => { ins += 4;
+                c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff863c));
                 c.r[0] = c.r[3].rotate_left(1) & 0x1fe;
                 c.r[3] = c.r[4].wrapping_add(c.r[0]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cbc8: bad pc {:#x}", pc),
         }
@@ -2783,37 +2996,40 @@ pub fn f_8011cbf4(c: &mut Cpu) {
 pub fn f_8011cbf4_at(c: &mut Cpu, pc: u32) { f_8011cbf4_b(c, pc) }
 #[inline(always)]
 fn f_8011cbf4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cbf4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cbf4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cbf4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cbf4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cc04; continue; }
+            0x8011cbf4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cc04; continue; }
                 pc = 0x8011cbfc;
             }
-            0x8011cbfc => {
+            0x8011cbfc => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cc04;
             }
-            0x8011cc04 => {
+            0x8011cc04 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[0], 0x7);
-                if c.crbit(0) { pc = 0x8011cc18; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x7);
+                if cr_bit(cr, 0) { pc = 0x8011cc18; continue; }
                 pc = 0x8011cc10;
             }
-            0x8011cc10 => {
+            0x8011cc10 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cc18;
             }
-            0x8011cc18 => {
+            0x8011cc18 => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x1f));
-                if true { return; }
-                return;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x1f));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cbf4: bad pc {:#x}", pc),
         }
@@ -2835,37 +3051,40 @@ pub fn f_8011cc24(c: &mut Cpu) {
 pub fn f_8011cc24_at(c: &mut Cpu, pc: u32) { f_8011cc24_b(c, pc) }
 #[inline(always)]
 fn f_8011cc24_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cc24;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cc24, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cc24, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cc24 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cc34; continue; }
+            0x8011cc24 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cc34; continue; }
                 pc = 0x8011cc2c;
             }
-            0x8011cc2c => {
+            0x8011cc2c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cc34;
             }
-            0x8011cc34 => {
+            0x8011cc34 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[0], 0x7);
-                if c.crbit(0) { pc = 0x8011cc48; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x7);
+                if cr_bit(cr, 0) { pc = 0x8011cc48; continue; }
                 pc = 0x8011cc40;
             }
-            0x8011cc40 => {
+            0x8011cc40 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cc48;
             }
-            0x8011cc48 => {
+            0x8011cc48 => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x18));
-                if true { return; }
-                return;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x18));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cc24: bad pc {:#x}", pc),
         }
@@ -2887,25 +3106,28 @@ pub fn f_8011cc54(c: &mut Cpu) {
 pub fn f_8011cc54_at(c: &mut Cpu, pc: u32) { f_8011cc54_b(c, pc) }
 #[inline(always)]
 fn f_8011cc54_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cc54;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cc54, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cc54, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cc54 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cc64; continue; }
+            0x8011cc54 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cc64; continue; }
                 pc = 0x8011cc5c;
             }
-            0x8011cc5c => {
+            0x8011cc5c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cc64;
             }
-            0x8011cc64 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x11));
-                if true { return; }
-                return;
+            0x8011cc64 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x11));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cc54: bad pc {:#x}", pc),
         }
@@ -2927,25 +3149,28 @@ pub fn f_8011cc6c(c: &mut Cpu) {
 pub fn f_8011cc6c_at(c: &mut Cpu, pc: u32) { f_8011cc6c_b(c, pc) }
 #[inline(always)]
 fn f_8011cc6c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cc6c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cc6c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cc6c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cc6c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cc7c; continue; }
+            0x8011cc6c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cc7c; continue; }
                 pc = 0x8011cc74;
             }
-            0x8011cc74 => {
+            0x8011cc74 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cc7c;
             }
-            0x8011cc7c => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x10));
-                if true { return; }
-                return;
+            0x8011cc7c => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x10));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cc6c: bad pc {:#x}", pc),
         }
@@ -2967,25 +3192,28 @@ pub fn f_8011cc84(c: &mut Cpu) {
 pub fn f_8011cc84_at(c: &mut Cpu, pc: u32) { f_8011cc84_b(c, pc) }
 #[inline(always)]
 fn f_8011cc84_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cc84;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cc84, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cc84, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cc84 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cc94; continue; }
+            0x8011cc84 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cc94; continue; }
                 pc = 0x8011cc8c;
             }
-            0x8011cc8c => {
+            0x8011cc8c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cc94;
             }
-            0x8011cc94 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xf));
-                if true { return; }
-                return;
+            0x8011cc94 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xf));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cc84: bad pc {:#x}", pc),
         }
@@ -3007,25 +3235,28 @@ pub fn f_8011cc9c(c: &mut Cpu) {
 pub fn f_8011cc9c_at(c: &mut Cpu, pc: u32) { f_8011cc9c_b(c, pc) }
 #[inline(always)]
 fn f_8011cc9c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cc9c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cc9c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cc9c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cc9c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ccac; continue; }
+            0x8011cc9c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ccac; continue; }
                 pc = 0x8011cca4;
             }
-            0x8011cca4 => {
+            0x8011cca4 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ccac;
             }
-            0x8011ccac => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xe));
-                if true { return; }
-                return;
+            0x8011ccac => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xe));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cc9c: bad pc {:#x}", pc),
         }
@@ -3047,25 +3278,28 @@ pub fn f_8011ccb4(c: &mut Cpu) {
 pub fn f_8011ccb4_at(c: &mut Cpu, pc: u32) { f_8011ccb4_b(c, pc) }
 #[inline(always)]
 fn f_8011ccb4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ccb4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ccb4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ccb4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ccb4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ccc4; continue; }
+            0x8011ccb4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ccc4; continue; }
                 pc = 0x8011ccbc;
             }
-            0x8011ccbc => {
+            0x8011ccbc => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ccc4;
             }
-            0x8011ccc4 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xd));
-                if true { return; }
-                return;
+            0x8011ccc4 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xd));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ccb4: bad pc {:#x}", pc),
         }
@@ -3087,25 +3321,28 @@ pub fn f_8011cccc(c: &mut Cpu) {
 pub fn f_8011cccc_at(c: &mut Cpu, pc: u32) { f_8011cccc_b(c, pc) }
 #[inline(always)]
 fn f_8011cccc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cccc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cccc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cccc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cccc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ccdc; continue; }
+            0x8011cccc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ccdc; continue; }
                 pc = 0x8011ccd4;
             }
-            0x8011ccd4 => {
+            0x8011ccd4 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ccdc;
             }
-            0x8011ccdc => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xc));
-                if true { return; }
-                return;
+            0x8011ccdc => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xc));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cccc: bad pc {:#x}", pc),
         }
@@ -3127,25 +3364,28 @@ pub fn f_8011cce4(c: &mut Cpu) {
 pub fn f_8011cce4_at(c: &mut Cpu, pc: u32) { f_8011cce4_b(c, pc) }
 #[inline(always)]
 fn f_8011cce4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cce4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cce4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cce4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cce4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ccf4; continue; }
+            0x8011cce4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ccf4; continue; }
                 pc = 0x8011ccec;
             }
-            0x8011ccec => {
+            0x8011ccec => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ccf4;
             }
-            0x8011ccf4 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0xb));
-                if true { return; }
-                return;
+            0x8011ccf4 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0xb));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cce4: bad pc {:#x}", pc),
         }
@@ -3167,26 +3407,29 @@ pub fn f_8011ccfc(c: &mut Cpu) {
 pub fn f_8011ccfc_at(c: &mut Cpu, pc: u32) { f_8011ccfc_b(c, pc) }
 #[inline(always)]
 fn f_8011ccfc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ccfc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ccfc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ccfc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ccfc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cd0c; continue; }
+            0x8011ccfc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cd0c; continue; }
                 pc = 0x8011cd04;
             }
-            0x8011cd04 => {
+            0x8011cd04 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cd0c;
             }
-            0x8011cd0c => {
-                c.r[0] = c.lbz(c.r[3].wrapping_add(0x4));
+            0x8011cd0c => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x4));
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ccfc: bad pc {:#x}", pc),
         }
@@ -3208,26 +3451,29 @@ pub fn f_8011cd18(c: &mut Cpu) {
 pub fn f_8011cd18_at(c: &mut Cpu, pc: u32) { f_8011cd18_b(c, pc) }
 #[inline(always)]
 fn f_8011cd18_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cd18;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cd18, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cd18, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cd18 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cd28; continue; }
+            0x8011cd18 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cd28; continue; }
                 pc = 0x8011cd20;
             }
-            0x8011cd20 => {
+            0x8011cd20 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cd28;
             }
-            0x8011cd28 => {
-                c.r[0] = c.lbz(c.r[3].wrapping_add(0x3));
+            0x8011cd28 => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x3));
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cd18: bad pc {:#x}", pc),
         }
@@ -3249,26 +3495,29 @@ pub fn f_8011cd34(c: &mut Cpu) {
 pub fn f_8011cd34_at(c: &mut Cpu, pc: u32) { f_8011cd34_b(c, pc) }
 #[inline(always)]
 fn f_8011cd34_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cd34;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cd34, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cd34, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cd34 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cd44; continue; }
+            0x8011cd34 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cd44; continue; }
                 pc = 0x8011cd3c;
             }
-            0x8011cd3c => {
+            0x8011cd3c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cd44;
             }
-            0x8011cd44 => {
-                c.r[0] = c.lbz(c.r[3].wrapping_add(0x2));
+            0x8011cd44 => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x2));
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cd34: bad pc {:#x}", pc),
         }
@@ -3290,26 +3539,29 @@ pub fn f_8011cd50(c: &mut Cpu) {
 pub fn f_8011cd50_at(c: &mut Cpu, pc: u32) { f_8011cd50_b(c, pc) }
 #[inline(always)]
 fn f_8011cd50_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cd50;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cd50, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cd50, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cd50 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cd60; continue; }
+            0x8011cd50 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cd60; continue; }
                 pc = 0x8011cd58;
             }
-            0x8011cd58 => {
+            0x8011cd58 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cd60;
             }
-            0x8011cd60 => {
-                c.r[0] = c.lbz(c.r[3].wrapping_add(0x1));
+            0x8011cd60 => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x1));
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cd50: bad pc {:#x}", pc),
         }
@@ -3331,26 +3583,29 @@ pub fn f_8011cd6c(c: &mut Cpu) {
 pub fn f_8011cd6c_at(c: &mut Cpu, pc: u32) { f_8011cd6c_b(c, pc) }
 #[inline(always)]
 fn f_8011cd6c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cd6c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cd6c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cd6c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cd6c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cd7c; continue; }
+            0x8011cd6c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cd7c; continue; }
                 pc = 0x8011cd74;
             }
-            0x8011cd74 => {
+            0x8011cd74 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cd7c;
             }
-            0x8011cd7c => {
-                c.r[0] = c.lbz(c.r[3]);
+            0x8011cd7c => { ins += 3;
+                c.r[0] = c.lbz_t(ins, c.r[3]);
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cd6c: bad pc {:#x}", pc),
         }
@@ -3372,25 +3627,28 @@ pub fn f_8011cd88(c: &mut Cpu) {
 pub fn f_8011cd88_at(c: &mut Cpu, pc: u32) { f_8011cd88_b(c, pc) }
 #[inline(always)]
 fn f_8011cd88_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cd88;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cd88, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cd88, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cd88 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cd98; continue; }
+            0x8011cd88 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cd98; continue; }
                 pc = 0x8011cd90;
             }
-            0x8011cd90 => {
+            0x8011cd90 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cd98;
             }
-            0x8011cd98 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x9));
-                if true { return; }
-                return;
+            0x8011cd98 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x9));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cd88: bad pc {:#x}", pc),
         }
@@ -3412,25 +3670,28 @@ pub fn f_8011cda0(c: &mut Cpu) {
 pub fn f_8011cda0_at(c: &mut Cpu, pc: u32) { f_8011cda0_b(c, pc) }
 #[inline(always)]
 fn f_8011cda0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cda0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cda0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cda0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cda0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cdb0; continue; }
+            0x8011cda0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cdb0; continue; }
                 pc = 0x8011cda8;
             }
-            0x8011cda8 => {
+            0x8011cda8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cdb0;
             }
-            0x8011cdb0 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x8));
-                if true { return; }
-                return;
+            0x8011cdb0 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x8));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cda0: bad pc {:#x}", pc),
         }
@@ -3452,25 +3713,28 @@ pub fn f_8011cdb8(c: &mut Cpu) {
 pub fn f_8011cdb8_at(c: &mut Cpu, pc: u32) { f_8011cdb8_b(c, pc) }
 #[inline(always)]
 fn f_8011cdb8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cdb8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cdb8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cdb8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cdb8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cdc8; continue; }
+            0x8011cdb8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cdc8; continue; }
                 pc = 0x8011cdc0;
             }
-            0x8011cdc0 => {
+            0x8011cdc0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cdc8;
             }
-            0x8011cdc8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x7));
-                if true { return; }
-                return;
+            0x8011cdc8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x7));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cdb8: bad pc {:#x}", pc),
         }
@@ -3492,25 +3756,28 @@ pub fn f_8011cdd0(c: &mut Cpu) {
 pub fn f_8011cdd0_at(c: &mut Cpu, pc: u32) { f_8011cdd0_b(c, pc) }
 #[inline(always)]
 fn f_8011cdd0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cdd0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cdd0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cdd0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cdd0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cde0; continue; }
+            0x8011cdd0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cde0; continue; }
                 pc = 0x8011cdd8;
             }
-            0x8011cdd8 => {
+            0x8011cdd8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cde0;
             }
-            0x8011cde0 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x6));
-                if true { return; }
-                return;
+            0x8011cde0 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x6));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cdd0: bad pc {:#x}", pc),
         }
@@ -3532,25 +3799,28 @@ pub fn f_8011cde8(c: &mut Cpu) {
 pub fn f_8011cde8_at(c: &mut Cpu, pc: u32) { f_8011cde8_b(c, pc) }
 #[inline(always)]
 fn f_8011cde8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cde8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cde8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cde8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cde8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cdf8; continue; }
+            0x8011cde8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cdf8; continue; }
                 pc = 0x8011cdf0;
             }
-            0x8011cdf0 => {
+            0x8011cdf0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cdf8;
             }
-            0x8011cdf8 => {
-                c.r[3] = c.lbz(c.r[3].wrapping_add(0x5));
-                if true { return; }
-                return;
+            0x8011cdf8 => { ins += 2;
+                c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x5));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cde8: bad pc {:#x}", pc),
         }
@@ -3572,25 +3842,28 @@ pub fn f_8011ce00(c: &mut Cpu) {
 pub fn f_8011ce00_at(c: &mut Cpu, pc: u32) { f_8011ce00_b(c, pc) }
 #[inline(always)]
 fn f_8011ce00_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ce00;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ce00, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ce00, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ce00 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ce10; continue; }
+            0x8011ce00 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ce10; continue; }
                 pc = 0x8011ce08;
             }
-            0x8011ce08 => {
+            0x8011ce08 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ce10;
             }
-            0x8011ce10 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x14));
-                if true { return; }
-                return;
+            0x8011ce10 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x14));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ce00: bad pc {:#x}", pc),
         }
@@ -3612,30 +3885,33 @@ pub fn f_8011ce18(c: &mut Cpu) {
 pub fn f_8011ce18_at(c: &mut Cpu, pc: u32) { f_8011ce18_b(c, pc) }
 #[inline(always)]
 fn f_8011ce18_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ce18;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ce18, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ce18, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ce18 => {
-                c.r[4] = c.lwz(c.r[13].wrapping_add(0xffff8640));
+            0x8011ce18 => { ins += 5;
+                c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8640));
                 c.r[3] = c.r[3].rotate_left(0) & 0xff;
-                c.r[0] = c.lwz(c.r[4]);
-                c.cmpu(0, c.r[3], c.r[0]);
-                if c.crbit(0) { pc = 0x8011ce34; continue; }
+                c.r[0] = c.lwz_t(ins, c.r[4]);
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011ce34; continue; }
                 pc = 0x8011ce2c;
             }
-            0x8011ce2c => {
+            0x8011ce2c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ce34;
             }
-            0x8011ce34 => {
+            0x8011ce34 => { ins += 4;
                 c.r[0] = c.r[3].wrapping_mul(0x28);
-                c.r[3] = c.lwz(c.r[13].wrapping_add(0xffff8644));
+                c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8644));
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ce18: bad pc {:#x}", pc),
         }
@@ -3657,37 +3933,40 @@ pub fn f_8011ce44(c: &mut Cpu) {
 pub fn f_8011ce44_at(c: &mut Cpu, pc: u32) { f_8011ce44_b(c, pc) }
 #[inline(always)]
 fn f_8011ce44_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ce44;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ce44, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ce44, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ce44 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011ce54; continue; }
+            0x8011ce44 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011ce54; continue; }
                 pc = 0x8011ce4c;
             }
-            0x8011ce4c => {
+            0x8011ce4c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ce54;
             }
-            0x8011ce54 => {
+            0x8011ce54 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[0], 0x65);
-                if c.crbit(0) { pc = 0x8011ce68; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x65);
+                if cr_bit(cr, 0) { pc = 0x8011ce68; continue; }
                 pc = 0x8011ce60;
             }
-            0x8011ce60 => {
+            0x8011ce60 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ce68;
             }
-            0x8011ce68 => {
+            0x8011ce68 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(2) & 0x3fc;
-                c.r[3] = c.lwz(c.r[3].wrapping_add(c.r[0]));
-                if true { return; }
-                return;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ce44: bad pc {:#x}", pc),
         }
@@ -3709,30 +3988,33 @@ pub fn f_8011ce74(c: &mut Cpu) {
 pub fn f_8011ce74_at(c: &mut Cpu, pc: u32) { f_8011ce74_b(c, pc) }
 #[inline(always)]
 fn f_8011ce74_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ce74;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ce74, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ce74, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ce74 => {
-                c.r[0] = c.lwz(c.r[13].wrapping_add(0xffff8340));
+            0x8011ce74 => { ins += 4;
+                c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8340));
                 c.r[3] = c.r[3].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[3], c.r[0]);
-                if c.crbit(0) { pc = 0x8011ce8c; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011ce8c; continue; }
                 pc = 0x8011ce84;
             }
-            0x8011ce84 => {
+            0x8011ce84 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { return; }
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ce8c;
             }
-            0x8011ce8c => {
+            0x8011ce8c => { ins += 5;
                 c.r[4] = c.r[3].wrapping_mul(0x194);
                 c.r[3] = 0x80360000;
                 c.r[0] = c.r[3].wrapping_add(0xffffe940);
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ce74: bad pc {:#x}", pc),
         }
@@ -3754,20 +4036,23 @@ pub fn f_8011cea0(c: &mut Cpu) {
 pub fn f_8011cea0_at(c: &mut Cpu, pc: u32) { f_8011cea0_b(c, pc) }
 #[inline(always)]
 fn f_8011cea0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cea0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cea0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cea0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cea0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cea0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cea8;
             }
-            0x8011cea8 => {
+            0x8011cea8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cea0: bad pc {:#x}", pc),
         }
@@ -3789,20 +4074,23 @@ pub fn f_8011ceb0(c: &mut Cpu) {
 pub fn f_8011ceb0_at(c: &mut Cpu, pc: u32) { f_8011ceb0_b(c, pc) }
 #[inline(always)]
 fn f_8011ceb0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ceb0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ceb0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ceb0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ceb0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011ceb0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ceb8;
             }
-            0x8011ceb8 => {
+            0x8011ceb8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x3), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ceb0: bad pc {:#x}", pc),
         }
@@ -3824,20 +4112,23 @@ pub fn f_8011cec0(c: &mut Cpu) {
 pub fn f_8011cec0_at(c: &mut Cpu, pc: u32) { f_8011cec0_b(c, pc) }
 #[inline(always)]
 fn f_8011cec0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cec0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cec0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cec0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cec0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cec0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cec8;
             }
-            0x8011cec8 => {
+            0x8011cec8 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x16), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cec0: bad pc {:#x}", pc),
         }
@@ -3859,27 +4150,30 @@ pub fn f_8011ced0(c: &mut Cpu) {
 pub fn f_8011ced0_at(c: &mut Cpu, pc: u32) { f_8011ced0_b(c, pc) }
 #[inline(always)]
 fn f_8011ced0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ced0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ced0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ced0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ced0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011ced0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011ced8;
             }
-            0x8011ced8 => {
+            0x8011ced8 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x2);
-                if !c.crbit(0) { return; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x2);
+                if !cr_bit(cr, 0) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cee4;
             }
-            0x8011cee4 => {
+            0x8011cee4 => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x6e), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ced0: bad pc {:#x}", pc),
         }
@@ -3901,28 +4195,31 @@ pub fn f_8011cef0(c: &mut Cpu) {
 pub fn f_8011cef0_at(c: &mut Cpu, pc: u32) { f_8011cef0_b(c, pc) }
 #[inline(always)]
 fn f_8011cef0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cef0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cef0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cef0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cef0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cef0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cef8;
             }
-            0x8011cef8 => {
+            0x8011cef8 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x8);
-                if !c.crbit(0) { return; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x8);
+                if !cr_bit(cr, 0) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cf04;
             }
-            0x8011cf04 => {
+            0x8011cf04 => { ins += 4;
                 c.r[0] = c.r[4].rotate_left(1) & 0x1fffe;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.sth(c.r[3].wrapping_add(0x74), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cef0: bad pc {:#x}", pc),
         }
@@ -3944,20 +4241,23 @@ pub fn f_8011cf14(c: &mut Cpu) {
 pub fn f_8011cf14_at(c: &mut Cpu, pc: u32) { f_8011cf14_b(c, pc) }
 #[inline(always)]
 fn f_8011cf14_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cf14;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cf14, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cf14, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cf14 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cf14 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cf1c;
             }
-            0x8011cf1c => {
+            0x8011cf1c => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x2c), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cf14: bad pc {:#x}", pc),
         }
@@ -3979,20 +4279,23 @@ pub fn f_8011cf24(c: &mut Cpu) {
 pub fn f_8011cf24_at(c: &mut Cpu, pc: u32) { f_8011cf24_b(c, pc) }
 #[inline(always)]
 fn f_8011cf24_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cf24;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cf24, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cf24, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cf24 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cf24 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cf2c;
             }
-            0x8011cf2c => {
+            0x8011cf2c => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x12), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cf24: bad pc {:#x}", pc),
         }
@@ -4014,20 +4317,23 @@ pub fn f_8011cf34(c: &mut Cpu) {
 pub fn f_8011cf34_at(c: &mut Cpu, pc: u32) { f_8011cf34_b(c, pc) }
 #[inline(always)]
 fn f_8011cf34_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cf34;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cf34, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cf34, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cf34 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cf34 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cf3c;
             }
-            0x8011cf3c => {
+            0x8011cf3c => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x14), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cf34: bad pc {:#x}", pc),
         }
@@ -4049,30 +4355,33 @@ pub fn f_8011cf44(c: &mut Cpu) {
 pub fn f_8011cf44_at(c: &mut Cpu, pc: u32) { f_8011cf44_b(c, pc) }
 #[inline(always)]
 fn f_8011cf44_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cf44;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cf44, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cf44, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cf44 => {
+            0x8011cf44 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
-                c.cmpu(0, c.r[3], 0x0);
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                if c.crbit(2) { pc = 0x8011cf60; continue; }
+                if cr_bit(cr, 2) { pc = 0x8011cf60; continue; }
                 pc = 0x8011cf58;
             }
-            0x8011cf58 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x28));
-                c.lr = 0x8011cf60; f_8019075c(c);
+            0x8011cf58 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x28));
+                c.lr = 0x8011cf60; { c.steps = st; c.instrs = ins; c.cr = cr; f_8019075c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011cf60;
             }
-            0x8011cf60 => {
-                c.r[0] = c.lwz(c.r[1].wrapping_add(0x14));
+            0x8011cf60 => { ins += 4;
+                c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cf44: bad pc {:#x}", pc),
         }
@@ -4094,30 +4403,33 @@ pub fn f_8011cf70(c: &mut Cpu) {
 pub fn f_8011cf70_at(c: &mut Cpu, pc: u32) { f_8011cf70_b(c, pc) }
 #[inline(always)]
 fn f_8011cf70_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cf70;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cf70, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cf70, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cf70 => {
+            0x8011cf70 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
-                c.cmpu(0, c.r[3], 0x0);
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                if c.crbit(2) { pc = 0x8011cf8c; continue; }
+                if cr_bit(cr, 2) { pc = 0x8011cf8c; continue; }
                 pc = 0x8011cf84;
             }
-            0x8011cf84 => {
-                c.r[3] = c.lwz(c.r[3].wrapping_add(0x24));
-                c.lr = 0x8011cf8c; f_8019075c(c);
+            0x8011cf84 => { ins += 2;
+                c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x24));
+                c.lr = 0x8011cf8c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8019075c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011cf8c;
             }
-            0x8011cf8c => {
-                c.r[0] = c.lwz(c.r[1].wrapping_add(0x14));
+            0x8011cf8c => { ins += 4;
+                c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cf70: bad pc {:#x}", pc),
         }
@@ -4139,20 +4451,23 @@ pub fn f_8011cf9c(c: &mut Cpu) {
 pub fn f_8011cf9c_at(c: &mut Cpu, pc: u32) { f_8011cf9c_b(c, pc) }
 #[inline(always)]
 fn f_8011cf9c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cf9c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cf9c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cf9c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cf9c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cf9c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cfa4;
             }
-            0x8011cfa4 => {
+            0x8011cfa4 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xe), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cf9c: bad pc {:#x}", pc),
         }
@@ -4174,20 +4489,23 @@ pub fn f_8011cfac(c: &mut Cpu) {
 pub fn f_8011cfac_at(c: &mut Cpu, pc: u32) { f_8011cfac_b(c, pc) }
 #[inline(always)]
 fn f_8011cfac_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cfac;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cfac, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cfac, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cfac => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cfac => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cfb4;
             }
-            0x8011cfb4 => {
+            0x8011cfb4 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x20), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cfac: bad pc {:#x}", pc),
         }
@@ -4209,20 +4527,23 @@ pub fn f_8011cfbc(c: &mut Cpu) {
 pub fn f_8011cfbc_at(c: &mut Cpu, pc: u32) { f_8011cfbc_b(c, pc) }
 #[inline(always)]
 fn f_8011cfbc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cfbc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cfbc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cfbc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cfbc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cfbc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cfc4;
             }
-            0x8011cfc4 => {
+            0x8011cfc4 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xc), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cfbc: bad pc {:#x}", pc),
         }
@@ -4244,20 +4565,23 @@ pub fn f_8011cfcc(c: &mut Cpu) {
 pub fn f_8011cfcc_at(c: &mut Cpu, pc: u32) { f_8011cfcc_b(c, pc) }
 #[inline(always)]
 fn f_8011cfcc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cfcc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cfcc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cfcc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cfcc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cfcc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cfd4;
             }
-            0x8011cfd4 => {
+            0x8011cfd4 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cfcc: bad pc {:#x}", pc),
         }
@@ -4279,20 +4603,23 @@ pub fn f_8011cfdc(c: &mut Cpu) {
 pub fn f_8011cfdc_at(c: &mut Cpu, pc: u32) { f_8011cfdc_b(c, pc) }
 #[inline(always)]
 fn f_8011cfdc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cfdc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cfdc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cfdc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cfdc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011cfdc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011cfe4;
             }
-            0x8011cfe4 => {
+            0x8011cfe4 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x1c), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cfdc: bad pc {:#x}", pc),
         }
@@ -4314,47 +4641,50 @@ pub fn f_8011cfec(c: &mut Cpu) {
 pub fn f_8011cfec_at(c: &mut Cpu, pc: u32) { f_8011cfec_b(c, pc) }
 #[inline(always)]
 fn f_8011cfec_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011cfec;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011cfec, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011cfec, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011cfec => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011cffc; continue; }
+            0x8011cfec => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011cffc; continue; }
                 pc = 0x8011cff4;
             }
-            0x8011cff4 => {
+            0x8011cff4 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d01c; continue;
                 pc = 0x8011cffc;
             }
-            0x8011cffc => {
+            0x8011cffc => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x2);
-                if c.crbit(0) { pc = 0x8011d010; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x2);
+                if cr_bit(cr, 0) { pc = 0x8011d010; continue; }
                 pc = 0x8011d008;
             }
-            0x8011d008 => {
+            0x8011d008 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d01c; continue;
                 pc = 0x8011d010;
             }
-            0x8011d010 => {
+            0x8011d010 => { ins += 3;
                 c.r[4] = c.r[4].rotate_left(3) & 0x7fff8;
                 c.r[4] = c.r[4].wrapping_add(0x10c);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d01c;
             }
-            0x8011d01c => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d01c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d024;
             }
-            0x8011d024 => {
+            0x8011d024 => { ins += 2;
                 c.stb(c.r[4], c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011cfec: bad pc {:#x}", pc),
         }
@@ -4376,47 +4706,50 @@ pub fn f_8011d02c(c: &mut Cpu) {
 pub fn f_8011d02c_at(c: &mut Cpu, pc: u32) { f_8011d02c_b(c, pc) }
 #[inline(always)]
 fn f_8011d02c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d02c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d02c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d02c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d02c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d03c; continue; }
+            0x8011d02c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d03c; continue; }
                 pc = 0x8011d034;
             }
-            0x8011d034 => {
+            0x8011d034 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d05c; continue;
                 pc = 0x8011d03c;
             }
-            0x8011d03c => {
+            0x8011d03c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x2);
-                if c.crbit(0) { pc = 0x8011d050; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x2);
+                if cr_bit(cr, 0) { pc = 0x8011d050; continue; }
                 pc = 0x8011d048;
             }
-            0x8011d048 => {
+            0x8011d048 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d05c; continue;
                 pc = 0x8011d050;
             }
-            0x8011d050 => {
+            0x8011d050 => { ins += 3;
                 c.r[4] = c.r[4].rotate_left(3) & 0x7fff8;
                 c.r[4] = c.r[4].wrapping_add(0x10c);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d05c;
             }
-            0x8011d05c => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d05c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d064;
             }
-            0x8011d064 => {
+            0x8011d064 => { ins += 2;
                 c.sth(c.r[4].wrapping_add(0x2), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d02c: bad pc {:#x}", pc),
         }
@@ -4438,47 +4771,50 @@ pub fn f_8011d06c(c: &mut Cpu) {
 pub fn f_8011d06c_at(c: &mut Cpu, pc: u32) { f_8011d06c_b(c, pc) }
 #[inline(always)]
 fn f_8011d06c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d06c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d06c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d06c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d06c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d07c; continue; }
+            0x8011d06c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d07c; continue; }
                 pc = 0x8011d074;
             }
-            0x8011d074 => {
+            0x8011d074 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d09c; continue;
                 pc = 0x8011d07c;
             }
-            0x8011d07c => {
+            0x8011d07c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x2);
-                if c.crbit(0) { pc = 0x8011d090; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x2);
+                if cr_bit(cr, 0) { pc = 0x8011d090; continue; }
                 pc = 0x8011d088;
             }
-            0x8011d088 => {
+            0x8011d088 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d09c; continue;
                 pc = 0x8011d090;
             }
-            0x8011d090 => {
+            0x8011d090 => { ins += 3;
                 c.r[4] = c.r[4].rotate_left(3) & 0x7fff8;
                 c.r[4] = c.r[4].wrapping_add(0x10c);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d09c;
             }
-            0x8011d09c => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d09c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d0a4;
             }
-            0x8011d0a4 => {
+            0x8011d0a4 => { ins += 2;
                 c.stw(c.r[4].wrapping_add(0x4), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d06c: bad pc {:#x}", pc),
         }
@@ -4500,27 +4836,30 @@ pub fn f_8011d0ac(c: &mut Cpu) {
 pub fn f_8011d0ac_at(c: &mut Cpu, pc: u32) { f_8011d0ac_b(c, pc) }
 #[inline(always)]
 fn f_8011d0ac_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d0ac;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d0ac, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d0ac, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d0ac => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d0ac => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d0b4;
             }
-            0x8011d0b4 => {
+            0x8011d0b4 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x3a);
-                if !c.crbit(0) { return; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x3a);
+                if !cr_bit(cr, 0) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d0c0;
             }
-            0x8011d0c0 => {
+            0x8011d0c0 => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x34), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d0ac: bad pc {:#x}", pc),
         }
@@ -4542,47 +4881,50 @@ pub fn f_8011d0cc(c: &mut Cpu) {
 pub fn f_8011d0cc_at(c: &mut Cpu, pc: u32) { f_8011d0cc_b(c, pc) }
 #[inline(always)]
 fn f_8011d0cc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d0cc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d0cc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d0cc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d0cc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d0dc; continue; }
+            0x8011d0cc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d0dc; continue; }
                 pc = 0x8011d0d4;
             }
-            0x8011d0d4 => {
+            0x8011d0d4 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d0fc; continue;
                 pc = 0x8011d0dc;
             }
-            0x8011d0dc => {
+            0x8011d0dc => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x14);
-                if c.crbit(0) { pc = 0x8011d0f0; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x14);
+                if cr_bit(cr, 0) { pc = 0x8011d0f0; continue; }
                 pc = 0x8011d0e8;
             }
-            0x8011d0e8 => {
+            0x8011d0e8 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d0fc; continue;
                 pc = 0x8011d0f0;
             }
-            0x8011d0f0 => {
+            0x8011d0f0 => { ins += 3;
                 c.r[4] = c.r[4].rotate_left(2) & 0x3fffc;
                 c.r[4] = c.r[4].wrapping_add(0xba);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d0fc;
             }
-            0x8011d0fc => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d0fc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d104;
             }
-            0x8011d104 => {
+            0x8011d104 => { ins += 2;
                 c.sth(c.r[4].wrapping_add(0x2), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d0cc: bad pc {:#x}", pc),
         }
@@ -4604,47 +4946,50 @@ pub fn f_8011d10c(c: &mut Cpu) {
 pub fn f_8011d10c_at(c: &mut Cpu, pc: u32) { f_8011d10c_b(c, pc) }
 #[inline(always)]
 fn f_8011d10c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d10c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d10c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d10c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d10c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d11c; continue; }
+            0x8011d10c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d11c; continue; }
                 pc = 0x8011d114;
             }
-            0x8011d114 => {
+            0x8011d114 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d13c; continue;
                 pc = 0x8011d11c;
             }
-            0x8011d11c => {
+            0x8011d11c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x14);
-                if c.crbit(0) { pc = 0x8011d130; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x14);
+                if cr_bit(cr, 0) { pc = 0x8011d130; continue; }
                 pc = 0x8011d128;
             }
-            0x8011d128 => {
+            0x8011d128 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d13c; continue;
                 pc = 0x8011d130;
             }
-            0x8011d130 => {
+            0x8011d130 => { ins += 3;
                 c.r[4] = c.r[4].rotate_left(2) & 0x3fffc;
                 c.r[4] = c.r[4].wrapping_add(0xba);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d13c;
             }
-            0x8011d13c => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d13c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d144;
             }
-            0x8011d144 => {
+            0x8011d144 => { ins += 2;
                 c.stb(c.r[4], c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d10c: bad pc {:#x}", pc),
         }
@@ -4666,47 +5011,50 @@ pub fn f_8011d14c(c: &mut Cpu) {
 pub fn f_8011d14c_at(c: &mut Cpu, pc: u32) { f_8011d14c_b(c, pc) }
 #[inline(always)]
 fn f_8011d14c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d14c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d14c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d14c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d14c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d15c; continue; }
+            0x8011d14c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d15c; continue; }
                 pc = 0x8011d154;
             }
-            0x8011d154 => {
+            0x8011d154 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d17c; continue;
                 pc = 0x8011d15c;
             }
-            0x8011d15c => {
+            0x8011d15c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x5);
-                if c.crbit(0) { pc = 0x8011d170; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x5);
+                if cr_bit(cr, 0) { pc = 0x8011d170; continue; }
                 pc = 0x8011d168;
             }
-            0x8011d168 => {
+            0x8011d168 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d17c; continue;
                 pc = 0x8011d170;
             }
-            0x8011d170 => {
+            0x8011d170 => { ins += 3;
                 c.r[4] = c.r[0].wrapping_mul(0x6);
                 c.r[4] = c.r[4].wrapping_add(0x9c);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d17c;
             }
-            0x8011d17c => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d17c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d184;
             }
-            0x8011d184 => {
+            0x8011d184 => { ins += 2;
                 c.sth(c.r[4].wrapping_add(0x4), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d14c: bad pc {:#x}", pc),
         }
@@ -4728,47 +5076,50 @@ pub fn f_8011d18c(c: &mut Cpu) {
 pub fn f_8011d18c_at(c: &mut Cpu, pc: u32) { f_8011d18c_b(c, pc) }
 #[inline(always)]
 fn f_8011d18c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d18c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d18c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d18c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d18c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d19c; continue; }
+            0x8011d18c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d19c; continue; }
                 pc = 0x8011d194;
             }
-            0x8011d194 => {
+            0x8011d194 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d1bc; continue;
                 pc = 0x8011d19c;
             }
-            0x8011d19c => {
+            0x8011d19c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x5);
-                if c.crbit(0) { pc = 0x8011d1b0; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x5);
+                if cr_bit(cr, 0) { pc = 0x8011d1b0; continue; }
                 pc = 0x8011d1a8;
             }
-            0x8011d1a8 => {
+            0x8011d1a8 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d1bc; continue;
                 pc = 0x8011d1b0;
             }
-            0x8011d1b0 => {
+            0x8011d1b0 => { ins += 3;
                 c.r[4] = c.r[0].wrapping_mul(0x6);
                 c.r[4] = c.r[4].wrapping_add(0x9c);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d1bc;
             }
-            0x8011d1bc => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d1bc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d1c4;
             }
-            0x8011d1c4 => {
+            0x8011d1c4 => { ins += 2;
                 c.sth(c.r[4].wrapping_add(0x2), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d18c: bad pc {:#x}", pc),
         }
@@ -4790,47 +5141,50 @@ pub fn f_8011d1cc(c: &mut Cpu) {
 pub fn f_8011d1cc_at(c: &mut Cpu, pc: u32) { f_8011d1cc_b(c, pc) }
 #[inline(always)]
 fn f_8011d1cc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d1cc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d1cc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d1cc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d1cc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d1dc; continue; }
+            0x8011d1cc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d1dc; continue; }
                 pc = 0x8011d1d4;
             }
-            0x8011d1d4 => {
+            0x8011d1d4 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d1fc; continue;
                 pc = 0x8011d1dc;
             }
-            0x8011d1dc => {
+            0x8011d1dc => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x5);
-                if c.crbit(0) { pc = 0x8011d1f0; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x5);
+                if cr_bit(cr, 0) { pc = 0x8011d1f0; continue; }
                 pc = 0x8011d1e8;
             }
-            0x8011d1e8 => {
+            0x8011d1e8 => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011d1fc; continue;
                 pc = 0x8011d1f0;
             }
-            0x8011d1f0 => {
+            0x8011d1f0 => { ins += 3;
                 c.r[4] = c.r[0].wrapping_mul(0x6);
                 c.r[4] = c.r[4].wrapping_add(0x9c);
                 c.r[4] = c.r[3].wrapping_add(c.r[4]);
                 pc = 0x8011d1fc;
             }
-            0x8011d1fc => {
-                c.cmpu(0, c.r[4], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d1fc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d204;
             }
-            0x8011d204 => {
+            0x8011d204 => { ins += 2;
                 c.stb(c.r[4], c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d1cc: bad pc {:#x}", pc),
         }
@@ -4852,27 +5206,30 @@ pub fn f_8011d20c(c: &mut Cpu) {
 pub fn f_8011d20c_at(c: &mut Cpu, pc: u32) { f_8011d20c_b(c, pc) }
 #[inline(always)]
 fn f_8011d20c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d20c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d20c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d20c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d20c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d20c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d214;
             }
-            0x8011d214 => {
+            0x8011d214 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x2);
-                if !c.crbit(0) { return; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x2);
+                if !cr_bit(cr, 0) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d220;
             }
-            0x8011d220 => {
+            0x8011d220 => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x32), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d20c: bad pc {:#x}", pc),
         }
@@ -4894,27 +5251,30 @@ pub fn f_8011d22c(c: &mut Cpu) {
 pub fn f_8011d22c_at(c: &mut Cpu, pc: u32) { f_8011d22c_b(c, pc) }
 #[inline(always)]
 fn f_8011d22c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d22c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d22c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d22c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d22c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d22c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d234;
             }
-            0x8011d234 => {
+            0x8011d234 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x2);
-                if !c.crbit(0) { return; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x2);
+                if !cr_bit(cr, 0) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d240;
             }
-            0x8011d240 => {
+            0x8011d240 => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x30), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d22c: bad pc {:#x}", pc),
         }
@@ -4936,28 +5296,31 @@ pub fn f_8011d24c(c: &mut Cpu) {
 pub fn f_8011d24c_at(c: &mut Cpu, pc: u32) { f_8011d24c_b(c, pc) }
 #[inline(always)]
 fn f_8011d24c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d24c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d24c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d24c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d24c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d24c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d254;
             }
-            0x8011d254 => {
+            0x8011d254 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x2);
-                if !c.crbit(0) { return; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x2);
+                if !cr_bit(cr, 0) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d260;
             }
-            0x8011d260 => {
+            0x8011d260 => { ins += 4;
                 c.r[0] = c.r[4].rotate_left(1) & 0x1fffe;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.sth(c.r[3].wrapping_add(0x70), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d24c: bad pc {:#x}", pc),
         }
@@ -4979,20 +5342,23 @@ pub fn f_8011d270(c: &mut Cpu) {
 pub fn f_8011d270_at(c: &mut Cpu, pc: u32) { f_8011d270_b(c, pc) }
 #[inline(always)]
 fn f_8011d270_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d270;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d270, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d270, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d270 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d270 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d278;
             }
-            0x8011d278 => {
+            0x8011d278 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d270: bad pc {:#x}", pc),
         }
@@ -5014,20 +5380,23 @@ pub fn f_8011d280(c: &mut Cpu) {
 pub fn f_8011d280_at(c: &mut Cpu, pc: u32) { f_8011d280_b(c, pc) }
 #[inline(always)]
 fn f_8011d280_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d280;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d280, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d280, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d280 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d280 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d288;
             }
-            0x8011d288 => {
+            0x8011d288 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d280: bad pc {:#x}", pc),
         }
@@ -5049,20 +5418,23 @@ pub fn f_8011d290(c: &mut Cpu) {
 pub fn f_8011d290_at(c: &mut Cpu, pc: u32) { f_8011d290_b(c, pc) }
 #[inline(always)]
 fn f_8011d290_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d290;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d290, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d290, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d290 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d290 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d298;
             }
-            0x8011d298 => {
+            0x8011d298 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d290: bad pc {:#x}", pc),
         }
@@ -5084,20 +5456,23 @@ pub fn f_8011d2a0(c: &mut Cpu) {
 pub fn f_8011d2a0_at(c: &mut Cpu, pc: u32) { f_8011d2a0_b(c, pc) }
 #[inline(always)]
 fn f_8011d2a0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d2a0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d2a0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d2a0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d2a0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d2a0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d2a8;
             }
-            0x8011d2a8 => {
+            0x8011d2a8 => { ins += 2;
                 c.stb(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d2a0: bad pc {:#x}", pc),
         }
@@ -5119,20 +5494,23 @@ pub fn f_8011d2b0(c: &mut Cpu) {
 pub fn f_8011d2b0_at(c: &mut Cpu, pc: u32) { f_8011d2b0_b(c, pc) }
 #[inline(always)]
 fn f_8011d2b0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d2b0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d2b0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d2b0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d2b0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d2b0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d2b8;
             }
-            0x8011d2b8 => {
+            0x8011d2b8 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d2b0: bad pc {:#x}", pc),
         }
@@ -5154,34 +5532,37 @@ pub fn f_8011d2c0(c: &mut Cpu) {
 pub fn f_8011d2c0_at(c: &mut Cpu, pc: u32) { f_8011d2c0_b(c, pc) }
 #[inline(always)]
 fn f_8011d2c0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d2c0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d2c0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d2c0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d2c0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d2d0; continue; }
+            0x8011d2c0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d2d0; continue; }
                 pc = 0x8011d2c8;
             }
-            0x8011d2c8 => {
+            0x8011d2c8 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d2d4; continue;
                 pc = 0x8011d2d0;
             }
-            0x8011d2d0 => {
+            0x8011d2d0 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x90);
                 pc = 0x8011d2d4;
             }
-            0x8011d2d4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d2d4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d2dc;
             }
-            0x8011d2dc => {
+            0x8011d2dc => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d2c0: bad pc {:#x}", pc),
         }
@@ -5203,34 +5584,37 @@ pub fn f_8011d2e4(c: &mut Cpu) {
 pub fn f_8011d2e4_at(c: &mut Cpu, pc: u32) { f_8011d2e4_b(c, pc) }
 #[inline(always)]
 fn f_8011d2e4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d2e4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d2e4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d2e4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d2e4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d2f4; continue; }
+            0x8011d2e4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d2f4; continue; }
                 pc = 0x8011d2ec;
             }
-            0x8011d2ec => {
+            0x8011d2ec => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d2f8; continue;
                 pc = 0x8011d2f4;
             }
-            0x8011d2f4 => {
+            0x8011d2f4 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x90);
                 pc = 0x8011d2f8;
             }
-            0x8011d2f8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d2f8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d300;
             }
-            0x8011d300 => {
+            0x8011d300 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d2e4: bad pc {:#x}", pc),
         }
@@ -5252,34 +5636,37 @@ pub fn f_8011d308(c: &mut Cpu) {
 pub fn f_8011d308_at(c: &mut Cpu, pc: u32) { f_8011d308_b(c, pc) }
 #[inline(always)]
 fn f_8011d308_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d308;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d308, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d308, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d308 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d318; continue; }
+            0x8011d308 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d318; continue; }
                 pc = 0x8011d310;
             }
-            0x8011d310 => {
+            0x8011d310 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d31c; continue;
                 pc = 0x8011d318;
             }
-            0x8011d318 => {
+            0x8011d318 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x90);
                 pc = 0x8011d31c;
             }
-            0x8011d31c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d31c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d324;
             }
-            0x8011d324 => {
+            0x8011d324 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d308: bad pc {:#x}", pc),
         }
@@ -5301,34 +5688,37 @@ pub fn f_8011d32c(c: &mut Cpu) {
 pub fn f_8011d32c_at(c: &mut Cpu, pc: u32) { f_8011d32c_b(c, pc) }
 #[inline(always)]
 fn f_8011d32c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d32c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d32c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d32c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d32c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d33c; continue; }
+            0x8011d32c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d33c; continue; }
                 pc = 0x8011d334;
             }
-            0x8011d334 => {
+            0x8011d334 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d340; continue;
                 pc = 0x8011d33c;
             }
-            0x8011d33c => {
+            0x8011d33c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x90);
                 pc = 0x8011d340;
             }
-            0x8011d340 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d340 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d348;
             }
-            0x8011d348 => {
+            0x8011d348 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d32c: bad pc {:#x}", pc),
         }
@@ -5350,34 +5740,37 @@ pub fn f_8011d350(c: &mut Cpu) {
 pub fn f_8011d350_at(c: &mut Cpu, pc: u32) { f_8011d350_b(c, pc) }
 #[inline(always)]
 fn f_8011d350_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d350;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d350, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d350, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d350 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d360; continue; }
+            0x8011d350 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d360; continue; }
                 pc = 0x8011d358;
             }
-            0x8011d358 => {
+            0x8011d358 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d364; continue;
                 pc = 0x8011d360;
             }
-            0x8011d360 => {
+            0x8011d360 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x90);
                 pc = 0x8011d364;
             }
-            0x8011d364 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d364 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d36c;
             }
-            0x8011d36c => {
+            0x8011d36c => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d350: bad pc {:#x}", pc),
         }
@@ -5399,34 +5792,37 @@ pub fn f_8011d374(c: &mut Cpu) {
 pub fn f_8011d374_at(c: &mut Cpu, pc: u32) { f_8011d374_b(c, pc) }
 #[inline(always)]
 fn f_8011d374_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d374;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d374, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d374, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d374 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d384; continue; }
+            0x8011d374 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d384; continue; }
                 pc = 0x8011d37c;
             }
-            0x8011d37c => {
+            0x8011d37c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d388; continue;
                 pc = 0x8011d384;
             }
-            0x8011d384 => {
+            0x8011d384 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x90);
                 pc = 0x8011d388;
             }
-            0x8011d388 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d388 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d390;
             }
-            0x8011d390 => {
+            0x8011d390 => { ins += 2;
                 c.sth(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d374: bad pc {:#x}", pc),
         }
@@ -5448,34 +5844,37 @@ pub fn f_8011d398(c: &mut Cpu) {
 pub fn f_8011d398_at(c: &mut Cpu, pc: u32) { f_8011d398_b(c, pc) }
 #[inline(always)]
 fn f_8011d398_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d398;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d398, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d398, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d398 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d3a8; continue; }
+            0x8011d398 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d3a8; continue; }
                 pc = 0x8011d3a0;
             }
-            0x8011d3a0 => {
+            0x8011d3a0 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d3ac; continue;
                 pc = 0x8011d3a8;
             }
-            0x8011d3a8 => {
+            0x8011d3a8 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x84);
                 pc = 0x8011d3ac;
             }
-            0x8011d3ac => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d3ac => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d3b4;
             }
-            0x8011d3b4 => {
+            0x8011d3b4 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d398: bad pc {:#x}", pc),
         }
@@ -5497,34 +5896,37 @@ pub fn f_8011d3bc(c: &mut Cpu) {
 pub fn f_8011d3bc_at(c: &mut Cpu, pc: u32) { f_8011d3bc_b(c, pc) }
 #[inline(always)]
 fn f_8011d3bc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d3bc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d3bc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d3bc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d3bc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d3cc; continue; }
+            0x8011d3bc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d3cc; continue; }
                 pc = 0x8011d3c4;
             }
-            0x8011d3c4 => {
+            0x8011d3c4 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d3d0; continue;
                 pc = 0x8011d3cc;
             }
-            0x8011d3cc => {
+            0x8011d3cc => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x84);
                 pc = 0x8011d3d0;
             }
-            0x8011d3d0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d3d0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d3d8;
             }
-            0x8011d3d8 => {
+            0x8011d3d8 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d3bc: bad pc {:#x}", pc),
         }
@@ -5546,34 +5948,37 @@ pub fn f_8011d3e0(c: &mut Cpu) {
 pub fn f_8011d3e0_at(c: &mut Cpu, pc: u32) { f_8011d3e0_b(c, pc) }
 #[inline(always)]
 fn f_8011d3e0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d3e0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d3e0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d3e0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d3e0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d3f0; continue; }
+            0x8011d3e0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d3f0; continue; }
                 pc = 0x8011d3e8;
             }
-            0x8011d3e8 => {
+            0x8011d3e8 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d3f4; continue;
                 pc = 0x8011d3f0;
             }
-            0x8011d3f0 => {
+            0x8011d3f0 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x84);
                 pc = 0x8011d3f4;
             }
-            0x8011d3f4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d3f4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d3fc;
             }
-            0x8011d3fc => {
+            0x8011d3fc => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d3e0: bad pc {:#x}", pc),
         }
@@ -5595,34 +6000,37 @@ pub fn f_8011d404(c: &mut Cpu) {
 pub fn f_8011d404_at(c: &mut Cpu, pc: u32) { f_8011d404_b(c, pc) }
 #[inline(always)]
 fn f_8011d404_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d404;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d404, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d404, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d404 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d414; continue; }
+            0x8011d404 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d414; continue; }
                 pc = 0x8011d40c;
             }
-            0x8011d40c => {
+            0x8011d40c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d418; continue;
                 pc = 0x8011d414;
             }
-            0x8011d414 => {
+            0x8011d414 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x84);
                 pc = 0x8011d418;
             }
-            0x8011d418 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d418 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d420;
             }
-            0x8011d420 => {
+            0x8011d420 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d404: bad pc {:#x}", pc),
         }
@@ -5644,34 +6052,37 @@ pub fn f_8011d428(c: &mut Cpu) {
 pub fn f_8011d428_at(c: &mut Cpu, pc: u32) { f_8011d428_b(c, pc) }
 #[inline(always)]
 fn f_8011d428_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d428;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d428, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d428, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d428 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d438; continue; }
+            0x8011d428 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d438; continue; }
                 pc = 0x8011d430;
             }
-            0x8011d430 => {
+            0x8011d430 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d43c; continue;
                 pc = 0x8011d438;
             }
-            0x8011d438 => {
+            0x8011d438 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x84);
                 pc = 0x8011d43c;
             }
-            0x8011d43c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d43c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d444;
             }
-            0x8011d444 => {
+            0x8011d444 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d428: bad pc {:#x}", pc),
         }
@@ -5693,34 +6104,37 @@ pub fn f_8011d44c(c: &mut Cpu) {
 pub fn f_8011d44c_at(c: &mut Cpu, pc: u32) { f_8011d44c_b(c, pc) }
 #[inline(always)]
 fn f_8011d44c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d44c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d44c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d44c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d44c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d45c; continue; }
+            0x8011d44c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d45c; continue; }
                 pc = 0x8011d454;
             }
-            0x8011d454 => {
+            0x8011d454 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d460; continue;
                 pc = 0x8011d45c;
             }
-            0x8011d45c => {
+            0x8011d45c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x84);
                 pc = 0x8011d460;
             }
-            0x8011d460 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d460 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d468;
             }
-            0x8011d468 => {
+            0x8011d468 => { ins += 2;
                 c.sth(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d44c: bad pc {:#x}", pc),
         }
@@ -5742,20 +6156,23 @@ pub fn f_8011d470(c: &mut Cpu) {
 pub fn f_8011d470_at(c: &mut Cpu, pc: u32) { f_8011d470_b(c, pc) }
 #[inline(always)]
 fn f_8011d470_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d470;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d470, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d470, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d470 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d470 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d478;
             }
-            0x8011d478 => {
+            0x8011d478 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x18), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d470: bad pc {:#x}", pc),
         }
@@ -5777,21 +6194,24 @@ pub fn f_8011d480(c: &mut Cpu) {
 pub fn f_8011d480_at(c: &mut Cpu, pc: u32) { f_8011d480_b(c, pc) }
 #[inline(always)]
 fn f_8011d480_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d480;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d480, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d480, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d480 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d480 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d488;
             }
-            0x8011d488 => {
+            0x8011d488 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
                 c.stw(c.r[3].wrapping_add(0xf8), c.r[0]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d480: bad pc {:#x}", pc),
         }
@@ -5813,20 +6233,23 @@ pub fn f_8011d494(c: &mut Cpu) {
 pub fn f_8011d494_at(c: &mut Cpu, pc: u32) { f_8011d494_b(c, pc) }
 #[inline(always)]
 fn f_8011d494_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d494;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d494, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d494, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d494 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d494 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d49c;
             }
-            0x8011d49c => {
+            0x8011d49c => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xd6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d494: bad pc {:#x}", pc),
         }
@@ -5848,20 +6271,23 @@ pub fn f_8011d4a4(c: &mut Cpu) {
 pub fn f_8011d4a4_at(c: &mut Cpu, pc: u32) { f_8011d4a4_b(c, pc) }
 #[inline(always)]
 fn f_8011d4a4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d4a4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d4a4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d4a4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d4a4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d4a4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d4ac;
             }
-            0x8011d4ac => {
+            0x8011d4ac => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xd2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d4a4: bad pc {:#x}", pc),
         }
@@ -5883,20 +6309,23 @@ pub fn f_8011d4b4(c: &mut Cpu) {
 pub fn f_8011d4b4_at(c: &mut Cpu, pc: u32) { f_8011d4b4_b(c, pc) }
 #[inline(always)]
 fn f_8011d4b4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d4b4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d4b4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d4b4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d4b4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d4b4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d4bc;
             }
-            0x8011d4bc => {
+            0x8011d4bc => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xd4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d4b4: bad pc {:#x}", pc),
         }
@@ -5918,20 +6347,23 @@ pub fn f_8011d4c4(c: &mut Cpu) {
 pub fn f_8011d4c4_at(c: &mut Cpu, pc: u32) { f_8011d4c4_b(c, pc) }
 #[inline(always)]
 fn f_8011d4c4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d4c4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d4c4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d4c4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d4c4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d4c4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d4cc;
             }
-            0x8011d4cc => {
+            0x8011d4cc => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xd0), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d4c4: bad pc {:#x}", pc),
         }
@@ -5953,20 +6385,23 @@ pub fn f_8011d4d4(c: &mut Cpu) {
 pub fn f_8011d4d4_at(c: &mut Cpu, pc: u32) { f_8011d4d4_b(c, pc) }
 #[inline(always)]
 fn f_8011d4d4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d4d4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d4d4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d4d4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d4d4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d4d4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d4dc;
             }
-            0x8011d4dc => {
+            0x8011d4dc => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xcf), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d4d4: bad pc {:#x}", pc),
         }
@@ -5988,20 +6423,23 @@ pub fn f_8011d4e4(c: &mut Cpu) {
 pub fn f_8011d4e4_at(c: &mut Cpu, pc: u32) { f_8011d4e4_b(c, pc) }
 #[inline(always)]
 fn f_8011d4e4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d4e4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d4e4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d4e4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d4e4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d4e4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d4ec;
             }
-            0x8011d4ec => {
+            0x8011d4ec => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xce), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d4e4: bad pc {:#x}", pc),
         }
@@ -6023,20 +6461,23 @@ pub fn f_8011d4f4(c: &mut Cpu) {
 pub fn f_8011d4f4_at(c: &mut Cpu, pc: u32) { f_8011d4f4_b(c, pc) }
 #[inline(always)]
 fn f_8011d4f4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d4f4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d4f4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d4f4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d4f4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d4f4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d4fc;
             }
-            0x8011d4fc => {
+            0x8011d4fc => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xcd), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d4f4: bad pc {:#x}", pc),
         }
@@ -6058,76 +6499,79 @@ pub fn f_8011d504(c: &mut Cpu) {
 pub fn f_8011d504_at(c: &mut Cpu, pc: u32) { f_8011d504_b(c, pc) }
 #[inline(always)]
 fn f_8011d504_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d504;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d504, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d504, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d504 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d504 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d50c;
             }
-            0x8011d50c => {
-                if !c.crbit(2) { pc = 0x8011d518; continue; }
+            0x8011d50c => { ins += 1;
+                if !cr_bit(cr, 2) { pc = 0x8011d518; continue; }
                 pc = 0x8011d510;
             }
-            0x8011d510 => {
+            0x8011d510 => { ins += 2;
                 c.r[0] = 0x0;
                 pc = 0x8011d51c; continue;
                 pc = 0x8011d518;
             }
-            0x8011d518 => {
-                c.r[0] = c.lhz(c.r[3]);
+            0x8011d518 => { ins += 1;
+                c.r[0] = c.lhz_t(ins, c.r[3]);
                 pc = 0x8011d51c;
             }
-            0x8011d51c => {
-                c.r[5] = c.lwz(c.r[13].wrapping_add(0xffff8770));
+            0x8011d51c => { ins += 5;
+                c.r[5] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8770));
                 c.r[6] = c.r[0].rotate_left(0) & 0xffff;
-                c.r[0] = c.lwz(c.r[5]);
-                c.cmpu(0, c.r[6], c.r[0]);
-                if c.crbit(0) { pc = 0x8011d538; continue; }
+                c.r[0] = c.lwz_t(ins, c.r[5]);
+                cr_cmpu(&mut cr, c.xer, 0, c.r[6], c.r[0]);
+                if cr_bit(cr, 0) { pc = 0x8011d538; continue; }
                 pc = 0x8011d530;
             }
-            0x8011d530 => {
+            0x8011d530 => { ins += 2;
                 c.r[5] = 0x0;
                 pc = 0x8011d544; continue;
                 pc = 0x8011d538;
             }
-            0x8011d538 => {
+            0x8011d538 => { ins += 3;
                 c.r[0] = c.r[6].wrapping_mul(0x11c);
-                c.r[5] = c.lwz(c.r[13].wrapping_add(0xffff8774));
+                c.r[5] = c.lwz_t(ins, c.r[13].wrapping_add(0xffff8774));
                 c.r[5] = c.r[5].wrapping_add(c.r[0]);
                 pc = 0x8011d544;
             }
-            0x8011d544 => {
-                c.cmpu(0, c.r[5], 0x0);
-                if !c.crbit(2) { pc = 0x8011d554; continue; }
+            0x8011d544 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[5], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d554; continue; }
                 pc = 0x8011d54c;
             }
-            0x8011d54c => {
+            0x8011d54c => { ins += 2;
                 c.r[0] = 0x0;
                 pc = 0x8011d558; continue;
                 pc = 0x8011d554;
             }
-            0x8011d554 => {
-                c.r[0] = c.lbz(c.r[5].wrapping_add(0x33));
+            0x8011d554 => { ins += 1;
+                c.r[0] = c.lbz_t(ins, c.r[5].wrapping_add(0x33));
                 pc = 0x8011d558;
             }
-            0x8011d558 => {
+            0x8011d558 => { ins += 2;
                 c.r[0] = c.r[0].rotate_left(0) & 0xff;
-                c.rc(c.r[0]);
-                if !c.crbit(2) { pc = 0x8011d564; continue; }
+                cr_rc(&mut cr, c.xer, c.r[0]);
+                if !cr_bit(cr, 2) { pc = 0x8011d564; continue; }
                 pc = 0x8011d560;
             }
-            0x8011d560 => {
+            0x8011d560 => { ins += 1;
                 c.r[4] = 0x0;
                 pc = 0x8011d564;
             }
-            0x8011d564 => {
+            0x8011d564 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xcc), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d504: bad pc {:#x}", pc),
         }
@@ -6149,20 +6593,23 @@ pub fn f_8011d56c(c: &mut Cpu) {
 pub fn f_8011d56c_at(c: &mut Cpu, pc: u32) { f_8011d56c_b(c, pc) }
 #[inline(always)]
 fn f_8011d56c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d56c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d56c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d56c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d56c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d56c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d574;
             }
-            0x8011d574 => {
+            0x8011d574 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xcb), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d56c: bad pc {:#x}", pc),
         }
@@ -6184,20 +6631,23 @@ pub fn f_8011d57c(c: &mut Cpu) {
 pub fn f_8011d57c_at(c: &mut Cpu, pc: u32) { f_8011d57c_b(c, pc) }
 #[inline(always)]
 fn f_8011d57c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d57c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d57c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d57c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d57c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d57c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d584;
             }
-            0x8011d584 => {
+            0x8011d584 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xca), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d57c: bad pc {:#x}", pc),
         }
@@ -6219,34 +6669,37 @@ pub fn f_8011d58c(c: &mut Cpu) {
 pub fn f_8011d58c_at(c: &mut Cpu, pc: u32) { f_8011d58c_b(c, pc) }
 #[inline(always)]
 fn f_8011d58c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d58c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d58c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d58c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d58c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d59c; continue; }
+            0x8011d58c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d59c; continue; }
                 pc = 0x8011d594;
             }
-            0x8011d594 => {
+            0x8011d594 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d5a0; continue;
                 pc = 0x8011d59c;
             }
-            0x8011d59c => {
+            0x8011d59c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d5a0;
             }
-            0x8011d5a0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d5a0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d5a8;
             }
-            0x8011d5a8 => {
+            0x8011d5a8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xc), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d58c: bad pc {:#x}", pc),
         }
@@ -6268,34 +6721,37 @@ pub fn f_8011d5b0(c: &mut Cpu) {
 pub fn f_8011d5b0_at(c: &mut Cpu, pc: u32) { f_8011d5b0_b(c, pc) }
 #[inline(always)]
 fn f_8011d5b0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d5b0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d5b0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d5b0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d5b0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d5c0; continue; }
+            0x8011d5b0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d5c0; continue; }
                 pc = 0x8011d5b8;
             }
-            0x8011d5b8 => {
+            0x8011d5b8 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d5c4; continue;
                 pc = 0x8011d5c0;
             }
-            0x8011d5c0 => {
+            0x8011d5c0 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d5c4;
             }
-            0x8011d5c4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d5c4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d5cc;
             }
-            0x8011d5cc => {
+            0x8011d5cc => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xb), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d5b0: bad pc {:#x}", pc),
         }
@@ -6317,34 +6773,37 @@ pub fn f_8011d5d4(c: &mut Cpu) {
 pub fn f_8011d5d4_at(c: &mut Cpu, pc: u32) { f_8011d5d4_b(c, pc) }
 #[inline(always)]
 fn f_8011d5d4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d5d4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d5d4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d5d4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d5d4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d5e4; continue; }
+            0x8011d5d4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d5e4; continue; }
                 pc = 0x8011d5dc;
             }
-            0x8011d5dc => {
+            0x8011d5dc => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d5e8; continue;
                 pc = 0x8011d5e4;
             }
-            0x8011d5e4 => {
+            0x8011d5e4 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d5e8;
             }
-            0x8011d5e8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d5e8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d5f0;
             }
-            0x8011d5f0 => {
+            0x8011d5f0 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d5d4: bad pc {:#x}", pc),
         }
@@ -6366,34 +6825,37 @@ pub fn f_8011d5f8(c: &mut Cpu) {
 pub fn f_8011d5f8_at(c: &mut Cpu, pc: u32) { f_8011d5f8_b(c, pc) }
 #[inline(always)]
 fn f_8011d5f8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d5f8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d5f8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d5f8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d5f8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d608; continue; }
+            0x8011d5f8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d608; continue; }
                 pc = 0x8011d600;
             }
-            0x8011d600 => {
+            0x8011d600 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d60c; continue;
                 pc = 0x8011d608;
             }
-            0x8011d608 => {
+            0x8011d608 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d60c;
             }
-            0x8011d60c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d60c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d614;
             }
-            0x8011d614 => {
+            0x8011d614 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x9), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d5f8: bad pc {:#x}", pc),
         }
@@ -6415,34 +6877,37 @@ pub fn f_8011d61c(c: &mut Cpu) {
 pub fn f_8011d61c_at(c: &mut Cpu, pc: u32) { f_8011d61c_b(c, pc) }
 #[inline(always)]
 fn f_8011d61c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d61c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d61c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d61c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d61c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d62c; continue; }
+            0x8011d61c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d62c; continue; }
                 pc = 0x8011d624;
             }
-            0x8011d624 => {
+            0x8011d624 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d630; continue;
                 pc = 0x8011d62c;
             }
-            0x8011d62c => {
+            0x8011d62c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d630;
             }
-            0x8011d630 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d630 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d638;
             }
-            0x8011d638 => {
+            0x8011d638 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d61c: bad pc {:#x}", pc),
         }
@@ -6464,34 +6929,37 @@ pub fn f_8011d640(c: &mut Cpu) {
 pub fn f_8011d640_at(c: &mut Cpu, pc: u32) { f_8011d640_b(c, pc) }
 #[inline(always)]
 fn f_8011d640_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d640;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d640, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d640, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d640 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d650; continue; }
+            0x8011d640 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d650; continue; }
                 pc = 0x8011d648;
             }
-            0x8011d648 => {
+            0x8011d648 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d654; continue;
                 pc = 0x8011d650;
             }
-            0x8011d650 => {
+            0x8011d650 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d654;
             }
-            0x8011d654 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d654 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d65c;
             }
-            0x8011d65c => {
+            0x8011d65c => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x7), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d640: bad pc {:#x}", pc),
         }
@@ -6513,34 +6981,37 @@ pub fn f_8011d664(c: &mut Cpu) {
 pub fn f_8011d664_at(c: &mut Cpu, pc: u32) { f_8011d664_b(c, pc) }
 #[inline(always)]
 fn f_8011d664_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d664;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d664, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d664, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d664 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d674; continue; }
+            0x8011d664 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d674; continue; }
                 pc = 0x8011d66c;
             }
-            0x8011d66c => {
+            0x8011d66c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d678; continue;
                 pc = 0x8011d674;
             }
-            0x8011d674 => {
+            0x8011d674 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d678;
             }
-            0x8011d678 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d678 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d680;
             }
-            0x8011d680 => {
+            0x8011d680 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d664: bad pc {:#x}", pc),
         }
@@ -6562,34 +7033,37 @@ pub fn f_8011d688(c: &mut Cpu) {
 pub fn f_8011d688_at(c: &mut Cpu, pc: u32) { f_8011d688_b(c, pc) }
 #[inline(always)]
 fn f_8011d688_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d688;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d688, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d688, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d688 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d698; continue; }
+            0x8011d688 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d698; continue; }
                 pc = 0x8011d690;
             }
-            0x8011d690 => {
+            0x8011d690 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d69c; continue;
                 pc = 0x8011d698;
             }
-            0x8011d698 => {
+            0x8011d698 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d69c;
             }
-            0x8011d69c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d69c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d6a4;
             }
-            0x8011d6a4 => {
+            0x8011d6a4 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x5), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d688: bad pc {:#x}", pc),
         }
@@ -6611,34 +7085,37 @@ pub fn f_8011d6ac(c: &mut Cpu) {
 pub fn f_8011d6ac_at(c: &mut Cpu, pc: u32) { f_8011d6ac_b(c, pc) }
 #[inline(always)]
 fn f_8011d6ac_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d6ac;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d6ac, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d6ac, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d6ac => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d6bc; continue; }
+            0x8011d6ac => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d6bc; continue; }
                 pc = 0x8011d6b4;
             }
-            0x8011d6b4 => {
+            0x8011d6b4 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d6c0; continue;
                 pc = 0x8011d6bc;
             }
-            0x8011d6bc => {
+            0x8011d6bc => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d6c0;
             }
-            0x8011d6c0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d6c0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d6c8;
             }
-            0x8011d6c8 => {
+            0x8011d6c8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d6ac: bad pc {:#x}", pc),
         }
@@ -6660,34 +7137,37 @@ pub fn f_8011d6d0(c: &mut Cpu) {
 pub fn f_8011d6d0_at(c: &mut Cpu, pc: u32) { f_8011d6d0_b(c, pc) }
 #[inline(always)]
 fn f_8011d6d0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d6d0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d6d0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d6d0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d6d0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d6e0; continue; }
+            0x8011d6d0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d6e0; continue; }
                 pc = 0x8011d6d8;
             }
-            0x8011d6d8 => {
+            0x8011d6d8 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d6e4; continue;
                 pc = 0x8011d6e0;
             }
-            0x8011d6e0 => {
+            0x8011d6e0 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d6e4;
             }
-            0x8011d6e4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d6e4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d6ec;
             }
-            0x8011d6ec => {
+            0x8011d6ec => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x3), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d6d0: bad pc {:#x}", pc),
         }
@@ -6709,34 +7189,37 @@ pub fn f_8011d6f4(c: &mut Cpu) {
 pub fn f_8011d6f4_at(c: &mut Cpu, pc: u32) { f_8011d6f4_b(c, pc) }
 #[inline(always)]
 fn f_8011d6f4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d6f4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d6f4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d6f4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d6f4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d704; continue; }
+            0x8011d6f4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d704; continue; }
                 pc = 0x8011d6fc;
             }
-            0x8011d6fc => {
+            0x8011d6fc => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d708; continue;
                 pc = 0x8011d704;
             }
-            0x8011d704 => {
+            0x8011d704 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d708;
             }
-            0x8011d708 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d708 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d710;
             }
-            0x8011d710 => {
+            0x8011d710 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d6f4: bad pc {:#x}", pc),
         }
@@ -6758,34 +7241,37 @@ pub fn f_8011d718(c: &mut Cpu) {
 pub fn f_8011d718_at(c: &mut Cpu, pc: u32) { f_8011d718_b(c, pc) }
 #[inline(always)]
 fn f_8011d718_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d718;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d718, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d718, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d718 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d728; continue; }
+            0x8011d718 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d728; continue; }
                 pc = 0x8011d720;
             }
-            0x8011d720 => {
+            0x8011d720 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d72c; continue;
                 pc = 0x8011d728;
             }
-            0x8011d728 => {
+            0x8011d728 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d72c;
             }
-            0x8011d72c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d72c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d734;
             }
-            0x8011d734 => {
+            0x8011d734 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d718: bad pc {:#x}", pc),
         }
@@ -6807,34 +7293,37 @@ pub fn f_8011d73c(c: &mut Cpu) {
 pub fn f_8011d73c_at(c: &mut Cpu, pc: u32) { f_8011d73c_b(c, pc) }
 #[inline(always)]
 fn f_8011d73c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d73c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d73c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d73c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d73c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d74c; continue; }
+            0x8011d73c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d74c; continue; }
                 pc = 0x8011d744;
             }
-            0x8011d744 => {
+            0x8011d744 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d750; continue;
                 pc = 0x8011d74c;
             }
-            0x8011d74c => {
+            0x8011d74c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xbd);
                 pc = 0x8011d750;
             }
-            0x8011d750 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d750 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d758;
             }
-            0x8011d758 => {
+            0x8011d758 => { ins += 2;
                 c.stb(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d73c: bad pc {:#x}", pc),
         }
@@ -6856,20 +7345,23 @@ pub fn f_8011d760(c: &mut Cpu) {
 pub fn f_8011d760_at(c: &mut Cpu, pc: u32) { f_8011d760_b(c, pc) }
 #[inline(always)]
 fn f_8011d760_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d760;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d760, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d760, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d760 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d760 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d768;
             }
-            0x8011d768 => {
+            0x8011d768 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0xbc), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d760: bad pc {:#x}", pc),
         }
@@ -6891,34 +7383,37 @@ pub fn f_8011d770(c: &mut Cpu) {
 pub fn f_8011d770_at(c: &mut Cpu, pc: u32) { f_8011d770_b(c, pc) }
 #[inline(always)]
 fn f_8011d770_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d770;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d770, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d770, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d770 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d780; continue; }
+            0x8011d770 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d780; continue; }
                 pc = 0x8011d778;
             }
-            0x8011d778 => {
+            0x8011d778 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d784; continue;
                 pc = 0x8011d780;
             }
-            0x8011d780 => {
+            0x8011d780 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb7);
                 pc = 0x8011d784;
             }
-            0x8011d784 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d784 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d78c;
             }
-            0x8011d78c => {
+            0x8011d78c => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d770: bad pc {:#x}", pc),
         }
@@ -6940,34 +7435,37 @@ pub fn f_8011d794(c: &mut Cpu) {
 pub fn f_8011d794_at(c: &mut Cpu, pc: u32) { f_8011d794_b(c, pc) }
 #[inline(always)]
 fn f_8011d794_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d794;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d794, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d794, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d794 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d7a4; continue; }
+            0x8011d794 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d7a4; continue; }
                 pc = 0x8011d79c;
             }
-            0x8011d79c => {
+            0x8011d79c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d7a8; continue;
                 pc = 0x8011d7a4;
             }
-            0x8011d7a4 => {
+            0x8011d7a4 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb7);
                 pc = 0x8011d7a8;
             }
-            0x8011d7a8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d7a8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d7b0;
             }
-            0x8011d7b0 => {
+            0x8011d7b0 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x3), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d794: bad pc {:#x}", pc),
         }
@@ -6989,34 +7487,37 @@ pub fn f_8011d7b8(c: &mut Cpu) {
 pub fn f_8011d7b8_at(c: &mut Cpu, pc: u32) { f_8011d7b8_b(c, pc) }
 #[inline(always)]
 fn f_8011d7b8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d7b8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d7b8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d7b8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d7b8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d7c8; continue; }
+            0x8011d7b8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d7c8; continue; }
                 pc = 0x8011d7c0;
             }
-            0x8011d7c0 => {
+            0x8011d7c0 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d7cc; continue;
                 pc = 0x8011d7c8;
             }
-            0x8011d7c8 => {
+            0x8011d7c8 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb7);
                 pc = 0x8011d7cc;
             }
-            0x8011d7cc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d7cc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d7d4;
             }
-            0x8011d7d4 => {
+            0x8011d7d4 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d7b8: bad pc {:#x}", pc),
         }
@@ -7038,34 +7539,37 @@ pub fn f_8011d7dc(c: &mut Cpu) {
 pub fn f_8011d7dc_at(c: &mut Cpu, pc: u32) { f_8011d7dc_b(c, pc) }
 #[inline(always)]
 fn f_8011d7dc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d7dc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d7dc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d7dc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d7dc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d7ec; continue; }
+            0x8011d7dc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d7ec; continue; }
                 pc = 0x8011d7e4;
             }
-            0x8011d7e4 => {
+            0x8011d7e4 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d7f0; continue;
                 pc = 0x8011d7ec;
             }
-            0x8011d7ec => {
+            0x8011d7ec => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb7);
                 pc = 0x8011d7f0;
             }
-            0x8011d7f0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d7f0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d7f8;
             }
-            0x8011d7f8 => {
+            0x8011d7f8 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d7dc: bad pc {:#x}", pc),
         }
@@ -7087,34 +7591,37 @@ pub fn f_8011d800(c: &mut Cpu) {
 pub fn f_8011d800_at(c: &mut Cpu, pc: u32) { f_8011d800_b(c, pc) }
 #[inline(always)]
 fn f_8011d800_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d800;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d800, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d800, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d800 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d810; continue; }
+            0x8011d800 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d810; continue; }
                 pc = 0x8011d808;
             }
-            0x8011d808 => {
+            0x8011d808 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d814; continue;
                 pc = 0x8011d810;
             }
-            0x8011d810 => {
+            0x8011d810 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb7);
                 pc = 0x8011d814;
             }
-            0x8011d814 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d814 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d81c;
             }
-            0x8011d81c => {
+            0x8011d81c => { ins += 2;
                 c.stb(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d800: bad pc {:#x}", pc),
         }
@@ -7136,34 +7643,37 @@ pub fn f_8011d824(c: &mut Cpu) {
 pub fn f_8011d824_at(c: &mut Cpu, pc: u32) { f_8011d824_b(c, pc) }
 #[inline(always)]
 fn f_8011d824_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d824;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d824, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d824, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d824 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d834; continue; }
+            0x8011d824 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d834; continue; }
                 pc = 0x8011d82c;
             }
-            0x8011d82c => {
+            0x8011d82c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d838; continue;
                 pc = 0x8011d834;
             }
-            0x8011d834 => {
+            0x8011d834 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb2);
                 pc = 0x8011d838;
             }
-            0x8011d838 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d838 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d840;
             }
-            0x8011d840 => {
+            0x8011d840 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d824: bad pc {:#x}", pc),
         }
@@ -7185,34 +7695,37 @@ pub fn f_8011d848(c: &mut Cpu) {
 pub fn f_8011d848_at(c: &mut Cpu, pc: u32) { f_8011d848_b(c, pc) }
 #[inline(always)]
 fn f_8011d848_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d848;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d848, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d848, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d848 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d858; continue; }
+            0x8011d848 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d858; continue; }
                 pc = 0x8011d850;
             }
-            0x8011d850 => {
+            0x8011d850 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d85c; continue;
                 pc = 0x8011d858;
             }
-            0x8011d858 => {
+            0x8011d858 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb2);
                 pc = 0x8011d85c;
             }
-            0x8011d85c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d85c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d864;
             }
-            0x8011d864 => {
+            0x8011d864 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x3), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d848: bad pc {:#x}", pc),
         }
@@ -7234,34 +7747,37 @@ pub fn f_8011d86c(c: &mut Cpu) {
 pub fn f_8011d86c_at(c: &mut Cpu, pc: u32) { f_8011d86c_b(c, pc) }
 #[inline(always)]
 fn f_8011d86c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d86c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d86c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d86c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d86c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d87c; continue; }
+            0x8011d86c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d87c; continue; }
                 pc = 0x8011d874;
             }
-            0x8011d874 => {
+            0x8011d874 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d880; continue;
                 pc = 0x8011d87c;
             }
-            0x8011d87c => {
+            0x8011d87c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb2);
                 pc = 0x8011d880;
             }
-            0x8011d880 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d880 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d888;
             }
-            0x8011d888 => {
+            0x8011d888 => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d86c: bad pc {:#x}", pc),
         }
@@ -7283,34 +7799,37 @@ pub fn f_8011d890(c: &mut Cpu) {
 pub fn f_8011d890_at(c: &mut Cpu, pc: u32) { f_8011d890_b(c, pc) }
 #[inline(always)]
 fn f_8011d890_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d890;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d890, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d890, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d890 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d8a0; continue; }
+            0x8011d890 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d8a0; continue; }
                 pc = 0x8011d898;
             }
-            0x8011d898 => {
+            0x8011d898 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d8a4; continue;
                 pc = 0x8011d8a0;
             }
-            0x8011d8a0 => {
+            0x8011d8a0 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb2);
                 pc = 0x8011d8a4;
             }
-            0x8011d8a4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d8a4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d8ac;
             }
-            0x8011d8ac => {
+            0x8011d8ac => { ins += 2;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d890: bad pc {:#x}", pc),
         }
@@ -7332,34 +7851,37 @@ pub fn f_8011d8b4(c: &mut Cpu) {
 pub fn f_8011d8b4_at(c: &mut Cpu, pc: u32) { f_8011d8b4_b(c, pc) }
 #[inline(always)]
 fn f_8011d8b4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d8b4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d8b4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d8b4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d8b4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d8c4; continue; }
+            0x8011d8b4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d8c4; continue; }
                 pc = 0x8011d8bc;
             }
-            0x8011d8bc => {
+            0x8011d8bc => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d8c8; continue;
                 pc = 0x8011d8c4;
             }
-            0x8011d8c4 => {
+            0x8011d8c4 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xb2);
                 pc = 0x8011d8c8;
             }
-            0x8011d8c8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d8c8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d8d0;
             }
-            0x8011d8d0 => {
+            0x8011d8d0 => { ins += 2;
                 c.stb(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d8b4: bad pc {:#x}", pc),
         }
@@ -7381,29 +7903,32 @@ pub fn f_8011d8d8(c: &mut Cpu) {
 pub fn f_8011d8d8_at(c: &mut Cpu, pc: u32) { f_8011d8d8_b(c, pc) }
 #[inline(always)]
 fn f_8011d8d8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d8d8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d8d8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d8d8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d8d8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d8d8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d8e0;
             }
-            0x8011d8e0 => {
-                c.cmps(0, c.r[4], 0x639c);
-                if c.crbit(0) { pc = 0x8011d8ec; continue; }
+            0x8011d8e0 => { ins += 2;
+                cr_cmps(&mut cr, c.xer, 0, c.r[4], 0x639c);
+                if cr_bit(cr, 0) { pc = 0x8011d8ec; continue; }
                 pc = 0x8011d8e8;
             }
-            0x8011d8e8 => {
+            0x8011d8e8 => { ins += 1;
                 c.r[4] = 0x639c;
                 pc = 0x8011d8ec;
             }
-            0x8011d8ec => {
+            0x8011d8ec => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0xdc), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d8d8: bad pc {:#x}", pc),
         }
@@ -7425,20 +7950,23 @@ pub fn f_8011d8f4(c: &mut Cpu) {
 pub fn f_8011d8f4_at(c: &mut Cpu, pc: u32) { f_8011d8f4_b(c, pc) }
 #[inline(always)]
 fn f_8011d8f4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d8f4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d8f4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d8f4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d8f4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d8f4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d8fc;
             }
-            0x8011d8fc => {
+            0x8011d8fc => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xd8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d8f4: bad pc {:#x}", pc),
         }
@@ -7460,30 +7988,33 @@ pub fn f_8011d904(c: &mut Cpu) {
 pub fn f_8011d904_at(c: &mut Cpu, pc: u32) { f_8011d904_b(c, pc) }
 #[inline(always)]
 fn f_8011d904_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d904;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d904, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d904, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d904 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d904 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d90c;
             }
-            0x8011d90c => {
+            0x8011d90c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0xff);
-                if !c.crbit(1) { pc = 0x8011d91c; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
+                if !cr_bit(cr, 1) { pc = 0x8011d91c; continue; }
                 pc = 0x8011d918;
             }
-            0x8011d918 => {
+            0x8011d918 => { ins += 1;
                 c.r[4] = 0xff;
                 pc = 0x8011d91c;
             }
-            0x8011d91c => {
+            0x8011d91c => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xb0), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d904: bad pc {:#x}", pc),
         }
@@ -7505,44 +8036,47 @@ pub fn f_8011d924(c: &mut Cpu) {
 pub fn f_8011d924_at(c: &mut Cpu, pc: u32) { f_8011d924_b(c, pc) }
 #[inline(always)]
 fn f_8011d924_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d924;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d924, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d924, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d924 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d934; continue; }
+            0x8011d924 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d934; continue; }
                 pc = 0x8011d92c;
             }
-            0x8011d92c => {
+            0x8011d92c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d938; continue;
                 pc = 0x8011d934;
             }
-            0x8011d934 => {
+            0x8011d934 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xa4);
                 pc = 0x8011d938;
             }
-            0x8011d938 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d938 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d940;
             }
-            0x8011d940 => {
+            0x8011d940 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x1f);
-                if !c.crbit(1) { pc = 0x8011d950; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1f);
+                if !cr_bit(cr, 1) { pc = 0x8011d950; continue; }
                 pc = 0x8011d94c;
             }
-            0x8011d94c => {
+            0x8011d94c => { ins += 1;
                 c.r[4] = 0x1f;
                 pc = 0x8011d950;
             }
-            0x8011d950 => {
+            0x8011d950 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d924: bad pc {:#x}", pc),
         }
@@ -7564,44 +8098,47 @@ pub fn f_8011d958(c: &mut Cpu) {
 pub fn f_8011d958_at(c: &mut Cpu, pc: u32) { f_8011d958_b(c, pc) }
 #[inline(always)]
 fn f_8011d958_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d958;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d958, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d958, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d958 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d968; continue; }
+            0x8011d958 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d968; continue; }
                 pc = 0x8011d960;
             }
-            0x8011d960 => {
+            0x8011d960 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d96c; continue;
                 pc = 0x8011d968;
             }
-            0x8011d968 => {
+            0x8011d968 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xa4);
                 pc = 0x8011d96c;
             }
-            0x8011d96c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d96c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d974;
             }
-            0x8011d974 => {
+            0x8011d974 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x1f);
-                if !c.crbit(1) { pc = 0x8011d984; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1f);
+                if !cr_bit(cr, 1) { pc = 0x8011d984; continue; }
                 pc = 0x8011d980;
             }
-            0x8011d980 => {
+            0x8011d980 => { ins += 1;
                 c.r[4] = 0x1f;
                 pc = 0x8011d984;
             }
-            0x8011d984 => {
+            0x8011d984 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d958: bad pc {:#x}", pc),
         }
@@ -7623,44 +8160,47 @@ pub fn f_8011d98c(c: &mut Cpu) {
 pub fn f_8011d98c_at(c: &mut Cpu, pc: u32) { f_8011d98c_b(c, pc) }
 #[inline(always)]
 fn f_8011d98c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d98c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d98c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d98c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d98c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d99c; continue; }
+            0x8011d98c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d99c; continue; }
                 pc = 0x8011d994;
             }
-            0x8011d994 => {
+            0x8011d994 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d9a0; continue;
                 pc = 0x8011d99c;
             }
-            0x8011d99c => {
+            0x8011d99c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xa4);
                 pc = 0x8011d9a0;
             }
-            0x8011d9a0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d9a0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d9a8;
             }
-            0x8011d9a8 => {
+            0x8011d9a8 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x1f);
-                if !c.crbit(1) { pc = 0x8011d9b8; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1f);
+                if !cr_bit(cr, 1) { pc = 0x8011d9b8; continue; }
                 pc = 0x8011d9b4;
             }
-            0x8011d9b4 => {
+            0x8011d9b4 => { ins += 1;
                 c.r[4] = 0x1f;
                 pc = 0x8011d9b8;
             }
-            0x8011d9b8 => {
+            0x8011d9b8 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d98c: bad pc {:#x}", pc),
         }
@@ -7682,44 +8222,47 @@ pub fn f_8011d9c0(c: &mut Cpu) {
 pub fn f_8011d9c0_at(c: &mut Cpu, pc: u32) { f_8011d9c0_b(c, pc) }
 #[inline(always)]
 fn f_8011d9c0_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d9c0;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d9c0, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d9c0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d9c0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011d9d0; continue; }
+            0x8011d9c0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011d9d0; continue; }
                 pc = 0x8011d9c8;
             }
-            0x8011d9c8 => {
+            0x8011d9c8 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011d9d4; continue;
                 pc = 0x8011d9d0;
             }
-            0x8011d9d0 => {
+            0x8011d9d0 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xa4);
                 pc = 0x8011d9d4;
             }
-            0x8011d9d4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011d9d4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011d9dc;
             }
-            0x8011d9dc => {
+            0x8011d9dc => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x1f);
-                if !c.crbit(1) { pc = 0x8011d9ec; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1f);
+                if !cr_bit(cr, 1) { pc = 0x8011d9ec; continue; }
                 pc = 0x8011d9e8;
             }
-            0x8011d9e8 => {
+            0x8011d9e8 => { ins += 1;
                 c.r[4] = 0x1f;
                 pc = 0x8011d9ec;
             }
-            0x8011d9ec => {
+            0x8011d9ec => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d9c0: bad pc {:#x}", pc),
         }
@@ -7741,44 +8284,47 @@ pub fn f_8011d9f4(c: &mut Cpu) {
 pub fn f_8011d9f4_at(c: &mut Cpu, pc: u32) { f_8011d9f4_b(c, pc) }
 #[inline(always)]
 fn f_8011d9f4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011d9f4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011d9f4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011d9f4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011d9f4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011da04; continue; }
+            0x8011d9f4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011da04; continue; }
                 pc = 0x8011d9fc;
             }
-            0x8011d9fc => {
+            0x8011d9fc => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011da08; continue;
                 pc = 0x8011da04;
             }
-            0x8011da04 => {
+            0x8011da04 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xa4);
                 pc = 0x8011da08;
             }
-            0x8011da08 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011da08 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011da10;
             }
-            0x8011da10 => {
+            0x8011da10 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x1f);
-                if !c.crbit(1) { pc = 0x8011da20; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1f);
+                if !cr_bit(cr, 1) { pc = 0x8011da20; continue; }
                 pc = 0x8011da1c;
             }
-            0x8011da1c => {
+            0x8011da1c => { ins += 1;
                 c.r[4] = 0x1f;
                 pc = 0x8011da20;
             }
-            0x8011da20 => {
+            0x8011da20 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011d9f4: bad pc {:#x}", pc),
         }
@@ -7800,44 +8346,47 @@ pub fn f_8011da28(c: &mut Cpu) {
 pub fn f_8011da28_at(c: &mut Cpu, pc: u32) { f_8011da28_b(c, pc) }
 #[inline(always)]
 fn f_8011da28_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011da28;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011da28, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011da28, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011da28 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011da38; continue; }
+            0x8011da28 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011da38; continue; }
                 pc = 0x8011da30;
             }
-            0x8011da30 => {
+            0x8011da30 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011da3c; continue;
                 pc = 0x8011da38;
             }
-            0x8011da38 => {
+            0x8011da38 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xa4);
                 pc = 0x8011da3c;
             }
-            0x8011da3c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011da3c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011da44;
             }
-            0x8011da44 => {
+            0x8011da44 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0x1f);
-                if !c.crbit(1) { pc = 0x8011da54; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1f);
+                if !cr_bit(cr, 1) { pc = 0x8011da54; continue; }
                 pc = 0x8011da50;
             }
-            0x8011da50 => {
+            0x8011da50 => { ins += 1;
                 c.r[4] = 0x1f;
                 pc = 0x8011da54;
             }
-            0x8011da54 => {
+            0x8011da54 => { ins += 2;
                 c.sth(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011da28: bad pc {:#x}", pc),
         }
@@ -7859,44 +8408,47 @@ pub fn f_8011da5c(c: &mut Cpu) {
 pub fn f_8011da5c_at(c: &mut Cpu, pc: u32) { f_8011da5c_b(c, pc) }
 #[inline(always)]
 fn f_8011da5c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011da5c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011da5c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011da5c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011da5c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011da6c; continue; }
+            0x8011da5c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011da6c; continue; }
                 pc = 0x8011da64;
             }
-            0x8011da64 => {
+            0x8011da64 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011da70; continue;
                 pc = 0x8011da6c;
             }
-            0x8011da6c => {
+            0x8011da6c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x98);
                 pc = 0x8011da70;
             }
-            0x8011da70 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011da70 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011da78;
             }
-            0x8011da78 => {
+            0x8011da78 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0xff);
-                if !c.crbit(1) { pc = 0x8011da88; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
+                if !cr_bit(cr, 1) { pc = 0x8011da88; continue; }
                 pc = 0x8011da84;
             }
-            0x8011da84 => {
+            0x8011da84 => { ins += 1;
                 c.r[4] = 0xff;
                 pc = 0x8011da88;
             }
-            0x8011da88 => {
+            0x8011da88 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011da5c: bad pc {:#x}", pc),
         }
@@ -7918,44 +8470,47 @@ pub fn f_8011da90(c: &mut Cpu) {
 pub fn f_8011da90_at(c: &mut Cpu, pc: u32) { f_8011da90_b(c, pc) }
 #[inline(always)]
 fn f_8011da90_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011da90;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011da90, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011da90, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011da90 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011daa0; continue; }
+            0x8011da90 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011daa0; continue; }
                 pc = 0x8011da98;
             }
-            0x8011da98 => {
+            0x8011da98 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011daa4; continue;
                 pc = 0x8011daa0;
             }
-            0x8011daa0 => {
+            0x8011daa0 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x98);
                 pc = 0x8011daa4;
             }
-            0x8011daa4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011daa4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011daac;
             }
-            0x8011daac => {
+            0x8011daac => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0xff);
-                if !c.crbit(1) { pc = 0x8011dabc; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
+                if !cr_bit(cr, 1) { pc = 0x8011dabc; continue; }
                 pc = 0x8011dab8;
             }
-            0x8011dab8 => {
+            0x8011dab8 => { ins += 1;
                 c.r[4] = 0xff;
                 pc = 0x8011dabc;
             }
-            0x8011dabc => {
+            0x8011dabc => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011da90: bad pc {:#x}", pc),
         }
@@ -7977,44 +8532,47 @@ pub fn f_8011dac4(c: &mut Cpu) {
 pub fn f_8011dac4_at(c: &mut Cpu, pc: u32) { f_8011dac4_b(c, pc) }
 #[inline(always)]
 fn f_8011dac4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dac4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dac4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dac4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dac4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dad4; continue; }
+            0x8011dac4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dad4; continue; }
                 pc = 0x8011dacc;
             }
-            0x8011dacc => {
+            0x8011dacc => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dad8; continue;
                 pc = 0x8011dad4;
             }
-            0x8011dad4 => {
+            0x8011dad4 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x98);
                 pc = 0x8011dad8;
             }
-            0x8011dad8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dad8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dae0;
             }
-            0x8011dae0 => {
+            0x8011dae0 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0xff);
-                if !c.crbit(1) { pc = 0x8011daf0; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
+                if !cr_bit(cr, 1) { pc = 0x8011daf0; continue; }
                 pc = 0x8011daec;
             }
-            0x8011daec => {
+            0x8011daec => { ins += 1;
                 c.r[4] = 0xff;
                 pc = 0x8011daf0;
             }
-            0x8011daf0 => {
+            0x8011daf0 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dac4: bad pc {:#x}", pc),
         }
@@ -8036,44 +8594,47 @@ pub fn f_8011daf8(c: &mut Cpu) {
 pub fn f_8011daf8_at(c: &mut Cpu, pc: u32) { f_8011daf8_b(c, pc) }
 #[inline(always)]
 fn f_8011daf8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011daf8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011daf8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011daf8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011daf8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011db08; continue; }
+            0x8011daf8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011db08; continue; }
                 pc = 0x8011db00;
             }
-            0x8011db00 => {
+            0x8011db00 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011db0c; continue;
                 pc = 0x8011db08;
             }
-            0x8011db08 => {
+            0x8011db08 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x98);
                 pc = 0x8011db0c;
             }
-            0x8011db0c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011db0c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011db14;
             }
-            0x8011db14 => {
+            0x8011db14 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0xff);
-                if !c.crbit(1) { pc = 0x8011db24; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
+                if !cr_bit(cr, 1) { pc = 0x8011db24; continue; }
                 pc = 0x8011db20;
             }
-            0x8011db20 => {
+            0x8011db20 => { ins += 1;
                 c.r[4] = 0xff;
                 pc = 0x8011db24;
             }
-            0x8011db24 => {
+            0x8011db24 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011daf8: bad pc {:#x}", pc),
         }
@@ -8095,44 +8656,47 @@ pub fn f_8011db2c(c: &mut Cpu) {
 pub fn f_8011db2c_at(c: &mut Cpu, pc: u32) { f_8011db2c_b(c, pc) }
 #[inline(always)]
 fn f_8011db2c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011db2c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011db2c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011db2c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011db2c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011db3c; continue; }
+            0x8011db2c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011db3c; continue; }
                 pc = 0x8011db34;
             }
-            0x8011db34 => {
+            0x8011db34 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011db40; continue;
                 pc = 0x8011db3c;
             }
-            0x8011db3c => {
+            0x8011db3c => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x98);
                 pc = 0x8011db40;
             }
-            0x8011db40 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011db40 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011db48;
             }
-            0x8011db48 => {
+            0x8011db48 => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0xff);
-                if !c.crbit(1) { pc = 0x8011db58; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
+                if !cr_bit(cr, 1) { pc = 0x8011db58; continue; }
                 pc = 0x8011db54;
             }
-            0x8011db54 => {
+            0x8011db54 => { ins += 1;
                 c.r[4] = 0xff;
                 pc = 0x8011db58;
             }
-            0x8011db58 => {
+            0x8011db58 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011db2c: bad pc {:#x}", pc),
         }
@@ -8154,44 +8718,47 @@ pub fn f_8011db60(c: &mut Cpu) {
 pub fn f_8011db60_at(c: &mut Cpu, pc: u32) { f_8011db60_b(c, pc) }
 #[inline(always)]
 fn f_8011db60_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011db60;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011db60, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011db60, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011db60 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011db70; continue; }
+            0x8011db60 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011db70; continue; }
                 pc = 0x8011db68;
             }
-            0x8011db68 => {
+            0x8011db68 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011db74; continue;
                 pc = 0x8011db70;
             }
-            0x8011db70 => {
+            0x8011db70 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x98);
                 pc = 0x8011db74;
             }
-            0x8011db74 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011db74 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011db7c;
             }
-            0x8011db7c => {
+            0x8011db7c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[0], 0xff);
-                if !c.crbit(1) { pc = 0x8011db8c; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
+                if !cr_bit(cr, 1) { pc = 0x8011db8c; continue; }
                 pc = 0x8011db88;
             }
-            0x8011db88 => {
+            0x8011db88 => { ins += 1;
                 c.r[4] = 0xff;
                 pc = 0x8011db8c;
             }
-            0x8011db8c => {
+            0x8011db8c => { ins += 2;
                 c.sth(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011db60: bad pc {:#x}", pc),
         }
@@ -8213,34 +8780,37 @@ pub fn f_8011db94(c: &mut Cpu) {
 pub fn f_8011db94_at(c: &mut Cpu, pc: u32) { f_8011db94_b(c, pc) }
 #[inline(always)]
 fn f_8011db94_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011db94;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011db94, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011db94, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011db94 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dba4; continue; }
+            0x8011db94 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dba4; continue; }
                 pc = 0x8011db9c;
             }
-            0x8011db9c => {
+            0x8011db9c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dba8; continue;
                 pc = 0x8011dba4;
             }
-            0x8011dba4 => {
+            0x8011dba4 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x8c);
                 pc = 0x8011dba8;
             }
-            0x8011dba8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dba8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dbb0;
             }
-            0x8011dbb0 => {
+            0x8011dbb0 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0xa), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011db94: bad pc {:#x}", pc),
         }
@@ -8262,34 +8832,37 @@ pub fn f_8011dbb8(c: &mut Cpu) {
 pub fn f_8011dbb8_at(c: &mut Cpu, pc: u32) { f_8011dbb8_b(c, pc) }
 #[inline(always)]
 fn f_8011dbb8_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dbb8;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dbb8, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dbb8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dbb8 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dbc8; continue; }
+            0x8011dbb8 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dbc8; continue; }
                 pc = 0x8011dbc0;
             }
-            0x8011dbc0 => {
+            0x8011dbc0 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dbcc; continue;
                 pc = 0x8011dbc8;
             }
-            0x8011dbc8 => {
+            0x8011dbc8 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x8c);
                 pc = 0x8011dbcc;
             }
-            0x8011dbcc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dbcc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dbd4;
             }
-            0x8011dbd4 => {
+            0x8011dbd4 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dbb8: bad pc {:#x}", pc),
         }
@@ -8311,34 +8884,37 @@ pub fn f_8011dbdc(c: &mut Cpu) {
 pub fn f_8011dbdc_at(c: &mut Cpu, pc: u32) { f_8011dbdc_b(c, pc) }
 #[inline(always)]
 fn f_8011dbdc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dbdc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dbdc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dbdc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dbdc => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dbec; continue; }
+            0x8011dbdc => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dbec; continue; }
                 pc = 0x8011dbe4;
             }
-            0x8011dbe4 => {
+            0x8011dbe4 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dbf0; continue;
                 pc = 0x8011dbec;
             }
-            0x8011dbec => {
+            0x8011dbec => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x8c);
                 pc = 0x8011dbf0;
             }
-            0x8011dbf0 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dbf0 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dbf8;
             }
-            0x8011dbf8 => {
+            0x8011dbf8 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x6), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dbdc: bad pc {:#x}", pc),
         }
@@ -8360,34 +8936,37 @@ pub fn f_8011dc00(c: &mut Cpu) {
 pub fn f_8011dc00_at(c: &mut Cpu, pc: u32) { f_8011dc00_b(c, pc) }
 #[inline(always)]
 fn f_8011dc00_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dc00;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dc00, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dc00, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dc00 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dc10; continue; }
+            0x8011dc00 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dc10; continue; }
                 pc = 0x8011dc08;
             }
-            0x8011dc08 => {
+            0x8011dc08 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dc14; continue;
                 pc = 0x8011dc10;
             }
-            0x8011dc10 => {
+            0x8011dc10 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x8c);
                 pc = 0x8011dc14;
             }
-            0x8011dc14 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dc14 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dc1c;
             }
-            0x8011dc1c => {
+            0x8011dc1c => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x4), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dc00: bad pc {:#x}", pc),
         }
@@ -8409,34 +8988,37 @@ pub fn f_8011dc24(c: &mut Cpu) {
 pub fn f_8011dc24_at(c: &mut Cpu, pc: u32) { f_8011dc24_b(c, pc) }
 #[inline(always)]
 fn f_8011dc24_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dc24;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dc24, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dc24, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dc24 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dc34; continue; }
+            0x8011dc24 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dc34; continue; }
                 pc = 0x8011dc2c;
             }
-            0x8011dc2c => {
+            0x8011dc2c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dc38; continue;
                 pc = 0x8011dc34;
             }
-            0x8011dc34 => {
+            0x8011dc34 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x8c);
                 pc = 0x8011dc38;
             }
-            0x8011dc38 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dc38 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dc40;
             }
-            0x8011dc40 => {
+            0x8011dc40 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x2), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dc24: bad pc {:#x}", pc),
         }
@@ -8458,34 +9040,37 @@ pub fn f_8011dc48(c: &mut Cpu) {
 pub fn f_8011dc48_at(c: &mut Cpu, pc: u32) { f_8011dc48_b(c, pc) }
 #[inline(always)]
 fn f_8011dc48_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dc48;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dc48, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dc48, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dc48 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dc58; continue; }
+            0x8011dc48 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dc58; continue; }
                 pc = 0x8011dc50;
             }
-            0x8011dc50 => {
+            0x8011dc50 => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dc5c; continue;
                 pc = 0x8011dc58;
             }
-            0x8011dc58 => {
+            0x8011dc58 => { ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x8c);
                 pc = 0x8011dc5c;
             }
-            0x8011dc5c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dc5c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dc64;
             }
-            0x8011dc64 => {
+            0x8011dc64 => { ins += 2;
                 c.sth(c.r[3], c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dc48: bad pc {:#x}", pc),
         }
@@ -8507,55 +9092,58 @@ pub fn f_8011dc6c(c: &mut Cpu) {
 pub fn f_8011dc6c_at(c: &mut Cpu, pc: u32) { f_8011dc6c_b(c, pc) }
 #[inline(always)]
 fn f_8011dc6c_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dc6c;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dc6c, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dc6c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dc6c => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dc6c => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dc74;
             }
-            0x8011dc74 => {
+            0x8011dc74 => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8a), c.r[4]);
-                if !c.crbit(2) { pc = 0x8011dc84; continue; }
+                if !cr_bit(cr, 2) { pc = 0x8011dc84; continue; }
                 pc = 0x8011dc7c;
             }
-            0x8011dc7c => {
+            0x8011dc7c => { ins += 2;
                 c.r[4] = 0x0;
                 pc = 0x8011dc88; continue;
                 pc = 0x8011dc84;
             }
-            0x8011dc84 => {
+            0x8011dc84 => { ins += 1;
                 c.r[4] = c.r[3].wrapping_add(0x8c);
                 pc = 0x8011dc88;
             }
-            0x8011dc88 => {
-                c.cmpu(0, c.r[4], 0x0);
-                if !c.crbit(2) { pc = 0x8011dc98; continue; }
+            0x8011dc88 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dc98; continue; }
                 pc = 0x8011dc90;
             }
-            0x8011dc90 => {
+            0x8011dc90 => { ins += 2;
                 c.r[5] = 0x0;
                 pc = 0x8011dc9c; continue;
                 pc = 0x8011dc98;
             }
-            0x8011dc98 => {
-                c.r[5] = c.lhz(c.r[4]);
+            0x8011dc98 => { ins += 1;
+                c.r[5] = c.lhz_t(ins, c.r[4]);
                 pc = 0x8011dc9c;
             }
-            0x8011dc9c => {
-                c.r[0] = c.lhz(c.r[3].wrapping_add(0x8a));
+            0x8011dc9c => { ins += 4;
+                c.r[0] = c.lhz_t(ins, c.r[3].wrapping_add(0x8a));
                 c.r[4] = c.r[5].rotate_left(0) & 0xffff;
-                c.cmpu(0, c.r[4], c.r[0]);
-                if !c.crbit(0) { return; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], c.r[0]);
+                if !cr_bit(cr, 0) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dcac;
             }
-            0x8011dcac => {
+            0x8011dcac => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x8a), c.r[5]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dc6c: bad pc {:#x}", pc),
         }
@@ -8577,20 +9165,23 @@ pub fn f_8011dcb4(c: &mut Cpu) {
 pub fn f_8011dcb4_at(c: &mut Cpu, pc: u32) { f_8011dcb4_b(c, pc) }
 #[inline(always)]
 fn f_8011dcb4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dcb4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dcb4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dcb4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dcb4 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { return; }
+            0x8011dcb4 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
                 pc = 0x8011dcbc;
             }
-            0x8011dcbc => {
+            0x8011dcbc => { ins += 2;
                 c.sth(c.r[3].wrapping_add(0x88), c.r[4]);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dcb4: bad pc {:#x}", pc),
         }
@@ -8612,12 +9203,15 @@ pub fn f_8011dcc4(c: &mut Cpu) {
 pub fn f_8011dcc4_at(c: &mut Cpu, pc: u32) { f_8011dcc4_b(c, pc) }
 #[inline(always)]
 fn f_8011dcc4_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dcc4;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dcc4, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dcc4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dcc4 => {
+            0x8011dcc4 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
@@ -8629,86 +9223,86 @@ fn f_8011dcc4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = c.r[3] | c.r[3];
-                c.lr = 0x8011dcf4; f_8011f260(c);
+                c.lr = 0x8011dcf4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8011f260(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011dcf4;
             }
-            0x8011dcf4 => {
+            0x8011dcf4 => { ins += 2;
                 c.r[31] = c.r[3] | c.r[3];
-                c.rc(c.r[31]);
-                if c.crbit(2) { pc = 0x8011dd60; continue; }
+                cr_rc(&mut cr, c.xer, c.r[31]);
+                if cr_bit(cr, 2) { pc = 0x8011dd60; continue; }
                 pc = 0x8011dcfc;
             }
-            0x8011dcfc => {
+            0x8011dcfc => { ins += 3;
                 c.r[0] = c.r[30].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[0], 0x3);
-                if !c.crbit(1) { pc = 0x8011dd0c; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x3);
+                if !cr_bit(cr, 1) { pc = 0x8011dd0c; continue; }
                 pc = 0x8011dd08;
             }
-            0x8011dd08 => {
+            0x8011dd08 => { ins += 1;
                 c.r[30] = 0x3;
                 pc = 0x8011dd0c;
             }
-            0x8011dd0c => {
+            0x8011dd0c => { ins += 3;
                 c.r[3] = c.r[28] | c.r[28];
                 c.r[4] = c.r[29] | c.r[29];
-                c.lr = 0x8011dd18; f_80123cd4(c);
+                c.lr = 0x8011dd18; { c.steps = st; c.instrs = ins; c.cr = cr; f_80123cd4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011dd18;
             }
-            0x8011dd18 => {
+            0x8011dd18 => { ins += 3;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[0], 0x1);
-                if !c.crbit(2) { pc = 0x8011dd5c; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1);
+                if !cr_bit(cr, 2) { pc = 0x8011dd5c; continue; }
                 pc = 0x8011dd24;
             }
-            0x8011dd24 => {
+            0x8011dd24 => { ins += 4;
                 c.r[3] = c.r[28] | c.r[28];
                 c.r[4] = c.r[29] | c.r[29];
                 c.r[5] = 0x1;
-                c.lr = 0x8011dd34; f_8011f260(c);
+                c.lr = 0x8011dd34; { c.steps = st; c.instrs = ins; c.cr = cr; f_8011f260(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011dd34;
             }
-            0x8011dd34 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if !c.crbit(2) { pc = 0x8011dd44; continue; }
+            0x8011dd34 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if !cr_bit(cr, 2) { pc = 0x8011dd44; continue; }
                 pc = 0x8011dd3c;
             }
-            0x8011dd3c => {
+            0x8011dd3c => { ins += 2;
                 c.r[3] = 0x0;
                 pc = 0x8011dd48; continue;
                 pc = 0x8011dd44;
             }
-            0x8011dd44 => {
-                c.r[3] = c.lhz(c.r[3]);
+            0x8011dd44 => { ins += 1;
+                c.r[3] = c.lhz_t(ins, c.r[3]);
                 pc = 0x8011dd48;
             }
-            0x8011dd48 => {
-                c.lr = 0x8011dd4c; f_8011ca34(c);
+            0x8011dd48 => { ins += 1;
+                c.lr = 0x8011dd4c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8011ca34(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011dd4c;
             }
-            0x8011dd4c => {
-                c.lr = 0x8011dd50; f_8011ca04(c);
+            0x8011dd4c => { ins += 1;
+                c.lr = 0x8011dd50; { c.steps = st; c.instrs = ins; c.cr = cr; f_8011ca04(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011dd50;
             }
-            0x8011dd50 => {
+            0x8011dd50 => { ins += 3;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[0], 0x4);
-                if !c.crbit(1) { pc = 0x8011dd60; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x4);
+                if !cr_bit(cr, 1) { pc = 0x8011dd60; continue; }
                 pc = 0x8011dd5c;
             }
-            0x8011dd5c => {
+            0x8011dd5c => { ins += 1;
                 c.stb(c.r[31].wrapping_add(0x3), c.r[30]);
                 pc = 0x8011dd60;
             }
-            0x8011dd60 => {
-                c.r[0] = c.lwz(c.r[1].wrapping_add(0x24));
-                c.r[31] = c.lwz(c.r[1].wrapping_add(0x1c));
-                c.r[30] = c.lwz(c.r[1].wrapping_add(0x18));
-                c.r[29] = c.lwz(c.r[1].wrapping_add(0x14));
-                c.r[28] = c.lwz(c.r[1].wrapping_add(0x10));
+            0x8011dd60 => { ins += 8;
+                c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
+                c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
+                c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
+                c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
+                c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dcc4: bad pc {:#x}", pc),
         }
@@ -8730,12 +9324,15 @@ pub fn f_8011dd80(c: &mut Cpu) {
 pub fn f_8011dd80_at(c: &mut Cpu, pc: u32) { f_8011dd80_b(c, pc) }
 #[inline(always)]
 fn f_8011dd80_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011dd80;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011dd80, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011dd80, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011dd80 => {
+            0x8011dd80 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
@@ -8747,46 +9344,46 @@ fn f_8011dd80_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = c.r[3] | c.r[3];
-                c.lr = 0x8011ddb0; f_8011f260(c);
+                c.lr = 0x8011ddb0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8011f260(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011ddb0;
             }
-            0x8011ddb0 => {
+            0x8011ddb0 => { ins += 2;
                 c.r[31] = c.r[3] | c.r[3];
-                c.rc(c.r[31]);
-                if c.crbit(2) { pc = 0x8011dddc; continue; }
+                cr_rc(&mut cr, c.xer, c.r[31]);
+                if cr_bit(cr, 2) { pc = 0x8011dddc; continue; }
                 pc = 0x8011ddb8;
             }
-            0x8011ddb8 => {
+            0x8011ddb8 => { ins += 3;
                 c.r[3] = c.r[28] | c.r[28];
                 c.r[4] = c.r[29] | c.r[29];
-                c.lr = 0x8011ddc4; f_80123e70(c);
+                c.lr = 0x8011ddc4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80123e70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011ddc4;
             }
-            0x8011ddc4 => {
+            0x8011ddc4 => { ins += 4;
                 c.r[0] = c.r[30].rotate_left(0) & 0xff;
                 c.r[4] = c.r[3].rotate_left(0) & 0xff;
-                c.cmpu(0, c.r[4], c.r[0]);
-                if !c.crbit(0) { pc = 0x8011ddd8; continue; }
+                cr_cmpu(&mut cr, c.xer, 0, c.r[4], c.r[0]);
+                if !cr_bit(cr, 0) { pc = 0x8011ddd8; continue; }
                 pc = 0x8011ddd4;
             }
-            0x8011ddd4 => {
+            0x8011ddd4 => { ins += 1;
                 c.r[30] = c.r[3] | c.r[3];
                 pc = 0x8011ddd8;
             }
-            0x8011ddd8 => {
+            0x8011ddd8 => { ins += 1;
                 c.stb(c.r[31].wrapping_add(0x2), c.r[30]);
                 pc = 0x8011dddc;
             }
-            0x8011dddc => {
-                c.r[0] = c.lwz(c.r[1].wrapping_add(0x24));
-                c.r[31] = c.lwz(c.r[1].wrapping_add(0x1c));
-                c.r[30] = c.lwz(c.r[1].wrapping_add(0x18));
-                c.r[29] = c.lwz(c.r[1].wrapping_add(0x14));
-                c.r[28] = c.lwz(c.r[1].wrapping_add(0x10));
+            0x8011dddc => { ins += 8;
+                c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
+                c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
+                c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
+                c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
+                c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011dd80: bad pc {:#x}", pc),
         }
@@ -8808,37 +9405,40 @@ pub fn f_8011ddfc(c: &mut Cpu) {
 pub fn f_8011ddfc_at(c: &mut Cpu, pc: u32) { f_8011ddfc_b(c, pc) }
 #[inline(always)]
 fn f_8011ddfc_b(c: &mut Cpu, mut pc: u32) {
+    let mut st = c.steps;
+    let mut ins = c.instrs;
+    let mut cr = c.cr;
     c.last_fn = 0x8011ddfc;
     loop {
-        c.steps += 1;
-        if c.steps > c.step_limit { c.step_event(0x8011ddfc, pc); }
+        st += 1;
+        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8011ddfc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
         match pc {
-            0x8011ddfc => {
+            0x8011ddfc => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[5] | c.r[5];
                 c.r[5] = 0x0;
-                c.lr = 0x8011de18; f_8011f260(c);
+                c.lr = 0x8011de18; { c.steps = st; c.instrs = ins; c.cr = cr; f_8011f260(c); st = c.steps; ins = c.instrs; cr = c.cr; };
                 pc = 0x8011de18;
             }
-            0x8011de18 => {
-                c.cmpu(0, c.r[3], 0x0);
-                if c.crbit(2) { pc = 0x8011de24; continue; }
+            0x8011de18 => { ins += 2;
+                cr_cmpu(&mut cr, c.xer, 0, c.r[3], 0x0);
+                if cr_bit(cr, 2) { pc = 0x8011de24; continue; }
                 pc = 0x8011de20;
             }
-            0x8011de20 => {
+            0x8011de20 => { ins += 1;
                 c.sth(c.r[3], c.r[31]);
                 pc = 0x8011de24;
             }
-            0x8011de24 => {
-                c.r[0] = c.lwz(c.r[1].wrapping_add(0x14));
-                c.r[31] = c.lwz(c.r[1].wrapping_add(0xc));
+            0x8011de24 => { ins += 5;
+                c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
+                c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { return; }
-                return;
+                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8011ddfc: bad pc {:#x}", pc),
         }

@@ -5,7 +5,7 @@
 //! the graphics card: a later draw that samples a copy's destination address uses the copy itself (as Dolphin's
 //! "EFB copies to texture only").
 
-use crate::raster::{transform, konst_alpha, konst_color, swap};
+use crate::raster::{transform, konst_alpha, konst_color, swap, Fog};
 use crate::{Frame, GpuMem, Prim, State};
 use std::collections::{HashMap, HashSet};
 
@@ -52,6 +52,15 @@ pub struct GState {
     pub regs: [[i32; 4]; 4],
     pub tex: [Option<TexId>; 8],
     pub samp: [SamplerDesc; 8],
+    /// Indirect texturing: IND_CMD per stage (BP 0x10+), then (IREF 0x27, coord scales 0x25/0x26, indirect stages).
+    pub ind: [u32; 16],
+    pub ind_misc: [u32; 4],
+    /// Indirect matrices 0-2 as Dolphin's constants: rows (ma, mc, me, 17 - scale) and (mb, md, mf, 0).
+    pub ind_mtx: [[i32; 4]; 6],
+    /// SU texcoord scales (s, t) for coords 0-7, two per row: the fixed-point texel space of indirect offsets.
+    pub su: [[u32; 4]; 4],
+    /// Fog (BP 0xE8-0xF2), None when off.
+    pub fog: Option<Fog>,
 }
 
 #[derive(Clone, Debug)]
@@ -65,6 +74,8 @@ pub struct GCopy {
     pub fmt: u32,
     pub intensity: bool,
     pub half: bool,
+    /// A Z copy (PE pixel format Z24): the 24-bit depth as R (bits 16-23), G, B (0-7), A 255, then encoded as colour.
+    pub depth: bool,
     /// Clear after copying: colour (r, g, b, a), z, and what the PE masks let through (colour, alpha, z).
     pub clear: Option<([u8; 4], u32, bool, bool, bool)>,
 }
@@ -85,6 +96,39 @@ pub struct GFrame {
     pub new_tex: Vec<(u64, GTex)>,
     /// The last XFB copy (what the TV shows).
     pub xfb: Option<u32>,
+    /// `Builder::build_deferred`: the frame whose draws still need their vertices (`finish`).
+    pending: Option<(Frame, Vec<u32>)>,
+}
+
+impl GFrame {
+    /// Run the XF over the draws a deferred build left (the vertex work, off the thread that runs the game).
+    /// Nothing to do for a frame from `Builder::build`.
+    pub fn finish(&mut self) {
+        let Some((fr, draws)) = self.pending.take() else { return };
+        let t0 = std::time::Instant::now();
+        for i in draws {
+            let d = &fr.draws[i as usize];
+            emit(d, &fr.states[d.state], &mut self.verts);
+        }
+        tadd(0, t0);
+    }
+}
+
+impl GFrame {
+    /// False until `finish` for a frame from `build_deferred` (its `verts` are still empty).
+    pub fn is_finished(&self) -> bool { self.pending.is_none() }
+}
+
+/// Vertices a draw produces as triangles (lines and points become quads); 0 = nothing drawn.
+fn vert_count(prim: Prim, n: usize) -> usize {
+    match prim {
+        Prim::Quads | Prim::Quads2 => n / 4 * 6,
+        Prim::Triangles => n / 3 * 3,
+        Prim::TriStrip | Prim::TriFan => n.saturating_sub(2) * 3,
+        Prim::Points => n * 6,
+        Prim::Lines => n / 2 * 6,
+        Prim::LineStrip => n.saturating_sub(1) * 6,
+    }
 }
 
 /// Builds GFrames; remembers which textures the renderer already has and where EFB copies landed.
@@ -96,6 +140,11 @@ pub struct Builder {
     next_copy: u32,
     frame_tex: HashMap<(u32, u32, u32, u32, u32, u32), Option<TexId>>,
 }
+
+/// Time spent on draw lists (ns): [vertex work (`emit`, in `build` or `finish`), the rest of `build`/`build_deferred`].
+/// Diagnostics (colo-viewer storybattle GXTIME=1).
+pub static TIMES: [std::sync::atomic::AtomicU64; 2] = [const { std::sync::atomic::AtomicU64::new(0) }; 2];
+fn tadd(k: usize, t: std::time::Instant) { TIMES[k].fetch_add(t.elapsed().as_nanos() as u64, std::sync::atomic::Ordering::Relaxed); }
 
 fn fnv(h: &mut u64, b: &[u8]) { for &x in b { *h ^= x as u64; *h = h.wrapping_mul(0x100_0000_01B3); } }
 /// FNV-1a over 8-byte words (texture data: hashed every frame for the decode cache; ~8x faster than per byte).
@@ -110,6 +159,27 @@ impl Builder {
 
     pub fn build(&mut self, fr: &Frame, mem: &dyn GpuMem) -> GFrame {
         let mut g = GFrame::default();
+        let draws = self.build_ops(fr, mem, &mut g);
+        let t0 = std::time::Instant::now();
+        for i in draws { let d = &fr.draws[i as usize]; emit(d, &fr.states[d.state], &mut g.verts); }
+        tadd(0, t0);
+        g
+    }
+
+    /// `build` without the vertex work: everything that reads memory (textures, TLUTs) is done here, and the
+    /// returned frame's `finish` transforms the vertices later, on another thread (same result as `build`).
+    pub fn build_deferred(&mut self, fr: Frame, mem: &dyn GpuMem) -> GFrame {
+        let mut g = GFrame::default();
+        let draws = self.build_ops(&fr, mem, &mut g);
+        g.pending = Some((fr, draws));
+        g
+    }
+
+    /// Ops, states and textures; returns the draws (indices into `fr.draws`) whose vertices fill `verts` in order.
+    fn build_ops(&mut self, fr: &Frame, mem: &dyn GpuMem, g: &mut GFrame) -> Vec<u32> {
+        let t_all = std::time::Instant::now();
+        let mut out = Vec::new();
+        let mut nv = 0u32;
         self.frame_tex.clear();
         let (mut ci, mut ti) = (0usize, 0usize);
         for i in 0..=fr.draws.len() {
@@ -125,65 +195,23 @@ impl Builder {
             }
             while ci < fr.copies.len() && fr.copies[ci].2 == i {
                 let (st, v, _) = fr.copies[ci];
-                self.copy(&fr.states[st], v, &mut g);
+                self.copy(&fr.states[st], v, g);
                 self.frame_tex.clear();
                 ci += 1;
             }
-            if let Some(d) = fr.draws.get(i) { self.draw(d, &fr.states[d.state], mem, &mut g); }
-        }
-        g
-    }
-
-    fn draw(&mut self, d: &crate::Draw, s: &State, mem: &dyn GpuMem, g: &mut GFrame) {
-        let vs = transform(d, s);
-        let n = vs.len();
-        if DUMP.load(std::sync::atomic::Ordering::Relaxed) { dump(d, s, g.ops.len()); }
-        let first = g.verts.len() as u32;
-        let mut push = |k: usize| {
-            let v = &vs[k];
-            let mut tc = [[0f32; 4]; 8];
-            for t in 0..8 { tc[t] = [v.tc[t][0], v.tc[t][1], v.tc[t][2], 0.0]; }
-            g.verts.push(GVertex { pos: v.c, col: v.col, tc });
-        };
-        match d.prim {
-            Prim::Quads | Prim::Quads2 => for q in (0..n / 4 * 4).step_by(4) { for k in [q, q + 1, q + 2, q, q + 2, q + 3] { push(k); } },
-            Prim::Triangles => for k in 0..n / 3 * 3 { push(k); },
-            Prim::TriStrip => for k in 2..n { let t = if k % 2 == 0 { [k - 2, k - 1, k] } else { [k - 1, k - 2, k] }; for x in t { push(x); } },
-            Prim::TriFan => for k in 2..n { for x in [0, k - 1, k] { push(x); } },
-            Prim::Lines | Prim::LineStrip | Prim::Points => {
-                // lines and points as screen-space quads (SU line/point size 0x22, in 1/6 pixel; lines widen across
-                // their minor axis, as Dolphin)
-                let su = s.bp[0x22];
-                let (vx, vy) = (f32::from_bits(s.xf_reg[0x1A]).abs().max(1e-6), f32::from_bits(s.xf_reg[0x1B]).abs().max(1e-6));
-                let quad = |g: &mut GFrame, v: &[&crate::raster::V; 4], off: [[f32; 2]; 4]| {
-                    for k in [0usize, 1, 2, 0, 2, 3] {
-                        let p = v[k].c;
-                        let mut tc = [[0f32; 4]; 8];
-                        for t in 0..8 { tc[t] = [v[k].tc[t][0], v[k].tc[t][1], v[k].tc[t][2], 0.0]; }
-                        g.verts.push(GVertex { pos: [p[0] + off[k][0] / vx * p[3], p[1] + off[k][1] / vy * p[3], p[2], p[3]], col: v[k].col, tc });
-                    }
-                };
-                if d.prim == Prim::Points {
-                    let h = (su >> 8 & 0xFF) as f32 / 12.0;
-                    for v in &vs { quad(g, &[v, v, v, v], [[-h, h], [h, h], [h, -h], [-h, -h]]); }
-                } else {
-                    let h = (su & 0xFF) as f32 / 12.0;
-                    let pairs: Vec<(usize, usize)> = if d.prim == Prim::Lines { (0..n / 2).map(|k| (2 * k, 2 * k + 1)).collect() } else { (1..n).map(|k| (k - 1, k)).collect() };
-                    for (a, b) in pairs {
-                        let (pa, pb) = (vs[a].c, vs[b].c);
-                        let dx = (pb[0] / pb[3] - pa[0] / pa[3]) * vx;
-                        let dy = (pb[1] / pb[3] - pa[1] / pa[3]) * vy;
-                        let o = if dx.abs() > dy.abs() { [0.0, h] } else { [h, 0.0] };
-                        quad(g, &[&vs[a], &vs[b], &vs[b], &vs[a]], [[o[0], o[1]], [o[0], o[1]], [-o[0], -o[1]], [-o[0], -o[1]]]);
-                    }
-                }
+            if let Some(d) = fr.draws.get(i) {
+                if DUMP.load(std::sync::atomic::Ordering::Relaxed) { dump(d, &fr.states[d.state], g.ops.len()); }
+                let count = vert_count(d.prim, d.verts.len()) as u32;
+                if count == 0 { continue; }
+                let st = self.state(&fr.states[d.state], mem, g);
+                g.states.push(st);
+                g.ops.push(GOp::Draw { first: nv, count, state: g.states.len() as u32 - 1 });
+                nv += count;
+                out.push(i as u32);
             }
         }
-        let count = g.verts.len() as u32 - first;
-        if count == 0 { return; }
-        let st = self.state(s, mem, g);
-        g.states.push(st);
-        g.ops.push(GOp::Draw { first, count, state: g.states.len() as u32 - 1 });
+        tadd(1, t_all);
+        out
     }
 
     fn state(&mut self, s: &State, mem: &dyn GpuMem, g: &mut GFrame) -> GState {
@@ -204,14 +232,24 @@ impl Builder {
             let kc = konst_color(s, ksel >> 4 & 0x1F);
             konst[st] = [kc[0], kc[1], kc[2], konst_alpha(s, ksel >> 9 & 0x1F)];
             let map = (order & 7) as usize;
-            if order >> 6 & 1 != 0 && tex[map].is_none() {
-                tex[map] = self.texture(s, mem, map, g);
-                let r = |base: usize| s.bp[if map < 4 { base + map } else { base + 0x20 + map - 4 }];
-                let (m0, m1) = (r(0x80), r(0x84));
-                samp[map] = SamplerDesc { wrap_s: m0 & 3, wrap_t: m0 >> 2 & 3, mag_linear: m0 >> 4 & 1 != 0, min: m0 >> 5 & 7,
-                    lod_bias: ((m0 >> 9 & 0xFF) as i8 as f32) / 32.0, min_lod: (m1 & 0xFF) as f32 / 16.0, max_lod: (m1 >> 8 & 0xFF) as f32 / 16.0 };
-            }
+            if order >> 6 & 1 != 0 { self.bind(s, mem, map, g, &mut tex, &mut samp); }
         }
+        // indirect stages: their maps (IREF), and the per-stage commands
+        let nind = gm >> 16 & 7;
+        let iref = s.bp[0x27];
+        for i in 0..nind.min(4) { self.bind(s, mem, (iref >> (6 * i) & 7) as usize, g, &mut tex, &mut samp); }
+        let mut ind = [0u32; 16];
+        for st in 0..nstages as usize { ind[st] = s.bp[0x10 + st] & 0x1F_FFFF; }
+        let mut ind_mtx = [[0i32; 4]; 6];
+        for m in 0..3 {
+            let [a, b, c] = [s.bp[0x06 + 3 * m], s.bp[0x07 + 3 * m], s.bp[0x08 + 3 * m]];
+            let sx = |v: u32| ((v as i32) << 21) >> 21;
+            let scale = (a >> 22 & 3) | (b >> 22 & 3) << 2 | (c >> 22 & 3) << 4;
+            ind_mtx[2 * m] = [sx(a & 0x7FF), sx(b & 0x7FF), sx(c & 0x7FF), 17 - scale as i32];
+            ind_mtx[2 * m + 1] = [sx(a >> 11 & 0x7FF), sx(b >> 11 & 0x7FF), sx(c >> 11 & 0x7FF), 0];
+        }
+        let mut su = [[0u32; 4]; 4];
+        for k in 0..8 { su[k / 2][2 * (k & 1)] = (s.bp[0x30 + 2 * k] & 0xFFFF) + 1; su[k / 2][2 * (k & 1) + 1] = (s.bp[0x31 + 2 * k] & 0xFFFF) + 1; }
         let mut regs = [[0i32; 4]; 4];
         for r in 0..4 {
             let [lo, hi] = s.tevreg[r];
@@ -229,7 +267,18 @@ impl Builder {
             cull: (gm >> 14) & 3,
             zmode: s.bp[0x40], early_z: s.bp[0x43] >> 6 & 1 != 0, cmode: s.bp[0x41], dstalpha: s.bp[0x42], pixfmt: s.bp[0x43] & 7,
             afunc: s.bp[0xF3], nstages, ntex: gm & 0xF, stages, konst, regs, tex, samp,
+            ind, ind_misc: [iref, s.bp[0x25], s.bp[0x26], nind], ind_mtx, su, fog: Fog::new(s),
         }
+    }
+
+    /// Texture map `map` and its sampler, once per draw.
+    fn bind(&mut self, s: &State, mem: &dyn GpuMem, map: usize, g: &mut GFrame, tex: &mut [Option<TexId>; 8], samp: &mut [SamplerDesc; 8]) {
+        if tex[map].is_some() { return; }
+        tex[map] = self.texture(s, mem, map, g);
+        let r = |base: usize| s.bp[if map < 4 { base + map } else { base + 0x20 + map - 4 }];
+        let (m0, m1) = (r(0x80), r(0x84));
+        samp[map] = SamplerDesc { wrap_s: m0 & 3, wrap_t: m0 >> 2 & 3, mag_linear: m0 >> 4 & 1 != 0, min: m0 >> 5 & 7,
+            lod_bias: ((m0 >> 9 & 0xFF) as i8 as f32) / 32.0, min_lod: (m1 & 0xFF) as f32 / 16.0, max_lod: (m1 >> 8 & 0xFF) as f32 / 16.0 };
     }
 
     fn texture(&mut self, s: &State, mem: &dyn GpuMem, map: usize, g: &mut GFrame) -> Option<TexId> {
@@ -301,11 +350,60 @@ impl Builder {
         } else { None };
         let c = GCopy {
             id, src: [src & 0x3FF, src >> 10 & 0x3FF, (sz & 0x3FF) + 1, (sz >> 10 & 0x3FF) + 1], dst, to_xfb,
-            fmt: (tp >> 1) | ((tp & 1) << 3), intensity: v >> 15 & 1 != 0, half: v >> 9 & 1 != 0, clear,
+            fmt: (tp >> 1) | ((tp & 1) << 3), intensity: v >> 15 & 1 != 0, half: v >> 9 & 1 != 0,
+            depth: s.bp[0x43] & 7 == 3, clear,
         };
         if to_xfb { g.xfb = Some(id); } else { self.copies.insert(dst, id); }
         g.ops.push(GOp::Copy(c));
     }
+}
+
+/// A draw's vertices through the XF, as triangles (`vert_count` of them), appended to `verts`.
+fn emit(d: &crate::Draw, s: &State, verts: &mut Vec<GVertex>) {
+    let vs = transform(d, s);
+    let n = vs.len();
+    let start = verts.len();
+    let mut push = |k: usize| {
+        let v = &vs[k];
+        let mut tc = [[0f32; 4]; 8];
+        for t in 0..8 { tc[t] = [v.tc[t][0], v.tc[t][1], v.tc[t][2], 0.0]; }
+        verts.push(GVertex { pos: v.c, col: v.col, tc });
+    };
+    match d.prim {
+        Prim::Quads | Prim::Quads2 => for q in (0..n / 4 * 4).step_by(4) { for k in [q, q + 1, q + 2, q, q + 2, q + 3] { push(k); } },
+        Prim::Triangles => for k in 0..n / 3 * 3 { push(k); },
+        Prim::TriStrip => for k in 2..n { let t = if k % 2 == 0 { [k - 2, k - 1, k] } else { [k - 1, k - 2, k] }; for x in t { push(x); } },
+        Prim::TriFan => for k in 2..n { for x in [0, k - 1, k] { push(x); } },
+        Prim::Lines | Prim::LineStrip | Prim::Points => {
+            // lines and points as screen-space quads (SU line/point size 0x22, in 1/6 pixel; lines widen across
+            // their minor axis, as Dolphin)
+            let su = s.bp[0x22];
+            let (vx, vy) = (f32::from_bits(s.xf_reg[0x1A]).abs().max(1e-6), f32::from_bits(s.xf_reg[0x1B]).abs().max(1e-6));
+            let quad = |verts: &mut Vec<GVertex>, v: &[&crate::raster::V; 4], off: [[f32; 2]; 4]| {
+                for k in [0usize, 1, 2, 0, 2, 3] {
+                    let p = v[k].c;
+                    let mut tc = [[0f32; 4]; 8];
+                    for t in 0..8 { tc[t] = [v[k].tc[t][0], v[k].tc[t][1], v[k].tc[t][2], 0.0]; }
+                    verts.push(GVertex { pos: [p[0] + off[k][0] / vx * p[3], p[1] + off[k][1] / vy * p[3], p[2], p[3]], col: v[k].col, tc });
+                }
+            };
+            if d.prim == Prim::Points {
+                let h = (su >> 8 & 0xFF) as f32 / 12.0;
+                for v in &vs { quad(verts, &[v, v, v, v], [[-h, h], [h, h], [h, -h], [-h, -h]]); }
+            } else {
+                let h = (su & 0xFF) as f32 / 12.0;
+                let pairs: Vec<(usize, usize)> = if d.prim == Prim::Lines { (0..n / 2).map(|k| (2 * k, 2 * k + 1)).collect() } else { (1..n).map(|k| (k - 1, k)).collect() };
+                for (a, b) in pairs {
+                    let (pa, pb) = (vs[a].c, vs[b].c);
+                    let dx = (pb[0] / pb[3] - pa[0] / pa[3]) * vx;
+                    let dy = (pb[1] / pb[3] - pa[1] / pa[3]) * vy;
+                    let o = if dx.abs() > dy.abs() { [0.0, h] } else { [h, 0.0] };
+                    quad(verts, &[&vs[a], &vs[b], &vs[b], &vs[a]], [[o[0], o[1]], [o[0], o[1]], [-o[0], -o[1]], [-o[0], -o[1]]]);
+                }
+            }
+        }
+    }
+    debug_assert_eq!(verts.len() - start, vert_count(d.prim, n));
 }
 
 fn dump(d: &crate::Draw, s: &State, op: usize) {

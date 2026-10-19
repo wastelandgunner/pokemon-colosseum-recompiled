@@ -6,14 +6,23 @@ use super::*;
 /// mask, SISR RDST0: controller 1 answered), which runs the polling handlers (PADRead through
 /// inputPadCallback).
 pub(super) fn field(c: &mut Cpu) {
-    // time jumps to the field: the AI blocks that end before it play out first, each with the DSP's answer
+    // time jumps to the field: the AI blocks, disc command and ARAM DMA that end before it play out first, each with its
+    // interrupt
     {
         use std::sync::atomic::Ordering::Relaxed;
         let f = FIELD_TB.load(Relaxed) + TB_PER_FIELD;
         loop {
             let ai = AI_NEXT.load(Relaxed);
-            if ai == 0 || ai > f || time_base(c) >= f { break; }
-            if ai > time_base(c) { TB_BASE.store(ai, Relaxed); TB_MARK.store(c.steps, Relaxed); }
+            let di = dev_next(c);
+            if time_base(c) >= f { break; }
+            if let Some(di) = di.filter(|&d| d <= f && (ai == 0 || d <= ai)) {
+                if di > time_base(c) { TB_BASE.store(di, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
+                dev_due(c);
+                raise_pending(c);
+                continue;
+            }
+            if ai == 0 || ai > f { break; }
+            if ai > time_base(c) { TB_BASE.store(ai, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
             ai_due(c);
             raise_pending(c);
         }

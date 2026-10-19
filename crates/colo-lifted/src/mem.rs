@@ -26,7 +26,6 @@ pub struct Region {
     pub bytes: Vec<u8>,
 }
 
-#[derive(Default)]
 pub struct Mem {
     pub regions: Vec<Region>,
     /// When set, every access is buffered in `PEND` as (address, length, is write) for `prof.rs`.
@@ -41,6 +40,23 @@ pub struct Mem {
     /// Per 1 MB page: the first region that intersects it (`NO_REGION`: none). Any address the region holds is
     /// found there (no earlier region can hold it); the others fall back to the scan.
     page: Vec<u8>,
+    /// MEM1 (the region at 0x80000000) when no earlier region overlaps it: (start of its bytes, length). The hot
+    /// path: lifted loads and stores reach MEM1 (or its uncached mirror) with one compare instead of the page
+    /// lookup. Its bytes are never resized (only the heap, region 0, grows), so the pointer stays valid; `index`
+    /// refreshes it whenever regions change.
+    mem1: (*mut u8, usize),
+    /// The locked L1 cache (the region at 0xE0000000) likewise: the game's particle and matrix code works in it.
+    lc: (*mut u8, usize),
+}
+
+// `mem1` points into `regions` (owned): moving a Mem to another thread moves what it points at with it.
+unsafe impl Send for Mem {}
+unsafe impl Sync for Mem {}
+
+impl Default for Mem {
+    fn default() -> Self {
+        Mem { regions: Vec::new(), trace: false, pipe: None, mmio_write: None, heap_top: 0, page: Vec::new(), mem1: (std::ptr::null_mut(), 0), lc: (std::ptr::null_mut(), 0) }
+    }
 }
 
 const NO_REGION: u8 = u8::MAX;
@@ -62,6 +78,34 @@ impl Mem {
             let end = r.start as u64 + r.bytes.len() as u64 - 1;
             for p in (r.start >> 20) as u64..=(end >> 20).min(4095) { self.page[p as usize] = i as u8; }
         }
+        self.mem1 = self.fast(0x8000_0000);
+        self.lc = self.fast(0xE000_0000);
+    }
+
+    /// The region starting at `start` as (bytes, length) for a fast path, if no earlier region overlaps it.
+    fn fast(&mut self, start: u32) -> (*mut u8, usize) {
+        let Some(k) = self.regions.iter().position(|r| r.start == start && !r.bytes.is_empty()) else { return (std::ptr::null_mut(), 0) };
+        let n = self.regions[k].bytes.len() as u64;
+        let s = start as u64;
+        let shadowed = self.regions[..k].iter().any(|r| !r.bytes.is_empty() && (r.start as u64) < s + n && r.start as u64 + r.bytes.len() as u64 > s);
+        if shadowed || n > 0x0200_0000 { return (std::ptr::null_mut(), 0); }
+        (self.regions[k].bytes.as_mut_ptr(), n as usize)
+    }
+
+    /// Offset of `a..a+n` in MEM1 (0x80000000.. or its 0xC0000000.. mirror), if it lies wholly inside.
+    #[inline(always)]
+    fn mem1_off(&self, a: u32, n: usize) -> Option<usize> {
+        // 0xC0000000.. -> 0x80000000..; anything else this maps lands outside MEM1 (0xCC.. -> 0x8C.., 0xE0.. -> 0xA0..)
+        let o = (a & 0xBFFF_FFFF).wrapping_sub(0x8000_0000) as usize;
+        (o + n <= self.mem1.1).then_some(o)
+    }
+
+    /// Bytes of `a..a+n` from a fast region (MEM1 or the locked cache), if it lies wholly inside one.
+    #[inline(always)]
+    fn fast_ptr(&self, a: u32, n: usize) -> Option<*mut u8> {
+        if let Some(o) = self.mem1_off(a, n) { return Some(unsafe { self.mem1.0.add(o) }); }
+        let o = a.wrapping_sub(0xE000_0000) as usize;
+        (o + n <= self.lc.1).then(|| unsafe { self.lc.0.add(o) })
     }
 
     /// Allocate `size` zeroed bytes on the heap (32-byte aligned, like the game's allocators).
@@ -97,17 +141,25 @@ impl Mem {
 
     #[inline(always)]
     pub fn read(&self, a: u32, n: u32) -> &[u8] {
+        // hot path inline (every lifted load); tracing and the other regions out of line, so each load site stays small
+        if !self.trace { if let Some(p) = self.fast_ptr(a, n as usize) { return unsafe { std::slice::from_raw_parts(p, n as usize) }; } }
+        self.read_slow(a, n)
+    }
+    #[inline(never)]
+    #[cold]
+    fn read_slow(&self, a: u32, n: u32) -> &[u8] {
         if self.trace { PEND.with(|p| p.borrow_mut().push((a, n as u8, false))); }
         let (i, o) = self.find(a, n);
         &self.regions[i].bytes[o..o + n as usize]
     }
     #[inline(always)]
     pub fn write(&mut self, a: u32, d: &[u8]) {
-        // hot path inline (lifted code stores through here); watchpoint, tracing, the gather pipe and hardware
-        // registers out of line
-        if self.trace || (a >> 24) == 0xCC || WATCH.load(std::sync::atomic::Ordering::Relaxed) != 0 { return self.write_slow(a, d); }
-        let (i, o) = self.find(a, d.len() as u32);
-        self.regions[i].bytes[o..o + d.len()].copy_from_slice(d);
+        // hot path inline (lifted code stores through here); watchpoint, tracing, the gather pipe, hardware
+        // registers and the other regions out of line
+        if !self.trace && WATCH.load(std::sync::atomic::Ordering::Relaxed) == 0 {
+            if let Some(p) = self.fast_ptr(a, d.len()) { unsafe { std::ptr::copy_nonoverlapping(d.as_ptr(), p, d.len()) }; return; }
+        }
+        self.write_slow(a, d)
     }
     #[inline(never)]
     fn write_slow(&mut self, a: u32, d: &[u8]) {

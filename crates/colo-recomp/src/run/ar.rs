@@ -1,4 +1,4 @@
-//! ARAM (the AR library and the ARAM DMA registers): 16 MB of auxiliary memory, transfers complete at once.
+//! ARAM (the AR library and the ARAM DMA registers): 16 MB of auxiliary memory; transfers take their DMA time.
 
 use super::*;
 
@@ -59,10 +59,58 @@ if covers(a, n, 0xCC00_502A) || covers(a, n, 0xCC00_502B) {
             m.write(mm, &d);
         }
     }
-    // done at once: ARINT set, interrupt if ARINTMASK
-    let v = DSPCR.load(std::sync::atomic::Ordering::Relaxed) | 0x20;
+    // the data moves at once (as in Dolphin); the DMA stays busy (DSPCR DMAState 0x200) for its transfer time,
+    // then ARINT and the interrupt if ARINTMASK (`ar_due`)
+    let v = DSPCR.load(std::sync::atomic::Ordering::Relaxed) | 0x200;
     DSPCR.store(v, std::sync::atomic::Ordering::Relaxed);
     m.set_u16(0xCC00_500A, v);
+    *AR_BUSY.lock().unwrap() = Some((len as u32, None));
+}
+}
+
+/// The ARAM DMA in flight: (bytes, completion time base once timed). Dolphin's measured rate: 246 CPU cycles per
+/// 32 bytes (20.5 time base ticks). Like the DI, it is timed from the next point that has the CPU's clock.
+pub(super) static AR_BUSY: Mutex<Option<(u32, Option<u64>)>> = Mutex::new(None);
+
+pub(super) fn ar_next(c: &Cpu) -> Option<u64> {
+    let mut g = AR_BUSY.lock().unwrap();
+    let (len, due) = g.as_mut()?;
+    Some(*due.get_or_insert_with(|| time_base(c) + (*len as u64 / 32) * 246 / 12))
+}
+
+/// The ARAM DMA finishes if its time has come: DMAState clears, ARINT sets, the interrupt is pending if
+/// ARINTMASK. Takes no `&mut Cpu` so register reads can complete it (the register itself follows at `ar_due`).
+fn ar_finish(c: &Cpu) {
+    match ar_next(c) { Some(t) if t <= time_base(c) => {} _ => return }
+    *AR_BUSY.lock().unwrap() = None;
+    let v = DSPCR.load(std::sync::atomic::Ordering::Relaxed) & !0x200 | 0x20;
+    DSPCR.store(v, std::sync::atomic::Ordering::Relaxed);
+    DSPCR_STALE.store(true, std::sync::atomic::Ordering::Relaxed);
     if v & 0x10 != 0 { PENDING.lock().unwrap().push(IRQ_DSP_ARAM); }
 }
+
+/// The DSPCR register in memory lags DSPCR (a read finished the DMA) until `ar_due` stores it.
+static DSPCR_STALE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+pub(super) fn ar_due(c: &mut Cpu) {
+    ar_finish(c);
+    if DSPCR_STALE.swap(false, std::sync::atomic::Ordering::Relaxed) {
+        c.m.set_u16(0xCC00_500A, DSPCR.load(std::sync::atomic::Ordering::Relaxed));
+    }
+}
+
+/// DSPCR reads: an ARAM DMA whose time has come finishes first (`__OSInitAudioSystem` and the AR library poll
+/// ARINT / DMAState with interrupts off), so the value is DSPCR's.
+pub(super) fn ar_dspcr_read(c: &Cpu, a: u32, n: u32) -> Option<u32> {
+    if !(a <= 0xCC00_500A && 0xCC00_500A < a + n.max(1)) { return None; }
+    if AR_BUSY.lock().unwrap().is_none() && !DSPCR_STALE.load(std::sync::atomic::Ordering::Relaxed) { return None; }
+    ar_finish(c);
+    let v = DSPCR.load(std::sync::atomic::Ordering::Relaxed);
+    let w = c.m.u32(0xCC00_5008);
+    Some(match (a, n) {
+        (0xCC00_500A, 2) => v,
+        (0xCC00_500B, 1) => v & 0xFF,
+        (0xCC00_5008, 4) => w & 0xFFFF_0000 | v,
+        _ => return None,
+    })
 }

@@ -25,8 +25,15 @@ pub struct GameBattle {
     pub frame: Option<Vec<u8>>,
     /// Game frames requested and not yet returned.
     in_flight: u32,
+    /// Frames returned and not yet shown (one is shown per 1/29.97 s).
+    ready: std::collections::VecDeque<Vec<u8>>,
     acc: f32,
 }
+
+/// How many game frames may be requested or waiting ahead of the one on screen: 2, the old one-in-flight latency.
+/// (3 absorbed single slow frames but added a frame of input lag, and attack frames run ~30 ms of game code anyway,
+/// so the queue rarely filled.)
+const AHEAD: usize = 2;
 
 /// A graphics-card renderer with no window (the battle's frames are read back into the viewer's screen image).
 fn headless_gpu() -> Option<colo_gxgpu::Gpu> {
@@ -59,9 +66,7 @@ fn to_640x480(px: &[u8], w: u32, h: u32) -> Vec<u8> {
 
 /// Where the snapshot for `encounter` lives, if it does.
 pub fn snapshot_dir(encounter: u32) -> Option<std::path::PathBuf> {
-    let base = std::env::var("COLO_SNAPS").map(std::path::PathBuf::from).unwrap_or_else(|_| {
-        std::path::PathBuf::from("/media/zach/massstorage/Pokemon Colosseum/Working/dolphin/snaps")
-    });
+    let base = std::env::var("COLO_SNAPS").map(std::path::PathBuf::from).unwrap_or_else(|_| crate::save::snaps_dir());
     let d = base.join(format!("story{encounter}"));
     (std::env::var("COLO_NO_GAME_BATTLE").is_err() && d.join("before.bin").exists()).then_some(d)
 }
@@ -143,7 +148,9 @@ impl GameBattle {
             // every frame goes through the render thread once it exists (software ones pass through), in order
             let render = gpu.map(|mut g| std::thread::Builder::new().name("game-battle-gpu".into()).spawn(move || {
                 while let Ok((f, mut out)) = rrx.recv() {
-                    if let Some(f) = f {
+                    if let Some(mut f) = f {
+                        // the draw list's vertex work (XF transform, lighting, texgens) runs here, off the game thread
+                        f.finish();
                         g.render(&f);
                         if let Some((px, w, h)) = g.read_xfb() { out.rgba = to_640x480(&px, w, h); }
                     }
@@ -161,7 +168,7 @@ impl GameBattle {
                 m.set_pad(pad);
                 m.frame();
                 if !on_gpu && render.is_some() && m.c.m.u32(FADE_STATE + 0xC) == 0 { on_gpu = true; }
-                let list = if on_gpu { Some(m.gpu_cmds(&mut builder)) } else { m.gpu_frame(); None };
+                let list = if on_gpu { Some(m.gpu_cmds_deferred(&mut builder)) } else { m.gpu_frame(); None };
                 // the first frame shows the XFB Dolphin rendered before the snapshot (the VI shows the previous
                 // copy): keep the viewer's wipe on screen for it (an empty image)
                 let soft = !std::mem::take(&mut first) && list.is_none();
@@ -182,24 +189,30 @@ impl GameBattle {
             }
         }).expect("game battle thread");
         crate::audio::external(true);
-        GameBattle { tx, rx, result: None, frame: None, in_flight: 0, acc: 0.0 }
+        GameBattle { tx, rx, result: None, frame: None, in_flight: 0, ready: Default::default(), acc: 0.0 }
     }
 
-    /// Advance with the viewer's frame time: one game frame per 1/29.97 s, at most one ahead.
+    /// Advance with the viewer's frame time: one game frame shown per 1/29.97 s, up to `AHEAD` requested ahead.
     pub fn update(&mut self, dt: f32, pad: Pad) {
         while let Ok(o) = self.rx.try_recv() {
             self.in_flight -= 1;
+            // audio goes out as it comes (the output keeps a 100 ms prebuffer)
             crate::audio::push_external(&o.audio);
-            if !o.rgba.is_empty() { self.frame = Some(o.rgba); }
+            if !o.rgba.is_empty() { self.ready.push_back(o.rgba); }
             if let Some(r) = o.done { self.result = Some(r); }
         }
-        if self.result.is_some() { return; }
+        if self.result.is_some() {
+            // the last frames still go up (the game's own end fade)
+            if let Some(f) = self.ready.pop_back() { self.ready.clear(); self.frame = Some(f); }
+            return;
+        }
         self.acc += dt;
         let step = 1001.0 / 30000.0;
-        if self.acc >= step && self.in_flight < 2 {
+        if self.acc >= step {
             self.acc -= step;
             if self.acc > step { self.acc = 0.0; }
-            if self.tx.send(pad).is_ok() { self.in_flight += 1; }
+            if let Some(f) = self.ready.pop_front() { self.frame = Some(f); }
+            if self.in_flight as usize + self.ready.len() < AHEAD && self.tx.send(pad).is_ok() { self.in_flight += 1; }
         }
     }
 }

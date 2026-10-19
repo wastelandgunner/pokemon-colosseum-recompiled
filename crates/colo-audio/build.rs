@@ -49,5 +49,5 @@ fn main() {
     b.file("shim.c");
     println!("cargo:rerun-if-changed=shim.c");
     b.compile("musyx");
-    println!("cargo:rustc-link-lib=m");
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") { println!("cargo:rustc-link-lib=m"); }
 }

@@ -30,6 +30,8 @@ pub struct Cpu {
     pub dispatch: fn(&mut Cpu, u32),
     /// Basic blocks executed, a limit that panics (runaway loops waiting on hardware), and the last function entered.
     pub steps: u64,
+    /// Guest instructions executed (each lifted block adds its length on entry): the emulated clock (run.rs time base).
+    pub instrs: u64,
     pub step_limit: u64,
     pub last_fn: u32,
     /// Record function facts (`prof.rs`); lifted functions check this at entry.
@@ -37,17 +39,17 @@ pub struct Cpu {
     /// Lifted functions consult `stub_hit`/`prof` only when this is set.
     pub hooks: bool,
     /// Runtime stubs: function address -> value for r3 (or u32::MAX: leave r3), checked at every lifted entry.
-    pub stubs: std::collections::HashMap<u32, u32>,
+    pub stubs: AddrMap<u32>,
     /// Runtime stubs that also zero `n` bytes at r3 first (output buffers, e.g. pad state).
-    pub stub_zero: std::collections::HashMap<u32, u32>,
+    pub stub_zero: AddrMap<u32>,
     /// Runtime register patches at entry that then run the original function: addr -> [(reg, value)].
-    pub entry_set: std::collections::HashMap<u32, Vec<(usize, u32)>>,
+    pub entry_set: AddrMap<Vec<(usize, u32)>>,
     /// Runtime stubs that call the function pointer in register N with the entry r3 (completion callbacks,
     /// e.g. an ARAM transfer that "finishes" at once).
-    pub stub_cb: std::collections::HashMap<u32, usize>,
+    pub stub_cb: AddrMap<usize>,
     /// Host callbacks that replace a function (checked before `stubs`): colo-viewer parks the battle thread at
     /// `_threadSwitch` and feeds the pad at `menuGetKeyInfo`.
-    pub hook_fn: std::collections::HashMap<u32, fn(&mut Cpu)>,
+    pub hook_fn: AddrMap<fn(&mut Cpu)>,
     /// See `mmio`: live hardware register reads (None = plain memory).
     pub mmio_read: Option<fn(&Cpu, u32, u32) -> Option<u32>>,
     /// Debug: log entry (r3-r5, lr) of these functions (needs `hooks`).
@@ -55,6 +57,63 @@ pub struct Cpu {
     /// Called at a block boundary once `steps` passes `step_limit` (it sets the next limit): run.rs takes
     /// interrupts there, as the hardware does between instructions. Without it, the step limit is an error.
     pub tick: Option<fn(&mut Cpu)>,
+}
+
+/// Function-address keyed maps (hooks, stubs): `stub_hit` checks them at every lifted call (millions a frame), so
+/// each keeps a 4096-bit filter of its keys (bit (addr >> 2) & 0xFFF) and only hashes (one multiply, not SipHash)
+/// when the address's bit is set. Writes go through `insert` / `entry` / `remove`, which keep the filter a superset
+/// of the keys; reads may use the map directly (Deref).
+pub struct AddrMap<V> {
+    map: std::collections::HashMap<u32, V, std::hash::BuildHasherDefault<AddrHasher>>,
+    bits: Box<[u64; 64]>,
+}
+
+impl<V> Default for AddrMap<V> {
+    fn default() -> Self { AddrMap { map: Default::default(), bits: Box::new([0; 64]) } }
+}
+
+impl<V> std::ops::Deref for AddrMap<V> {
+    type Target = std::collections::HashMap<u32, V, std::hash::BuildHasherDefault<AddrHasher>>;
+    fn deref(&self) -> &Self::Target { &self.map }
+}
+
+impl<V> AddrMap<V> {
+    #[inline(always)]
+    fn bit(a: u32) -> (usize, u64) { let i = (a >> 2) & 0xFFF; ((i >> 6) as usize, 1 << (i & 63)) }
+    /// Whether `a` may be a key (false: it isn't).
+    #[inline(always)]
+    pub fn may(&self, a: u32) -> bool { let (w, b) = Self::bit(a); self.bits[w] & b != 0 }
+    /// The value at `a`; the filter answers most misses without hashing.
+    #[inline(always)]
+    pub fn get(&self, a: &u32) -> Option<&V> {
+        let (w, b) = Self::bit(*a);
+        if self.bits[w] & b == 0 { return None; }
+        self.map.get(a)
+    }
+    pub fn insert(&mut self, a: u32, v: V) -> Option<V> {
+        let (w, b) = Self::bit(a);
+        self.bits[w] |= b;
+        self.map.insert(a, v)
+    }
+    pub fn entry(&mut self, a: u32) -> std::collections::hash_map::Entry<'_, u32, V> {
+        let (w, b) = Self::bit(a);
+        self.bits[w] |= b;
+        self.map.entry(a)
+    }
+    pub fn remove(&mut self, a: &u32) -> Option<V> {
+        let v = self.map.remove(a);
+        self.bits.fill(0);
+        for &k in self.map.keys() { let (w, b) = Self::bit(k); self.bits[w] |= b; }
+        v
+    }
+}
+
+#[derive(Default, Clone, Copy)]
+pub struct AddrHasher(u64);
+impl std::hash::Hasher for AddrHasher {
+    fn finish(&self) -> u64 { self.0 }
+    fn write(&mut self, b: &[u8]) { for &x in b { self.0 = (self.0.rotate_left(8) ^ x as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15); } }
+    fn write_u32(&mut self, n: u32) { let h = (n as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15); self.0 = h ^ (h >> 32); }
 }
 
 fn no_dispatch(_: &mut Cpu, a: u32) { panic!("ppc: no dispatcher for indirect call to {a:#010x}") }
@@ -66,7 +125,7 @@ impl Cpu {
     pub fn new(mut m: Mem) -> Self {
         m.map(STACK_TOP - STACK_SIZE, vec![0; STACK_SIZE as usize]);
         let mut c = Cpu { r: [0; 32], f: [0.0; 32], ps1: [0.0; 32], cr: 0, lr: 0, ctr: 0, xer: 0, fpscr: 0, gqr: [0; 8], m,
-            dispatch: no_dispatch, steps: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None };
+            dispatch: no_dispatch, steps: 0, instrs: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None };
         c.r[1] = STACK_TOP - 0x100;
         c.r[2] = 0x804836A0; // _SDA2_BASE_
         c.r[13] = 0x80480820; // _SDA_BASE_
@@ -76,7 +135,7 @@ impl Cpu {
     /// A CPU over an existing address space (e.g. a RAM snapshot that already has a stack); no stack is mapped.
     pub fn bare(m: Mem) -> Self {
         Cpu { r: [0; 32], f: [0.0; 32], ps1: [0.0; 32], cr: 0, lr: 0, ctr: 0, xer: 0, fpscr: 0, gqr: [0; 8], m,
-            dispatch: no_dispatch, steps: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None }
+            dispatch: no_dispatch, steps: 0, instrs: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None }
     }
 
     /// `steps` passed `step_limit` at block `pc` of function `f`.
@@ -88,14 +147,21 @@ impl Cpu {
         }
     }
 
-    /// Runtime stub check (see `stubs`): returns true when the call is replaced.
-    #[inline]
+    /// Runtime stub check (see `stubs`): returns true when the call is replaced. Inline: the maps' key filters
+    /// answer most calls (no hook at `f`) without leaving the lifted function.
+    #[inline(always)]
     pub fn stub_hit(&mut self, f: u32) -> bool {
+        if self.trace_fns.is_empty() && !self.hook_fn.may(f) && !self.entry_set.may(f) && !self.stubs.may(f) { return false; }
+        self.stub_hit_slow(f)
+    }
+    #[inline(never)]
+    fn stub_hit_slow(&mut self, f: u32) -> bool {
         if !self.trace_fns.is_empty() && self.trace_fns.contains(&f) {
             eprintln!("call {f:#010x} r3 {:#x} r4 {:#x} r5 {:#x} lr {:#x}", self.r[3], self.r[4], self.r[5], self.lr);
         }
         if let Some(&h) = self.hook_fn.get(&f) { h(self); return true; }
-        if let Some(v) = self.entry_set.get(&f) { for &(r, x) in v { self.r[r] = x; } }
+        if !self.entry_set.is_empty() { if let Some(v) = self.entry_set.get(&f) { for &(r, x) in v { self.r[r] = x; } } }
+        if self.stubs.is_empty() { return false; }
         match self.stubs.get(&f) {
             Some(&v) => {
                 if let Some(&n) = self.stub_zero.get(&f) { let a = self.r[3]; for k in 0..n { self.m.set_u8(a + k, 0); } }
@@ -140,8 +206,23 @@ impl Cpu {
     /// Hardware register reads with side effects or live values (colo-viewer's run.rs): (cpu, address, bytes)
     /// -> value, or None for plain memory.
     #[inline(always)] fn mmio(&self, a: u32, n: u32) -> Option<u32> {
-        if (0xCC00_0000..0xCC00_8000).contains(&a) { self.mmio_read.and_then(|h| h(self, a, n)) } else { None }
+        if (0xCC00_0000..0xCC00_8000).contains(&a) { self.mmio_cold(a, n) } else { None }
     }
+    #[inline(never)] #[cold] fn mmio_cold(&self, a: u32, n: u32) -> Option<u32> { self.mmio_read.and_then(|h| h(self, a, n)) }
+    /// A hardware register read from a lifted body that keeps its instruction count in a local (`ins`): the handler
+    /// sees the current count (the time base), then the field goes back to the body's last sync.
+    #[inline(never)] #[cold] fn mmio_at(&mut self, ins: u64, a: u32, n: u32) -> Option<u32> {
+        let h = self.mmio_read?;
+        let old = std::mem::replace(&mut self.instrs, ins);
+        let v = h(self, a, n);
+        self.instrs = old;
+        v
+    }
+    #[inline(always)] fn io(a: u32) -> bool { a.wrapping_sub(0xCC00_0000) < 0x8000 }
+    #[inline(always)] pub fn lbz_t(&mut self, ins: u64, a: u32) -> u32 { if Self::io(a) { if let Some(v) = self.mmio_at(ins, a, 1) { return v & 0xFF; } } self.m.u8(a) as u32 }
+    #[inline(always)] pub fn lhz_t(&mut self, ins: u64, a: u32) -> u32 { if Self::io(a) { if let Some(v) = self.mmio_at(ins, a, 2) { return v & 0xFFFF; } } self.m.u16(a) as u32 }
+    #[inline(always)] pub fn lha_t(&mut self, ins: u64, a: u32) -> u32 { if Self::io(a) { if let Some(v) = self.mmio_at(ins, a, 2) { return v as u16 as i16 as i32 as u32; } } self.m.u16(a) as i16 as i32 as u32 }
+    #[inline(always)] pub fn lwz_t(&mut self, ins: u64, a: u32) -> u32 { if Self::io(a) { if let Some(v) = self.mmio_at(ins, a, 4) { return v; } } self.m.u32(a) }
     #[inline(always)] pub fn lbz(&self, a: u32) -> u32 { if let Some(v) = self.mmio(a, 1) { return v & 0xFF; } self.m.u8(a) as u32 }
     #[inline(always)] pub fn lhz(&self, a: u32) -> u32 { if let Some(v) = self.mmio(a, 2) { return v & 0xFFFF; } self.m.u16(a) as u32 }
     #[inline(always)] pub fn lha(&self, a: u32) -> u32 { if let Some(v) = self.mmio(a, 2) { return v as u16 as i16 as i32 as u32; } self.m.u16(a) as i16 as i32 as u32 }
@@ -163,33 +244,15 @@ impl Cpu {
     }
 
     // --- condition register ---------------------------------------------------------------------
-    #[inline] pub fn set_crf(&mut self, n: u32, nib: u32) {
-        let sh = 28 - 4 * n;
-        self.cr = (self.cr & !(0xF << sh)) | ((nib & 0xF) << sh);
-    }
-    #[inline] pub fn crf(&self, n: u32) -> u32 { (self.cr >> (28 - 4 * n)) & 0xF }
-    #[inline] pub fn crbit(&self, b: u32) -> bool { self.cr & (0x8000_0000 >> b) != 0 }
-    #[inline] pub fn set_crbit(&mut self, b: u32, v: bool) {
-        let m = 0x8000_0000 >> b;
-        if v { self.cr |= m } else { self.cr &= !m }
-    }
-    #[inline] fn so(&self) -> u32 { if self.xer & XER_SO != 0 { 1 } else { 0 } }
-    #[inline] pub fn cmps(&mut self, n: u32, a: u32, b: u32) {
-        let (a, b) = (a as i32, b as i32);
-        let v = if a < b { 8 } else if a > b { 4 } else { 2 };
-        self.set_crf(n, v | self.so());
-    }
-    #[inline] pub fn cmpu(&mut self, n: u32, a: u32, b: u32) {
-        let v = if a < b { 8 } else if a > b { 4 } else { 2 };
-        self.set_crf(n, v | self.so());
-    }
+    #[inline] pub fn set_crf(&mut self, n: u32, nib: u32) { cr_set_crf(&mut self.cr, n, nib) }
+    #[inline] pub fn crf(&self, n: u32) -> u32 { cr_crf(self.cr, n) }
+    #[inline] pub fn crbit(&self, b: u32) -> bool { cr_bit(self.cr, b) }
+    #[inline] pub fn set_crbit(&mut self, b: u32, v: bool) { cr_set_bit(&mut self.cr, b, v) }
+    #[inline] pub fn cmps(&mut self, n: u32, a: u32, b: u32) { cr_cmps(&mut self.cr, self.xer, n, a, b) }
+    #[inline] pub fn cmpu(&mut self, n: u32, a: u32, b: u32) { cr_cmpu(&mut self.cr, self.xer, n, a, b) }
     /// Record form: cr0 from a result.
-    #[inline] pub fn rc(&mut self, v: u32) { self.cmps(0, v, 0) }
-    #[inline] pub fn fcmp(&mut self, n: u32, a: f64, b: f64) {
-        let v = if a.is_nan() || b.is_nan() { 1 } else if a < b { 8 } else if a > b { 4 } else { 2 };
-        self.set_crf(n, v);
-        self.fpscr = (self.fpscr & !0xF000) | (v << 12);
-    }
+    #[inline] pub fn rc(&mut self, v: u32) { cr_rc(&mut self.cr, self.xer, v) }
+    #[inline] pub fn fcmp(&mut self, n: u32, a: f64, b: f64) { cr_fcmp(&mut self.cr, &mut self.fpscr, n, a, b) }
 
     // --- carry ----------------------------------------------------------------------------------
     #[inline] pub fn ca(&self) -> u32 { if self.xer & XER_CA != 0 { 1 } else { 0 } }
@@ -313,3 +376,32 @@ fn parse_num(v: &str) -> u32 {
 /// fres: Gekko's reciprocal estimate (single precision 1/x, good to the table's accuracy).
 #[inline] pub fn fres(v: f64) -> f64 { s(1.0 / v) }
 #[inline] pub fn frsqrte(v: f64) -> f64 { 1.0 / v.sqrt() }
+
+// --- condition register on a value: lifted bodies keep CR in a local (tools/ppclift/counters.py) ----------------
+#[inline(always)] pub fn cr_set_crf(cr: &mut u32, n: u32, nib: u32) {
+    let sh = 28 - 4 * n;
+    *cr = (*cr & !(0xF << sh)) | ((nib & 0xF) << sh);
+}
+#[inline(always)] pub fn cr_crf(cr: u32, n: u32) -> u32 { (cr >> (28 - 4 * n)) & 0xF }
+#[inline(always)] pub fn cr_bit(cr: u32, b: u32) -> bool { cr & (0x8000_0000 >> b) != 0 }
+#[inline(always)] pub fn cr_set_bit(cr: &mut u32, b: u32, v: bool) {
+    let m = 0x8000_0000 >> b;
+    if v { *cr |= m } else { *cr &= !m }
+}
+#[inline(always)] fn so(xer: u32) -> u32 { if xer & XER_SO != 0 { 1 } else { 0 } }
+#[inline(always)] pub fn cr_cmps(cr: &mut u32, xer: u32, n: u32, a: u32, b: u32) {
+    let (a, b) = (a as i32, b as i32);
+    let v = if a < b { 8 } else if a > b { 4 } else { 2 };
+    cr_set_crf(cr, n, v | so(xer));
+}
+#[inline(always)] pub fn cr_cmpu(cr: &mut u32, xer: u32, n: u32, a: u32, b: u32) {
+    let v = if a < b { 8 } else if a > b { 4 } else { 2 };
+    cr_set_crf(cr, n, v | so(xer));
+}
+/// Record form: cr0 from a result.
+#[inline(always)] pub fn cr_rc(cr: &mut u32, xer: u32, v: u32) { cr_cmps(cr, xer, 0, v, 0) }
+#[inline(always)] pub fn cr_fcmp(cr: &mut u32, fpscr: &mut u32, n: u32, a: f64, b: f64) {
+    let v = if a.is_nan() || b.is_nan() { 1 } else if a < b { 8 } else if a > b { 4 } else { 2 };
+    cr_set_crf(cr, n, v);
+    *fpscr = (*fpscr & !0xF000) | (v << 12);
+}

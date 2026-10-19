@@ -9,8 +9,10 @@
 //! Behaviour follows the hardware ucode as documented by Dolphin's AX HLE (AX.cpp, AXVoice.h, DSPAccelerator.cpp;
 //! described, not copied): commands 0x00-0x13, parameter blocks walked through `next`, 5 x 1 ms of 32 samples per
 //! list, the accelerator's ADPCM/PCM decoding with its end/loop rules, sample-rate conversion, volume envelope,
-//! ramped mixing and dpop. The polyphase coefficients are in the DSP's DROM (not in the game): without them the
-//! ucode's polyphase type falls back to linear, which only changes the output samples, never voice state.
+//! ramped mixing and dpop. The polyphase coefficients are in the DSP's DROM (not in the game). Like Dolphin, which
+//! reads `dsp_coef.bin` from the user's GC folder and else from its own Sys/GC, we use an official DROM dump when
+//! `COLO_DSP_COEF` names one and else Dolphin's free table, rebuilt here from its formula (`free_coefs`), so the
+//! mix matches Dolphin's HLE sample for sample. The table only changes output samples, never voice state.
 
 use crate::ppc::Cpu;
 
@@ -58,7 +60,7 @@ pub struct Ax {
     /// 9 mixing buffers of 5 ms x 32 samples: main L/R/S, auxA L/R/S, auxB L/R/S.
     bufs: [[i32; 160]; 9],
     pb_addr: u32,
-    /// DROM polyphase coefficients (0x800 s16), when the host has them.
+    /// DROM polyphase coefficients (0x800 s16); `None` makes the polyphase type linear.
     pub coefs: Option<Vec<i16>>,
     /// What the AI DMA played since the host last took it (R, L per frame; run.rs `ai_due` fills it).
     pub out: Vec<i16>,
@@ -71,11 +73,55 @@ const BL: usize = 6; const BR: usize = 7; const BS: usize = 8;
 fn phys(a: u32) -> u32 { (a & 0x01FF_FFFF) | 0x8000_0000 }
 fn sat16(v: i64) -> i16 { v.clamp(-32768, 32767) as i16 }
 
+/// The DROM coefficient table: a 4096-byte big-endian dump named by `COLO_DSP_COEF`, else `free_coefs`
+/// (`COLO_DSP_COEF=linear`: none, Dolphin's behaviour without any table).
+fn load_coefs() -> Option<Vec<i16>> {
+    let p = std::env::var_os("COLO_DSP_COEF");
+    if p.as_deref() == Some("linear".as_ref()) { return None; }
+    if let Some(d) = p.and_then(|p| std::fs::read(p).ok()).filter(|d| d.len() == 0x1000) {
+        return Some(d.chunks_exact(2).map(|x| i16::from_be_bytes([x[0], x[1]])).collect());
+    }
+    Some(free_coefs())
+}
+
+/// Dolphin's free replacement for the DROM coefficients (docs/DSP/free_dsp_rom/generate_coefs.py; Adler-32
+/// 0xFDE375F5, what Dolphin uses without a user dump): three 4-tap x 128-phase tables from 512-point windowed
+/// sincs (cutoff 0.5 Hamming, 0.75 Kaiser beta 9pi/4, 1.0 Hamming) over x in [-2, 2], each phase's taps taken
+/// from the four 128-point quarters in reverse, scaled so the largest phase sum is 32767; a zero fourth table;
+/// then the words the GBA ucode needs patched in. Every value lies >= 0.0015 from a rounding boundary, so host
+/// libm differences cannot change it.
+pub fn free_coefs() -> Vec<i16> {
+    use std::f64::consts::PI;
+    const N: usize = 512;
+    let x: Vec<f64> = (0..N).map(|i| if i == N - 1 { 2.0 } else { -2.0 + i as f64 * (4.0 / 511.0) }).collect();
+    let sinc = |v: f64| { let v = if v == 0.0 { 1e-20 } else { v }; (PI * v).sin() / (PI * v) };
+    let hamming = |i: usize| 0.54 + 0.46 * (PI * (2.0 * i as f64 + 1.0 - N as f64) / (N - 1) as f64).cos();
+    let i0 = |v: f64| { let (mut s, mut t, mut k) = (1.0f64, 1.0f64, 1.0f64); loop {
+        t *= (v / 2.0) * (v / 2.0) / (k * k); s += t; k += 1.0; if t < 1e-18 * s { return s; } } };
+    let (beta, a) = (PI * 9.0 / 4.0, (N - 1) as f64 / 2.0);
+    let kaiser = |i: usize| i0(beta * (1.0 - ((i as f64 - a) / a).powi(2)).sqrt()) / i0(beta);
+    let table = |c: Vec<f64>| -> Vec<u16> {
+        let phase = |p: usize| [c[127 - p], c[255 - p], c[383 - p], c[511 - p]];
+        let m = (0..128).map(|p| phase(p).iter().sum::<f64>()).fold(f64::MIN, f64::max);
+        (0..128).flat_map(|p| phase(p).map(|n| (n / m * 32767.0).round() as i32 as u16)).collect()
+    };
+    let mut w: Vec<u16> = Vec::with_capacity(0x800);
+    w.extend(table((0..N).map(|i| sinc(x[i] * 0.5) * hamming(i)).collect()));
+    w.extend(table((0..N).map(|i| sinc(x[i] * 0.75) * kaiser(i)).collect()));
+    w.extend(table((0..N).map(|i| sinc(x[i]) * hamming(i)).collect()));
+    w.resize(0x800, 0);
+    for (o, v) in [(0x03B, 0x0065), (0x043, 0x0076), (0x0CA, 0x3461), (0x0E2, 0x376F), (0x1B8, 0x007F), (0x1F8, 0x0009),
+        (0x1FC, 0x0003), (0x229, 0x657C), (0x231, 0x64FC), (0x259, 0x6143), (0x285, 0x5AFF), (0x456, 0x102F),
+        (0x468, 0xF808), (0x491, 0x6A0F), (0x5F1, 0x0200), (0x5F6, 0x7F65), (0x65B, 0x0000), (0x66B, 0x0000),
+        (0x66C, 0x06F2), (0x6FE, 0x0008), (0x723, 0xFFE0), (0x766, 0x0273)] { w[o] = v; }
+    w.into_iter().map(|v| v as i16).collect()
+}
+
 impl Default for Ax { fn default() -> Self { Ax::new() } }
 
 impl Ax {
     pub fn new() -> Ax {
-        Ax { state: MailState::Size, task_mails: [0; 10], list_len: 0, bufs: [[0; 160]; 9], pb_addr: 0, coefs: None, out: Vec::new() }
+        Ax { state: MailState::Size, task_mails: [0; 10], list_len: 0, bufs: [[0; 160]; 9], pb_addr: 0, coefs: load_coefs(), out: Vec::new() }
     }
 
     /// A mail from the CPU (`DSPSendMailToDSP`). Returns the mail the DSP answers with, if any.
@@ -470,4 +516,15 @@ fn get_input_samples(pb: &mut [u16; FULL_WORDS], aram: &[u8], out: &mut [i16; 32
     pb[ADPCM + 18] = acc.yn1 as u16;
     pb[ADPCM + 19] = acc.yn2 as u16;
     pb[ADPCM + 17] = acc.pred_scale;
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn free_coefs_match_dolphin() {
+        let t = super::free_coefs();
+        let (mut a, mut b) = (1u32, 0u32);
+        for v in &t { for x in v.to_be_bytes() { a = (a + x as u32) % 65521; b = (b + a) % 65521; } }
+        assert_eq!(b << 16 | a, 0xFDE3_75F5);
+    }
 }

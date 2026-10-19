@@ -74,8 +74,50 @@ D=/path/to/your/own/GC6E01.iso   # your own dump; nothing is included here
 ./target/release/colo-tool materials "$D"                        # material / TObj / TEV setups over the disc
 ./target/release/colo-tool sound "$D" 3 watercity.wav 30         # sound id 3 through the game's layer + MusyX -> WAV
 cargo run -p colo-viewer --release -- "$D" M2_out                # play Pyrite: WASD walk, Shift run, F talk, walk through doors
-cargo run -p colo-viewer --release -- "$D" recomp                # the whole game on its recompiled code, drawn on the GPU (COLO_SCALE=3)
+cargo run -p colo-viewer --release -- "$D" recomp                # the whole game from power-on (see below)
 ```
+
+## Playing the recompiled game (`recomp`)
+
+`colo-viewer <disc> recomp` runs the whole game from power-on on its recompiled code (`colo-lifted`), drawn on the
+graphics card (`colo-gxgpu`) at `COLO_SCALE` (default 3) times native resolution, with sound through `colo-audio`.
+
+- **Boots from the disc alone.** Nothing but your own disc image is needed: the runtime reads the disc header,
+  `bi2.bin`, `main.dol` and the FST off it, lays out memory as the console's IPL and apploader leave it, and runs the
+  game's own `__start` / `OSInit` up to `main` on lifted code (`colo-recomp/src/run/ipl.rs`). Earlier versions
+  needed a RAM snapshot taken in Dolphin; that path still exists for testing (`COLO_BOOT_SNAP=<dir>`) but is optional.
+- **Memory card.** Slot A is a card image file, `COLO_CARD=<file>` (default `saves/MemoryCardA.USA.raw` beside the
+  exe on Windows). If the file doesn't exist, a blank card formatted for this console is created there, and the
+  game's saves are written back to it. A Dolphin `MemoryCardA.USA.raw` from your own console or emulator works too.
+  On Linux the built-in default points at the author's checkout, so set `COLO_CARD` yourself.
+- **Disc timing.** Disc reads take as long as on a real drive (command overhead, seeks across the disc, rotational
+  latency, CAV read speed and the drive's 1 MB read-ahead buffer, as Dolphin models it). Loads are therefore
+  noticeably longer than in earlier versions, which read instantly; some game timing depends on it.
+- **Performance overlay.** `recomp --perf` shows the frame rate and where each frame's time goes (F3 toggles it);
+  `recomp --perf-log[=secs]` prints the same to the terminal every `secs` seconds (default 1).
+
+```sh
+cargo run -p colo-viewer --release -- "$D" recomp                       # play
+COLO_CARD=~/colo/MemoryCardA.USA.raw cargo run -p colo-viewer --release -- "$D" recomp --perf
+```
+
+Run with no arguments (or double-click the exe) and a file dialog asks for the disc image, then starts `recomp`.
+
+### Windows
+
+The Windows build is cross-compiled from Linux with the GNU toolchain (native MSVC builds are untested):
+
+```sh
+rustup target add x86_64-pc-windows-gnu
+sudo apt install mingw-w64              # or your distro's mingw-w64-gcc
+CARGO_TARGET_DIR=target-win cargo build --release --target x86_64-pc-windows-gnu -p colo-viewer
+# -> target-win/x86_64-pc-windows-gnu/release/colo-viewer.exe
+```
+
+The exe (~340 MB, mostly the recompiled game) needs only system DLLs. Copy it to a folder of its own and keep that
+whole folder together: the memory card is made in `saves\` beside the exe, and the viewer's save file goes to
+`%APPDATA%\colo-viewer`. Double-click it, pick your disc image in the dialog, and the game starts. From a terminal,
+`colo-viewer.exe D:\GC6E01.iso recomp --perf` works as on Linux. It also runs under Wine.
 
 ## Models (`colo_formats::hsd`)
 HSD archives -> static bind-pose meshes: joint tree (SRT, inverse bind matrices, `JOBJ_INSTANCE` re-drawing),

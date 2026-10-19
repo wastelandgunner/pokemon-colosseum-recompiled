@@ -21,6 +21,7 @@ pub fn call(c: &mut Cpu, a: u32) {
         let simm = i as u16 as i16 as i32 as u32;
         let ra0 = |c: &Cpu| if ra == 0 { 0 } else { c.r[ra] };
         c.steps += 1;
+        c.instrs += 1;
         let mut next = pc.wrapping_add(4);
         match op {
             14 => c.r[rd] = ra0(c).wrapping_add(simm),                       // addi

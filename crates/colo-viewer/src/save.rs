@@ -6,7 +6,7 @@
 //!
 //! Plain text, one item per line: `room <name>`, `entry <index>`, `prev <floor>`, `partner <0|1>`, `flag <id>` (older saves
 //! may have `pos <x> <y> <z> <yaw>` instead of `entry`). Location: `$COLO_SAVE`, else
-//! `$XDG_DATA_HOME/colo-viewer/save.txt`, else `~/.local/share/colo-viewer/save.txt`.
+//! `$XDG_DATA_HOME/colo-viewer/save.txt`, else `~/.local/share/colo-viewer/save.txt` (`%APPDATA%\colo-viewer\save.txt` on Windows).
 //! (The game's own memory card format isn't decoded yet; this only stands in for its flag block.)
 
 use bevy::prelude::*;
@@ -24,9 +24,22 @@ pub struct Save {
     pub partner: Option<bool>,
 }
 
+/// The Working tree's data (Dolphin snapshots, card images): the dev checkout, or on Windows builds the exe's
+/// folder, so a shipped exe finds `snaps\` and `saves\` beside it.
+pub fn working_dir() -> PathBuf {
+    if cfg!(windows) {
+        std::env::current_exe().ok().and_then(|p| p.parent().map(PathBuf::from)).unwrap_or_default()
+    } else { PathBuf::from("/media/zach/massstorage/Pokemon Colosseum/Working") }
+}
+
+/// Dolphin snapshot root: Working/dolphin/snaps, or `snaps` beside the exe on Windows.
+pub fn snaps_dir() -> PathBuf {
+    if cfg!(windows) { working_dir().join("snaps") } else { working_dir().join("dolphin/snaps") }
+}
+
 pub fn path() -> Option<PathBuf> {
     if let Ok(p) = std::env::var("COLO_SAVE") { return Some(p.into()); }
-    let base = std::env::var("XDG_DATA_HOME").map(PathBuf::from)
+    let base = std::env::var(if cfg!(windows) { "APPDATA" } else { "XDG_DATA_HOME" }).map(PathBuf::from)
         .or_else(|_| std::env::var("HOME").map(|h| PathBuf::from(h).join(".local/share")))
         .ok()?;
     Some(base.join("colo-viewer").join("save.txt"))

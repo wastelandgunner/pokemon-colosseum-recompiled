@@ -1,6 +1,6 @@
 //! colo-viewer: play through Pokémon Colosseum rooms loaded straight from the disc image.
 //!
-//! `colo-viewer <image.gcm | dir of extracted files> <room>`   e.g. `colo-viewer iph-pmc.gcm M2_out`
+//! `colo-viewer <image.gcm | dir of extracted files> <room>`   e.g. `colo-viewer iph-pmc.gcm M2_out`   (no disc: a file dialog asks for it, then runs `recomp`)
 //!
 //! Controls: WASD run (full tilt), Shift + WASD walk (half tilt), gamepad left stick analog;
 //! F talk / advance text / confirm (also Enter, Space; pad A), Backspace back (pad B), W/S move the cursor,
@@ -32,6 +32,7 @@ mod audio;
 mod battle;
 mod gamebattle;
 mod recomp;
+mod perf;
 mod fade;
 mod wipe;
 mod menu;
@@ -109,15 +110,40 @@ struct StatusText;
 #[derive(Component)]
 struct FadeOverlay;
 
+/// Read the disc image once in the background so the OS caches it: the recompiled game reads the disc synchronously
+/// on its frame thread, and on a cold cache (a hard disk after a reboot) its first battle loads took 0.5-0.8 s per
+/// frame (pipeperf story10: 817 ms at the start, 582 ms at the first attack; nothing over 70 ms once cached).
+/// COLO_NO_PREFETCH=1 skips it.
+fn prefetch_disc(path: &str) {
+    let p = std::path::PathBuf::from(path);
+    if std::env::var("COLO_NO_PREFETCH").is_ok() || !p.is_file() { return; }
+    std::thread::Builder::new().name("disc-prefetch".into()).spawn(move || {
+        use std::io::Read;
+        let Ok(mut f) = std::fs::File::open(&p) else { return };
+        let mut buf = vec![0u8; 8 << 20];
+        while matches!(f.read(&mut buf), Ok(n) if n > 0) {}
+    }).ok();
+}
+
 fn main() {
-    let args: Vec<String> = std::env::args().skip(1).collect();
+    let mut args: Vec<String> = std::env::args().skip(1).collect();
+    // no disc given (e.g. the exe double-clicked): ask for it, and play the whole game from power-on (recomp.rs),
+    // with its own title screen and memory card
+    if args.is_empty() {
+        let pick = rfd::FileDialog::new().set_title("Pokémon Colosseum disc image")
+            .add_filter("GameCube disc image", &["gcm", "iso"]).add_filter("All files", &["*"]).pick_file();
+        if let Some(p) = pick { args.push(p.to_string_lossy().into_owned()); args.push("recomp".into()); }
+    }
     if args.is_empty() {
         eprintln!("usage: colo-viewer <image.gcm | dir> [room | continue]   (e.g. M2_out; no room = continue the save)");
         std::process::exit(2);
     }
-    if args.get(1).map(String::as_str) == Some("recomp") { return recomp::run(&args[0]); }
+    prefetch_disc(&args[0]);
+    if args.get(1).map(String::as_str) == Some("recomp") { return recomp::run(&args[0], perf::Opts::parse(&args[2..])); }
     // story progress: the save's flags (unless COLO_NEW_GAME=1), plus COLO_FLAGS overrides
     let saved = if std::env::var("COLO_NEW_GAME").is_ok() { None } else { save::load() };
+    // nothing to continue (first run): a New Game, which starts at Outskirt Stand (story_start.rs)
+    if args.len() < 2 && saved.as_ref().and_then(|s| s.room.as_ref()).is_none() { args.push("S1_out".into()); }
     let cont = args.len() < 2 || args[1] == "continue";
     // a New Game (no save, or COLO_NEW_GAME) starts with the story state of where it starts (story_start.rs)
     let mut flags = match &saved {

@@ -361,3 +361,11 @@ Effect ids that scripts pass to soundSetBackgroundMusic — 90, 1088, 1098, 1160
    - Songs fade through `sndSeqVolume` in ms.
 5. Start songs with `SND_PLAYPARA{flags = 4, speed = 0x100, vol.time = fadeIn, vol.target = vol}`, and apply the song's reverb preset on start and on resume.
 6. Initial master faders are music 127 and effects 100. Run the mixer at 32 kHz, stereo or mono.
+
+## DSP mix (recomp)
+
+The recomp runs MusyX on the AX ucode model in `colo-recomp/src/dsp_ax.rs`. Polyphase sample-rate conversion uses
+the DSP DROM table, which the game doesn't contain; `free_coefs` rebuilds Dolphin's free replacement (three 4-tap x
+128-phase windowed-sinc tables) from its formula, so the mix matches Dolphin HLE's. `COLO_DSP_COEF` takes an
+official 4 KB dump instead (or `linear`). `cargo run --release -p colo-recomp --example audio_dump <snap or disc> <frames>
+<out.wav>` writes the mix for comparison with Dolphin's `dspdump.wav` (set `[DSP] DumpAudio` and `DumpAudioSilence`).

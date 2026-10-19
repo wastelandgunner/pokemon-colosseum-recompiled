@@ -1,6 +1,11 @@
 //! Play a story battle snapshot headless the way the viewer does (`gamebattle.rs`), tapping A, until the game pops
 //! its battle floor: `cargo run --release -p colo-viewer --example storybattle <snapdir> [max frames]`.
 //! Prints the floor depth and `battleGetResult` at the end; SHOT=dir saves a PPM every 300 frames (SHOT_EVERY=n).
+//! Timing: GPUCMDS=1 builds the viewer's draw list (game / draw-list ms every 60 frames; FTIME=ms also every frame over
+//! that; GXTIME=1 splits out GX decode and vertex work), PROFILE=a-b samples the guest call stack over those frames
+//! (PROFILE_OUT, one line of hex addresses per sample: last function entered, then return addresses).
+//! HOSTPROF=a-b samples the host program counter (SIGPROF every 100 us of CPU time) over those frames into
+//! HOSTPROF_OUT (default /tmp/sb_hostprof.txt): one hex offset into the executable per line (`addr2line -fe`).
 /// MusyX `salCallback` (0x80163EE0) calls: one per 5 ms AI DMA block, 6.7 per 30 Hz battle frame.
 static SYNTH: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
 
@@ -17,7 +22,7 @@ fn main() {
         if f.seek(SeekFrom::Start(off)).is_err() || f.read_exact(buf).is_err() { buf.fill(0); }
     }));
     // FANFARE=1: log soundPlayFanfare (0x801653CC), the fanfare's soundStart and song load, every 300th
-    // soundGetStatus (0x801666BC) result, and count salCallback
+    // GSsndGetStatus (0x801666BC) result, and count salCallback
     if std::env::var("FANFARE").is_ok() {
         fn fanfare(c: &mut colo_recomp::ppc::Cpu) {
             println!("  soundPlayFanfare({:#x}, {:#x}, {:#x})", c.r[3], c.r[4], c.r[5]);
@@ -27,7 +32,7 @@ fn main() {
             static N: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
             let id = c.r[3];
             c.hook_fn.remove(&0x801666BC); colo_recomp::lifted::dispatch(c, 0x801666BC); c.hook_fn.insert(0x801666BC, status);
-            if N.fetch_add(1, std::sync::atomic::Ordering::Relaxed) % 300 == 0 { println!("  soundGetStatus({id:#x}) = {}", c.r[3]); }
+            if N.fetch_add(1, std::sync::atomic::Ordering::Relaxed) % 300 == 0 { println!("  GSsndGetStatus({id:#x}) = {}", c.r[3]); }
         }
         fn start(c: &mut colo_recomp::ppc::Cpu) {
             let id = c.r[3];
@@ -55,6 +60,51 @@ fn main() {
         m.c.hook_fn.insert(0x801653CC, fanfare);
         m.c.hook_fn.insert(0x801666BC, status);
     }
+    // PROFILE=from-to: sample the guest call stack (Cpu::last_fn, then the return addresses on the PPC back chain)
+    // every 100 us while those frames run the game; one line per sample to PROFILE_OUT (default /tmp/sb_prof.txt)
+    let prof: Option<(u32, u32)> = std::env::var("PROFILE").ok().and_then(|v| { let (a, b) = v.split_once('-')?; Some((a.parse().ok()?, b.parse().ok()?)) });
+    static ON: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+    let samples = std::sync::Arc::new(std::sync::Mutex::new(Vec::<Vec<u32>>::new()));
+    if prof.is_some() {
+        let r1 = &m.c.r[1] as *const u32 as usize;
+        let lf = &m.c.last_fn as *const u32 as usize;
+        let ram = m.c.m.regions.iter().find(|r| r.start == 0x8000_0000).map(|r| (r.bytes.as_ptr() as usize, r.bytes.len())).expect("MEM1");
+        let out = samples.clone();
+        std::thread::spawn(move || loop {
+            std::thread::sleep(std::time::Duration::from_micros(100));
+            if !ON.load(std::sync::atomic::Ordering::Relaxed) { continue; }
+            let rd = |a: u32| -> Option<u32> {
+                let o = a.wrapping_sub(0x8000_0000) as usize;
+                if o + 4 > ram.1 { return None; }
+                Some(u32::from_be(unsafe { std::ptr::read_volatile((ram.0 + o) as *const u32) }))
+            };
+            let mut st = vec![unsafe { std::ptr::read_volatile(lf as *const u32) }];
+            let mut sp = unsafe { std::ptr::read_volatile(r1 as *const u32) };
+            for _ in 0..48 {
+                let Some(next) = rd(sp) else { break };
+                if next <= sp || next == 0xFFFF_FFFF { break; }
+                if let Some(lr) = rd(next + 4) { st.push(lr); }
+                sp = next;
+            }
+            out.lock().unwrap().push(st);
+        });
+    }
+    // DRAWDONE=1: per frame, GSgfxRenderEnd's draw-done callback (0x800D3F50) calls and its wait loop's OSYieldThread calls
+    static DD: [std::sync::atomic::AtomicU32; 2] = [const { std::sync::atomic::AtomicU32::new(0) }; 2];
+    if std::env::var("DRAWDONE").is_ok() {
+        fn cb(c: &mut colo_recomp::ppc::Cpu) {
+            DD[0].fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            c.hook_fn.remove(&0x800D3F50); colo_recomp::lifted::dispatch(c, 0x800D3F50); c.hook_fn.insert(0x800D3F50, cb);
+        }
+        fn y(c: &mut colo_recomp::ppc::Cpu) {
+            if c.lr == 0x800D31E4 { DD[1].fetch_add(1, std::sync::atomic::Ordering::Relaxed); }
+            c.hook_fn.remove(&0x800A1990); colo_recomp::lifted::dispatch(c, 0x800A1990); c.hook_fn.insert(0x800A1990, y);
+        }
+        m.c.hook_fn.insert(0x800D3F50, cb);
+        m.c.hook_fn.insert(0x800A1990, y);
+    }
+    let hostprof: Option<(u32, u32)> = std::env::var("HOSTPROF").ok().and_then(|v| { let (a, b) = v.split_once('-')?; Some((a.parse().ok()?, b.parse().ok()?)) });
+    if hostprof.is_some() { hostprof::start(); }
     let shots = std::env::var("SHOT").ok();
     let every: u32 = std::env::var("SHOT_EVERY").ok().and_then(|v| v.parse().ok()).unwrap_or(300);
     let mut was = m.floor_depth();
@@ -62,9 +112,22 @@ fn main() {
     for fr in 0..max {
         let b = if fr % 20 >= 10 && fr % 20 < 13 { 0x100 } else { 0 };
         m.set_pad(colo_recomp::run::Pad { buttons: b, ..Default::default() });
+        let s0 = m.c.steps;
         let t0 = std::time::Instant::now();
+        if let Some((a, b)) = prof { ON.store(fr >= a && fr < b, std::sync::atomic::Ordering::Relaxed); }
+        if let Some((a, b)) = hostprof { hostprof::ON.store(fr >= a && fr < b, std::sync::atomic::Ordering::Relaxed); }
         m.frame();
+        ON.store(false, std::sync::atomic::Ordering::Relaxed);
+        if std::env::var("DRAWDONE").is_ok() && fr % 50 == 0 { println!("frame {fr}: draw-done callbacks {} wait-loop yields {}", DD[0].swap(0, std::sync::atomic::Ordering::Relaxed), DD[1].swap(0, std::sync::atomic::Ordering::Relaxed)); }
         let t1 = t0.elapsed().as_secs_f64();
+        if std::env::var("STEPS").is_ok() && fr % 60 == 0 { println!("frame {fr}: {} lifted blocks, {:.1} ms", m.c.steps - s0, t1 * 1e3); }
+        if let Some((_, b)) = hostprof { if fr + 1 == b { hostprof::dump(); } }
+        if prof.is_some_and(|(_, b)| fr + 1 == b) {
+            let s = samples.lock().unwrap();
+            let txt: String = s.iter().map(|st| st.iter().map(|a| format!("{a:x}")).collect::<Vec<_>>().join(" ") + "\n").collect();
+            std::fs::write(std::env::var("PROFILE_OUT").unwrap_or("/tmp/sb_prof.txt".into()), txt).ok();
+            eprintln!("profile: {} samples", s.len());
+        }
         let shot = shots.is_some() && fr % every == 0;
         // the GX FIFO is only rasterized for the frames that are saved (NOGPU=1: never)
         if std::env::var("GXOPS").is_ok() {
@@ -94,10 +157,23 @@ fn main() {
             println!(" [{draws} draws]  <- frame {fr}");
         } else if std::env::var("GPUCMDS").is_ok() {
             // the viewer's battle path: the graphics-card draw list (built, not drawn)
+            // as gamebattle.rs: the draw list on the game thread, its vertex work (`finish`) on the render thread
             let tb = std::time::Instant::now();
-            let g = m.gpu_cmds(&mut builder);
+            // GXDUMP=frames (or all): each draw's GX state (stderr) for those frames
+            let gxd = std::env::var("GXDUMP").is_ok_and(|v| v == "all" || v.split(',').any(|x| x == fr.to_string()));
+            colo_gx::cmd::DUMP.store(gxd, std::sync::atomic::Ordering::Relaxed);
+            if gxd { eprintln!("gx frame {fr}"); }
+            let mut g = m.gpu_cmds_deferred(&mut builder);
             let t2 = tb.elapsed().as_secs_f64();
-            if fr % 60 == 0 { println!("frame {fr}: game {:.1} ms, draw list {:.1} ms ({} ops, {} verts, {} new textures)", t1 * 1e3, t2 * 1e3, g.ops.len(), g.verts.len(), g.new_tex.len()); }
+            g.finish();
+            // FTIME=ms: every frame whose game + draw list took longer than that
+            let slow = std::env::var("FTIME").ok().and_then(|v| v.parse::<f64>().ok()).is_some_and(|ms| (t1 + t2) * 1e3 > ms);
+            if std::env::var("GXTIME").is_ok() && fr % 60 == 59 {
+                use std::sync::atomic::Ordering::Relaxed;
+                let t = |a: &std::sync::atomic::AtomicU64| a.swap(0, Relaxed) as f64 / 60e6;
+                println!("  per frame (60): gx decode {:.2} ms, draw list {:.2} ms, vertex work {:.2} ms, {} states", t(&colo_recomp::run::FEED_NS), t(&colo_gx::cmd::TIMES[1]), t(&colo_gx::cmd::TIMES[0]), g.states.len());
+            }
+            if fr % 60 == 0 || slow { println!("frame {fr}: game {:.1} ms, draw list {:.1} ms ({} ops, {} verts, {} new textures)", t1 * 1e3, t2 * 1e3, g.ops.len(), g.verts.len(), g.new_tex.len()); }
         } else if shot && std::env::var("NOGPU").is_err() { m.gpu_frame(); } else { m.take_gx(); }
         let _ = colo_recomp::run::take_audio();
         if let (Some(d), true) = (&shots, shot) {
@@ -129,11 +205,64 @@ fn main() {
         }
         let d = m.floor_depth();
         if was == 1 && d == 0 {
-            println!("frame {fr}: battle floor popped, battleGetResult {}", m.battle_result());
+            println!("frame {fr}: battle floor popped, battleGetResult {} ({} blocks, {} instructions)", m.battle_result(), m.c.steps, m.c.instrs);
             return;
         }
         was = d;
         if fr % 600 == 0 { println!("frame {fr}: floor depth {d} threads {:x?} AI callbacks {}", colo_recomp::run::threads(), SYNTH.load(std::sync::atomic::Ordering::Relaxed)); }
     }
-    println!("no pop after {max} frames (floor depth {})", m.floor_depth());
+    println!("no pop after {max} frames (floor depth {}; {} blocks, {} instructions)", m.floor_depth(), m.c.steps, m.c.instrs);
+}
+
+/// HOSTPROF: the host program counter at each SIGPROF (process CPU time), kept while `ON`.
+#[cfg(target_os = "linux")]
+mod hostprof {
+    use std::sync::atomic::{AtomicBool, AtomicUsize, AtomicU64, Ordering::Relaxed};
+    pub static ON: AtomicBool = AtomicBool::new(false);
+    const N: usize = 1 << 20;
+    static PCS: [AtomicU64; N] = [const { AtomicU64::new(0) }; N];
+    static LEN: AtomicUsize = AtomicUsize::new(0);
+
+    extern "C" fn on_prof(_: libc::c_int, _: *mut libc::siginfo_t, ctx: *mut libc::c_void) {
+        if !ON.load(Relaxed) { return; }
+        let pc = unsafe { (*(ctx as *const libc::ucontext_t)).uc_mcontext.gregs[libc::REG_RIP as usize] } as u64;
+        let i = LEN.fetch_add(1, Relaxed);
+        if i < N { PCS[i].store(pc, Relaxed); }
+    }
+
+    pub fn start() {
+        unsafe {
+            let mut sa: libc::sigaction = std::mem::zeroed();
+            sa.sa_sigaction = on_prof as usize;
+            sa.sa_flags = libc::SA_SIGINFO | libc::SA_RESTART;
+            libc::sigaction(libc::SIGPROF, &sa, std::ptr::null_mut());
+            let t = libc::timeval { tv_sec: 0, tv_usec: 100 };
+            let it = libc::itimerval { it_interval: t, it_value: t };
+            libc::setitimer(libc::ITIMER_PROF, &it, std::ptr::null_mut());
+        }
+    }
+
+    /// Write the samples as offsets into the executable (its mapping from /proc/self/maps).
+    pub fn dump() {
+        let exe = std::fs::read_link("/proc/self/exe").unwrap_or_default();
+        let maps = std::fs::read_to_string("/proc/self/maps").unwrap_or_default();
+        let segs: Vec<(u64, u64, u64)> = maps.lines().filter(|l| l.ends_with(exe.to_str().unwrap_or("?"))).filter_map(|l| {
+            let f: Vec<&str> = l.split_whitespace().collect();
+            let (a, b) = f[0].split_once('-')?;
+            Some((u64::from_str_radix(a, 16).ok()?, u64::from_str_radix(b, 16).ok()?, u64::from_str_radix(f[2], 16).ok()?))
+        }).collect();
+        let n = LEN.load(Relaxed).min(N);
+        let mut out = String::new();
+        for p in PCS[..n].iter().map(|p| p.load(Relaxed)) {
+            match segs.iter().find(|s| p >= s.0 && p < s.1) { Some(s) => out += &format!("{:x}\n", p - s.0 + s.2), None => out += "?\n" }
+        }
+        std::fs::write(std::env::var("HOSTPROF_OUT").unwrap_or("/tmp/sb_hostprof.txt".into()), out).ok();
+        eprintln!("hostprof: {n} samples");
+    }
+}
+#[cfg(not(target_os = "linux"))]
+mod hostprof {
+    pub static ON: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+    pub fn start() {}
+    pub fn dump() {}
 }

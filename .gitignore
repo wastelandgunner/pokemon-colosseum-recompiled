@@ -1,5 +1,6 @@
 # Build output
 /target/
+/target-*/
 **/target/
 
 # Disc images and archives: never commit game data
@@ -68,3 +69,10 @@ screenshots/
 *.swp
 .idea/
 .vscode/
+
+# Memory cards, saves and RAM snapshots (game data)
+saves/
+snaps/
+*.raw
+*.gci
+*.sav

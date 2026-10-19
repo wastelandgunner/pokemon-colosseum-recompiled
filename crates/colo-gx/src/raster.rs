@@ -1,5 +1,6 @@
 //! A software GX: transform/lighting/texgen (XF), triangle setup and rasterization (SU/RAS), texturing and the
-//! TEV, alpha test, depth, blending (PE) into a 640x528 EFB, and EFB copies to textures and the XFB in memory.
+//! TEV, alpha test, fog, depth, blending / logic ops (PE) into a 640x528 EFB, and EFB copies (colour or Z) to
+//! textures and the XFB (YUYV) in memory.
 //!
 //! Register meanings follow the hardware as documented by YAGCD, libogc and Dolphin's VideoCommon /
 //! VideoBackends/Software (described, not copied). Precision: TEV and blending in the hardware's integer math;
@@ -122,14 +123,13 @@ impl Renderer {
             let map = (order & 7) as usize;
             let tex_on = order >> 6 & 1 != 0;
             let aenv = s.bp[0xC1 + 2 * st];
-            if s.bp[0x10 + st] != 0 { self.note("indirect texturing"); }
             let ksel = s.bp[0xF6 + st / 2] >> (10 * (st & 1));
             if tex_on && tex[map].is_none() {
                 tex[map] = self.texture(s, mem, map);
                 samp[map] = Sampler::new(s, map);
             }
             stages.push(Stage {
-                map, coord: (order >> 3 & 7) as usize, tex_on, chan: order >> 7 & 7,
+                map, coord: (order >> 3 & 7) as usize, tex_on, chan: order >> 7 & 7, ind: s.bp[0x10 + st] & 0x1F_FFFF,
                 cenv: s.bp[0xC0 + 2 * st], aenv, rs: swap(s, aenv & 3), ts: swap(s, aenv >> 2 & 3),
                 kc: konst_color(s, ksel >> 4 & 0x1F), ka: konst_alpha(s, ksel >> 9 & 0x1F),
             });
@@ -140,6 +140,8 @@ impl Renderer {
             let sx = |v: u32| ((v as i32) << 21) >> 21;
             regs[r] = [sx(lo & 0x7FF), sx(hi >> 12 & 0x7FF), sx(hi & 0x7FF), sx(lo >> 12 & 0x7FF)];
         }
+        let ind = Ind::new(s);
+        for k in 0..ind.n { let m = ind.map[k]; if tex[m].is_none() { tex[m] = self.texture(s, mem, m); samp[m] = Sampler::new(s, m); } }
         // scissor (BP 0x20/0x21, offset BP 0x59), in EFB pixels
         let (sc0, sc1, off) = (s.bp[0x20], s.bp[0x21], s.bp[0x59]);
         let ox = ((off & 0x3FF) as i32) * 2 - 342;
@@ -171,8 +173,8 @@ impl Renderer {
         }
         if tris.is_empty() { return None; }
         let zmode = s.bp[0x40];
-        Some(Prep { s, stages, ntex, regs, tex, samp, tris, zmode, early: s.bp[0x43] >> 6 & 1 != 0,
-                    afunc: s.bp[0xF3], cmode: s.bp[0x41], dstalpha: s.bp[0x42], pixfmt: s.bp[0x43] & 7 })
+        Some(Prep { s, stages, ntex, regs, tex, samp, ind, tris, zmode, early: s.bp[0x43] >> 6 & 1 != 0,
+                    afunc: s.bp[0xF3], cmode: s.bp[0x41], dstalpha: s.bp[0x42], pixfmt: s.bp[0x43] & 7, fog: Fog::new(s) })
     }
 
     /// Rasterize prepared draws into the EFB, in parallel horizontal bands (each band draws everything in order
@@ -237,9 +239,12 @@ impl Renderer {
         let (w, h) = ((sz & 0x3FF) as usize + 1, (sz >> 10 & 0x3FF) as usize + 1);
         let dst = (s.bp[0x4B] & 0xFF_FFFF) << 5;
         let stride = (s.bp[0x4D] & 0x3FF) << 5;
+        let depth_copy = s.bp[0x43] & 7 == 3;
         let px = |x: usize, y: usize| -> [u8; 4] {
             let (x, y) = ((sx + x).min(EFB_W - 1), (sy + y).min(EFB_H - 1));
-            self.color[y * EFB_W + x]
+            // Z24 pixel format: a Z copy (the 24-bit depth as R = bits 16-23, G = 8-15, B = 0-7, A = 255, then
+            // encoded like colour, as Dolphin's EFB copy shaders)
+            if depth_copy { let z = self.depth[y * EFB_W + x]; [(z >> 16) as u8, (z >> 8) as u8, z as u8, 255] } else { self.color[y * EFB_W + x] }
         };
         if v >> 14 & 1 != 0 {
             // XFB: YUYV 4:2:2, vertical scale BP 0x4E (256 = 1:1)
@@ -249,12 +254,7 @@ impl Renderer {
             for oy in 0..oh {
                 let y = (oy * h / oh.max(1)).min(h - 1);
                 for x in (0..w).step_by(2) {
-                    let (p0, p1) = (px(x, y), px(x + 1, y));
-                    let yv = |p: [u8; 4]| (((66 * p[0] as i32 + 129 * p[1] as i32 + 25 * p[2] as i32 + 128) >> 8) + 16).clamp(0, 255) as u8;
-                    let (r, g, b) = ((p0[0] as i32 + p1[0] as i32) / 2, (p0[1] as i32 + p1[1] as i32) / 2, (p0[2] as i32 + p1[2] as i32) / 2);
-                    let u = (((-38 * r - 74 * g + 112 * b + 128) >> 8) + 128).clamp(0, 255) as u8;
-                    let vv = (((112 * r - 94 * g - 18 * b + 128) >> 8) + 128).clamp(0, 255) as u8;
-                    line[x * 2] = yv(p0); line[x * 2 + 1] = u; line[x * 2 + 2] = yv(p1); line[x * 2 + 3] = vv;
+                    line[x * 2..x * 2 + 4].copy_from_slice(&xfb_encode(px(x, y), px(x + 1, y)));
                 }
                 mem.write(dst + oy as u32 * stride, &line);
             }
@@ -309,6 +309,7 @@ struct Prep<'s> {
     regs: [[i32; 4]; 4],
     tex: [Option<Arc<Tex>>; 8],
     samp: [Sampler; 8],
+    ind: Ind,
     tris: Vec<Tri>,
     zmode: u32,
     early: bool,
@@ -316,12 +317,13 @@ struct Prep<'s> {
     cmode: u32,
     dstalpha: u32,
     pixfmt: u32,
+    fog: Option<Fog>,
 }
 
 struct Tri { v: [SV; 3], area: f32, grads: [f32; 8], bbox: [i32; 4] }
 
 struct Stage {
-    map: usize, coord: usize, tex_on: bool, chan: u32, cenv: u32, aenv: u32,
+    map: usize, coord: usize, tex_on: bool, chan: u32, ind: u32, cenv: u32, aenv: u32,
     rs: [usize; 4], ts: [usize; 4], kc: [i32; 3], ka: i32,
 }
 
@@ -401,17 +403,18 @@ fn raster(p: &Prep, t: &Tri, color: &mut [[u8; 4]], depth: &mut [u32], y0: usize
                 tc[tt] = if q != 0.0 { [s_ / q, t_ / q] } else { [s_, t_] };
             }
             let i = (y as usize - y0) * EFB_W + x as usize;
-            pixel(p, t, &mut color[i], &mut depth[i], z, col, tc);
+            pixel(p, t, &mut color[i], &mut depth[i], x, z, col, tc);
         }
     }
 }
 
-fn pixel(p: &Prep, t: &Tri, color: &mut [u8; 4], depth: &mut u32, z: u32, col: [[f32; 4]; 2], tc: [[f32; 2]; 8]) {
+fn pixel(p: &Prep, t: &Tri, color: &mut [u8; 4], depth: &mut u32, x: i32, z: u32, col: [[f32; 4]; 2], tc: [[f32; 2]; 8]) {
     let zt = |dz: u32| p.zmode & 1 == 0 || zfunc((p.zmode >> 1) & 7, z, dz);
     if p.early && !zt(*depth) { return; }
     let ras = [col[0].map(|v| v.clamp(0.0, 255.0) as i32), col[1].map(|v| v.clamp(0.0, 255.0) as i32)];
-    let out = tev(p, t, &ras, &tc);
+    let mut out = tev(p, t, &ras, &tc);
     if !alpha_test(p.afunc, out[3]) { return; }
+    if let Some(fg) = &p.fog { fg.apply(&mut out, x as f32 + 0.5, z); }
     if !p.early && !zt(*depth) { return; }
     if p.zmode & 1 != 0 && p.zmode >> 4 & 1 != 0 { *depth = z; }
     blend(p, color, [out[0] as u8, out[1] as u8, out[2] as u8, out[3] as u8]);
@@ -446,14 +449,89 @@ fn blend(p: &Prep, dstp: &mut [u8; 4], src: [u8; 4]) {
     *dstp = w;
 }
 
+/// Indirect texturing state (Dolphin's PixelShaderGen): the indirect stages' maps, coords and coord scales
+/// (IREF, RAS1_SS0/1), matrices 0-2 as rows (ma, mc, me, 17 - scale) / (mb, md, mf), SU coord scales.
+struct Ind { n: usize, map: [usize; 4], coord: [usize; 4], shift: [[u32; 2]; 4], mtx: [[i32; 4]; 6], su: [[u32; 2]; 8] }
+
+impl Ind {
+    fn new(s: &State) -> Ind {
+        let mut i = Ind { n: (s.bp[0x00] >> 16 & 7).min(4) as usize, map: [0; 4], coord: [0; 4], shift: [[0; 2]; 4], mtx: [[0; 4]; 6], su: [[1; 2]; 8] };
+        for k in 0..4 {
+            let r = s.bp[0x27] >> (6 * k);
+            i.map[k] = (r & 7) as usize;
+            i.coord[k] = (r >> 3 & 7) as usize;
+            let ss = s.bp[0x25 + k / 2] >> (8 * (k & 1));
+            i.shift[k] = [ss & 15, ss >> 4 & 15];
+        }
+        let sx = |v: u32| ((v as i32) << 21) >> 21;
+        for m in 0..3 {
+            let [a, b, c] = [s.bp[0x06 + 3 * m], s.bp[0x07 + 3 * m], s.bp[0x08 + 3 * m]];
+            let scale = (a >> 22 & 3) | (b >> 22 & 3) << 2 | (c >> 22 & 3) << 4;
+            i.mtx[2 * m] = [sx(a & 0x7FF), sx(b & 0x7FF), sx(c & 0x7FF), 17 - scale as i32];
+            i.mtx[2 * m + 1] = [sx(a >> 11 & 0x7FF), sx(b >> 11 & 0x7FF), sx(c >> 11 & 0x7FF), 0];
+        }
+        for k in 0..8 { i.su[k] = [(s.bp[0x30 + 2 * k] & 0xFFFF) + 1, (s.bp[0x31 + 2 * k] & 0xFFFF) + 1]; }
+        i
+    }
+    /// A coordinate in the TEV's fixed-point texel space (1/128 texel of its SU scale), truncated.
+    fn fix(&self, c: usize, uv: [f32; 2]) -> [i32; 2] { [(uv[0] * self.su[c][0] as f32 * 128.0) as i32, (uv[1] * self.su[c][1] as f32 * 128.0) as i32] }
+}
+
 fn tev(p: &Prep, t: &Tri, ras: &[[i32; 4]; 2], tc: &[[f32; 2]; 8]) -> [i32; 4] {
     let mut reg = p.regs; // PREV, C0, C1, C2 (signed 11-bit)
+    // indirect lookups: the texel's alpha, blue, green as S, T, U
+    let ind = &p.ind;
+    let mut iind = [[0i32; 3]; 4];
+    for k in 0..ind.n {
+        let (m, c) = (ind.map[k], ind.coord[k]);
+        let Some(tx) = &p.tex[m] else { continue };
+        let f = ind.fix(c, tc[c]);
+        let sh = ind.shift[k];
+        let uv = [(f[0] >> sh[0]) as f32 / (128.0 * tx.w as f32), (f[1] >> sh[1]) as f32 / (128.0 * tx.h as f32)];
+        let v = sample(tx, &p.samp[m], uv, t.grads[c] / (1u32 << sh[0].max(sh[1])) as f32);
+        iind[k] = [v[3], v[2], v[1]];
+    }
+    let mut tevcoord = [0i32; 2];
     for st in &p.stages {
-        let rc = match st.chan { 0 => ras[0], 1 => ras[1], _ => [0; 4] };
+        let ic = st.ind;
+        let (bt, fmt, mid, sw, tw) = ((ic & 3) as usize, ic >> 2 & 3, ic >> 9 & 15, ic >> 13 & 7, ic >> 16 & 7);
+        let mut uv = tc[st.coord];
+        let mut alphabump = 0;
+        if (sw != 0 || tw != 0 || mid != 0 || ic >> 20 & 1 != 0) && bt < ind.n {
+            let it = iind[bt];
+            let bs = ic >> 7 & 3;
+            if bs != 0 { alphabump = (it[bs as usize - 1] << [0, 5, 4, 3][fmt as usize]) & 248; }
+            let fu = ind.fix(st.coord, tc[st.coord]);
+            let mut tr = [0i32; 2];
+            if mid & 3 != 0 {
+                let sh = [0, 3, 4, 5][fmt as usize];
+                let mut crd = [it[0] >> sh, it[1] >> sh, it[2] >> sh];
+                let badd = if fmt == 0 { -128 } else { 1 };
+                for k in 0..3 { if ic >> (4 + k) & 1 != 0 { crd[k] += badd; } }
+                let mi = (mid & 3) as usize - 1;
+                let (r0, r1) = (ind.mtx[2 * mi], ind.mtx[2 * mi + 1]);
+                tr = match mid >> 2 {
+                    0 => [(r0[0] * crd[0] + r0[1] * crd[1] + r0[2] * crd[2]) >> 3, (r1[0] * crd[0] + r1[1] * crd[1] + r1[2] * crd[2]) >> 3],
+                    1 => [(fu[0] * crd[0]) >> 8, (fu[1] * crd[0]) >> 8],
+                    _ => [(fu[0] * crd[1]) >> 8, (fu[1] * crd[1]) >> 8],
+                };
+                for x in &mut tr { *x = if r0[3] >= 0 { *x >> r0[3] } else { *x << -r0[3] }; }
+            }
+            let wrap = |x: i32, w: u32| match w { 0 => x, 1..=5 => x & ((256 >> (w - 1)) * 128 - 1), _ => 0 };
+            let wr = [wrap(fu[0], sw), wrap(fu[1], tw)];
+            if ic >> 20 & 1 != 0 { tevcoord = [tevcoord[0] + wr[0] + tr[0], tevcoord[1] + wr[1] + tr[1]]; } else { tevcoord = [wr[0] + tr[0], wr[1] + tr[1]]; }
+            tevcoord = [(tevcoord[0] << 8) >> 8, (tevcoord[1] << 8) >> 8];
+            if let Some(tx) = &p.tex[st.map] { uv = [tevcoord[0] as f32 / (128.0 * tx.w as f32), tevcoord[1] as f32 / (128.0 * tx.h as f32)]; }
+        } else if st.tex_on {
+            tevcoord = ind.fix(st.coord, tc[st.coord]);
+        } else {
+            tevcoord = [0; 2];
+        }
+        let rc = match st.chan { 0 => ras[0], 1 => ras[1], 5 => [alphabump; 4], 6 => [alphabump | alphabump >> 5; 4], _ => [0; 4] };
         let rc = [rc[st.rs[0]], rc[st.rs[1]], rc[st.rs[2]], rc[st.rs[3]]];
         let tx = if st.tex_on {
             match &p.tex[st.map] {
-                Some(tx) => { let v = sample(tx, &p.samp[st.map], tc[st.coord], t.grads[st.coord]); [v[st.ts[0]], v[st.ts[1]], v[st.ts[2]], v[st.ts[3]]] }
+                Some(tx) => { let v = sample(tx, &p.samp[st.map], uv, t.grads[st.coord]); [v[st.ts[0]], v[st.ts[1]], v[st.ts[2]], v[st.ts[3]]] }
                 None => [255, 0, 255, 255],
             }
         } else { [255; 4] };
@@ -816,6 +894,88 @@ fn tex_grad(a: &SV, b: &SV, c: &SV, t: usize, area: f32) -> f32 {
     g
 }
 
+/// Fog (BP 0xE8-0xED range adjust, 0xEE-0xF2 parameters) as Dolphin's pixel shaders apply it after the alpha
+/// test (PixelShaderGen `WriteFog`, constants from PixelShaderManager): eye-space z from the 24-bit screen z
+/// (perspective `A / (B_MAG - (z >> B_SHIFT))`, orthographic `A * z`), optionally scaled by the range adjustment
+/// table across the screen, minus C, clamped, through the fog function, then blended into the colour in 1/256ths.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Fog {
+    /// FOG_PARAM3 fsel: 2 linear, 4 exp, 5 exp^2, 6 backwards exp, 7 backwards exp^2.
+    pub fsel: u32,
+    pub ortho: bool,
+    pub a: f32,
+    pub c: f32,
+    pub b_mag: i32,
+    pub b_shift: u32,
+    pub color: [i32; 3],
+    /// Range adjustment: centre (EFB x), viewport half-width, and the ten k values (x4/256, as Dolphin) plus a 0.
+    pub range: Option<(f32, f32, [f32; 11])>,
+}
+
+/// A fog float register: sign 1, exponent 8, mantissa 11 (the top of an f32).
+fn fog_float(v: u32) -> f32 { f32::from_bits((v >> 19 & 1) << 31 | (v >> 11 & 0xFF) << 23 | (v & 0x7FF) << 12) }
+
+impl Fog {
+    pub fn new(s: &State) -> Option<Fog> {
+        let p3 = s.bp[0xF1];
+        let fsel = p3 >> 21 & 7;
+        if fsel == 0 { return None; }
+        let col = s.bp[0xF2];
+        let rb = s.bp[0xE8];
+        let range = (rb >> 10 & 1 != 0).then(|| {
+            let mut k = [0f32; 11];
+            for i in 0..10 { let e = s.bp[0xE9 + i / 2]; k[i] = (if i & 1 == 0 { e >> 12 & 0xFFF } else { e & 0xFFF }) as f32 / 256.0 * 4.0; }
+            ((rb & 0x3FF) as f32 - 342.0, f(s.xf_reg[0x1A]), k)
+        });
+        Some(Fog { fsel, ortho: p3 >> 20 & 1 != 0, a: fog_float(s.bp[0xEE]), c: fog_float(p3), b_mag: (s.bp[0xEF] & 0xFF_FFFF) as i32,
+                   b_shift: s.bp[0xF0] & 0x1F, color: [(col >> 16 & 0xFF) as i32, (col >> 8 & 0xFF) as i32, (col & 0xFF) as i32], range })
+    }
+
+    /// Fog a pixel's colour (EFB x of the pixel centre, 24-bit z).
+    pub fn apply(&self, rgb: &mut [i32; 4], x: f32, z: u32) {
+        let mut ze = if self.ortho { self.a * z as f32 / 16777216.0 } else { self.a * 16777216.0 / (self.b_mag - (z >> self.b_shift) as i32) as f32 };
+        if let Some((center, wd, k)) = &self.range {
+            let off = (x - center) / wd;
+            let fi = (9.0 - off.abs() * 9.0).clamp(0.0, 9.0);
+            let lo = fi as usize;
+            let kk = k[lo] + (k[lo + 1] - k[lo]) * fi.fract();
+            ze *= (off * off + kk * kk).sqrt() / kk;
+        }
+        let mut fog = (ze - self.c).clamp(0.0, 1.0);
+        if fog.is_nan() { fog = 0.0; }
+        fog = match self.fsel {
+            4 => 1.0 - (-8.0 * fog).exp2(),
+            5 => 1.0 - (-8.0 * fog * fog).exp2(),
+            6 => (-8.0 * (1.0 - fog)).exp2(),
+            7 => { let g = 1.0 - fog; (-8.0 * g * g).exp2() }
+            _ => fog,
+        };
+        let i = (fog * 256.0).round() as i32;
+        for k in 0..3 { rgb[k] = (rgb[k] * (256 - i) + self.color[k] * i) >> 8; }
+    }
+}
+
+/// Two EFB pixels as one XFB YUYV word (Y0 U Y1 V), as Dolphin's XFB encoder (TextureConversionShader
+/// `WriteXFBEncoder`: BT.601 constants from hardware tests on 0-1 colours, chroma from the pair's average, each
+/// value rounded, divided by 256 and stored as a unorm byte).
+pub fn xfb_encode(p0: [u8; 4], p1: [u8; 4]) -> [u8; 4] {
+    let n = |p: [u8; 4]| [p[0] as f32 / 255.0, p[1] as f32 / 255.0, p[2] as f32 / 255.0];
+    let (c0, c1) = (n(p0), n(p1));
+    let av = [(c0[0] + c1[0]) * 0.5, (c0[1] + c1[1]) * 0.5, (c0[2] + c1[2]) * 0.5];
+    let dot = |c: [f32; 3], k: [f32; 4]| c[0] * k[0] + c[1] * k[1] + c[2] * k[2] + k[3];
+    let unorm = |v: f32| ((v.round() / 256.0).clamp(0.0, 1.0) * 255.0 + 0.5).floor() as u8;
+    let (ky, ku, kv) = ([66.0, 129.0, 25.0, 16.0], [-38.0, -74.0, 112.0, 128.0], [112.0, -94.0, -18.0, 128.0]);
+    [unorm(dot(c0, ky)), unorm(dot(av, ku)), unorm(dot(c1, ky)), unorm(dot(av, kv))]
+}
+
+/// One XFB pixel (its Y and the pair's U, V) back to RGB, as Dolphin's XFB decoder (inverse BT.601 in floats,
+/// stored as unorm bytes).
+pub fn xfb_decode(y: u8, u: u8, v: u8) -> [u8; 3] {
+    let yc = 1.164 * (y as f32 - 16.0);
+    let (uc, vc) = (u as f32 - 128.0, v as f32 - 128.0);
+    [yc + 1.596 * vc, yc - 0.813 * vc - 0.391 * uc, yc + 2.018 * uc].map(|c| (c.clamp(0.0, 255.0) + 0.5).floor() as u8)
+}
+
 /// EFB copy encoding into a GX texture format (rows of blocks, `stride` bytes per block row).
 fn encode(img: &[[u8; 4]], w: usize, h: usize, fmt: u32, intensity: bool, stride: usize) -> Option<Vec<u8>> {
     let lum = |p: [u8; 4]| (((66 * p[0] as i32 + 129 * p[1] as i32 + 25 * p[2] as i32 + 128) >> 8) + 16).clamp(0, 255) as u8;
@@ -862,4 +1022,41 @@ fn encode(img: &[[u8; 4]], w: usize, h: usize, fmt: u32, intensity: bool, stride
         }
     }
     Some(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn xfb_round_trip() {
+        // white and black survive the round trip; Y of white 235, black 16 (BT.601 studio range)
+        assert_eq!(xfb_encode([255; 4], [255; 4]), [235, 128, 235, 128]);
+        assert_eq!(xfb_encode([0, 0, 0, 255], [0, 0, 0, 255]), [16, 128, 16, 128]);
+        assert_eq!(xfb_decode(235, 128, 128), [255, 255, 255]);
+        assert_eq!(xfb_decode(16, 128, 128), [0, 0, 0]);
+    }
+
+    #[test]
+    fn fog_registers() {
+        let mut s = State::default();
+        // GXSetFog-style: linear, perspective, A = 0.5 (exp 126, mant 0), C = 0.25 (exp 125), B_MAG 0x800000, shift 1
+        s.bp[0xEE] = 126 << 11;
+        s.bp[0xEF] = 0x80_0000;
+        s.bp[0xF0] = 1;
+        s.bp[0xF1] = 2 << 21 | 125 << 11;
+        s.bp[0xF2] = 0x10_20_30;
+        let fg = Fog::new(&s).unwrap();
+        assert_eq!((fg.a, fg.c, fg.b_mag, fg.b_shift, fg.color, fg.ortho), (0.5, 0.25, 0x80_0000, 1, [0x10, 0x20, 0x30], false));
+        // z = 0x800000: ze = 0.5 * 2^24 / (2^23 - 2^22) = 2, - C = 1.75 -> clamped 1: all fog colour
+        let mut c = [200, 100, 50, 255];
+        fg.apply(&mut c, 320.5, 0x80_0000);
+        assert_eq!(c, [0x10, 0x20, 0x30, 255]);
+        // z = 0: ze = 0.5 * 2^24 / 2^23 = 1, - C = 0.75 -> 192/256 fog
+        let mut c = [200, 100, 50, 255];
+        fg.apply(&mut c, 320.5, 0);
+        assert_eq!(c, [(200 * 64 + 0x10 * 192) >> 8, (100 * 64 + 0x20 * 192) >> 8, (50 * 64 + 0x30 * 192) >> 8, 255]);
+        s.bp[0xF1] = 0;
+        assert!(Fog::new(&s).is_none());
+    }
 }

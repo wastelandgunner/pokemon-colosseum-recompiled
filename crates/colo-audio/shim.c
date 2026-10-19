@@ -6,8 +6,14 @@
 #include <string.h>
 
 static SND_AUX_REVERBHI g_rev;
+#ifdef _WIN32
+#include <malloc.h> /* no aligned_alloc in the Windows CRT */
+static void* hook_malloc(size_t n) { return _aligned_malloc((n + 31) & ~(size_t)31, 32); }
+static void hook_free(void* p) { _aligned_free(p); }
+#else
 static void* hook_malloc(size_t n) { return aligned_alloc(32, (n + 31) & ~(size_t)31); }
 static void hook_free(void* p) { free(p); }
+#endif
 
 /* sndSetReceiveMessageCallback (the game's 0x80167040 releases the work whose handle sent it): queued here
  * and drained by the Rust layer. */
@@ -75,7 +81,7 @@ void colo_snd_output_mode(unsigned mode) { sndOutputMode((SND_OUTPUTMODE)mode); 
 /* Interleaved s16 frames. */
 int colo_snd_render(short* out, size_t frames) { return sndPCRender(out, frames) ? 1 : 0; }
 
-/* The debugger (musyx/src/musyx/debugger, not built) instruments the runtime through these. */
+/* The debugger (musyx/src/musyx/debugger, not vendored) instruments the runtime through these. */
 #include <musyx/debugger.h>
 void musyxDebuggerRuntimeFrame(u32 deltaTime) { (void)deltaTime; }
 void musyxDebuggerRuntimeMacroStep(SYNTH_VOICE* voice, const MSTEP* step) { (void)voice; (void)step; }

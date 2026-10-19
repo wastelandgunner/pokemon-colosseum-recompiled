@@ -19,6 +19,7 @@ mod dvd;
 mod exi;
 mod gs;
 mod gx;
+mod ipl;
 mod os;
 mod si;
 mod vi;
@@ -29,6 +30,7 @@ pub use dvd::*;
 pub use exi::*;
 pub use gs::*;
 pub use gx::*;
+pub use ipl::*;
 pub use os::*;
 pub use si::*;
 pub use vi::*;
@@ -47,7 +49,102 @@ struct Die;
 /// Interrupts raised and not yet handled (the GPU finishes a `GXSetDrawDone` at once).
 static PENDING: Mutex<Vec<u32>> = Mutex::new(Vec::new());
 
-/// Run a lifted function's own body (bypassing its hook).
+/// MSL `memcpy` 0x800054F4 (r3 dst, r4 src, r5 n; a byte loop, backwards when src < dst, so overlaps copy as
+/// memmove): ~7% of a battle frame lifted. Here as host copies with exactly the lifted loop's blocks: 2n + 4 blocks
+/// (entry, setup, n + 1 checks with n copies between them, return), 4n + 9 instructions. When the copy reaches an
+/// interrupt point (`steps` past `step_limit`), the registers are set to that block's state and the step event runs
+/// there, as the lifted loop would, and the copy goes on after it (reading memory afresh). Falls back to the lifted
+/// code when the copy leaves MEM1 and the locked cache, or memory is traced.
+pub const MEMCPY: u32 = 0x8000_54F4;
+fn memcpy(c: &mut Cpu) {
+    let (dst, src, n) = (c.r[3], c.r[4], c.r[5]);
+    // MEM1, or the locked L1 cache (0xE0000000, 16 KB: the game's particle/matrix code copies 24-128 byte records
+    // through it, ~1500 times a frame)
+    let ram = |a: u32| (0x8000_0000..=0x8180_0000).contains(&a) || (0xE000_0000..=0xE000_4000).contains(&a);
+    if n > 0x0180_0000 || !ram(dst) || !ram(dst + n) || !ram(src) || !ram(src + n) || c.m.trace { return call_original(c, MEMCPY); }
+    c.last_fn = MEMCPY;
+    let init = MemcpyEntry { dst, src, n, r0: c.r[0], cr: c.cr, xer: c.xer };
+    let mut counted = 0u64; // instructions added so far (the step event's interrupt code adds its own)
+    let total = init.blocks();
+    let mut k = 0u64; // the next block to start; the bodies of blocks before it are done
+    let mut done = 0u32; // bytes copied (by the copy blocks before k)
+    let mut last = c.r[0];
+    loop {
+        // blocks start without an event while steps stays <= step_limit after their count
+        let room = c.step_limit.saturating_sub(c.steps);
+        let e = k.saturating_add(room).min(total);
+        last = init.copy(c, done, MemcpyEntry::copied_before(e, n), last);
+        done = MemcpyEntry::copied_before(e, n);
+        c.steps += e - k;
+        if e == total { break; }
+        // block e starts with the step event, in that block's register state
+        c.steps += 1;
+        init.set_state(c, e, done, last);
+        let before = MemcpyEntry::instrs_before(e, n);
+        c.instrs += before - counted;
+        counted = before;
+        c.step_event(MEMCPY, init.pc(e));
+        // then its body
+        if MemcpyEntry::copied_before(e + 1, n) > done {
+            last = init.copy(c, done, done + 1, last);
+            done += 1;
+        }
+        k = e + 1;
+    }
+    init.set_state(c, total, n, last);
+    c.instrs += 4 * n as u64 + 9 - counted;
+}
+
+/// `memcpy`'s registers at entry, and its block structure: 0 entry (cmplw r4, r3), 1 setup (r4/r6 one before the
+/// first byte, r5 = n + 1), then for i in 0..=n a check (addic. r5, r5, -1; bne copy) at 2 + 2i and for i < n a copy
+/// (lbzu/stbu; backwards: from the end) at 3 + 2i, return at 2n + 3.
+struct MemcpyEntry { dst: u32, src: u32, n: u32, r0: u32, cr: u32, xer: u32 }
+impl MemcpyEntry {
+    fn back(&self) -> bool { self.src < self.dst }
+    fn blocks(&self) -> u64 { 2 * self.n as u64 + 4 }
+    /// Instructions of the blocks before block k (entry 2, setup 4, check and copy 2, return 1).
+    fn instrs_before(k: u64, n: u32) -> u64 { match k { 0 => 0, 1 => 2, k => (6 + 2 * (k - 2)).min(4 * n as u64 + 9) } }
+    fn copied_before(k: u64, n: u32) -> u32 { if k < 2 { 0 } else { ((k - 2) / 2).min(n as u64) as u32 } }
+    fn pc(&self, k: u64) -> u32 {
+        let b = self.back();
+        match k {
+            0 => 0x8000_54F4,
+            1 => if b { 0x8000_5520 } else { 0x8000_54FC },
+            k if k == self.blocks() - 1 => if b { 0x8000_5540 } else { 0x8000_551C },
+            k if k % 2 == 0 => if b { 0x8000_5538 } else { 0x8000_5514 },
+            _ => if b { 0x8000_5530 } else { 0x8000_550C },
+        }
+    }
+    /// Copy bytes `from..to` (counted in copy order), returning the last byte moved (`last` if none).
+    fn copy(&self, c: &mut Cpu, from: u32, to: u32, last: u32) -> u32 {
+        if to <= from { return last; }
+        let len = to - from;
+        let (s, d) = if self.back() { (self.src + self.n - to, self.dst + self.n - to) } else { (self.src + from, self.dst + from) };
+        let b = c.m.read(s, len).to_vec();
+        c.m.write(d, &b);
+        (if self.back() { b[0] } else { b[len as usize - 1] }) as u32
+    }
+    /// The registers at the start of block k (k = blocks(): after the return), `done` bytes copied.
+    fn set_state(&self, c: &mut Cpu, k: u64, done: u32, last: u32) {
+        let n = self.n;
+        c.r[3] = self.dst;
+        c.cr = self.cr;
+        c.xer = self.xer;
+        if k == 0 { (c.r[4], c.r[5], c.r[0]) = (self.src, n, self.r0); return; }
+        c.cmpu(0, self.src, self.dst);
+        if k == 1 { (c.r[4], c.r[5], c.r[0]) = (self.src, n, self.r0); return; }
+        (c.r[4], c.r[6]) = if self.back() { (self.src + n - done, self.dst + n - done) }
+            else { (self.src.wrapping_sub(1).wrapping_add(done), self.dst.wrapping_sub(1).wrapping_add(done)) };
+        c.r[0] = if done > 0 { last } else { self.r0 };
+        if k == 2 { c.r[5] = n.wrapping_add(1); return; }
+        // r5 as the last check left it (n + 1 - i before check i, n - i before copy i, 0 at the return), with its
+        // `addic.` carry and CR0
+        let v = if k >= self.blocks() - 1 { 0 } else if k % 2 == 0 { n + 1 - (k as u32 - 2) / 2 } else { n - (k as u32 - 3) / 2 };
+        c.r[5] = c.addc(v.wrapping_add(1), 0xFFFF_FFFF, 0);
+        c.rc(c.r[5]);
+    }
+}
+
 pub fn call_original(c: &mut Cpu, a: u32) {
     let i = lifted::RANGES.partition_point(|r| r.0 <= a) - 1;
     (lifted::RANGES[i].2)(c, a);
@@ -139,6 +236,8 @@ pub struct Machine {
     sp: u32,
     /// Boot mode: the game's `main` runs on its own thread; (wake, frame-done).
     main: Option<(Sender<Wake>, Receiver<MainMsg>)>,
+    /// Where `boot` starts the game: `main` (a snapshot taken there) or the DOL's entry point (`from_disc`).
+    entry: u32,
 }
 
 impl Machine {
@@ -189,6 +288,10 @@ impl Machine {
         c.hook_fn.insert(OS_DISABLE_INTERRUPTS, os_disable_interrupts);
         c.hook_fn.insert(OS_ENABLE_INTERRUPTS, os_enable_interrupts);
         c.hook_fn.insert(OS_RESTORE_INTERRUPTS, os_restore_interrupts);
+        c.hook_fn.insert(MEMCPY, memcpy);
+        c.hook_fn.insert(REAL_MODE, real_mode);
+        c.hook_fn.insert(CONFIG_24MB, config_bats);
+        c.hook_fn.insert(CONFIG_48MB, config_bats);
         for &(a, ret) in HOST_STUBS { c.stubs.insert(a, ret); }
         // a killed coroutine unwinds with `Die`: not an error
         let prev = std::panic::take_hook();
@@ -201,7 +304,7 @@ impl Machine {
         let gxdata = c.m.u32(0x8048_36A0 - 0x73C0);
         if gxdata != 0 { gx.seed_sdk(&GpuView(&mut c.m), gxdata & 0x01FF_FFFF); }
         *GPU_IN.lock().unwrap() = Some(GpuStream { gx, frame: colo_gx::Frame::default(), buf: Vec::new() });
-        Machine { sp: r[1], c, gpu: colo_gx::raster::Renderer::new(), main: None }
+        Machine { sp: r[1], c, gpu: colo_gx::raster::Renderer::new(), main: None, entry: MAIN }
     }
 
     /// Boot from a `Working/dolphin/story_entry_snap.py` directory: before.bin (MEM1), regs_before.json, l1.bin,
@@ -220,7 +323,7 @@ impl Machine {
         DSPCR.store(0x54, std::sync::atomic::Ordering::Relaxed);
         m.c.m.set_u16(0xCC00_500A, 0x54);
         // nor the AI DMA (AIDCR/AIDMA regs): without it no AI interrupt runs MusyX's `salCallback` 0x80163EE0, so the
-        // synth never ticks and a fanfare's soundGetStatus stays 2 (the battle's win fanfare waits forever). Restart
+        // synth never ticks and a fanfare's GSsndGetStatus stays 2 (the battle's win fanfare waits forever). Restart
         // it where salCallback left it: AIInitDMA(block 0x8047B0A0 (already advanced) of its 0xA00 buffer 0x8047B09C, 0x280)
         let (buf, idx) = (m.c.m.u32(0x8047_B09C), m.c.m.u8(0x8047_B0A0) as u32);
         if buf != 0 {
@@ -247,6 +350,16 @@ impl Machine {
             }
             m.seed_efb(&rgba);
         }
+        Ok(m)
+    }
+
+    /// Power-on from the disc image alone (ipl.rs): MEM1 as the IPL and apploader leave it; `boot` then runs the
+    /// DOL's `__start` (OSInit included) on lifted code.
+    pub fn from_disc(disc: Disc) -> std::io::Result<Machine> {
+        let b = load_disc(&disc)?;
+        let mut m = Machine::new(b.mem1, &[0; 32]);
+        m.entry = b.entry;
+        m.set_disc(disc);
         Ok(m)
     }
 
@@ -323,6 +436,13 @@ impl Machine {
         b.build(&f, &GpuView(&mut self.c.m))
     }
 
+    /// `gpu_cmds` without the vertex work: the caller runs `GFrame::finish` (on another thread) before drawing it.
+    pub fn gpu_cmds_deferred(&mut self, b: &mut colo_gx::cmd::Builder) -> colo_gx::cmd::GFrame {
+        gx_feed(&mut self.c.m);
+        let f = GPU_IN.lock().unwrap().as_mut().map(|g| std::mem::take(&mut g.frame)).unwrap_or_default();
+        b.build_deferred(f, &GpuView(&mut self.c.m))
+    }
+
     /// `gpu_cmds` that also runs the software renderer over the same stream (for comparing the two).
     pub fn gpu_cmds_soft(&mut self, b: &mut colo_gx::cmd::Builder) -> colo_gx::cmd::GFrame {
         gx_feed(&mut self.c.m);
@@ -354,12 +474,11 @@ impl Machine {
         for y in 0..h {
             let line = self.c.m.read(a + (y * 1280) as u32, 1280);
             for x in (0..640).step_by(2) {
-                let (y0, u, y1, v) = (line[2 * x] as f32, line[2 * x + 1] as f32 - 128.0, line[2 * x + 2] as f32, line[2 * x + 3] as f32 - 128.0);
-                for (k, yy) in [(0, y0), (1, y1)] {
-                    let yy = 1.164 * (yy - 16.0);
-                    let rgb = [yy + 1.596 * v, yy - 0.392 * u - 0.813 * v, yy + 2.017 * u];
+                for k in 0..2 {
+                    // Dolphin's XFB decode (colo_gx::raster::xfb_decode)
+                    let rgb = colo_gx::raster::xfb_decode(line[2 * x + 2 * k], line[2 * x + 1], line[2 * x + 3]);
                     let o = (y * 640 + x + k) * 4;
-                    for c in 0..3 { out[o + c] = rgb[c].clamp(0.0, 255.0) as u8; }
+                    out[o..o + 3].copy_from_slice(&rgb);
                     out[o + 3] = 255;
                 }
             }
@@ -367,25 +486,76 @@ impl Machine {
         out
     }
 
+    /// Slot A's flash ID: the OS's copy of the SRAM (0x803FB854) once OSInit has read it, else the SRAM itself.
+    fn flash_id(&self) -> [u8; 12] {
+        let mut flash = [0u8; 12];
+        for (k, b) in flash.iter_mut().enumerate() { *b = self.c.m.u8(0x803F_B854 + k as u32); }
+        if flash == [0; 12] { flash = exi_with(|e| e.flash_id(0)); }
+        flash
+    }
+
     /// Insert a memory card in slot A built from GCI files (the SRAM flash ID and font encoding come from the
     /// game's RAM, so the card is this console's).
     pub fn insert_card(&mut self, gcis: &[Vec<u8>]) {
-        let mut flash = [0u8; 12];
-        for (k, b) in flash.iter_mut().enumerate() { *b = self.c.m.u8(0x803F_B854 + k as u32); }
+        let flash = self.flash_id();
         let enc = self.c.m.u16(0x8047_A970) as u16;
-        let img = crate::memcard::build(gcis, flash, 0, enc);
+        self.insert_card_image(crate::memcard::build(gcis, flash, 0, enc));
+    }
+
+    /// A blank card formatted for this console (as `insert_card` with no files), to start a card image from.
+    pub fn blank_card(&self) -> Vec<u8> {
+        let flash = self.flash_id();
+        crate::memcard::build(&[], flash, 0, self.c.m.u16(0x8047_A970) as u16)
+    }
+
+    /// Insert a raw card image (Dolphin's .raw layout: 64 blocks of 8 KB) in slot A.
+    pub fn insert_card_image(&mut self, img: Vec<u8>) {
         exi_with(|e| e.card = Some(crate::memcard::Card::new(img)));
         CARD_A.store(true, std::sync::atomic::Ordering::Relaxed);
         let csr = self.c.m.u32(0xCC00_6800);
         self.c.m.set_u32(0xCC00_6800, csr | 0x1000); // EXT: a device is in slot A
     }
 
+    /// The slot A card's image if the game has written to it since the last call (clears the flag).
+    pub fn take_card_writes(&mut self) -> Option<Vec<u8>> {
+        exi_with(|e| e.card.as_mut().filter(|cd| cd.dirty).map(|cd| { cd.dirty = false; cd.data.clone() }))
+    }
+
     /// Give the DI its disc.
     pub fn set_disc(&mut self, d: Disc) { *DISC.lock().unwrap() = Some(d); }
 
-    /// Boot mode: from a snapshot at `main` (Working/dolphin/boot_snap.py), run the game's `main` on its own thread
-    /// up to its first `GSgappUpdate` (the game's init: GXInit, DSP, sound, threads...).
+    /// Boot mode: from a snapshot at `main` (Working/dolphin/boot_snap.py) or from the disc (`from_disc`: `__start`,
+    /// then `main`), run the game on its own thread up to its first `GSgappUpdate` (the game's init: GXInit, DSP,
+    /// sound, threads...).
     pub fn boot(&mut self) {
+        if self.entry == MAIN { self.snapshot_fixups(); }
+        let entry = self.entry;
+        let (wtx, wrx) = channel::<Wake>();
+        let (ftx, frx) = channel::<MainMsg>();
+        *MAIN_TX.lock().unwrap() = Some(ftx.clone());
+        let cp = CpuPtr(&mut *self.c as *mut Cpu);
+        std::thread::Builder::new().name("game-main".into()).stack_size(CO_STACK).spawn(move || {
+            let cp = cp;
+            MAIN_RX.with(|r| *r.borrow_mut() = Some(wrx));
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                // SAFETY: the host waits for MainMsg while this thread runs (one side at a time)
+                let c = unsafe { &mut *cp.0 };
+                c.lr = 0;
+                lifted::dispatch(c, entry);
+            }));
+            let m = match r {
+                Err(e) if e.is::<Die>() => return,
+                Err(e) => e.downcast_ref::<String>().cloned().or_else(|| e.downcast_ref::<&str>().map(|s| s.to_string())).unwrap_or_default(),
+                Ok(()) => "main returned".into(),
+            };
+            ftx.send(MainMsg::Panic(m)).ok();
+        }).expect("run: main thread");
+        self.main = Some((wtx, frx));
+        self.wait_main();
+    }
+
+    /// A snapshot at `main` lacks the hardware state OSInit left.
+    fn snapshot_fixups(&mut self) {
         // the DSP sits in its ROM, its greeting mail unread (OSInit's DSP init ran before the snapshot; the
         // mailbox registers aren't in it)
         let r = AX.lock().unwrap().get_or_insert_with(crate::dsp_ax::Ax::new).reset();
@@ -404,28 +574,6 @@ impl Machine {
             self.c.m.set_u32(0xCC00_6000, sr | 0x10 | 0x2A);
             PENDING.lock().unwrap().push(IRQ_DI);
         }
-        let (wtx, wrx) = channel::<Wake>();
-        let (ftx, frx) = channel::<MainMsg>();
-        *MAIN_TX.lock().unwrap() = Some(ftx.clone());
-        let cp = CpuPtr(&mut *self.c as *mut Cpu);
-        std::thread::Builder::new().name("game-main".into()).stack_size(CO_STACK).spawn(move || {
-            let cp = cp;
-            MAIN_RX.with(|r| *r.borrow_mut() = Some(wrx));
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                // SAFETY: the host waits for MainMsg while this thread runs (one side at a time)
-                let c = unsafe { &mut *cp.0 };
-                c.lr = 0;
-                lifted::dispatch(c, MAIN);
-            }));
-            let m = match r {
-                Err(e) if e.is::<Die>() => return,
-                Err(e) => e.downcast_ref::<String>().cloned().or_else(|| e.downcast_ref::<&str>().map(|s| s.to_string())).unwrap_or_default(),
-                Ok(()) => "main returned".into(),
-            };
-            ftx.send(MainMsg::Panic(m)).ok();
-        }).expect("run: main thread");
-        self.main = Some((wtx, frx));
-        self.wait_main();
     }
 
     fn wait_main(&mut self) {

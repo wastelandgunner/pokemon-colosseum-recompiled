@@ -19,7 +19,14 @@ pub(super) struct GpuStream { pub(super) gx: colo_gx::Gx, pub(super) frame: colo
 pub(super) static GPU_IN: Mutex<Option<GpuStream>> = Mutex::new(None);
 pub const GX_FLUSH: u32 = 0x800B8920;
 
+/// Time spent decoding the GX stream (ns; diagnostics).
+pub static FEED_NS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
 pub(super) fn gx_feed(m: &mut crate::mem::Mem) {
+    let t0 = std::time::Instant::now();
+    let _t = Defer(t0);
+    struct Defer(std::time::Instant);
+    impl Drop for Defer { fn drop(&mut self) { FEED_NS.fetch_add(self.0.elapsed().as_nanos() as u64, std::sync::atomic::Ordering::Relaxed); } }
     let data = std::mem::take(m.pipe.as_mut().unwrap());
     let mut g = GPU_IN.lock().unwrap();
     let Some(g) = g.as_mut() else { return };

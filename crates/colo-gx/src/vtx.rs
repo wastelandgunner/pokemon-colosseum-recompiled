@@ -111,16 +111,17 @@ impl Format {
     }
 
     /// Bytes of attribute `arr` (0 pos, 1 nrm, 2/3 clr, 4.. tex) for a direct value or an index.
-    fn fetch<'a>(kind: u32, d: &'a [u8], i: &mut usize, size: usize, arr: usize, cp: &[u32; 256], mem: &dyn GpuMem, buf: &'a mut Vec<u8>) -> &'a [u8] {
+    fn fetch<'a>(kind: u32, d: &'a [u8], i: &mut usize, size: usize, arr: usize, cp: &[u32; 256], mem: &dyn GpuMem, buf: &'a mut [u8; 36]) -> &'a [u8] {
         match kind {
             1 => { let s = &d[*i..*i + size]; *i += size; s }
             k => {
                 let idx = if k == 2 { let v = d[*i] as u32; *i += 1; v } else { let v = u16::from_be_bytes([d[*i], d[*i + 1]]) as u32; *i += 2; v };
                 let base = cp[0xA0 + arr] & 0x3FF_FFFF;
                 let stride = cp[0xB0 + arr] & 0xFF;
-                buf.resize(size, 0);
-                mem.read(base + idx * stride, buf);
-                &buf[..]
+                // a stack buffer (36 bytes: nine f32 normal components, the largest attribute): no allocation per vertex
+                let b = &mut buf[..size];
+                mem.read(base + idx * stride, b);
+                b
             }
         }
     }
@@ -128,7 +129,7 @@ impl Format {
     pub fn decode(&self, d: &[u8], cp: &[u32; 256], mem: &dyn GpuMem) -> Vertex {
         let mut v = Vertex::default();
         let mut i = 0usize;
-        let mut buf = Vec::new();
+        let mut buf = [0u8; 36];
         if self.pnmtx { v.pnmtx = d[i]; i += 1; } else { v.pnmtx = (cp[0x30] & 0x3F) as u8; }
         for t in 0..8 {
             if self.texmtx[t] { v.texmtx[t] = d[i]; i += 1; } else {

@@ -28,6 +28,9 @@ pub struct Exi {
 }
 
 impl Exi {
+    /// The SRAM's memory card flash ID for slot `k` (the console's ID a formatted card carries).
+    pub fn flash_id(&self, k: usize) -> [u8; 12] { self.ipl.sram[0x14 + 12 * k..0x20 + 12 * k].try_into().unwrap() }
+
     pub fn new() -> Exi {
         let mut e = Exi::default();
         e.ipl.sram = default_sram();
@@ -161,6 +164,12 @@ impl Exi {
 fn default_sram() -> Vec<u8> {
     let mut s = vec![0u8; 64];
     s[0x13] = 0x2C; // flags: stereo (bit 2), progressive off; Dolphin default 0x2C
+    // the memory card flash IDs (slots A, B) and their checksums (~byte sum), as Dolphin's SRAM has them: cards
+    // formatted in Dolphin carry this console's ID
+    for (k, id) in [b"DOLPHINSLOTA", b"DOLPHINSLOTB"].iter().enumerate() {
+        s[0x14 + 12 * k..0x20 + 12 * k].copy_from_slice(&id[..]);
+        s[0x3A + k] = !id.iter().fold(0u8, |a, &b| a.wrapping_add(b));
+    }
     let mut sum: u16 = 0;
     let mut inv: u16 = 0;
     for k in (0x0C..0x14).step_by(2) {

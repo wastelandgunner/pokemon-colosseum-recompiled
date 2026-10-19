@@ -5,7 +5,7 @@ members = ["crates/colo-formats", "crates/colo-script", "crates/colo-battle", "c
 default-members = ["crates/colo-formats", "crates/colo-script", "crates/colo-battle", "crates/colo-lifted", "crates/colo-recomp", "crates/colo-export", "crates/colo-tool", "crates/colo-gx", "crates/colo-gxgpu"]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.4.0"
 edition = "2021"
 license = "MIT"
 
