@@ -1,0 +1,4 @@
+#!/bin/sh
+# No arguments: a file dialog asks for the disc image, then the game starts (recomp).
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/colo-viewer" "$@"

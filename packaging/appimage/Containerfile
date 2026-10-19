@@ -1,0 +1,8 @@
+# Build image for the colo-viewer AppImage: Ubuntu 22.04 (glibc 2.35), so the binary runs on any distro from then on.
+FROM ubuntu:22.04
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential pkg-config libasound2-dev libudev-dev squashfs-tools curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+ENV RUSTUP_HOME=/opt/rustup CARGO_HOME=/opt/cargo PATH=/opt/cargo/bin:$PATH
+RUN curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable \
+    && chmod -R a+rwX /opt/rustup /opt/cargo

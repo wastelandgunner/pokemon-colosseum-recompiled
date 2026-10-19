@@ -87,9 +87,9 @@ graphics card (`colo-gxgpu`) at `COLO_SCALE` (default 3) times native resolution
   game's own `__start` / `OSInit` up to `main` on lifted code (`colo-recomp/src/run/ipl.rs`). Earlier versions
   needed a RAM snapshot taken in Dolphin; that path still exists for testing (`COLO_BOOT_SNAP=<dir>`) but is optional.
 - **Memory card.** Slot A is a card image file, `COLO_CARD=<file>` (default `saves/MemoryCardA.USA.raw` beside the
-  exe on Windows). If the file doesn't exist, a blank card formatted for this console is created there, and the
+  exe on Windows, `~/.local/share/colo-viewer/saves/MemoryCardA.USA.raw` in the Linux AppImage). If the file doesn't exist, a blank card formatted for this console is created there, and the
   game's saves are written back to it. A Dolphin `MemoryCardA.USA.raw` from your own console or emulator works too.
-  On Linux the built-in default points at the author's checkout, so set `COLO_CARD` yourself.
+  Linux builds from source use the same folder as the AppImage.
 - **Disc timing.** Disc reads take as long as on a real drive (command overhead, seeks across the disc, rotational
   latency, CAV read speed and the drive's 1 MB read-ahead buffer, as Dolphin models it). Loads are therefore
   noticeably longer than in earlier versions, which read instantly; some game timing depends on it.
@@ -118,6 +118,24 @@ The exe (~340 MB, mostly the recompiled game) needs only system DLLs. Copy it to
 whole folder together: the memory card is made in `saves\` beside the exe, and the viewer's save file goes to
 `%APPDATA%\colo-viewer`. Double-click it, pick your disc image in the dialog, and the game starts. From a terminal,
 `colo-viewer.exe D:\GC6E01.iso recomp --perf` works as on Linux. It also runs under Wine.
+
+### Linux AppImage
+
+`packaging/appimage/build.sh` builds a single-file `colo-viewer-x86_64.AppImage`. It compiles in an Ubuntu 22.04
+container (podman by default, `CONTAINER=docker` for docker), so the result runs on any x86-64 distro with glibc 2.35
+or newer; `NATIVE=1` compiles on the host instead (it then needs the host's glibc or newer). Packing needs no
+appimagetool: the script squashes the AppDir and prepends the AppImage
+[type 2 runtime](https://github.com/AppImage/type2-runtime), downloaded unless `RUNTIME=<file>` names one.
+
+```sh
+packaging/appimage/build.sh
+# -> target-appimage/colo-viewer-x86_64.AppImage
+```
+
+The AppImage (~50 MB) holds only the program, no game data. Run it, pick your disc image in the dialog, and the game
+starts; `./colo-viewer-x86_64.AppImage ~/GC6E01.iso recomp --perf` works as well. The memory card is made in
+`~/.local/share/colo-viewer/saves/` (or under `$XDG_DATA_HOME`), next to the viewer's `save.txt`. It needs Vulkan
+drivers, ALSA (`libasound`) and udev, which desktop distros have.
 
 ## Models (`colo_formats::hsd`)
 HSD archives -> static bind-pose meshes: joint tree (SRT, inverse bind matrices, `JOBJ_INSTANCE` re-drawing),

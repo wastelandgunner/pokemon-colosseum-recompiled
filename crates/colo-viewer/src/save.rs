@@ -25,24 +25,34 @@ pub struct Save {
 }
 
 /// The Working tree's data (Dolphin snapshots, card images): the dev checkout, or on Windows builds the exe's
-/// folder, so a shipped exe finds `snaps\` and `saves\` beside it.
+/// folder, so a shipped exe finds `snaps\` and `saves\` beside it. A Linux AppImage (or any Linux build without the
+/// dev checkout) uses the user data folder, `$XDG_DATA_HOME/colo-viewer` (`~/.local/share/colo-viewer`).
 pub fn working_dir() -> PathBuf {
     if cfg!(windows) {
-        std::env::current_exe().ok().and_then(|p| p.parent().map(PathBuf::from)).unwrap_or_default()
-    } else { PathBuf::from("/media/zach/massstorage/Pokemon Colosseum/Working") }
+        return std::env::current_exe().ok().and_then(|p| p.parent().map(PathBuf::from)).unwrap_or_default();
+    }
+    let dev = PathBuf::from("/media/zach/massstorage/Pokemon Colosseum/Working");
+    if std::env::var_os("APPIMAGE").is_none() && dev.is_dir() { return dev; }
+    data_dir().unwrap_or_default()
 }
 
-/// Dolphin snapshot root: Working/dolphin/snaps, or `snaps` beside the exe on Windows.
+/// Dolphin snapshot root: Working/dolphin/snaps in the dev checkout, else `snaps` in working_dir.
 pub fn snaps_dir() -> PathBuf {
-    if cfg!(windows) { working_dir().join("snaps") } else { working_dir().join("dolphin/snaps") }
+    let w = working_dir();
+    if w.join("dolphin").is_dir() { w.join("dolphin/snaps") } else { w.join("snaps") }
+}
+
+/// The per-user folder for this program: `%APPDATA%\colo-viewer`, `$XDG_DATA_HOME/colo-viewer`, or
+/// `~/.local/share/colo-viewer`.
+fn data_dir() -> Option<PathBuf> {
+    let base = std::env::var(if cfg!(windows) { "APPDATA" } else { "XDG_DATA_HOME" }).ok().filter(|v| !v.is_empty()).map(PathBuf::from)
+        .or_else(|| std::env::var("HOME").ok().map(|h| PathBuf::from(h).join(".local/share")))?;
+    Some(base.join("colo-viewer"))
 }
 
 pub fn path() -> Option<PathBuf> {
     if let Ok(p) = std::env::var("COLO_SAVE") { return Some(p.into()); }
-    let base = std::env::var(if cfg!(windows) { "APPDATA" } else { "XDG_DATA_HOME" }).map(PathBuf::from)
-        .or_else(|_| std::env::var("HOME").map(|h| PathBuf::from(h).join(".local/share")))
-        .ok()?;
-    Some(base.join("colo-viewer").join("save.txt"))
+    Some(data_dir()?.join("save.txt"))
 }
 
 pub fn load() -> Option<Save> {

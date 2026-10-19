@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Colosseum Recompiled
+Comment=Pokémon Colosseum recompiled from your own disc image
+Exec=colo-viewer
+Icon=colo-viewer
+Categories=Game;
+Terminal=false

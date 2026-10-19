@@ -3,7 +3,7 @@
 //! resolution, from power-on: the disc image alone (`Machine::from_disc`: the DOL's `__start` and OSInit run on the
 //! lifted code; no Dolphin data), or with env COLO_BOOT_SNAP=<dir> Dolphin's `boot_snap.py` snapshot at `main`; and
 //! memory card A. The card is a raw image (Dolphin's .raw layout) kept on disk: env
-//! COLO_CARD names it (default Working/saves/MemoryCardA.USA.raw); when the file doesn't exist a blank card formatted
+//! COLO_CARD names it (default `save::working_dir()`/saves/MemoryCardA.USA.raw); when the file doesn't exist a blank card formatted
 //! for this console is made there, and the game's writes go back to it. COLO_CARD as comma-separated .gci files
 //! instead builds a card from those saves for this run only (writes are not kept).
 //!
