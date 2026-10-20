@@ -166,9 +166,7 @@ impl Renderer {
                 let miny = (a.y.min(b.y).min(c.y).floor() as i32).max(clipr[1]);
                 let maxy = (a.y.max(b.y).max(c.y).ceil() as i32).min(clipr[3]);
                 if minx > maxx || miny > maxy { continue; }
-                let mut grads = [0f32; 8];
-                for tt in 0..ntex { grads[tt] = tex_grad(&a, &b, &c, tt, area); }
-                tris.push(Tri { v: [a, b, c], area, grads, bbox: [minx, miny, maxx, maxy] });
+                tris.push(Tri { v: [a, b, c], area, bbox: [minx, miny, maxx, maxy] });
             }
         }
         if tris.is_empty() { return None; }
@@ -240,21 +238,26 @@ impl Renderer {
         let dst = (s.bp[0x4B] & 0xFF_FFFF) << 5;
         let stride = (s.bp[0x4D] & 0x3FF) << 5;
         let depth_copy = s.bp[0x43] & 7 == 3;
-        let px = |x: usize, y: usize| -> [u8; 4] {
-            let (x, y) = ((sx + x).min(EFB_W - 1), (sy + y).min(EFB_H - 1));
+        let cf = CopyFilter::new(s, v);
+        // EFB pixel (absolute coordinates, clamped to the EFB as the sampler's clamp-to-edge)
+        let px = |x: i32, y: i32| -> [u32; 4] {
+            let (x, y) = (x.clamp(0, EFB_W as i32 - 1) as usize, y.clamp(0, EFB_H as i32 - 1) as usize);
             // Z24 pixel format: a Z copy (the 24-bit depth as R = bits 16-23, G = 8-15, B = 0-7, A = 255, then
             // encoded like colour, as Dolphin's EFB copy shaders)
-            if depth_copy { let z = self.depth[y * EFB_W + x]; [(z >> 16) as u8, (z >> 8) as u8, z as u8, 255] } else { self.color[y * EFB_W + x] }
+            if depth_copy { let z = self.depth[y * EFB_W + x]; [z >> 16 & 0xFF, z >> 8 & 0xFF, z & 0xFF, 255] } else { self.color[y * EFB_W + x].map(|c| c as u32) }
         };
         if v >> 14 & 1 != 0 {
-            // XFB: YUYV 4:2:2, vertical scale BP 0x4E (256 = 1:1)
-            let ys = s.bp[0x4E] & 0x1FF;
-            let oh = if ys != 0 && ys != 256 { (h as u32 * 256 / ys) as usize } else { h };
+            // XFB: YUYV 4:2:2, `ys` output lines per EFB line (BP 0x4E, PE copy bit 10)
+            let ys = cf.y_scale;
+            let oh = (1.0 + (h - 1) as f32 * ys) as usize;
+            let linear = ys > 1.0 && !depth_copy;
             let mut line = vec![0u8; w * 2];
             for oy in 0..oh {
-                let y = (oy * h / oh.max(1)).min(h - 1);
+                let yc = (oy as f32 + 0.5 + sy as f32) / ys;
                 for x in (0..w).step_by(2) {
-                    line[x * 2..x * 2 + 4].copy_from_slice(&xfb_encode(px(x, y), px(x + 1, y)));
+                    let p0 = cf.sample(&px, (sx + x) as f32 + 0.5, yc, 1.0, linear);
+                    let p1 = cf.sample(&px, (sx + x + 1) as f32 + 0.5, yc, 1.0, linear);
+                    line[x * 2..x * 2 + 4].copy_from_slice(&xfb_encode(p0, p1));
                 }
                 mem.write(dst + oy as u32 * stride, &line);
             }
@@ -266,13 +269,12 @@ impl Renderer {
             let half = v >> 9 & 1 != 0;
             let (w2, h2) = if half { (w / 2, h / 2) } else { (w, h) };
             let mut img = vec![[0u8; 4]; w2 * h2];
+            // half scale: sampled linearly on the 2x2 block's centre, filter rows 2 lines apart (Dolphin's swizzler)
+            let k = if half { 2.0 } else { 1.0 };
             for y in 0..h2 {
                 for x in 0..w2 {
-                    img[y * w2 + x] = if half {
-                        let mut acc = [0u32; 4];
-                        for (dx, dy) in [(0, 0), (1, 0), (0, 1), (1, 1)] { let p = px(2 * x + dx, 2 * y + dy); for k in 0..4 { acc[k] += p[k] as u32; } }
-                        acc.map(|a| (a / 4) as u8)
-                    } else { px(x, y) };
+                    let (xc, yc) = (sx as f32 + (x as f32 + 0.5) * k, sy as f32 + (y as f32 + 0.5) * k);
+                    img[y * w2 + x] = cf.sample(&px, xc, yc, k, half && !depth_copy);
                 }
             }
             match encode(&img, w2, h2, fmt, intensity, stride as usize) {
@@ -320,55 +322,76 @@ struct Prep<'s> {
     fog: Option<Fog>,
 }
 
-struct Tri { v: [SV; 3], area: f32, grads: [f32; 8], bbox: [i32; 4] }
+struct Tri { v: [SV; 3], area: f32, bbox: [i32; 4] }
 
 struct Stage {
     map: usize, coord: usize, tex_on: bool, chan: u32, ind: u32, cenv: u32, aenv: u32,
     rs: [usize; 4], ts: [usize; 4], kc: [i32; 3], ka: i32,
 }
 
+/// A texture map's sampler state (BP TX_SETMODE0/1) as Dolphin's `SamplerState::Generate`: LOD bias, min and
+/// max LOD in 1/16 steps (no mipmaps: all 0; min never above max).
 #[derive(Clone, Copy, Default)]
-struct Sampler { ws: u32, wt: u32, mag_lin: bool, min: u32, bias: f32, minlod: f32, maxlod: f32 }
+struct Sampler { ws: u32, wt: u32, mag_lin: bool, min_lin: bool, mip_lin: bool, diag: bool, bias: i32, minlod: i32, maxlod: i32 }
 
 impl Sampler {
     fn new(s: &State, map: usize) -> Sampler {
         let r = |base: usize| s.bp[if map < 4 { base + map } else { base + 0x20 + map - 4 }];
         let (m0, m1) = (r(0x80), r(0x84));
-        Sampler { ws: m0 & 3, wt: m0 >> 2 & 3, mag_lin: m0 >> 4 & 1 != 0, min: m0 >> 5 & 7,
-                  bias: ((m0 >> 9 & 0xFF) as i8 as f32) / 32.0, minlod: (m1 & 0xFF) as f32 / 16.0, maxlod: (m1 >> 8 & 0xFF) as f32 / 16.0 }
+        let mip = m0 >> 5 & 3;
+        let (minlod, maxlod, bias) = if mip == 0 { (0, 0, 0) } else {
+            let max = (m1 >> 8 & 0xFF) as i32;
+            ((m1 & 0xFF).min(max as u32) as i32, max, ((m0 >> 9 & 0xFF) as i8 as i32 * 8) >> 4)
+        };
+        Sampler { ws: m0 & 3, wt: m0 >> 2 & 3, mag_lin: m0 >> 4 & 1 != 0, min_lin: m0 >> 7 & 1 != 0, mip_lin: mip == 2,
+                  diag: m0 >> 8 & 1 != 0, bias, minlod, maxlod }
     }
 }
 
-fn sample(t: &Tex, sp: &Sampler, uv: [f32; 2], grad: f32) -> [i32; 4] {
-    let lod = ((grad * t.w.max(t.h) as f32).max(1e-6).log2() + sp.bias).clamp(sp.minlod, sp.maxlod);
-    let (lin, level) = if lod <= 0.0 { (sp.mag_lin, 0usize) } else {
-        let lin = sp.min & 4 != 0 || sp.min == 1;
-        let lv = if sp.min & 3 != 0 && t.levels.len() > 1 { (lod.round() as usize).min(t.levels.len() - 1) } else { 0 };
-        (lin, lv)
-    };
-    let lw = (t.w >> level).max(1);
-    let lh = (t.h >> level).max(1);
-    let data = &t.levels[level];
-    let fetch = |x: i32, y: i32| -> [i32; 4] {
-        let x = wrap(x, lw as i32, sp.ws) as usize;
-        let y = wrap(y, lh as i32, sp.wt) as usize;
-        let p = &data[(y * lw + x) * 4..(y * lw + x) * 4 + 4];
-        [p[0] as i32, p[1] as i32, p[2] as i32, p[3] as i32]
-    };
-    let fu = uv[0] * lw as f32;
-    let fv = uv[1] * lh as f32;
-    if !lin { return fetch(fu.floor() as i32, fv.floor() as i32); }
-    let u = (fu * 128.0).round() as i32 - 64;
-    let v = (fv * 128.0).round() as i32 - 64;
-    let (x0, y0, fx, fy) = (u >> 7, v >> 7, u & 127, v & 127);
-    let (a, b, c, d) = (fetch(x0, y0), fetch(x0 + 1, y0), fetch(x0, y0 + 1), fetch(x0 + 1, y0 + 1));
-    let mut o = [0; 4];
-    for k in 0..4 {
-        let top = a[k] * (128 - fx) + b[k] * fx;
-        let bot = c[k] * (128 - fx) + d[k] * fx;
-        o[k] = (top * (128 - fy) + bot * fy) >> 14;
+/// Texture wrap of a texel index as the hardware (power-of-two masks; clamp for mode 0 and the invalid 3).
+fn tex_wrap(x: i32, n: i32, mode: u32) -> i32 {
+    match mode {
+        1 => x & (n - 1),
+        2 => (if x & n != 0 { !x } else { x }) & (n - 1),
+        _ => x.clamp(0, n - 1),
     }
-    o
+}
+
+/// Sample a texture as Dolphin's manual (hardware-accurate) sampling, PixelShaderGen `sampleTexture`: `uv` in
+/// 1/128 texels of level 0 (the TEV's fixed-point coordinate), `d` its screen-space change per pixel (|d/dx u|,
+/// |d/dx v|, |d/dy u|, |d/dy v|, coarse, in the same units). LOD in 1/16 steps: floor(log2(texels per pixel) * 16)
+/// + bias (the larger axis, or the sums with diagonal LOD; min LOD when the coordinate doesn't change), filter
+/// chosen before the LOD clamp, nearest mip rounded, linear mips blended in 1/16ths; bilinear with 7-bit weights.
+fn sample(t: &Tex, sp: &Sampler, uv: [i32; 2], d: [f32; 4]) -> [i32; 4] {
+    let (du, dv) = if sp.diag { (d[0] + d[2], d[1] + d[3]) } else { (d[0].max(d[2]), d[1].max(d[3])) };
+    let md = du.max(dv) / 128.0;
+    let lod = if md == 0.0 { sp.minlod } else { (md.log2() * 16.0).floor() as i32 + sp.bias };
+    let lin = if lod > 0 { sp.min_lin } else { sp.mag_lin };
+    let lod = lod.clamp(sp.minlod, sp.maxlod);
+    let (mut base, frac) = (lod >> 4, lod & 15);
+    if !sp.mip_lin && frac >= 8 { base += 1; }
+    let nlev = t.levels.len() as i32;
+    let one = |lv: i32| -> [i32; 4] {
+        let lv = lv.min(nlev - 1).max(0);
+        let (lw, lh) = (((t.w as i32) >> lv).max(1), ((t.h as i32) >> lv).max(1));
+        let data = &t.levels[lv as usize];
+        let fetch = |x: i32, y: i32| -> [i32; 4] {
+            let i = (tex_wrap(y, lh, sp.wt) * lw + tex_wrap(x, lw, sp.ws)) as usize * 4;
+            [data[i] as i32, data[i + 1] as i32, data[i + 2] as i32, data[i + 3] as i32]
+        };
+        let (u, v) = (uv[0] >> lv, uv[1] >> lv);
+        if !lin { return fetch(u >> 7, v >> 7); }
+        let (u, v) = (u - 64, v - 64);
+        let (x0, y0, fx, fy) = (u >> 7, v >> 7, u & 127, v & 127);
+        let (a, b, c, e) = (fetch(x0, y0), fetch(x0 + 1, y0), fetch(x0, y0 + 1), fetch(x0 + 1, y0 + 1));
+        std::array::from_fn(|k| (a[k] * (128 - fx) * (128 - fy) + b[k] * fx * (128 - fy) + c[k] * (128 - fx) * fy + e[k] * fx * fy) >> 14)
+    };
+    let r = one(base);
+    if frac != 0 && sp.mip_lin {
+        let r2 = one(base + 1);
+        return std::array::from_fn(|k| (r[k] * (16 - frac) + r2[k] * frac) >> 4);
+    }
+    r
 }
 
 /// One triangle into a band of rows [y0, y0 + n).
@@ -381,6 +404,20 @@ fn raster(p: &Prep, t: &Tri, color: &mut [[u8; 4]], depth: &mut [u32], y0: usize
     let edge = |p0: &SV, q: &SV, x: f32, y: f32| (q.x - p0.x) * (y - p0.y) - (q.y - p0.y) * (x - p0.x);
     let owns = |p0: &SV, q: &SV| { let dy = q.y - p0.y; let dx = q.x - p0.x; (dy == 0.0 && dx < 0.0) || dy > 0.0 };
     let (o0, o1, o2) = (owns(b, c), owns(c, a), owns(a, b));
+    // perspective-correct texture coordinates at any screen point
+    let tcs_at = |px: f32, py: f32| -> [[f32; 2]; 8] {
+        let (l0, l1, l2) = (edge(b, c, px, py) / area, edge(c, a, px, py) / area, edge(a, b, px, py) / area);
+        let iw = l0 * a.iw + l1 * b.iw + l2 * c.iw;
+        let pc = |va: f32, vb: f32, vc: f32| (l0 * va * a.iw + l1 * vb * b.iw + l2 * vc * c.iw) / iw;
+        let mut tc = [[0f32; 2]; 8];
+        for tt in 0..p.ntex {
+            let s_ = pc(a.tc[tt][0], b.tc[tt][0], c.tc[tt][0]);
+            let t_ = pc(a.tc[tt][1], b.tc[tt][1], c.tc[tt][1]);
+            let q = pc(a.tc[tt][2], b.tc[tt][2], c.tc[tt][2]);
+            tc[tt] = if q != 0.0 { [s_ / q, t_ / q] } else { [s_, t_] };
+        }
+        tc
+    };
     for y in ys as i32..=ye {
         for x in t.bbox[0]..=t.bbox[2] {
             let (px, py) = (x as f32 + 0.5, y as f32 + 0.5);
@@ -395,24 +432,30 @@ fn raster(p: &Prep, t: &Tri, color: &mut [[u8; 4]], depth: &mut [u32], y0: usize
             let pc = |va: f32, vb: f32, vc: f32| (l0 * va * a.iw + l1 * vb * b.iw + l2 * vc * c.iw) / iw;
             let mut col = [[0f32; 4]; 2];
             for ch in 0..2 { for k in 0..4 { col[ch][k] = pc(a.col[ch][k], b.col[ch][k], c.col[ch][k]); } }
-            let mut tc = [[0f32; 2]; 8];
-            for tt in 0..p.ntex {
-                let s_ = pc(a.tc[tt][0], b.tc[tt][0], c.tc[tt][0]);
-                let t_ = pc(a.tc[tt][1], b.tc[tt][1], c.tc[tt][1]);
-                let q = pc(a.tc[tt][2], b.tc[tt][2], c.tc[tt][2]);
-                tc[tt] = if q != 0.0 { [s_ / q, t_ / q] } else { [s_, t_] };
+            let tc = tcs_at(px, py);
+            // texture coordinate derivatives as a GPU's coarse ones: across the 2x2 quad from its top-left pixel
+            // (helper pixels outside the triangle extrapolate), in the TEV's fixed-point units
+            let mut dd = [[0f32; 4]; 8];
+            if p.ntex > 0 {
+                let (qx, qy) = ((x & !1) as f32 + 0.5, (y & !1) as f32 + 0.5);
+                let (t00, t10, t01) = (tcs_at(qx, qy), tcs_at(qx + 1.0, qy), tcs_at(qx, qy + 1.0));
+                for tt in 0..p.ntex {
+                    let (f00, f10, f01) = (p.ind.fix(tt, t00[tt]), p.ind.fix(tt, t10[tt]), p.ind.fix(tt, t01[tt]));
+                    dd[tt] = [(f10[0] - f00[0]).unsigned_abs() as f32, (f10[1] - f00[1]).unsigned_abs() as f32,
+                              (f01[0] - f00[0]).unsigned_abs() as f32, (f01[1] - f00[1]).unsigned_abs() as f32];
+                }
             }
             let i = (y as usize - y0) * EFB_W + x as usize;
-            pixel(p, t, &mut color[i], &mut depth[i], x, z, col, tc);
+            pixel(p, &mut color[i], &mut depth[i], x, z, col, tc, &dd);
         }
     }
 }
 
-fn pixel(p: &Prep, t: &Tri, color: &mut [u8; 4], depth: &mut u32, x: i32, z: u32, col: [[f32; 4]; 2], tc: [[f32; 2]; 8]) {
+fn pixel(p: &Prep, color: &mut [u8; 4], depth: &mut u32, x: i32, z: u32, col: [[f32; 4]; 2], tc: [[f32; 2]; 8], dd: &[[f32; 4]; 8]) {
     let zt = |dz: u32| p.zmode & 1 == 0 || zfunc((p.zmode >> 1) & 7, z, dz);
     if p.early && !zt(*depth) { return; }
     let ras = [col[0].map(|v| v.clamp(0.0, 255.0) as i32), col[1].map(|v| v.clamp(0.0, 255.0) as i32)];
-    let mut out = tev(p, t, &ras, &tc);
+    let mut out = tev(p, &ras, &tc, dd);
     if !alpha_test(p.afunc, out[3]) { return; }
     if let Some(fg) = &p.fog { fg.apply(&mut out, x as f32 + 0.5, z); }
     if !p.early && !zt(*depth) { return; }
@@ -477,7 +520,7 @@ impl Ind {
     fn fix(&self, c: usize, uv: [f32; 2]) -> [i32; 2] { [(uv[0] * self.su[c][0] as f32 * 128.0) as i32, (uv[1] * self.su[c][1] as f32 * 128.0) as i32] }
 }
 
-fn tev(p: &Prep, t: &Tri, ras: &[[i32; 4]; 2], tc: &[[f32; 2]; 8]) -> [i32; 4] {
+fn tev(p: &Prep, ras: &[[i32; 4]; 2], tc: &[[f32; 2]; 8], dd: &[[f32; 4]; 8]) -> [i32; 4] {
     let mut reg = p.regs; // PREV, C0, C1, C2 (signed 11-bit)
     // indirect lookups: the texel's alpha, blue, green as S, T, U
     let ind = &p.ind;
@@ -487,15 +530,16 @@ fn tev(p: &Prep, t: &Tri, ras: &[[i32; 4]; 2], tc: &[[f32; 2]; 8]) -> [i32; 4] {
         let Some(tx) = &p.tex[m] else { continue };
         let f = ind.fix(c, tc[c]);
         let sh = ind.shift[k];
-        let uv = [(f[0] >> sh[0]) as f32 / (128.0 * tx.w as f32), (f[1] >> sh[1]) as f32 / (128.0 * tx.h as f32)];
-        let v = sample(tx, &p.samp[m], uv, t.grads[c] / (1u32 << sh[0].max(sh[1])) as f32);
+        // derivatives of the shifted coordinate approximated by the coordinate's own, shifted
+        let (k0, k1) = ((1u32 << sh[0]) as f32, (1u32 << sh[1]) as f32);
+        let d = dd[c];
+        let v = sample(tx, &p.samp[m], [f[0] >> sh[0], f[1] >> sh[1]], [d[0] / k0, d[1] / k1, d[2] / k0, d[3] / k1]);
         iind[k] = [v[3], v[2], v[1]];
     }
     let mut tevcoord = [0i32; 2];
     for st in &p.stages {
         let ic = st.ind;
         let (bt, fmt, mid, sw, tw) = ((ic & 3) as usize, ic >> 2 & 3, ic >> 9 & 15, ic >> 13 & 7, ic >> 16 & 7);
-        let mut uv = tc[st.coord];
         let mut alphabump = 0;
         if (sw != 0 || tw != 0 || mid != 0 || ic >> 20 & 1 != 0) && bt < ind.n {
             let it = iind[bt];
@@ -521,7 +565,6 @@ fn tev(p: &Prep, t: &Tri, ras: &[[i32; 4]; 2], tc: &[[f32; 2]; 8]) -> [i32; 4] {
             let wr = [wrap(fu[0], sw), wrap(fu[1], tw)];
             if ic >> 20 & 1 != 0 { tevcoord = [tevcoord[0] + wr[0] + tr[0], tevcoord[1] + wr[1] + tr[1]]; } else { tevcoord = [wr[0] + tr[0], wr[1] + tr[1]]; }
             tevcoord = [(tevcoord[0] << 8) >> 8, (tevcoord[1] << 8) >> 8];
-            if let Some(tx) = &p.tex[st.map] { uv = [tevcoord[0] as f32 / (128.0 * tx.w as f32), tevcoord[1] as f32 / (128.0 * tx.h as f32)]; }
         } else if st.tex_on {
             tevcoord = ind.fix(st.coord, tc[st.coord]);
         } else {
@@ -531,7 +574,8 @@ fn tev(p: &Prep, t: &Tri, ras: &[[i32; 4]; 2], tc: &[[f32; 2]; 8]) -> [i32; 4] {
         let rc = [rc[st.rs[0]], rc[st.rs[1]], rc[st.rs[2]], rc[st.rs[3]]];
         let tx = if st.tex_on {
             match &p.tex[st.map] {
-                Some(tx) => { let v = sample(tx, &p.samp[st.map], uv, t.grads[st.coord]); [v[st.ts[0]], v[st.ts[1]], v[st.ts[2]], v[st.ts[3]]] }
+                // the stage's coordinate (indirect stages: its offset coordinate, derivatives of the plain one)
+                Some(tx) => { let v = sample(tx, &p.samp[st.map], tevcoord, dd[st.coord]); [v[st.ts[0]], v[st.ts[1]], v[st.ts[2]], v[st.ts[3]]] }
                 None => [255, 0, 255, 255],
             }
         } else { [255; 4] };
@@ -673,14 +717,6 @@ fn logic(op: u32, s: u8, d: u8) -> u8 {
     match op {
         0 => 0, 1 => s & d, 2 => s & !d, 3 => s, 4 => !s & d, 5 => d, 6 => s ^ d, 7 => s | d,
         8 => !(s | d), 9 => !(s ^ d), 10 => !d, 11 => s | !d, 12 => !s, 13 => !s | d, 14 => !(s & d), _ => 255,
-    }
-}
-
-pub(crate) fn wrap(x: i32, n: i32, mode: u32) -> i32 {
-    match mode {
-        0 => x.clamp(0, n - 1),
-        1 => x.rem_euclid(n),
-        _ => { let p = x.rem_euclid(2 * n); if p < n { p } else { 2 * n - 1 - p } }
     }
 }
 
@@ -881,19 +917,6 @@ fn to_screen(v: &V, s: &State) -> SV {
     }
 }
 
-/// Screen-space size of one pixel step in texture coordinates (for the LOD), per triangle.
-fn tex_grad(a: &SV, b: &SV, c: &SV, t: usize, area: f32) -> f32 {
-    let uv = |p: &SV| { let q = if p.tc[t][2] != 0.0 { p.tc[t][2] } else { 1.0 }; [p.tc[t][0] / q, p.tc[t][1] / q] };
-    let (ua, ub, uc) = (uv(a), uv(b), uv(c));
-    let mut g = 0f32;
-    for k in 0..2 {
-        let dx = ((ub[k] - ua[k]) * (c.y - a.y) - (uc[k] - ua[k]) * (b.y - a.y)) / area;
-        let dy = ((uc[k] - ua[k]) * (b.x - a.x) - (ub[k] - ua[k]) * (c.x - a.x)) / area;
-        g = g.max(dx.abs()).max(dy.abs());
-    }
-    g
-}
-
 /// Fog (BP 0xE8-0xED range adjust, 0xEE-0xF2 parameters) as Dolphin's pixel shaders apply it after the alpha
 /// test (PixelShaderGen `WriteFog`, constants from PixelShaderManager): eye-space z from the 24-bit screen z
 /// (perspective `A / (B_MAG - (z >> B_SHIFT))`, orthographic `A * z`), optionally scaled by the range adjustment
@@ -952,6 +975,82 @@ impl Fog {
         };
         let i = (fog * 256.0).round() as i32;
         for k in 0..3 { rgb[k] = (rgb[k] * (256 - i) + self.color[k] * i) >> 8; }
+    }
+}
+
+/// Debug: copies ignore the game's copy filter (as if it were the no-op 0,0,21,22,21,0,0).
+pub static NO_COPY_FILTER: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// What an EFB copy does to each pixel it reads (Dolphin's TextureConversionShader / TextureConverterShaderGen,
+/// verified on hardware there): the copy filter (BP 0x53/0x54, seven 6-bit coefficients: 0-1 weight the line
+/// above, 2-4 this line, 5-6 the line below; sum >> 6, 64 = unchanged) on RGB, the lines read clamped to the
+/// source rectangle where the PE copy's clamp bits say (else to the EFB), then the copy gamma (bits 7-8:
+/// 1.0, 1.7, 2.2, 2.2). Alpha is the centre line's. XFB copies also scale vertically (`y_scale` output lines
+/// per EFB line: BP 0x4E / 256, inverted when bit 10 is set).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct CopyFilter {
+    /// Weights of the line above, this line, the line below.
+    pub coef: [u32; 3],
+    pub gamma: u32,
+    /// First and last EFB line the filter may read.
+    pub clamp: [u32; 2],
+    pub y_scale: f32,
+}
+
+impl CopyFilter {
+    pub fn new(s: &State, v: u32) -> CopyFilter {
+        let (lo, hi) = if NO_COPY_FILTER.load(std::sync::atomic::Ordering::Relaxed) { (0x15 << 12, 0x16 | 0x15 << 6) } else { (s.bp[0x53], s.bp[0x54]) };
+        let w = |r: u32, k: u32| r >> (6 * k) & 0x3F;
+        let coef = [w(lo, 0) + w(lo, 1), w(lo, 2) + w(lo, 3) + w(hi, 0), w(hi, 1) + w(hi, 2)];
+        let (src, sz) = (s.bp[0x49], s.bp[0x4A]);
+        let (top, h) = (src >> 10 & 0x3FF, (sz >> 10 & 0x3FF) + 1);
+        let clamp = [if v & 1 != 0 { top } else { 0 }, if v & 2 != 0 { top + h } else { EFB_H as u32 } - 1];
+        let ys = (s.bp[0x4E] & 0x1FF).max(1) as f32;
+        let y_scale = if v >> 10 & 1 != 0 { 256.0 / ys } else { ys / 256.0 };
+        CopyFilter { coef, gamma: v >> 7 & 3, clamp, y_scale }
+    }
+
+    /// The filter leaves pixels unchanged.
+    pub fn identity(&self) -> bool { self.coef == [0, 64, 0] && self.gamma == 0 }
+
+    pub fn gamma_value(&self) -> f32 { [1.0, 1.7, 2.2, 2.2][self.gamma as usize & 3] }
+
+    /// The copied pixel centred on EFB position (`xc`, `yc`) (pixel centres at +0.5), filter lines `k` lines
+    /// apart; `linear` samples bilinearly (half-scale copies and stretched XFB copies, as Dolphin), else the
+    /// nearest pixel. Integer results truncate like Dolphin's `uint(tex * 255.0)`.
+    fn sample(&self, px: &dyn Fn(i32, i32) -> [u32; 4], xc: f32, yc: f32, k: f32, linear: bool) -> [u8; 4] {
+        let (lo, hi) = (self.clamp[0] as f32 + 0.5, self.clamp[1] as f32 + 0.5);
+        let at = |y: f32| -> [u32; 4] {
+            let y = y.clamp(lo, hi);
+            if !linear { return px(xc.floor() as i32, y.floor() as i32); }
+            let (fx, fy) = (xc - 0.5, y - 0.5);
+            let (x0, y0) = (fx.floor(), fy.floor());
+            let (ax, ay) = (fx - x0, fy - y0);
+            let (x0, y0) = (x0 as i32, y0 as i32);
+            let (p00, p10, p01, p11) = (px(x0, y0), px(x0 + 1, y0), px(x0, y0 + 1), px(x0 + 1, y0 + 1));
+            std::array::from_fn(|c| {
+                let top = p00[c] as f32 * (1.0 - ax) + p10[c] as f32 * ax;
+                let bot = p01[c] as f32 * (1.0 - ax) + p11[c] as f32 * ax;
+                (top * (1.0 - ay) + bot * ay) as u32
+            })
+        };
+        let cur = at(yc);
+        let mut o = [0u32; 4];
+        if self.coef[0] != 0 || self.coef[2] != 0 {
+            let (prev, next) = (at(yc - k), at(yc + k));
+            for c in 0..3 { o[c] = prev[c] * self.coef[0] + cur[c] * self.coef[1] + next[c] * self.coef[2]; }
+        } else {
+            for c in 0..3 { o[c] = cur[c] * self.coef[1]; }
+        }
+        for c in 0..3 { o[c] >>= 6; }
+        o[3] = cur[3];
+        if self.coef.iter().sum::<u32>() >= 128 { for c in &mut o { *c &= 0x1FF; } }
+        let mut b = o.map(|c| c.min(255) as u8);
+        if self.gamma != 0 {
+            let g = 1.0 / self.gamma_value();
+            for c in &mut b[..3] { *c = ((*c as f32 / 255.0).powf(g) * 255.0).round() as u8; }
+        }
+        b
     }
 }
 
@@ -1035,6 +1134,35 @@ mod tests {
         assert_eq!(xfb_encode([0, 0, 0, 255], [0, 0, 0, 255]), [16, 128, 16, 128]);
         assert_eq!(xfb_decode(235, 128, 128), [255, 255, 255]);
         assert_eq!(xfb_decode(16, 128, 128), [0, 0, 0]);
+    }
+
+    #[test]
+    fn copy_filter() {
+        let mut s = State::default();
+        // GXSetCopyFilter with the interlaced deflicker vfilter 8,8,10,12,10,8,8 (what the game sets)
+        s.bp[0x53] = 8 | 8 << 6 | 10 << 12 | 12 << 18;
+        s.bp[0x54] = 10 | 8 << 6 | 8 << 12;
+        s.bp[0x4A] = 639 | 479 << 10;
+        s.bp[0x4E] = 256;
+        let f = CopyFilter::new(&s, 1 << 14);
+        assert_eq!((f.coef, f.clamp, f.y_scale), ([16, 32, 16], [0, 527], 1.0));
+        let f = CopyFilter::new(&s, 1 << 14 | 3 | 2 << 7);
+        assert_eq!((f.clamp, f.gamma_value()), ([0, 479], 2.2));
+        // a vertical edge: rows 0-1 white, 2+ black; the filtered line 1 and 2 mix a quarter of their neighbour
+        let f = CopyFilter::new(&s, 1 << 14 | 3);
+        let px = |_x: i32, y: i32| if y < 2 { [255, 255, 255, 7] } else { [0, 0, 0, 7] };
+        assert_eq!(f.sample(&px, 0.5, 1.5, 1.0, false), [191, 191, 191, 7]);
+        assert_eq!(f.sample(&px, 0.5, 2.5, 1.0, false), [63, 63, 63, 7]);
+        // clamped at the top: line 0 reads itself above
+        assert_eq!(f.sample(&px, 0.5, 0.5, 1.0, false), [255, 255, 255, 7]);
+        // the no-op filter 0,0,21,22,21,0,0 and gamma 1.7
+        s.bp[0x53] = 21 << 12 | 22 << 18;
+        s.bp[0x54] = 21;
+        let f = CopyFilter::new(&s, 1 << 7);
+        assert!(!f.identity());
+        assert_eq!(f.coef, [0, 64, 0]);
+        assert_eq!(f.sample(&px, 0.5, 2.5, 1.0, false), [0, 0, 0, 7]);
+        assert_eq!(f.sample(&|_, _| [128, 64, 255, 255], 0.5, 0.5, 1.0, false), [170, 113, 255, 255]);
     }
 
     #[test]

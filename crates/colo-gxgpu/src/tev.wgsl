@@ -33,6 +33,9 @@ struct Draw {
 };
 
 @group(0) @binding(0) var<storage, read> draws: array<Draw>;
+// this pixel's draw: its state is read from `draws` where used (a copy of the whole Draw is dynamically indexed,
+// so it lands in scratch memory: 256 registers and ~35 KB of spills per wave, several times slower)
+var<private> cur: u32;
 @group(1) @binding(0) var t0: texture_2d<f32>;
 @group(1) @binding(1) var t1: texture_2d<f32>;
 @group(1) @binding(2) var t2: texture_2d<f32>;
@@ -79,10 +82,13 @@ fn vs(v: VIn, @builtin(instance_index) di: u32) -> VOut {
     let vp0 = d.viewport[0];
     let vp1 = d.viewport[1];
     let w = v.pos.w;
-    // screen = ndc * (wd, ht) + orig - 342; depth = farz + z/w * zrange (24-bit units)
+    // screen = ndc * (wd, ht) + orig - 342; depth = farz + z/w * zrange (24-bit units), stored reversed
+    // (1 - depth / 2^24 - 1): the scene sits near the far end, where a float depth buffer has least precision, and
+    // nearly coplanar surfaces (roots on grass, decals) then flickered in stripes as rounding picked the winner
+    // (Dolphin reverses its depth range for the same reason). lib.rs flips the compares, clears and Z copies to match.
     let sx = v.pos.x / w * vp0.x + vp0.w - 342.0;
     let sy = v.pos.y / w * vp0.y + vp1.x - 342.0;
-    let sz = (vp1.y + v.pos.z / w * vp0.z) / 16777215.0;
+    let sz = ((16777215.0 - vp1.y) - v.pos.z / w * vp0.z) / 16777215.0;
     var o: VOut;
     o.clip = vec4<f32>((sx / 320.0 - 1.0) * w, (1.0 - sy / 264.0) * w, sz * w, w);
     o.c0 = v.c0; o.c1 = v.c1;
@@ -92,11 +98,14 @@ fn vs(v: VIn, @builtin(instance_index) di: u32) -> VOut {
     return o;
 }
 
-fn wrapc(x: i32, n: i32, mode: u32) -> i32 {
-    if mode == 0u { return clamp(x, 0, n - 1); }
-    if mode == 1u { return ((x % n) + n) % n; }
-    let p = ((x % (2 * n)) + 2 * n) % (2 * n);
-    return select(2 * n - 1 - p, p, p < n);
+// Texture wrap of a texel index as the hardware (power-of-two masks; clamp for mode 0 and the invalid 3).
+// `scaled`: an EFB copy at `scale` times its size, wrapped by modulo (its size need not be a power of two).
+fn wrapc(x: i32, n: i32, mode: u32, scaled: bool) -> i32 {
+    if scaled && mode == 1u { return ((x % n) + n) % n; }
+    if scaled && mode == 2u { let p = ((x % (2 * n)) + 2 * n) % (2 * n); return select(2 * n - 1 - p, p, p < n); }
+    if mode == 1u { return x & (n - 1); }
+    if mode == 2u { return select(x, ~x, (x & n) != 0) & (n - 1); }
+    return clamp(x, 0, n - 1);
 }
 
 fn fetch(m: u32, p: vec2<i32>, lv: i32) -> vec4<i32> {
@@ -114,60 +123,66 @@ fn fetch(m: u32, p: vec2<i32>, lv: i32) -> vec4<i32> {
     return vec4<i32>(round(c * 255.0));
 }
 
-fn sample(d: Draw, m: u32, uv: vec2<f32>, grad: f32) -> vec4<i32> {
-    let sp = d.samp[m];
-    let ld = d.lod[m];
+// One mip level: point or bilinear (7-bit weights) at fixed-point `uv` (1/128 texel of level 0, in this
+// texture's texels: EFB copies are `scale` times larger).
+fn sample_level(m: u32, uv: vec2<i32>, lv: i32, lin: bool) -> vec4<i32> {
+    let sp = draws[cur].samp[m];
+    let l = clamp(lv, 0, i32(sp.w) - 1);
+    let lw = max(i32(sp.y) >> u32(l), 1);
+    let lh = max(i32(sp.z) >> u32(l), 1);
+    let ws = sp.x & 3u;
+    let wt = sp.x >> 2u & 3u;
+    let sc = draws[cur].lod[m].w > 1.0;
+    let p = uv >> vec2<u32>(u32(l));
+    if !lin { return fetch(m, vec2<i32>(wrapc(p.x >> 7u, lw, ws, sc), wrapc(p.y >> 7u, lh, wt, sc)), l); }
+    let q = p - vec2<i32>(64);
+    let x0 = q.x >> 7u;
+    let y0 = q.y >> 7u;
+    let fx = q.x & 127;
+    let fy = q.y & 127;
+    let xa = wrapc(x0, lw, ws, sc);
+    let xb = wrapc(x0 + 1, lw, ws, sc);
+    let ya = wrapc(y0, lh, wt, sc);
+    let yb = wrapc(y0 + 1, lh, wt, sc);
+    let a = fetch(m, vec2<i32>(xa, ya), l);
+    let b = fetch(m, vec2<i32>(xb, ya), l);
+    let c = fetch(m, vec2<i32>(xa, yb), l);
+    let e = fetch(m, vec2<i32>(xb, yb), l);
+    return (a * (128 - fx) * (128 - fy) + b * fx * (128 - fy) + c * (128 - fx) * fy + e * fx * fy) >> vec4<u32>(14u);
+}
+
+// Sample as Dolphin's manual (hardware-accurate) sampling, PixelShaderGen `sampleTexture` (colo-gx raster.rs
+// `sample`): `uv` the TEV's fixed-point coordinate (1/128 GameCube texel), `dd` its coarse change per GameCube
+// pixel (|d/dx|, |d/dy|). LOD in 1/16 steps: floor(log2(texels per pixel) * 16) + bias (larger axis, or the sums
+// with diagonal LOD; min LOD when the coordinate doesn't change), filter chosen before the clamp, nearest mip
+// rounded, linear mips blended in 1/16ths.
+fn sample(m: u32, uv: vec2<i32>, dd: vec4<f32>) -> vec4<i32> {
+    let sp = draws[cur].samp[m];
+    let ld = draws[cur].lod[m];
     if ld.w == 0.0 { return vec4<i32>(255, 0, 255, 255); }
-    let w = i32(sp.y);
-    let h = i32(sp.z);
-    let nlev = i32(sp.w);
     let mode = sp.x;
-    let lod = clamp(log2(max(grad * f32(max(w, h)), 1e-6)) + ld.x, ld.y, ld.z);
-    var lin = (mode >> 4u & 1u) != 0u;
-    var level = 0;
-    if lod > 0.0 {
-        let mn = mode >> 5u & 7u;
-        lin = (mn & 4u) != 0u || mn == 1u;
-        if (mn & 3u) != 0u && nlev > 1 { level = min(i32(round(lod)), nlev - 1); }
-    }
-    let lw = max(w >> u32(level), 1);
-    let lh = max(h >> u32(level), 1);
-    let ws = mode & 3u;
-    let wt = mode >> 2u & 3u;
-    let fu = uv.x * f32(lw);
-    let fv = uv.y * f32(lh);
-    if !lin {
-        return fetch(m, vec2<i32>(wrapc(i32(floor(fu)), lw, ws), wrapc(i32(floor(fv)), lh, wt)), level);
-    }
-    let u = i32(round(fu * 128.0)) - 64;
-    let v = i32(round(fv * 128.0)) - 64;
-    let x0 = u >> 7u;
-    let y0 = v >> 7u;
-    let fx = u & 127;
-    let fy = v & 127;
-    let xa = wrapc(x0, lw, ws);
-    let xb = wrapc(x0 + 1, lw, ws);
-    let ya = wrapc(y0, lh, wt);
-    let yb = wrapc(y0 + 1, lh, wt);
-    let a = fetch(m, vec2<i32>(xa, ya), level);
-    let b = fetch(m, vec2<i32>(xb, ya), level);
-    let c = fetch(m, vec2<i32>(xa, yb), level);
-    let e = fetch(m, vec2<i32>(xb, yb), level);
-    let top = a * (128 - fx) + b * fx;
-    let bot = c * (128 - fx) + e * fx;
-    return (top * (128 - fy) + bot * fy) >> vec4<u32>(14u);
+    let duv = select(max(dd.xy, dd.zw), dd.xy + dd.zw, (mode >> 8u & 1u) != 0u);
+    let md = max(duv.x, duv.y) / 128.0;
+    let minl = i32(ld.y);
+    var lod = minl;
+    if md != 0.0 { lod = i32(floor(log2(md) * 16.0)) + i32(ld.x); }
+    let lin = select((mode >> 4u & 1u) != 0u, (mode >> 7u & 1u) != 0u, lod > 0);
+    lod = clamp(lod, minl, i32(ld.z));
+    var base = lod >> 4u;
+    let frac = lod & 15;
+    let mip_lin = (mode >> 5u & 3u) == 2u;
+    if !mip_lin && frac >= 8 { base += 1; }
+    let tuv = uv * i32(ld.w);
+    let r = sample_level(m, tuv, base, lin);
+    if frac != 0 && mip_lin { return (r * (16 - frac) + sample_level(m, tuv, base + 1, lin) * frac) >> vec4<u32>(4u); }
+    return r;
 }
 
 // A coordinate in the TEV's fixed-point texel space (1/128 texel of its SU scale), truncated like Dolphin.
-fn fixuv(d: Draw, c: u32, uv: vec2<f32>) -> vec2<i32> {
-    let e = d.su[c >> 1u];
+fn fixuv(c: u32, uv: vec2<f32>) -> vec2<i32> {
+    let e = draws[cur].su[c >> 1u];
     let sz = select(e.xy, e.zw, (c & 1u) != 0u);
     return vec2<i32>(uv * vec2<f32>(sz) * 128.0);
-}
-
-// A map's size in GameCube texels (an EFB copy's texture is `scale` times larger).
-fn gxsize(d: Draw, m: u32) -> vec2<f32> {
-    return vec2<f32>(f32(d.samp[m].y), f32(d.samp[m].z)) / max(d.lod[m].w, 1.0);
 }
 
 // Indirect wrap of a fixed-point coordinate: off, 256, 128, 64, 32, 16 texels, 0.
@@ -285,42 +300,45 @@ fn ain(k: u32, reg: array<vec4<i32>, 4>, tx: vec4<i32>, rc: vec4<i32>, kc: vec4<
 
 @fragment
 fn fs(i: VOut) -> @location(0) vec4<f32> {
-    let d = draws[i.draw];
+    cur = i.draw;
     var tcs = array<vec3<f32>, 8>(i.tc0, i.tc1, i.tc2, i.tc3, i.tc4, i.tc5, i.tc6, i.tc7);
     // texture coordinates and their screen-space footprint (for the LOD), in uniform control flow
     var uvs: array<vec2<f32>, 8>;
-    var grads: array<f32, 8>;
+    var grads: array<vec4<f32>, 8>;
     for (var k = 0u; k < 8u; k++) {
         let t = tcs[k];
         let q = select(t.z, 1.0, t.z == 0.0);
         let uv = t.xy / q;
         uvs[k] = uv;
-        let scale = d.viewport[1].z;
-        let g = max(abs(dpdx(uv)), abs(dpdy(uv))) * scale;
-        grads[k] = max(g.x, g.y);
+        // coarse derivatives of the fixed-point coordinate, per GameCube pixel (the EFB is `scale` times larger)
+        let scale = draws[cur].viewport[1].z;
+        let f = vec2<f32>(fixuv(k, uv));
+        grads[k] = vec4<f32>(abs(dpdxCoarse(f)), abs(dpdyCoarse(f))) * scale;
     }
     let ras0 = vec4<i32>(clamp(i.c0, vec4<f32>(0.0), vec4<f32>(255.0)));
     let ras1 = vec4<i32>(clamp(i.c1, vec4<f32>(0.0), vec4<f32>(255.0)));
-    var reg = d.regs;
-    let n = d.misc.x;
+    var reg = draws[cur].regs;
+    let n = draws[cur].misc.x;
     var last = vec2<u32>(0u, 0u);
     // indirect lookups (Dolphin's iindtex: the texel's alpha, blue, green as S, T, U)
-    let nind = d.ind_misc.w;
+    let nind = draws[cur].ind_misc.w;
     var iind: array<vec3<i32>, 4>;
     for (var k = 0u; k < 4u; k++) {
         if k >= nind { break; }
-        let r = d.ind_misc.x >> (6u * k);
+        let r = draws[cur].ind_misc.x >> (6u * k);
         let m = r & 7u;
         let c = r >> 3u & 7u;
-        let ss = d.ind_misc[1u + (k >> 1u)] >> (8u * (k & 1u));
+        let ss = draws[cur].ind_misc[1u + (k >> 1u)] >> (8u * (k & 1u));
         let sh = vec2<u32>(ss & 15u, ss >> 4u & 15u);
-        let fp = fixuv(d, c, uvs[c]) >> sh;
-        let t = sample(d, m, vec2<f32>(fp) / (128.0 * gxsize(d, m)), grads[c] / f32(1u << max(sh.x, sh.y)));
+        let fp = fixuv(c, uvs[c]) >> sh;
+        // derivatives of the shifted coordinate approximated by the coordinate's own, shifted
+        let k2 = vec2<f32>(f32(1u << sh.x), f32(1u << sh.y));
+        let t = sample(m, fp, grads[c] / vec4<f32>(k2, k2));
         iind[k] = vec3<i32>(t.w, t.z, t.y);
     }
     var tevcoord = vec2<i32>(0);
     for (var s = 0u; s < n; s++) {
-        let st = d.stages[s];
+        let st = draws[cur].stages[s];
         let cenv = st.x;
         let aenv = st.y;
         let order = st.z;
@@ -329,19 +347,18 @@ fn fs(i: VOut) -> @location(0) vec4<f32> {
         let chan = order >> 7u & 7u;
         let ten = (order >> 6u & 1u) != 0u;
         // indirect stage: offset (matrix times the indirect texel), wrap, add to the previous stage's coordinate
-        let ic = d.ind[s >> 2u][s & 3u];
+        let ic = draws[cur].ind[s >> 2u][s & 3u];
         let bt = ic & 3u;
         let fmt = ic >> 2u & 3u;
         let mid = ic >> 9u & 15u;
         let sw = ic >> 13u & 7u;
         let tw = ic >> 16u & 7u;
-        var uv = uvs[coord];
         var alphabump = 0;
         if (sw != 0u || tw != 0u || mid != 0u || (ic >> 20u & 1u) != 0u) && bt < nind {
             let it = iind[bt];
             let bs = ic >> 7u & 3u;
             if bs != 0u { alphabump = (it[bs - 1u] << select(select(select(3u, 4u, fmt == 2u), 5u, fmt == 1u), 0u, fmt == 0u)) & 248; }
-            let fu = fixuv(d, coord, uvs[coord]);
+            let fu = fixuv(coord, uvs[coord]);
             var tr = vec2<i32>(0);
             if (mid & 3u) != 0u {
                 var crd = it >> vec3<u32>(select(select(select(5u, 4u, fmt == 2u), 3u, fmt == 1u), 0u, fmt == 0u));
@@ -351,8 +368,8 @@ fn fs(i: VOut) -> @location(0) vec4<f32> {
                 if (bias & 2u) != 0u { crd.y += badd; }
                 if (bias & 4u) != 0u { crd.z += badd; }
                 let mi = (mid & 3u) - 1u;
-                let r0 = d.ind_mtx[2u * mi];
-                let r1 = d.ind_mtx[2u * mi + 1u];
+                let r0 = draws[cur].ind_mtx[2u * mi];
+                let r1 = draws[cur].ind_mtx[2u * mi + 1u];
                 if mid < 4u { tr = vec2<i32>(dot(r0.xyz, crd), dot(r1.xyz, crd)) >> vec2<u32>(3u); }
                 else if mid < 8u { tr = (fu * crd.xx) >> vec2<u32>(8u); }
                 else { tr = (fu * crd.yy) >> vec2<u32>(8u); }
@@ -361,9 +378,8 @@ fn fs(i: VOut) -> @location(0) vec4<f32> {
             let wr = vec2<i32>(wrapi(fu.x, sw), wrapi(fu.y, tw));
             if (ic >> 20u & 1u) != 0u { tevcoord = tevcoord + wr + tr; } else { tevcoord = wr + tr; }
             tevcoord = (tevcoord << vec2<u32>(8u)) >> vec2<u32>(8u);
-            uv = vec2<f32>(tevcoord) / (128.0 * gxsize(d, map));
         } else if ten {
-            tevcoord = fixuv(d, coord, uvs[coord]);
+            tevcoord = fixuv(coord, uvs[coord]);
         } else {
             tevcoord = vec2<i32>(0);
         }
@@ -372,8 +388,8 @@ fn fs(i: VOut) -> @location(0) vec4<f32> {
         else if chan == 5u { rc = vec4<i32>(alphabump); } else if chan == 6u { rc = vec4<i32>(alphabump | (alphabump >> 5u)); }
         rc = swz(rc, st.w & 0xFFu);
         var tx = vec4<i32>(255);
-        if ten { tx = swz(sample(d, map, uv, grads[coord]), st.w >> 8u & 0xFFu); }
-        let kc = d.konst[s];
+        if ten { tx = swz(sample(map, tevcoord, grads[coord]), st.w >> 8u & 0xFFu); }
+        let kc = draws[cur].konst[s];
         let a = cin(cenv >> 12u & 15u, reg, tx, rc, kc);
         let b = cin(cenv >> 8u & 15u, reg, tx, rc, kc);
         let c = cin(cenv >> 4u & 15u, reg, tx, rc, kc);
@@ -410,33 +426,33 @@ fn fs(i: VOut) -> @location(0) vec4<f32> {
         last = vec2<u32>(cd, adst);
     }
     var out = vec4<i32>(clamp(reg[last.x].xyz, vec3<i32>(0), vec3<i32>(255)), clamp(reg[last.y].w, 0, 255));
-    if !atest(d.misc.z, out.w) { discard; }
-    out = vec4<i32>(fog(d, i.clip, out.xyz), out.w);
-    if (d.misc.w & 16u) != 0u {
+    if !atest(draws[cur].misc.z, out.w) { discard; }
+    out = vec4<i32>(fog(i.clip, out.xyz), out.w);
+    if (draws[cur].misc.w & 16u) != 0u {
         let dst = vec4<i32>(round(textureLoad(efb_dst, vec2<i32>(i.clip.xy), 0) * 255.0));
-        out = logic(d.misc.w & 15u, out, dst) & vec4<i32>(255);
+        out = logic(draws[cur].misc.w & 15u, out, dst) & vec4<i32>(255);
     }
     return vec4<f32>(out) / 255.0;
 }
 
 // Fog as Dolphin's PixelShaderGen WriteFog (raster::Fog): eye z from the 24-bit screen z, range adjust, minus C,
 // clamped, the fog function, then mixed with the fog colour in 1/256ths.
-fn fog(d: Draw, p: vec4<f32>, c: vec3<i32>) -> vec3<i32> {
-    let fsel = d.fog.x & 7u;
+fn fog(p: vec4<f32>, c: vec3<i32>) -> vec3<i32> {
+    let fsel = draws[cur].fog.x & 7u;
     if fsel == 0u { return c; }
-    let z = u32(clamp(p.z, 0.0, 1.0) * 16777215.0 + 0.5);
+    let z = u32(clamp(16777215.0 - p.z * 16777215.0, 0.0, 16777215.0) + 0.5);
     var ze: f32;
-    if (d.fog.x >> 3u & 1u) != 0u { ze = d.fogf.x * f32(z) / 16777216.0; }
-    else { ze = d.fogf.x * 16777216.0 / f32(i32(d.fog.y) - i32(z >> d.fog.z)); }
-    if (d.fog.x >> 4u & 1u) != 0u {
-        let off = (p.x / d.viewport[1].z - d.fogf.z) / d.fogf.w;
+    if (draws[cur].fog.x >> 3u & 1u) != 0u { ze = draws[cur].fogf.x * f32(z) / 16777216.0; }
+    else { ze = draws[cur].fogf.x * 16777216.0 / f32(i32(draws[cur].fog.y) - i32(z >> draws[cur].fog.z)); }
+    if (draws[cur].fog.x >> 4u & 1u) != 0u {
+        let off = (p.x / draws[cur].viewport[1].z - draws[cur].fogf.z) / draws[cur].fogf.w;
         let fi = clamp(9.0 - abs(off) * 9.0, 0.0, 9.0);
         let lo = u32(fi);
         let hi = lo + 1u;
-        let k = mix(d.fogk[lo >> 2u][lo & 3u], d.fogk[hi >> 2u][hi & 3u], fract(fi));
+        let k = mix(draws[cur].fogk[lo >> 2u][lo & 3u], draws[cur].fogk[hi >> 2u][hi & 3u], fract(fi));
         ze *= sqrt(off * off + k * k) / k;
     }
-    var f = clamp(ze - d.fogf.y, 0.0, 1.0);
+    var f = clamp(ze - draws[cur].fogf.y, 0.0, 1.0);
     if f != f { f = 0.0; }
     switch fsel {
         case 4u: { f = 1.0 - exp2(-8.0 * f); }
@@ -446,7 +462,7 @@ fn fog(d: Draw, p: vec4<f32>, c: vec3<i32>) -> vec3<i32> {
         default: {}
     }
     let n = i32(round(f * 256.0));
-    let col = vec3<i32>(i32(d.fog.w >> 16u & 255u), i32(d.fog.w >> 8u & 255u), i32(d.fog.w & 255u));
+    let col = vec3<i32>(i32(draws[cur].fog.w >> 16u & 255u), i32(draws[cur].fog.w >> 8u & 255u), i32(draws[cur].fog.w & 255u));
     return (c * (256 - n) + col * n) >> vec3<u32>(8u);
 }
 

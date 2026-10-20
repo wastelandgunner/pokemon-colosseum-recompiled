@@ -19,12 +19,12 @@ pub fn f_8014a23c_at(c: &mut Cpu, pc: u32) { f_8014a23c_b(c, pc) }
 #[inline(always)]
 fn f_8014a23c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014a23c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014a23c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014a23c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014a23c => { ins += 3;
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
@@ -36,7 +36,7 @@ fn f_8014a23c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = 0x8;
                 pc = 0x8014a24c;
             }
-            0x8014a24c => { ins += 13;
+            0x8014a24c => { ins += 19;
                 c.r[0] = c.r[3].rotate_left(3) & 0xfffffff8;
                 c.r[6] = 0x88890000;
                 c.r[0] = c.r[0].wrapping_mul(0x600);
@@ -49,8 +49,8 @@ fn f_8014a23c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].wrapping_add(c.r[4]);
                 c.r[4] = c.r[6].rotate_left(25) & 0x1ffffff;
                 c.stw(c.r[3].wrapping_add(c.r[0]), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014a23c: bad pc {:#x}", pc),
         }
@@ -73,12 +73,12 @@ pub fn f_8014a280_at(c: &mut Cpu, pc: u32) { f_8014a280_b(c, pc) }
 #[inline(always)]
 fn f_8014a280_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014a280;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014a280, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014a280, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014a280 => { ins += 4;
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x122));
@@ -99,8 +99,8 @@ fn f_8014a280_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
                 c.r[3] = c.r[3].wrapping_add(c.r[4]);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014a280: bad pc {:#x}", pc),
         }
@@ -123,12 +123,12 @@ pub fn f_8014a2b4_at(c: &mut Cpu, pc: u32) { f_8014a2b4_b(c, pc) }
 #[inline(always)]
 fn f_8014a2b4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014a2b4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014a2b4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014a2b4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014a2b4 => { ins += 10;
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0x114));
@@ -141,7 +141,7 @@ fn f_8014a2b4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[5] ^ c.r[6];
                 c.r[0] = c.r[4] | c.r[0];
                 cr_rc(&mut cr, c.xer, c.r[0]);
-                if !cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if !cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014a2dc;
             }
             0x8014a2dc => { ins += 3;
@@ -180,8 +180,8 @@ fn f_8014a2b4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x130));
                 c.r[0] = c.r[0].rotate_left(16) & 0xffff0000;
                 c.stw(c.r[3].wrapping_add(0x138), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014a2b4: bad pc {:#x}", pc),
         }
@@ -204,19 +204,19 @@ pub fn f_8014a32c_at(c: &mut Cpu, pc: u32) { f_8014a32c_b(c, pc) }
 #[inline(never)]
 fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014a32c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014a32c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014a32c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014a32c => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffc0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x44), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x40);
-                c.lr = 0x8014a340; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47b4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a340; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47b4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a340;
             }
             0x8014a340 => { ins += 14;
@@ -307,7 +307,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014a420 => { ins += 2;
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x8014a428; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a428; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a428;
             }
             0x8014a428 => { ins += 2;
@@ -343,7 +343,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014a5b4; continue;
                 pc = 0x8014a478;
             }
-            0x8014a478 => { ins += 33;
+            0x8014a478 => { ins += 37;
                 c.r[0] = c.lbz_t(ins, c.r[25].wrapping_add(0x12e));
                 c.r[3] = 0x51ec0000;
                 c.r[4] = c.r[3].wrapping_add(0xffff851f);
@@ -376,7 +376,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[25].wrapping_add(0x118), c.r[0]);
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[3] = c.r[0].wrapping_add(c.r[30]);
-                c.lr = 0x8014a4fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a4fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a4fc;
             }
             0x8014a4fc => { ins += 3;
@@ -392,7 +392,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[25].wrapping_add(0xf0), c.r[0]);
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[3] = c.r[0].wrapping_add(c.r[30]);
-                c.lr = 0x8014a524; { c.steps = st; c.instrs = ins; c.cr = cr; f_801576c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a524; { c.steps = st; c.cycles = ins; c.cr = cr; f_801576c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a524;
             }
             0x8014a524 => { ins += 3;
@@ -401,7 +401,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014a560; continue;
                 pc = 0x8014a530;
             }
-            0x8014a530 => { ins += 12;
+            0x8014a530 => { ins += 14;
                 c.r[0] = c.r[26].rotate_left(0) & 0xff;
                 c.r[6] = c.lwz_t(ins, c.r[25].wrapping_add(0xf4));
                 c.r[3] = c.r[0].wrapping_mul(0x404);
@@ -413,7 +413,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[26] = c.lwz_t(ins, c.r[25].wrapping_add(0xf4));
                 c.r[3] = c.r[0].wrapping_add(c.r[30]);
-                c.lr = 0x8014a560; { c.steps = st; c.instrs = ins; c.cr = cr; f_801576c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a560; { c.steps = st; c.cycles = ins; c.cr = cr; f_801576c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a560;
             }
             0x8014a560 => { ins += 3;
@@ -436,7 +436,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014a584 => { ins += 2;
                 c.r[3] = c.r[24] | c.r[24];
-                c.lr = 0x8014a58c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801589a8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a58c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801589a8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a58c;
             }
             0x8014a58c => { ins += 5;
@@ -444,7 +444,7 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[24].wrapping_add(0x121));
                 c.r[4] = c.lbz_t(ins, c.r[24].wrapping_add(0x122));
                 c.r[5] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x8014a5a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a5a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a5a0;
             }
             0x8014a5a0 => { ins += 3;
@@ -463,15 +463,15 @@ fn f_8014a32c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014a5b4 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x40);
-                c.lr = 0x8014a5bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4800(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a5bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4800(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a5bc;
             }
-            0x8014a5bc => { ins += 4;
+            0x8014a5bc => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x44));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x40);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014a32c: bad pc {:#x}", pc),
         }
@@ -494,19 +494,19 @@ pub fn f_8014a5cc_at(c: &mut Cpu, pc: u32) { f_8014a5cc_b(c, pc) }
 #[inline(never)]
 fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014a5cc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014a5cc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014a5cc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014a5cc => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffff80); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x84), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8014a5e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a5e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a5e0;
             }
             0x8014a5e0 => { ins += 17;
@@ -526,7 +526,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[1].wrapping_add(0x2a);
                 c.r[25] = c.lwz_t(ins, c.r[1].wrapping_add(0xa4));
                 c.r[14] = 0xffffffff;
-                c.lr = 0x8014a624; { c.steps = st; c.instrs = ins; c.cr = cr; f_801523b8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a624; { c.steps = st; c.cycles = ins; c.cr = cr; f_801523b8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a624;
             }
             0x8014a624 => { ins += 2;
@@ -591,7 +591,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[18] | c.r[18];
                 c.r[5] = c.r[19] | c.r[19];
                 c.r[3] = 0x41;
-                c.lr = 0x8014a6a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a6a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a6a8;
             }
             0x8014a6a8 => { ins += 3;
@@ -606,7 +606,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[19] | c.r[19];
                 c.r[7] = c.r[1].wrapping_add(0x2c);
                 c.r[6] = 0x0;
-                c.lr = 0x8014a6cc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a6cc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a6cc;
             }
             0x8014a6cc => { ins += 5;
@@ -668,7 +668,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x80;
                 pc = 0x8014a738;
             }
-            0x8014a738 => { ins += 16;
+            0x8014a738 => { ins += 24;
                 c.r[3] = 0x81020000;
                 c.r[4] = c.lha_t(ins, c.r[26].wrapping_add(0x6));
                 c.r[6] = c.r[3].wrapping_add(0x409);
@@ -746,7 +746,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[23]);
                 c.stw(c.r[1].wrapping_add(0x20), c.r[24]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[25]);
-                c.lr = 0x8014a804; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a804; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a804;
             }
             0x8014a804 => { ins += 2;
@@ -771,7 +771,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[23]);
                 c.stw(c.r[1].wrapping_add(0x20), c.r[24]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[25]);
-                c.lr = 0x8014a850; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a98c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a850; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a98c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a850;
             }
             0x8014a850 => { ins += 2;
@@ -796,7 +796,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[23]);
                 c.stw(c.r[1].wrapping_add(0x20), c.r[24]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[25]);
-                c.lr = 0x8014a89c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a89c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a89c;
             }
             0x8014a89c => { ins += 1;
@@ -821,12 +821,12 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014a8e0; continue; }
                 pc = 0x8014a8c4;
             }
-            0x8014a8c4 => { ins += 5;
+            0x8014a8c4 => { ins += 7;
                 c.r[0] = c.r[28].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[0].wrapping_mul(0x404);
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
-                c.lr = 0x8014a8d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801576b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a8d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801576b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a8d8;
             }
             0x8014a8d8 => { ins += 2;
@@ -839,7 +839,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014a910; continue;
                 pc = 0x8014a8e8;
             }
-            0x8014a8e8 => { ins += 10;
+            0x8014a8e8 => { ins += 14;
                 c.r[3] = c.r[27].rotate_left(0) & 0xff;
                 c.r[0] = c.r[28].rotate_left(0) & 0xff;
                 c.r[3] = c.r[3].wrapping_mul(0x404);
@@ -865,7 +865,7 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[27] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 pc = 0x8014a92c;
             }
-            0x8014a92c => { ins += 8;
+            0x8014a92c => { ins += 10;
                 c.r[0] = c.r[27].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[6] = c.r[0].wrapping_mul(0x404);
@@ -897,15 +897,15 @@ fn f_8014a5cc_b(c: &mut Cpu, mut pc: u32) {
             0x8014a970 => { ins += 3;
                 c.r[3] = c.r[14] | c.r[14];
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8014a97c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a97c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a97c;
             }
-            0x8014a97c => { ins += 4;
+            0x8014a97c => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x84));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x80);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014a5cc: bad pc {:#x}", pc),
         }
@@ -928,19 +928,19 @@ pub fn f_8014a98c_at(c: &mut Cpu, pc: u32) { f_8014a98c_b(c, pc) }
 #[inline(never)]
 fn f_8014a98c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014a98c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014a98c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014a98c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014a98c => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffff80); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x84), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8014a9a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47a8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a9a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47a8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a9a0;
             }
             0x8014a9a0 => { ins += 16;
@@ -959,7 +959,7 @@ fn f_8014a98c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[15] = c.lbz_t(ins, c.r[1].wrapping_add(0xa3));
                 c.r[28] = c.r[10] | c.r[10];
                 c.r[19] = c.lwz_t(ins, c.r[1].wrapping_add(0xa4));
-                c.lr = 0x8014a9e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015234c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014a9e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015234c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014a9e0;
             }
             0x8014a9e0 => { ins += 2;
@@ -1073,7 +1073,7 @@ fn f_8014a98c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[28] | c.r[28];
                 c.r[5] = c.r[29] | c.r[29];
                 c.r[3] = 0x41;
-                c.lr = 0x8014aac8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014aac8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014aac8;
             }
             0x8014aac8 => { ins += 3;
@@ -1088,7 +1088,7 @@ fn f_8014a98c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29] | c.r[29];
                 c.r[6] = c.r[31] | c.r[31];
                 c.r[7] = c.r[1].wrapping_add(0x28);
-                c.lr = 0x8014aaec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014aaec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014aaec;
             }
             0x8014aaec => { ins += 4;
@@ -1143,7 +1143,7 @@ fn f_8014a98c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x20), c.r[15]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[19]);
                 c.r[3] = c.lhz_t(ins, c.r[20]);
-                c.lr = 0x8014ab74; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ab74; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ab74;
             }
             0x8014ab74 => { ins += 1;
@@ -1170,7 +1170,7 @@ fn f_8014a98c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[16]);
                 c.stw(c.r[1].wrapping_add(0x20), c.r[15]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[19]);
-                c.lr = 0x8014abc8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014abc8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014abc8;
             }
             0x8014abc8 => { ins += 1;
@@ -1183,15 +1183,15 @@ fn f_8014a98c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014abd0 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8014abd8; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47f4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014abd8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47f4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014abd8;
             }
-            0x8014abd8 => { ins += 4;
+            0x8014abd8 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x84));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x80);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014a98c: bad pc {:#x}", pc),
         }
@@ -1214,19 +1214,19 @@ pub fn f_8014abe8_at(c: &mut Cpu, pc: u32) { f_8014abe8_b(c, pc) }
 #[inline(never)]
 fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014abe8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014abe8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014abe8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014abe8 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffff80); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x84), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8014abfc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47a8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014abfc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47a8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014abfc;
             }
             0x8014abfc => { ins += 19;
@@ -1290,7 +1290,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[24] | c.r[24];
                 c.r[5] = c.r[25] | c.r[25];
                 c.r[3] = 0x41;
-                c.lr = 0x8014ac90; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ac90; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ac90;
             }
             0x8014ac90 => { ins += 3;
@@ -1305,7 +1305,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[25] | c.r[25];
                 c.r[7] = c.r[1].wrapping_add(0x2c);
                 c.r[6] = 0x1;
-                c.lr = 0x8014acb4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014acb4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014acb4;
             }
             0x8014acb4 => { ins += 4;
@@ -1358,7 +1358,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[22]);
                 c.stw(c.r[1].wrapping_add(0x20), c.r[18]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[29]);
-                c.lr = 0x8014ad34; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ad34; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ad34;
             }
             0x8014ad34 => { ins += 1;
@@ -1367,7 +1367,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014ad38 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8014ad40; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015234c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ad40; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015234c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ad40;
             }
             0x8014ad40 => { ins += 2;
@@ -1482,7 +1482,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[25] | c.r[25];
                 c.r[15] = c.r[19].rotate_left(0) & 0xff;
                 c.r[3] = 0x41;
-                c.lr = 0x8014ae2c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ae2c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ae2c;
             }
             0x8014ae2c => { ins += 3;
@@ -1497,7 +1497,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[25] | c.r[25];
                 c.r[7] = c.r[1].wrapping_add(0x28);
                 c.r[6] = 0x1;
-                c.lr = 0x8014ae50; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ae50; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a32c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ae50;
             }
             0x8014ae50 => { ins += 4;
@@ -1553,7 +1553,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x20), c.r[18]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[29]);
                 c.r[3] = c.lhz_t(ins, c.r[17]);
-                c.lr = 0x8014aedc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014aedc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014aedc;
             }
             0x8014aedc => { ins += 2;
@@ -1581,7 +1581,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[22]);
                 c.stw(c.r[1].wrapping_add(0x20), c.r[18]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[29]);
-                c.lr = 0x8014af34; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014af34; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014af34;
             }
             0x8014af34 => { ins += 2;
@@ -1601,7 +1601,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014af4c => { ins += 2;
                 c.r[3] = c.r[15] | c.r[15];
-                c.lr = 0x8014af54; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014af54; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014af54;
             }
             0x8014af54 => { ins += 2;
@@ -1609,7 +1609,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014af7c; continue;
                 pc = 0x8014af5c;
             }
-            0x8014af5c => { ins += 8;
+            0x8014af5c => { ins += 10;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[5] = c.r[0].wrapping_mul(0x404);
@@ -1649,7 +1649,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[22]);
                 c.stw(c.r[1].wrapping_add(0x20), c.r[18]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[29]);
-                c.lr = 0x8014afd8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014afd8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a5cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014afd8;
             }
             0x8014afd8 => { ins += 4;
@@ -1660,7 +1660,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014afe8;
             }
             0x8014afe8 => { ins += 1;
-                c.lr = 0x8014afec; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014afec; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014afec;
             }
             0x8014afec => { ins += 2;
@@ -1668,7 +1668,7 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014b014; continue;
                 pc = 0x8014aff4;
             }
-            0x8014aff4 => { ins += 8;
+            0x8014aff4 => { ins += 10;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[5] = c.r[0].wrapping_mul(0x404);
@@ -1696,15 +1696,15 @@ fn f_8014abe8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014b02c => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8014b034; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47f4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b034; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47f4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b034;
             }
-            0x8014b034 => { ins += 4;
+            0x8014b034 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x84));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x80);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014abe8: bad pc {:#x}", pc),
         }
@@ -1727,27 +1727,27 @@ pub fn f_8014b044_at(c: &mut Cpu, pc: u32) { f_8014b044_b(c, pc) }
 #[inline(never)]
 fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014b044;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014b044, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014b044, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014b044 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8014b058; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b058; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b058;
             }
-            0x8014b058 => { ins += 5;
+            0x8014b058 => { ins += 7;
                 c.r[27] = c.r[3] | c.r[3];
                 c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[27].wrapping_mul(0x404);
                 c.r[28] = c.r[4].wrapping_add(c.r[0]);
-                c.lr = 0x8014b06c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b06c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b06c;
             }
             0x8014b06c => { ins += 2;
@@ -1780,7 +1780,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014b124; continue; }
                 pc = 0x8014b0b4;
             }
-            0x8014b0b4 => { ins += 13;
+            0x8014b0b4 => { ins += 95;
                 c.r[0] = c.lwz_t(ins, c.r[30].wrapping_add(0x1bc));
                 c.r[0] = c.r[0].wrapping_add(c.r[31]);
                 c.stw(c.r[30].wrapping_add(0x1bc), c.r[0]);
@@ -1793,7 +1793,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].rotate_left(4) & 0xfffffff0;
                 c.r[0] = divwu(c.r[3], c.r[0]);
                 c.r[3] = c.r[0].rotate_left(0) & 0xffff;
-                c.lr = 0x8014b0e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016208c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b0e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016208c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b0e8;
             }
             0x8014b0e8 => { ins += 5;
@@ -1841,7 +1841,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014b198; continue; }
                 pc = 0x8014b15c;
             }
-            0x8014b15c => { ins += 13;
+            0x8014b15c => { ins += 95;
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x148));
                 c.r[0] = c.r[0].wrapping_add(c.r[31]);
                 c.stw(c.r[28].wrapping_add(0x148), c.r[0]);
@@ -1854,7 +1854,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].rotate_left(4) & 0xfffffff0;
                 c.r[0] = divwu(c.r[3], c.r[0]);
                 c.r[3] = c.r[0].rotate_left(0) & 0xffff;
-                c.lr = 0x8014b190; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016208c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b190; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016208c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b190;
             }
             0x8014b190 => { ins += 2;
@@ -1895,7 +1895,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014b200; continue;
                 pc = 0x8014b1e8;
             }
-            0x8014b1e8 => { ins += 6;
+            0x8014b1e8 => { ins += 10;
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x1a8));
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x1a0));
                 { let v = c.r[0] as i32; c.set_ca(v < 0 && (v as u32) << 20 != 0); c.r[0] = (v >> 12) as u32; }
@@ -1928,7 +1928,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014b254; continue;
                 pc = 0x8014b23c;
             }
-            0x8014b23c => { ins += 6;
+            0x8014b23c => { ins += 10;
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x1ac));
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x1a4));
                 { let v = c.r[0] as i32; c.set_ca(v < 0 && (v as u32) << 20 != 0); c.r[0] = (v >> 12) as u32; }
@@ -1937,7 +1937,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[28].wrapping_add(0x1a4), c.r[0]);
                 pc = 0x8014b254;
             }
-            0x8014b254 => { ins += 3;
+            0x8014b254 => { ins += 4;
                 c.r[0] = 0x2;
                 c.r[5] = c.r[28] | c.r[28];
                 c.mtspr(9, c.r[0]);
@@ -1967,7 +1967,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014b2dc; continue;
                 pc = 0x8014b29c;
             }
-            0x8014b29c => { ins += 9;
+            0x8014b29c => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[5].wrapping_add(0x178));
                 c.r[4] = c.r[0].rotate_left(24) & 0xffffff;
                 c.r[0] = c.lwz_t(ins, c.r[5].wrapping_add(0x180));
@@ -2027,7 +2027,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[28].wrapping_add(0x1dc);
                 c.r[4] = c.r[1].wrapping_add(0xa);
                 c.r[5] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x8014b328; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159410(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b328; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159410(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b328;
             }
             0x8014b328 => { ins += 2;
@@ -2046,7 +2046,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[28].wrapping_add(0x114), c.r[0]);
                 pc = 0x8014b350;
             }
-            0x8014b350 => { ins += 23;
+            0x8014b350 => { ins += 27;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x12e));
                 c.r[4] = 0x51ec0000;
                 c.r[3] = 0x10000;
@@ -2081,7 +2081,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014b3b8 => { ins += 2;
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x8014b3c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801616ac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b3c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801616ac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b3c0;
             }
             0x8014b3c0 => { ins += 3;
@@ -2105,7 +2105,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8014b3f4; continue; }
                 pc = 0x8014b3e0;
             }
-            0x8014b3e0 => { ins += 5;
+            0x8014b3e0 => { ins += 9;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x1d6));
                 c.r[0] = c.r[0].wrapping_mul(c.r[3]);
                 c.r[0] = c.r[0].rotate_left(3) & 0xfffffff8;
@@ -2113,7 +2113,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014b404; continue;
                 pc = 0x8014b3f4;
             }
-            0x8014b3f4 => { ins += 4;
+            0x8014b3f4 => { ins += 8;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x1d7));
                 c.r[0] = c.r[0].wrapping_mul(c.r[3]);
                 c.r[0] = c.r[0].rotate_left(3) & 0xfffffff8;
@@ -2136,10 +2136,10 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014b42c => { ins += 2;
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x8014b434; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016173c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b434; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016173c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b434;
             }
-            0x8014b434 => { ins += 14;
+            0x8014b434 => { ins += 18;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x141));
                 c.r[4] = 0x51ec0000;
                 c.r[6] = c.lha_t(ins, c.r[28].wrapping_add(0x150));
@@ -2157,7 +2157,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014b480; continue; }
                 pc = 0x8014b46c;
             }
-            0x8014b46c => { ins += 5;
+            0x8014b46c => { ins += 9;
                 c.r[0] = c.r[3].rotate_left(0) & 0xffff;
                 { let v = c.r[0] as i32; c.set_ca(v < 0 && (v as u32) << 25 != 0); c.r[0] = (v >> 7) as u32; }
                 c.r[0] = c.r[6].wrapping_mul(c.r[0]);
@@ -2179,7 +2179,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014b4c0; continue; }
                 pc = 0x8014b4a8;
             }
-            0x8014b4a8 => { ins += 6;
+            0x8014b4a8 => { ins += 10;
                 c.r[0] = c.r[3].rotate_left(0) & 0xffff;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x14c));
                 { let v = c.r[0] as i32; c.set_ca(v < 0 && (v as u32) << 25 != 0); c.r[0] = (v >> 7) as u32; }
@@ -2192,7 +2192,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x14c));
                 pc = 0x8014b4c4;
             }
-            0x8014b4c4 => { ins += 3;
+            0x8014b4c4 => { ins += 7;
                 c.r[0] = c.r[7].wrapping_mul(c.r[0]);
                 { let v = c.r[0] as i32; c.set_ca(v < 0 && (v as u32) << 28 != 0); c.r[0] = (v >> 4) as u32; }
                 c.r[29] = c.r[29].wrapping_add(c.r[0]);
@@ -2207,7 +2207,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
             0x8014b4dc => { ins += 3;
                 c.r[5] = c.lbz_t(ins, c.r[28].wrapping_add(0x122));
                 c.r[3] = 0x41;
-                c.lr = 0x8014b4e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b4e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b4e8;
             }
             0x8014b4e8 => { ins += 4;
@@ -2349,7 +2349,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 1) { pc = 0x8014b69c; continue; }
                 pc = 0x8014b63c;
             }
-            0x8014b63c => { ins += 9;
+            0x8014b63c => { ins += 52;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x138));
                 c.r[0] = c.r[29].wrapping_sub(c.r[3]);
                 cr_cmpu(&mut cr, c.xer, 0, c.r[3], c.r[29]);
@@ -2405,7 +2405,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014b6dc; continue; }
                 pc = 0x8014b6c4;
             }
-            0x8014b6c4 => { ins += 6;
+            0x8014b6c4 => { ins += 10;
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x1e4));
                 c.r[3] = c.lha_t(ins, c.r[28].wrapping_add(0x204));
                 { let v = c.r[0] as i32; c.set_ca(v < 0 && (v as u32) << 16 != 0); c.r[0] = (v >> 16) as u32; }
@@ -2417,7 +2417,7 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
             0x8014b6dc => { ins += 3;
                 c.r[4] = c.lwz_t(ins, c.r[28].wrapping_add(0x124));
                 c.r[3] = c.r[30].rotate_left(16) & 0xff;
-                c.lr = 0x8014b6e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158bf0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b6e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158bf0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b6e8;
             }
             0x8014b6e8 => { ins += 3;
@@ -2430,10 +2430,10 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
             0x8014b6f4 => { ins += 3;
                 c.r[31] = c.r[29].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8014b700; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158bb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b700; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158bb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b700;
             }
-            0x8014b700 => { ins += 4;
+            0x8014b700 => { ins += 8;
                 c.r[0] = c.r[3].rotate_left(0) & 0xffff;
                 c.r[0] = c.r[0].wrapping_sub(c.r[31]);
                 c.r[0] = c.r[30].wrapping_mul(c.r[0]);
@@ -2446,24 +2446,24 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lwz_t(ins, c.r[28].wrapping_add(0x1a0));
                 c.r[29] = c.r[0].wrapping_add(c.r[29]);
                 c.r[29] = c.r[4].wrapping_add(c.r[29]);
-                c.lr = 0x8014b728; { c.steps = st; c.instrs = ins; c.cr = cr; f_801616f4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b728; { c.steps = st; c.cycles = ins; c.cr = cr; f_801616f4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b728;
             }
-            0x8014b728 => { ins += 7;
+            0x8014b728 => { ins += 11;
                 c.r[3] = c.r[3].rotate_left(0) & 0xffff;
                 c.r[0] = c.r[29].rotate_left(16) & 0xffff;
                 c.r[0] = c.r[0].wrapping_mul(c.r[3]);
                 c.r[3] = c.r[27] | c.r[27];
                 c.r[4] = c.r[0].rotate_left(19) & 0xffff;
                 c.sth(c.r[28].wrapping_add(0x206), c.r[4]);
-                c.lr = 0x8014b744; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016292c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b744; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016292c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b744;
             }
             0x8014b744 => { ins += 4;
                 c.r[3] = c.r[28] | c.r[28];
                 c.r[4] = 0x0;
                 c.r[5] = 0xf00;
-                c.lr = 0x8014b754; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b754; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b754;
             }
             0x8014b754 => { ins += 3;
@@ -2481,15 +2481,15 @@ fn f_8014b044_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014b770 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8014b778; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b778; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b778;
             }
-            0x8014b778 => { ins += 4;
+            0x8014b778 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014b044: bad pc {:#x}", pc),
         }
@@ -2512,14 +2512,14 @@ pub fn f_8014b788_at(c: &mut Cpu, pc: u32) { f_8014b788_b(c, pc) }
 #[inline(never)]
 fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014b788;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014b788, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014b788, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8014b788 => { ins += 20;
+            0x8014b788 => { ins += 22;
                 { let ea = c.r[1].wrapping_add(0xffffff60); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0xa4), c.r[0]);
@@ -2539,7 +2539,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[29].wrapping_mul(0x404);
                 c.r[30] = c.r[4].wrapping_add(c.r[0]);
-                c.lr = 0x8014b7d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b7d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b7d8;
             }
             0x8014b7d8 => { ins += 2;
@@ -2576,7 +2576,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014b8e0; continue; }
                 pc = 0x8014b838;
             }
-            0x8014b838 => { ins += 9;
+            0x8014b838 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[30].wrapping_add(0x194));
                 c.r[0] = c.r[31].rotate_left(24) & 0xffffff;
                 c.r[4] = c.lwz_t(ins, c.r[30].wrapping_add(0x19c));
@@ -2647,7 +2647,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 { let ci = c.ca(); c.r[0] = c.addc(!c.r[3], c.r[0], ci); }
                 pc = 0x8014b900;
             }
-            0x8014b900 => { ins += 27;
+            0x8014b900 => { ins += 31;
                 c.r[4] = c.lwz_t(ins, c.r[30].wrapping_add(0x118));
                 c.r[3] = 0xffffffff;
                 c.r[6] = c.lwz_t(ins, c.r[30].wrapping_add(0x114));
@@ -2727,13 +2727,13 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014b9ec => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8014b9f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016173c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014b9f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016173c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014b9f4;
             }
             0x8014b9f4 => { ins += 3;
                 c.r[28] = c.r[3] | c.r[3];
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8014ba00; { c.steps = st; c.instrs = ins; c.cr = cr; f_801618ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ba00; { c.steps = st; c.cycles = ins; c.cr = cr; f_801618ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ba00;
             }
             0x8014ba00 => { ins += 43;
@@ -2859,7 +2859,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x118), c.r[0]);
                 c.r[0] = c.r[5] & c.r[4];
                 c.stw(c.r[30].wrapping_add(0x114), c.r[0]);
-                c.lr = 0x8014bb68; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016161c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bb68; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016161c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bb68;
             }
             0x8014bb68 => { ins += 6;
@@ -2897,7 +2897,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014bba8 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8014bbb0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161664(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bbb0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161664(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bbb0;
             }
             0x8014bbb0 => { ins += 7;
@@ -2974,7 +2974,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014bc5c => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8014bc64; { c.steps = st; c.instrs = ins; c.cr = cr; f_801615d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bc64; { c.steps = st; c.cycles = ins; c.cr = cr; f_801615d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bc64;
             }
             0x8014bc64 => { ins += 13;
@@ -2990,7 +2990,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[2] - c.f[3]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[1] * c.f[2]); c.f[1] = v; c.ps1[1] = v; }
                 { let v = s(c.f[0] * c.f[1]); c.f[31] = v; c.ps1[31] = v; }
-                c.lr = 0x8014bc98; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161814(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bc98; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161814(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bc98;
             }
             0x8014bc98 => { ins += 20;
@@ -3013,7 +3013,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[2] * c.f[3]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[1] * c.f[2]); c.f[1] = v; c.ps1[1] = v; }
                 { let v = s(c.f[0] * c.f[1]); c.f[29] = v; c.ps1[29] = v; }
-                c.lr = 0x8014bce8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801617cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bce8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801617cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bce8;
             }
             0x8014bce8 => { ins += 21;
@@ -3037,7 +3037,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[1] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[2] + c.f[29]); c.f[1] = v; c.ps1[1] = v; }
                 { let v = s(c.f[0] + c.f[1]); c.f[28] = v; c.ps1[28] = v; }
-                c.lr = 0x8014bd3c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801618a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bd3c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801618a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bd3c;
             }
             0x8014bd3c => { ins += 12;
@@ -3052,7 +3052,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[1] - c.f[2]); c.f[1] = v; c.ps1[1] = v; }
                 { let v = s(c.f[31] * c.f[1]); c.f[1] = v; c.ps1[1] = v; }
                 { let v = s(c.f[0] * c.f[1]); c.f[29] = v; c.ps1[29] = v; }
-                c.lr = 0x8014bd6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016185c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bd6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016185c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bd6c;
             }
             0x8014bd6c => { ins += 24;
@@ -3079,7 +3079,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[0] + c.f[29]); c.f[3] = v; c.ps1[3] = v; }
                 c.r[5] = c.lwz_t(ins, c.r[30].wrapping_add(0x160));
                 c.r[6] = c.lwz_t(ins, c.r[30].wrapping_add(0x164));
-                c.lr = 0x8014bdcc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014bdcc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014bdcc;
             }
             0x8014bdcc => { ins += 3;
@@ -3088,7 +3088,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014be0c; continue; }
                 pc = 0x8014bdd8;
             }
-            0x8014bdd8 => { ins += 5;
+            0x8014bdd8 => { ins += 9;
                 c.r[0] = c.lhz_t(ins, c.r[30].wrapping_add(0x10e));
                 c.r[0] = c.r[0].wrapping_mul(c.r[31]);
                 c.r[0] = c.r[3].wrapping_sub(c.r[0]);
@@ -3108,11 +3108,11 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lbz_t(ins, c.r[30].wrapping_add(0x10c));
                 c.r[4] = c.r[0].rotate_left(17) & 0x1ffff;
                 c.r[4] = (c.r[5].rotate_left(24) & 0xff000000) | (c.r[4] & 0xffffff);
-                c.lr = 0x8014be0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014be0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014be0c;
             }
             0x8014be0c => { ins += 1;
-                c.lr = 0x8014be10; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162464(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014be10; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162464(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014be10;
             }
             0x8014be10 => { ins += 6;
@@ -3121,7 +3121,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.addc(!c.r[0], 0x5, 1);
                 c.r[4] = 0x1;
                 c.r[5] = c.r[0].rotate_left(8) & 0xffffff00;
-                c.lr = 0x8014be28; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014be28; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014be28;
             }
             0x8014be28 => { ins += 3;
@@ -3137,7 +3137,7 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x214), c.r[0]);
                 pc = 0x8014be44;
             }
-            0x8014be44 => { ins += 16;
+            0x8014be44 => { ins += 17;
                 { let ea = c.r[1].wrapping_add(0x98); let (x, y) = c.psq_load(ea, false, 0); c.f[31] = x; c.ps1[31] = y; }
                 { let ea = c.r[1].wrapping_add(0x90); c.f[31] = c.lfd(ea); }
                 { let ea = c.r[1].wrapping_add(0x88); let (x, y) = c.psq_load(ea, false, 0); c.f[30] = x; c.ps1[30] = y; }
@@ -3153,8 +3153,8 @@ fn f_8014b788_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x50));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0xa0);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014b788: bad pc {:#x}", pc),
         }
@@ -3177,14 +3177,14 @@ pub fn f_8014be84_at(c: &mut Cpu, pc: u32) { f_8014be84_b(c, pc) }
 #[inline(always)]
 fn f_8014be84_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014be84;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014be84, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014be84, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8014be84 => { ins += 10;
+            0x8014be84 => { ins += 12;
                 c.r[0] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa6f9));
                 c.r[6] = c.r[5].rotate_left(24) & 0xffffff;
                 c.r[5] = 0x80430000;
@@ -3228,7 +3228,7 @@ fn f_8014be84_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014bed8 => { ins += 2;
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], c.r[8]);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014bee0;
             }
             0x8014bee0 => { ins += 3;
@@ -3254,7 +3254,7 @@ fn f_8014be84_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014bf24; continue;
                 pc = 0x8014bf0c;
             }
-            0x8014bf0c => { ins += 6;
+            0x8014bf0c => { ins += 8;
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x9));
                 c.r[6] = 0x80430000;
                 c.r[7] = c.lwz_t(ins, c.r[3]);
@@ -3277,7 +3277,7 @@ fn f_8014be84_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014bf3c => { ins += 2;
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], c.r[8]);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014bf44;
             }
             0x8014bf44 => { ins += 3;
@@ -3303,7 +3303,7 @@ fn f_8014be84_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014bf8c; continue;
                 pc = 0x8014bf70;
             }
-            0x8014bf70 => { ins += 7;
+            0x8014bf70 => { ins += 9;
                 c.r[0] = c.lbz_t(ins, c.r[4].wrapping_add(0x9));
                 c.r[3] = 0x80430000;
                 c.r[3] = c.r[3].wrapping_add(0x54a4);
@@ -3322,7 +3322,7 @@ fn f_8014be84_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[3].wrapping_add(0x18);
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x21));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xff);
-                if !cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if !cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014bfa4;
             }
             0x8014bfa4 => { ins += 1;
@@ -3346,8 +3346,8 @@ fn f_8014be84_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.stw(c.r[4].wrapping_add(0x4), c.r[0]);
                 c.stw(c.r[7], c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014be84: bad pc {:#x}", pc),
         }
@@ -3370,12 +3370,12 @@ pub fn f_8014bfd4_at(c: &mut Cpu, pc: u32) { f_8014bfd4_b(c, pc) }
 #[inline(always)]
 fn f_8014bfd4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014bfd4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014bfd4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014bfd4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014bfd4 => { ins += 16;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -3393,23 +3393,23 @@ fn f_8014bfd4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa73c));
                 c.stw(c.r[3].wrapping_add(0x30), c.r[6]);
                 c.stw(c.r[3].wrapping_add(0x2c), c.r[0]);
-                c.lr = 0x8014c014; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c014; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c014;
             }
             0x8014c014 => { ins += 4;
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[4] = 0x1;
                 c.r[5] = 0x0;
-                c.lr = 0x8014c024; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c024; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c024;
             }
-            0x8014c024 => { ins += 5;
+            0x8014c024 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014bfd4: bad pc {:#x}", pc),
         }
@@ -3432,12 +3432,12 @@ pub fn f_8014c038_at(c: &mut Cpu, pc: u32) { f_8014c038_b(c, pc) }
 #[inline(always)]
 fn f_8014c038_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c038;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c038, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c038, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c038 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -3447,23 +3447,23 @@ fn f_8014c038_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014c058; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c058; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c058;
             }
             0x8014c058 => { ins += 4;
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[4] = 0x1;
                 c.r[5] = 0x0;
-                c.lr = 0x8014c068; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c068; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c068;
             }
-            0x8014c068 => { ins += 5;
+            0x8014c068 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c038: bad pc {:#x}", pc),
         }
@@ -3486,12 +3486,12 @@ pub fn f_8014c07c_at(c: &mut Cpu, pc: u32) { f_8014c07c_b(c, pc) }
 #[inline(always)]
 fn f_8014c07c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c07c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c07c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c07c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c07c => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -3499,15 +3499,15 @@ fn f_8014c07c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = 0x2;
                 c.r[5] = 0x0;
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                c.lr = 0x8014c094; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c094; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014be84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c094;
             }
-            0x8014c094 => { ins += 4;
+            0x8014c094 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c07c: bad pc {:#x}", pc),
         }
@@ -3530,19 +3530,19 @@ pub fn f_8014c0a4_at(c: &mut Cpu, pc: u32) { f_8014c0a4_b(c, pc) }
 #[inline(never)]
 fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c0a4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c0a4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c0a4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c0a4 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x54), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014c0b8; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c0b8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c0b8;
             }
             0x8014c0b8 => { ins += 7;
@@ -3556,10 +3556,10 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c0d4;
             }
             0x8014c0d4 => { ins += 1;
-                c.lr = 0x8014c0d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156744(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c0d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156744(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c0d8;
             }
-            0x8014c0d8 => { ins += 7;
+            0x8014c0d8 => { ins += 9;
                 c.r[0] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa6f9));
                 c.r[30] = c.r[31].wrapping_add(0xa94);
                 c.r[26] = 0xff;
@@ -3569,7 +3569,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c120; continue;
                 pc = 0x8014c0f4;
             }
-            0x8014c0f4 => { ins += 9;
+            0x8014c0f4 => { ins += 11;
                 c.r[27] = c.lwz_t(ins, c.r[3]);
                 c.stb(c.r[3].wrapping_add(0x9), c.r[26]);
                 c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x8));
@@ -3582,7 +3582,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c118;
             }
             0x8014c118 => { ins += 1;
-                c.lr = 0x8014c11c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014b044(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c11c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014b044(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c11c;
             }
             0x8014c11c => { ins += 1;
@@ -3602,7 +3602,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c2bc; continue;
                 pc = 0x8014c13c;
             }
-            0x8014c13c => { ins += 10;
+            0x8014c13c => { ins += 12;
                 c.r[29] = c.lwz_t(ins, c.r[3]);
                 c.r[0] = 0xff;
                 c.stb(c.r[3].wrapping_add(0x9), c.r[0]);
@@ -3618,7 +3618,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
             0x8014c164 => { ins += 3;
                 c.r[3] = c.r[26] | c.r[26];
                 c.r[27] = c.r[5].wrapping_add(c.r[4]);
-                c.lr = 0x8014c170; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c170; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c170;
             }
             0x8014c170 => { ins += 2;
@@ -3634,7 +3634,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014c184 => { ins += 2;
                 c.r[3] = c.r[27] | c.r[27];
-                c.lr = 0x8014c18c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161784(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c18c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161784(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c18c;
             }
             0x8014c18c => { ins += 5;
@@ -3642,7 +3642,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[27] | c.r[27];
                 c.r[0] = c.addc(!c.r[0], 0x1f80, 1);
                 c.r[4] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x8014c1a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156a30(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c1a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156a30(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c1a0;
             }
             0x8014c1a0 => { ins += 10;
@@ -3671,7 +3671,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0] | 0x10;
                 c.stw(c.r[27].wrapping_add(0x118), c.r[0]);
                 c.r[4] = c.lbz_t(ins, c.r[27].wrapping_add(0x11f));
-                c.lr = 0x8014c1f8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801628c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c1f8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801628c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c1f8;
             }
             0x8014c1f8 => { ins += 11;
@@ -3697,7 +3697,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[27].wrapping_add(0x118), c.r[0]);
                 c.r[0] = c.r[6] & c.r[4];
                 c.stw(c.r[27].wrapping_add(0x114), c.r[0]);
-                c.lr = 0x8014c244; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162904(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c244; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162904(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c244;
             }
             0x8014c244 => { ins += 10;
@@ -3716,7 +3716,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014c26c => { ins += 2;
                 c.r[3] = c.r[27].wrapping_add(0x1dc);
-                c.lr = 0x8014c274; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159110(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c274; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159110(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c274;
             }
             0x8014c274 => { ins += 2;
@@ -3766,7 +3766,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c308; continue;
                 pc = 0x8014c2dc;
             }
-            0x8014c2dc => { ins += 9;
+            0x8014c2dc => { ins += 11;
                 c.r[27] = c.lwz_t(ins, c.r[3]);
                 c.stb(c.r[3].wrapping_add(0x9), c.r[26]);
                 c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x8));
@@ -3779,7 +3779,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c300;
             }
             0x8014c300 => { ins += 1;
-                c.lr = 0x8014c304; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014b788(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c304; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014b788(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c304;
             }
             0x8014c304 => { ins += 1;
@@ -3798,7 +3798,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x1);
                 c.r[0] = c.r[0].rotate_left(0) & 0x1f;
                 c.stb(c.r[13].wrapping_add(0xffffa6f9), c.r[0]);
-                c.lr = 0x8014c32c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162464(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c32c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162464(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c32c;
             }
             0x8014c32c => { ins += 2;
@@ -3878,7 +3878,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014c3c8 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[20].wrapping_add(0x28));
-                c.lr = 0x8014c3d0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c3d0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c3d0;
             }
             0x8014c3d0 => { ins += 1;
@@ -3887,7 +3887,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014c3d4 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[20].wrapping_add(0x28));
-                c.lr = 0x8014c3dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c3dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c3dc;
             }
             0x8014c3dc => { ins += 1;
@@ -3898,7 +3898,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lwz_t(ins, c.r[20].wrapping_add(0x28));
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8014c3f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c3f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c3f0;
             }
             0x8014c3f0 => { ins += 4;
@@ -3991,7 +3991,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[20].rotate_left(0) & 0xff;
                 c.r[6] = c.lbz_t(ins, c.r[28]);
                 c.r[4] = c.r[21].rotate_left(0) & 0xff;
-                c.lr = 0x8014c4d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161934(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c4d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161934(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c4d4;
             }
             0x8014c4d4 => { ins += 5;
@@ -4002,13 +4002,13 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x8014c4c0; continue; }
                 pc = 0x8014c4e8;
             }
-            0x8014c4e8 => { ins += 6;
+            0x8014c4e8 => { ins += 7;
                 c.r[12] = c.lwz_t(ins, c.r[30]);
                 c.r[4] = c.r[1].wrapping_add(0x14);
                 c.r[5] = c.lwz_t(ins, c.r[29]);
                 c.r[3] = 0x1;
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014c500; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014c500; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014c500;
             }
             0x8014c500 => { ins += 3;
@@ -4027,7 +4027,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[20].rotate_left(0) & 0xff;
                 c.r[6] = c.lbz_t(ins, c.r[24]);
                 c.r[4] = c.r[21].rotate_left(0) & 0xff;
-                c.lr = 0x8014c528; { c.steps = st; c.instrs = ins; c.cr = cr; f_801619e8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c528; { c.steps = st; c.cycles = ins; c.cr = cr; f_801619e8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c528;
             }
             0x8014c528 => { ins += 5;
@@ -4038,13 +4038,13 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x8014c514; continue; }
                 pc = 0x8014c53c;
             }
-            0x8014c53c => { ins += 6;
+            0x8014c53c => { ins += 7;
                 c.r[12] = c.lwz_t(ins, c.r[22]);
                 c.r[4] = c.r[1].wrapping_add(0x8);
                 c.r[5] = c.lwz_t(ins, c.r[23]);
                 c.r[3] = 0x1;
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014c554; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014c554; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014c554;
             }
             0x8014c554 => { ins += 11;
@@ -4062,7 +4062,7 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c580;
             }
             0x8014c580 => { ins += 1;
-                c.lr = 0x8014c584; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631a8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c584; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631a8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c584;
             }
             0x8014c584 => { ins += 6;
@@ -4076,15 +4076,15 @@ fn f_8014c0a4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014c59c => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014c5a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4808(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c5a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4808(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c5a4;
             }
-            0x8014c5a4 => { ins += 4;
+            0x8014c5a4 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c0a4: bad pc {:#x}", pc),
         }
@@ -4107,18 +4107,18 @@ pub fn f_8014c5b4_at(c: &mut Cpu, pc: u32) { f_8014c5b4_b(c, pc) }
 #[inline(always)]
 fn f_8014c5b4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c5b4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c5b4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c5b4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c5b4 => { ins += 4;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                c.lr = 0x8014c5c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80152444(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c5c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80152444(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c5c4;
             }
             0x8014c5c4 => { ins += 2;
@@ -4135,12 +4135,12 @@ fn f_8014c5b4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x8014c5d8;
             }
-            0x8014c5d8 => { ins += 4;
+            0x8014c5d8 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c5b4: bad pc {:#x}", pc),
         }
@@ -4163,19 +4163,19 @@ pub fn f_8014c5e8_at(c: &mut Cpu, pc: u32) { f_8014c5e8_b(c, pc) }
 #[inline(always)]
 fn f_8014c5e8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c5e8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c5e8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c5e8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c5e8 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffc0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x44), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x40);
-                c.lr = 0x8014c5fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c5fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c5fc;
             }
             0x8014c5fc => { ins += 6;
@@ -4184,7 +4184,7 @@ fn f_8014c5e8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[6] | c.r[6];
                 c.r[30] = c.r[7] | c.r[7];
                 c.r[31] = 0xffffffff;
-                c.lr = 0x8014c614; { c.steps = st; c.instrs = ins; c.cr = cr; f_80152444(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c614; { c.steps = st; c.cycles = ins; c.cr = cr; f_80152444(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c614;
             }
             0x8014c614 => { ins += 2;
@@ -4234,7 +4234,7 @@ fn f_8014c5e8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lbz_t(ins, c.r[5].wrapping_add(0x5));
                 c.r[5] = c.lbz_t(ins, c.r[5].wrapping_add(0x4));
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x8014c690; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014abe8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c690; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014abe8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c690;
             }
             0x8014c690 => { ins += 1;
@@ -4244,15 +4244,15 @@ fn f_8014c5e8_b(c: &mut Cpu, mut pc: u32) {
             0x8014c694 => { ins += 3;
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[11] = c.r[1].wrapping_add(0x40);
-                c.lr = 0x8014c6a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c6a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c6a0;
             }
-            0x8014c6a0 => { ins += 4;
+            0x8014c6a0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x44));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x40);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c5e8: bad pc {:#x}", pc),
         }
@@ -4275,12 +4275,12 @@ pub fn f_8014c6b0_at(c: &mut Cpu, pc: u32) { f_8014c6b0_b(c, pc) }
 #[inline(always)]
 fn f_8014c6b0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c6b0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c6b0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c6b0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c6b0 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -4293,14 +4293,14 @@ fn f_8014c6b0_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = 0x0;
-                c.lr = 0x8014c6dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c6dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c6dc;
             }
             0x8014c6dc => { ins += 1;
                 pc = 0x8014c764; continue;
                 pc = 0x8014c6e0;
             }
-            0x8014c6e0 => { ins += 7;
+            0x8014c6e0 => { ins += 9;
                 c.r[4] = c.r[3].rotate_left(0) & 0xff;
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[29] = c.r[4].wrapping_mul(0x404);
@@ -4328,7 +4328,7 @@ fn f_8014c6b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lbz_t(ins, c.r[7].wrapping_add(0x20b));
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[6] = c.r[31] | c.r[31];
-                c.lr = 0x8014c734; { c.steps = st; c.instrs = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c734; { c.steps = st; c.cycles = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c734;
             }
             0x8014c734 => { ins += 1;
@@ -4339,7 +4339,7 @@ fn f_8014c6b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lbz_t(ins, c.r[7].wrapping_add(0x122));
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[6] = c.r[31] | c.r[31];
-                c.lr = 0x8014c748; { c.steps = st; c.instrs = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c748; { c.steps = st; c.cycles = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c748;
             }
             0x8014c748 => { ins += 5;
@@ -4365,7 +4365,7 @@ fn f_8014c6b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[28] | c.r[28];
                 pc = 0x8014c774;
             }
-            0x8014c774 => { ins += 8;
+            0x8014c774 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -4373,8 +4373,8 @@ fn f_8014c6b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c6b0: bad pc {:#x}", pc),
         }
@@ -4397,12 +4397,12 @@ pub fn f_8014c794_at(c: &mut Cpu, pc: u32) { f_8014c794_b(c, pc) }
 #[inline(always)]
 fn f_8014c794_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c794;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c794, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c794, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c794 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -4415,14 +4415,14 @@ fn f_8014c794_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = 0x0;
-                c.lr = 0x8014c7c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c7c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c7c0;
             }
             0x8014c7c0 => { ins += 1;
                 pc = 0x8014c848; continue;
                 pc = 0x8014c7c4;
             }
-            0x8014c7c4 => { ins += 7;
+            0x8014c7c4 => { ins += 9;
                 c.r[4] = c.r[3].rotate_left(0) & 0xff;
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[29] = c.r[4].wrapping_mul(0x404);
@@ -4450,7 +4450,7 @@ fn f_8014c794_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lbz_t(ins, c.r[7].wrapping_add(0x20b));
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[6] = c.r[31] | c.r[31];
-                c.lr = 0x8014c818; { c.steps = st; c.instrs = ins; c.cr = cr; f_801609c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c818; { c.steps = st; c.cycles = ins; c.cr = cr; f_801609c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c818;
             }
             0x8014c818 => { ins += 1;
@@ -4461,7 +4461,7 @@ fn f_8014c794_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lbz_t(ins, c.r[7].wrapping_add(0x122));
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[6] = c.r[31] | c.r[31];
-                c.lr = 0x8014c82c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801609c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c82c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801609c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c82c;
             }
             0x8014c82c => { ins += 5;
@@ -4487,7 +4487,7 @@ fn f_8014c794_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[28] | c.r[28];
                 pc = 0x8014c858;
             }
-            0x8014c858 => { ins += 8;
+            0x8014c858 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -4495,8 +4495,8 @@ fn f_8014c794_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c794: bad pc {:#x}", pc),
         }
@@ -4519,12 +4519,12 @@ pub fn f_8014c878_at(c: &mut Cpu, pc: u32) { f_8014c878_b(c, pc) }
 #[inline(always)]
 fn f_8014c878_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c878;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c878, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c878, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c878 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -4537,45 +4537,45 @@ fn f_8014c878_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[3] | c.r[3];
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[3] = 0x7;
-                c.lr = 0x8014c8a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c8a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c8a4;
             }
             0x8014c8a4 => { ins += 4;
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = c.r[31] | c.r[31];
                 c.r[3] = 0xa;
-                c.lr = 0x8014c8b4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c8b4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c8b4;
             }
             0x8014c8b4 => { ins += 4;
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = c.r[31] | c.r[31];
                 c.r[3] = 0x5b;
-                c.lr = 0x8014c8c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c8c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c8c4;
             }
             0x8014c8c4 => { ins += 4;
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = c.r[31] | c.r[31];
                 c.r[3] = 0x80;
-                c.lr = 0x8014c8d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c8d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c8d4;
             }
             0x8014c8d4 => { ins += 4;
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = c.r[31] | c.r[31];
                 c.r[3] = 0x84;
-                c.lr = 0x8014c8e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c8e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160fa8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c8e4;
             }
-            0x8014c8e4 => { ins += 6;
+            0x8014c8e4 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c878: bad pc {:#x}", pc),
         }
@@ -4598,12 +4598,12 @@ pub fn f_8014c8fc_at(c: &mut Cpu, pc: u32) { f_8014c8fc_b(c, pc) }
 #[inline(always)]
 fn f_8014c8fc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c8fc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c8fc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c8fc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c8fc => { ins += 9;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -4618,14 +4618,14 @@ fn f_8014c8fc_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014c920;
             }
             0x8014c920 => { ins += 1;
-                c.lr = 0x8014c924; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c924; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c924;
             }
             0x8014c924 => { ins += 1;
                 pc = 0x8014c95c; continue;
                 pc = 0x8014c928;
             }
-            0x8014c928 => { ins += 7;
+            0x8014c928 => { ins += 9;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[31] = c.r[0].wrapping_mul(0x404);
@@ -4637,7 +4637,7 @@ fn f_8014c8fc_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014c944 => { ins += 2;
                 c.r[3] = c.r[4] | c.r[4];
-                c.lr = 0x8014c94c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156940(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c94c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156940(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c94c;
             }
             0x8014c94c => { ins += 1;
@@ -4656,15 +4656,15 @@ fn f_8014c8fc_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014c928; continue; }
                 pc = 0x8014c968;
             }
-            0x8014c968 => { ins += 7;
+            0x8014c968 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c8fc: bad pc {:#x}", pc),
         }
@@ -4687,12 +4687,12 @@ pub fn f_8014c984_at(c: &mut Cpu, pc: u32) { f_8014c984_b(c, pc) }
 #[inline(never)]
 fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014c984;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014c984, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014c984, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014c984 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -4701,7 +4701,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x40); let v = c.f[31]; c.stfd(ea, v); }
                 { let ea = c.r[1].wrapping_add(0x48); let (x, y) = (c.f[31], c.ps1[31]); c.psq_store(ea, x, y, false, 0); }
                 c.r[11] = c.r[1].wrapping_add(0x40);
-                c.lr = 0x8014c9a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c9a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c9a0;
             }
             0x8014c9a0 => { ins += 7;
@@ -4717,7 +4717,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014c9bc => { ins += 2;
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x8014c9c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014c9c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014c9c4;
             }
             0x8014c9c4 => { ins += 3;
@@ -4797,7 +4797,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014ca98; continue; }
                 pc = 0x8014ca5c;
             }
-            0x8014ca5c => { ins += 15;
+            0x8014ca5c => { ins += 31;
                 c.r[0] = 0x43300000;
                 { let ea = c.r[29]; c.f[3] = c.lfs(ea); c.ps1[3] = c.f[3]; }
                 c.stw(c.r[1].wrapping_add(0x14), c.r[3]);
@@ -4853,7 +4853,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cad8;
             }
             0x8014cad8 => { ins += 1;
-                c.lr = 0x8014cadc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cadc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cadc;
             }
             0x8014cadc => { ins += 1;
@@ -4861,7 +4861,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cae0;
             }
             0x8014cae0 => { ins += 1;
-                c.lr = 0x8014cae4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cae4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cae4;
             }
             0x8014cae4 => { ins += 1;
@@ -4871,7 +4871,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
             0x8014cae8 => { ins += 3;
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8014caf4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014caf4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014caf4;
             }
             0x8014caf4 => { ins += 5;
@@ -4928,7 +4928,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014cbb4; continue; }
                 pc = 0x8014cb78;
             }
-            0x8014cb78 => { ins += 15;
+            0x8014cb78 => { ins += 31;
                 c.r[0] = 0x43300000;
                 { let ea = c.r[29]; c.f[3] = c.lfs(ea); c.ps1[3] = c.f[3]; }
                 c.stw(c.r[1].wrapping_add(0x14), c.r[3]);
@@ -4984,7 +4984,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cbf4;
             }
             0x8014cbf4 => { ins += 1;
-                c.lr = 0x8014cbf8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cbf8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cbf8;
             }
             0x8014cbf8 => { ins += 1;
@@ -4992,7 +4992,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cbfc;
             }
             0x8014cbfc => { ins += 1;
-                c.lr = 0x8014cc00; { c.steps = st; c.instrs = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cc00; { c.steps = st; c.cycles = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cc00;
             }
             0x8014cc00 => { ins += 1;
@@ -5002,7 +5002,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
             0x8014cc04 => { ins += 3;
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8014cc10; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cc10; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cc10;
             }
             0x8014cc10 => { ins += 5;
@@ -5074,7 +5074,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014cce8; continue; }
                 pc = 0x8014ccac;
             }
-            0x8014ccac => { ins += 15;
+            0x8014ccac => { ins += 31;
                 c.r[0] = 0x43300000;
                 { let ea = c.r[29]; c.f[3] = c.lfs(ea); c.ps1[3] = c.f[3]; }
                 c.stw(c.r[1].wrapping_add(0x14), c.r[3]);
@@ -5130,7 +5130,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cd28;
             }
             0x8014cd28 => { ins += 1;
-                c.lr = 0x8014cd2c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cd2c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cd2c;
             }
             0x8014cd2c => { ins += 1;
@@ -5138,7 +5138,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cd30;
             }
             0x8014cd30 => { ins += 1;
-                c.lr = 0x8014cd34; { c.steps = st; c.instrs = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cd34; { c.steps = st; c.cycles = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cd34;
             }
             0x8014cd34 => { ins += 1;
@@ -5148,7 +5148,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
             0x8014cd38 => { ins += 3;
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8014cd44; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cd44; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cd44;
             }
             0x8014cd44 => { ins += 5;
@@ -5170,7 +5170,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014ce94; continue;
                 pc = 0x8014cd6c;
             }
-            0x8014cd6c => { ins += 13;
+            0x8014cd6c => { ins += 15;
                 c.r[0] = c.r[29].rotate_left(0) & 0xff;
                 c.r[3] = 0x80430000;
                 c.r[6] = c.r[0].wrapping_mul(0x30);
@@ -5186,7 +5186,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014cdfc; continue; }
                 pc = 0x8014cda0;
             }
-            0x8014cda0 => { ins += 23;
+            0x8014cda0 => { ins += 39;
                 c.r[0] = 0x43300000;
                 c.r[3] = c.r[27].rotate_left(0) & 0xff;
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[4]);
@@ -5260,7 +5260,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014ce64;
             }
             0x8014ce64 => { ins += 1;
-                c.lr = 0x8014ce68; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ce68; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147168(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ce68;
             }
             0x8014ce68 => { ins += 1;
@@ -5268,7 +5268,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014ce6c;
             }
             0x8014ce6c => { ins += 1;
-                c.lr = 0x8014ce70; { c.steps = st; c.instrs = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ce70; { c.steps = st; c.cycles = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ce70;
             }
             0x8014ce70 => { ins += 1;
@@ -5278,7 +5278,7 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
             0x8014ce74 => { ins += 3;
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8014ce80; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ce80; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ce80;
             }
             0x8014ce80 => { ins += 5;
@@ -5293,15 +5293,15 @@ fn f_8014c984_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x48); let (x, y) = c.psq_load(ea, false, 0); c.f[31] = x; c.ps1[31] = y; }
                 c.r[11] = c.r[1].wrapping_add(0x40);
                 { let ea = c.r[1].wrapping_add(0x40); c.f[31] = c.lfd(ea); }
-                c.lr = 0x8014cea4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cea4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cea4;
             }
-            0x8014cea4 => { ins += 4;
+            0x8014cea4 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014c984: bad pc {:#x}", pc),
         }
@@ -5324,14 +5324,14 @@ pub fn f_8014ceb4_at(c: &mut Cpu, pc: u32) { f_8014ceb4_b(c, pc) }
 #[inline(always)]
 fn f_8014ceb4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014ceb4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014ceb4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014ceb4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8014ceb4 => { ins += 8;
+            0x8014ceb4 => { ins += 10;
                 c.r[5] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = 0x80430000;
                 c.r[4] = c.r[5].wrapping_mul(0x30);
@@ -5360,13 +5360,13 @@ fn f_8014ceb4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014cef8 => { ins += 2;
                 c.r[3] = 0x1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014cf00;
             }
             0x8014cf00 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014ceb4: bad pc {:#x}", pc),
         }
@@ -5389,28 +5389,28 @@ pub fn f_8014cf08_at(c: &mut Cpu, pc: u32) { f_8014cf08_b(c, pc) }
 #[inline(always)]
 fn f_8014cf08_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014cf08;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014cf08, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014cf08, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014cf08 => { ins += 3;
                 c.r[0] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa6f8));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x0);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014cf14;
             }
-            0x8014cf14 => { ins += 7;
+            0x8014cf14 => { ins += 9;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = 0x80430000;
                 c.r[0] = c.r[0].wrapping_mul(0x30);
                 c.r[3] = c.r[3].wrapping_add(0x4e64);
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x2d), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014cf08: bad pc {:#x}", pc),
         }
@@ -5433,12 +5433,12 @@ pub fn f_8014cf30_at(c: &mut Cpu, pc: u32) { f_8014cf30_b(c, pc) }
 #[inline(always)]
 fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014cf30;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014cf30, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014cf30, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014cf30 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -5479,7 +5479,7 @@ fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cfd4; continue;
                 pc = 0x8014cf78;
             }
-            0x8014cf78 => { ins += 7;
+            0x8014cf78 => { ins += 9;
                 c.r[3] = c.r[29].rotate_left(0) & 0xff;
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[31] = c.r[3].wrapping_mul(0x404);
@@ -5490,11 +5490,11 @@ fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cf94;
             }
             0x8014cf94 => { ins += 1;
-                c.lr = 0x8014cf98; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cf98; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cf98;
             }
             0x8014cf98 => { ins += 1;
-                c.lr = 0x8014cf9c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159798(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cf9c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159798(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cf9c;
             }
             0x8014cf9c => { ins += 5;
@@ -5506,7 +5506,7 @@ fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014cfb0;
             }
             0x8014cfb0 => { ins += 1;
-                c.lr = 0x8014cfb4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156894(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cfb4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156894(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cfb4;
             }
             0x8014cfb4 => { ins += 1;
@@ -5515,7 +5515,7 @@ fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014cfb8 => { ins += 2;
                 c.r[3] = c.r[29].rotate_left(0) & 0xff;
-                c.lr = 0x8014cfc0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cfc0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cfc0;
             }
             0x8014cfc0 => { ins += 1;
@@ -5524,7 +5524,7 @@ fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014cfc4 => { ins += 2;
                 c.r[3] = c.r[29].rotate_left(0) & 0xff;
-                c.lr = 0x8014cfcc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159550(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cfcc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159550(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cfcc;
             }
             0x8014cfcc => { ins += 2;
@@ -5534,14 +5534,14 @@ fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014cfd4 => { ins += 2;
                 c.r[3] = c.r[29].rotate_left(0) & 0xff;
-                c.lr = 0x8014cfdc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cfdc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cfdc;
             }
             0x8014cfdc => { ins += 1;
-                c.lr = 0x8014cfe0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159798(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014cfe0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159798(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014cfe0;
             }
-            0x8014cfe0 => { ins += 8;
+            0x8014cfe0 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
@@ -5549,8 +5549,8 @@ fn f_8014cf30_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014cf30: bad pc {:#x}", pc),
         }
@@ -5573,22 +5573,22 @@ pub fn f_8014d000_at(c: &mut Cpu, pc: u32) { f_8014d000_b(c, pc) }
 #[inline(never)]
 fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d000;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d000, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d000, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d000 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x54), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014d014; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d014; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d014;
             }
-            0x8014d014 => { ins += 15;
+            0x8014d014 => { ins += 17;
                 c.r[15] = c.r[4] | c.r[4];
                 c.r[4] = 0x80430000;
                 c.r[31] = c.r[4].wrapping_add(0x4a10);
@@ -5603,17 +5603,17 @@ fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[4].wrapping_add(0x200), c.r[0]);
                 c.stw(c.r[13].wrapping_add(0xffffa724), c.r[5]);
                 c.stw(c.r[13].wrapping_add(0xffffa72c), c.r[5]);
-                c.lr = 0x8014d050; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d050; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d050;
             }
             0x8014d050 => { ins += 4;
                 c.stw(c.r[13].wrapping_add(0xffffa728), c.r[3]);
                 c.r[5] = c.r[14] | c.r[14];
                 c.r[4] = 0x0;
-                c.lr = 0x8014d060; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d060; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d060;
             }
-            0x8014d060 => { ins += 6;
+            0x8014d060 => { ins += 7;
                 c.r[6] = 0x0;
                 c.r[5] = 0x0;
                 c.r[19] = 0x400000;
@@ -5746,7 +5746,7 @@ fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x8014d078; continue; }
                 pc = 0x8014d25c;
             }
-            0x8014d25c => { ins += 5;
+            0x8014d25c => { ins += 6;
                 c.r[0] = 0x2;
                 c.r[3] = c.r[31].wrapping_add(0x454);
                 { let ea = c.r[2].wrapping_add(0xffff9d08); c.f[1] = c.lfs(ea); c.ps1[1] = c.f[1]; }
@@ -5827,7 +5827,7 @@ fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[4].wrapping_add(0x5cd), c.r[5]);
                 { let ea = c.r[4].wrapping_add(0x3f0); let v = c.f[0]; c.stfs(ea, v); }
                 { let ea = c.r[4].wrapping_add(0x420); let v = c.f[0]; c.stfs(ea, v); }
-                c.lr = 0x8014d388; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161a9c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d388; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161a9c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d388;
             }
             0x8014d388 => { ins += 56;
@@ -5886,15 +5886,15 @@ fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[3].wrapping_add(0x7), c.r[0]);
                 c.stb(c.r[7].wrapping_add(0xf), c.r[8]);
                 c.stb(c.r[7].wrapping_add(0xe), c.r[8]);
-                c.lr = 0x8014d468; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157218(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d468; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157218(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d468;
             }
             0x8014d468 => { ins += 1;
-                c.lr = 0x8014d46c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157280(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d46c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157280(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d46c;
             }
             0x8014d46c => { ins += 1;
-                c.lr = 0x8014d470; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158088(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d470; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158088(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d470;
             }
             0x8014d470 => { ins += 19;
@@ -5916,7 +5916,7 @@ fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[3].wrapping_add(0x34), c.r[0]);
                 c.stw(c.r[3].wrapping_add(0x38), c.r[0]);
                 c.stw(c.r[3].wrapping_add(0x3c), c.r[0]);
-                c.lr = 0x8014d4bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158a70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d4bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158a70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d4bc;
             }
             0x8014d4bc => { ins += 2;
@@ -5924,7 +5924,7 @@ fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014d53c; continue;
                 pc = 0x8014d4c4;
             }
-            0x8014d4c4 => { ins += 30;
+            0x8014d4c4 => { ins += 32;
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
                 c.r[5] = c.r[31].wrapping_add(0xa94);
                 c.r[0] = c.r[0].wrapping_mul(0xc);
@@ -5968,20 +5968,20 @@ fn f_8014d000_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x80150000;
                 c.stb(c.r[13].wrapping_add(0xffffa6f9), c.r[0]);
                 c.r[3] = c.r[3].wrapping_add(0xffffcf30);
-                c.lr = 0x8014d55c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016248c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d55c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016248c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d55c;
             }
             0x8014d55c => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014d564; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d564; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d564;
             }
-            0x8014d564 => { ins += 4;
+            0x8014d564 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d000: bad pc {:#x}", pc),
         }
@@ -6004,27 +6004,27 @@ pub fn f_8014d574_at(c: &mut Cpu, pc: u32) { f_8014d574_b(c, pc) }
 #[inline(always)]
 fn f_8014d574_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d574;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d574, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d574, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d574 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
-                c.lr = 0x8014d588; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d588; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d588;
             }
-            0x8014d588 => { ins += 4;
+            0x8014d588 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d574: bad pc {:#x}", pc),
         }
@@ -6047,21 +6047,21 @@ pub fn f_8014d598_at(c: &mut Cpu, pc: u32) { f_8014d598_b(c, pc) }
 #[inline(always)]
 fn f_8014d598_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d598;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d598, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d598, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d598 => { ins += 4;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                c.lr = 0x8014d5a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014635c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d5a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014635c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d5a8;
             }
-            0x8014d5a8 => { ins += 8;
+            0x8014d5a8 => { ins += 9;
                 c.r[4] = c.addc(!c.r[3], 0xffffffff, 1);
                 c.r[0] = c.r[3].wrapping_add(0x1);
                 c.r[0] = c.r[4] | c.r[0];
@@ -6069,8 +6069,8 @@ fn f_8014d598_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d598: bad pc {:#x}", pc),
         }
@@ -6093,12 +6093,12 @@ pub fn f_8014d5c8_at(c: &mut Cpu, pc: u32) { f_8014d5c8_b(c, pc) }
 #[inline(always)]
 fn f_8014d5c8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d5c8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d5c8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d5c8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d5c8 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6106,25 +6106,25 @@ fn f_8014d5c8_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014d5e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d5e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d5e0;
             }
             0x8014d5e0 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8014d5e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d5e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80146eec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d5e8;
             }
             0x8014d5e8 => { ins += 1;
-                c.lr = 0x8014d5ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d5ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d5ec;
             }
-            0x8014d5ec => { ins += 5;
+            0x8014d5ec => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d5c8: bad pc {:#x}", pc),
         }
@@ -6147,12 +6147,12 @@ pub fn f_8014d600_at(c: &mut Cpu, pc: u32) { f_8014d600_b(c, pc) }
 #[inline(always)]
 fn f_8014d600_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d600;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d600, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d600, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d600 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6162,27 +6162,27 @@ fn f_8014d600_b(c: &mut Cpu, mut pc: u32) {
                 c.r[31] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x8), c.r[30]);
                 c.r[30] = c.r[3] | c.r[3];
-                c.lr = 0x8014d620; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d620; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d620;
             }
             0x8014d620 => { ins += 3;
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[4] = c.r[31] | c.r[31];
-                c.lr = 0x8014d62c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147418(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d62c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147418(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d62c;
             }
             0x8014d62c => { ins += 1;
-                c.lr = 0x8014d630; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d630; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d630;
             }
-            0x8014d630 => { ins += 6;
+            0x8014d630 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d600: bad pc {:#x}", pc),
         }
@@ -6205,12 +6205,12 @@ pub fn f_8014d648_at(c: &mut Cpu, pc: u32) { f_8014d648_b(c, pc) }
 #[inline(always)]
 fn f_8014d648_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d648;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d648, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d648, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d648 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6218,25 +6218,25 @@ fn f_8014d648_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014d660; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d660; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d660;
             }
             0x8014d660 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8014d668; { c.steps = st; c.instrs = ins; c.cr = cr; f_801474fc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d668; { c.steps = st; c.cycles = ins; c.cr = cr; f_801474fc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d668;
             }
             0x8014d668 => { ins += 1;
-                c.lr = 0x8014d66c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d66c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d66c;
             }
-            0x8014d66c => { ins += 5;
+            0x8014d66c => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d648: bad pc {:#x}", pc),
         }
@@ -6259,12 +6259,12 @@ pub fn f_8014d680_at(c: &mut Cpu, pc: u32) { f_8014d680_b(c, pc) }
 #[inline(always)]
 fn f_8014d680_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d680;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d680, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d680, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d680 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6276,29 +6276,29 @@ fn f_8014d680_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[29] = c.r[3] | c.r[3];
-                c.lr = 0x8014d6a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d6a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d6a8;
             }
             0x8014d6a8 => { ins += 4;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = c.r[31] | c.r[31];
-                c.lr = 0x8014d6b8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d6b8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80147604(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d6b8;
             }
             0x8014d6b8 => { ins += 1;
-                c.lr = 0x8014d6bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d6bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d6bc;
             }
-            0x8014d6bc => { ins += 7;
+            0x8014d6bc => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d680: bad pc {:#x}", pc),
         }
@@ -6321,12 +6321,12 @@ pub fn f_8014d6d8_at(c: &mut Cpu, pc: u32) { f_8014d6d8_b(c, pc) }
 #[inline(always)]
 fn f_8014d6d8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d6d8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d6d8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d6d8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d6d8 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6340,7 +6340,7 @@ fn f_8014d6d8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = c.r[3] | c.r[3];
-                c.lr = 0x8014d708; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d708; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d708;
             }
             0x8014d708 => { ins += 5;
@@ -6348,14 +6348,14 @@ fn f_8014d6d8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[29] | c.r[29];
                 c.r[5] = c.r[30] | c.r[30];
                 c.r[6] = c.r[31] | c.r[31];
-                c.lr = 0x8014d71c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801476c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d71c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801476c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d71c;
             }
             0x8014d71c => { ins += 1;
-                c.lr = 0x8014d720; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d720; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d720;
             }
-            0x8014d720 => { ins += 8;
+            0x8014d720 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -6363,8 +6363,8 @@ fn f_8014d6d8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d6d8: bad pc {:#x}", pc),
         }
@@ -6387,12 +6387,12 @@ pub fn f_8014d740_at(c: &mut Cpu, pc: u32) { f_8014d740_b(c, pc) }
 #[inline(always)]
 fn f_8014d740_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d740;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d740, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d740, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d740 => { ins += 7;
                 c.r[5] = 0x80430000;
@@ -6401,8 +6401,8 @@ fn f_8014d740_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[4].rotate_left(1) & 0x1fe;
                 c.r[3] = c.r[3].wrapping_add(c.r[6]);
                 c.r[3] = c.lhz_t(ins, c.r[3].wrapping_add(c.r[0]));
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d740: bad pc {:#x}", pc),
         }
@@ -6425,12 +6425,12 @@ pub fn f_8014d75c_at(c: &mut Cpu, pc: u32) { f_8014d75c_b(c, pc) }
 #[inline(always)]
 fn f_8014d75c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d75c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d75c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d75c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d75c => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6442,22 +6442,22 @@ fn f_8014d75c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[29] = c.r[3] | c.r[3];
-                c.lr = 0x8014d784; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d784; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d784;
             }
             0x8014d784 => { ins += 4;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = c.r[31] | c.r[31];
-                c.lr = 0x8014d794; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d794; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d794;
             }
             0x8014d794 => { ins += 2;
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014d79c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d79c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d79c;
             }
-            0x8014d79c => { ins += 8;
+            0x8014d79c => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
@@ -6465,8 +6465,8 @@ fn f_8014d75c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d75c: bad pc {:#x}", pc),
         }
@@ -6489,12 +6489,12 @@ pub fn f_8014d7bc_at(c: &mut Cpu, pc: u32) { f_8014d7bc_b(c, pc) }
 #[inline(always)]
 fn f_8014d7bc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d7bc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d7bc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d7bc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d7bc => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6502,27 +6502,27 @@ fn f_8014d7bc_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014d7d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d7d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d7d4;
             }
             0x8014d7d4 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8014d7dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c8fc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d7dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c8fc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d7dc;
             }
             0x8014d7dc => { ins += 2;
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014d7e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d7e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d7e4;
             }
-            0x8014d7e4 => { ins += 6;
+            0x8014d7e4 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d7bc: bad pc {:#x}", pc),
         }
@@ -6545,12 +6545,12 @@ pub fn f_8014d7fc_at(c: &mut Cpu, pc: u32) { f_8014d7fc_b(c, pc) }
 #[inline(always)]
 fn f_8014d7fc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d7fc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d7fc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d7fc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d7fc => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6564,7 +6564,7 @@ fn f_8014d7fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = c.r[3] | c.r[3];
-                c.lr = 0x8014d82c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d82c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d82c;
             }
             0x8014d82c => { ins += 10;
@@ -6577,15 +6577,15 @@ fn f_8014d7fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.lbz_t(ins, c.r[5].wrapping_add(0x1));
                 c.r[4] = c.r[29] | c.r[29];
                 c.r[5] = c.r[30] | c.r[30];
-                c.lr = 0x8014d854; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c5e8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d854; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c5e8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d854;
             }
             0x8014d854 => { ins += 2;
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014d85c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d85c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d85c;
             }
-            0x8014d85c => { ins += 9;
+            0x8014d85c => { ins += 10;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
@@ -6594,8 +6594,8 @@ fn f_8014d7fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d7fc: bad pc {:#x}", pc),
         }
@@ -6618,12 +6618,12 @@ pub fn f_8014d880_at(c: &mut Cpu, pc: u32) { f_8014d880_b(c, pc) }
 #[inline(always)]
 fn f_8014d880_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d880;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d880, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d880, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d880 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6631,7 +6631,7 @@ fn f_8014d880_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8014d898; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d898; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d898;
             }
             0x8014d898 => { ins += 4;
@@ -6645,13 +6645,13 @@ fn f_8014d880_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[31] | c.r[31];
                 pc = 0x8014d8ac;
             }
-            0x8014d8ac => { ins += 5;
+            0x8014d8ac => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d880: bad pc {:#x}", pc),
         }
@@ -6674,17 +6674,17 @@ pub fn f_8014d8c0_at(c: &mut Cpu, pc: u32) { f_8014d8c0_b(c, pc) }
 #[inline(always)]
 fn f_8014d8c0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d8c0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d8c0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d8c0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d8c0 => { ins += 2;
                 c.stw(c.r[13].wrapping_add(0xffffa72c), c.r[3]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d8c0: bad pc {:#x}", pc),
         }
@@ -6707,12 +6707,12 @@ pub fn f_8014d8c8_at(c: &mut Cpu, pc: u32) { f_8014d8c8_b(c, pc) }
 #[inline(always)]
 fn f_8014d8c8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d8c8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d8c8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d8c8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d8c8 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6724,7 +6724,7 @@ fn f_8014d8c8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[29] = c.r[3] | c.r[3];
-                c.lr = 0x8014d8f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d8f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d8f0;
             }
             0x8014d8f0 => { ins += 6;
@@ -6733,22 +6733,22 @@ fn f_8014d8c8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[31] | c.r[31];
                 c.r[6] = 0x0;
                 c.r[7] = 0xffffffff;
-                c.lr = 0x8014d908; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c984(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d908; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c984(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d908;
             }
             0x8014d908 => { ins += 1;
-                c.lr = 0x8014d90c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d90c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d90c;
             }
-            0x8014d90c => { ins += 7;
+            0x8014d90c => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d8c8: bad pc {:#x}", pc),
         }
@@ -6771,12 +6771,12 @@ pub fn f_8014d928_at(c: &mut Cpu, pc: u32) { f_8014d928_b(c, pc) }
 #[inline(always)]
 fn f_8014d928_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d928;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d928, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d928, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d928 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6790,7 +6790,7 @@ fn f_8014d928_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = c.r[3] | c.r[3];
-                c.lr = 0x8014d958; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d958; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d958;
             }
             0x8014d958 => { ins += 2;
@@ -6805,7 +6805,7 @@ fn f_8014d928_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x15;
                 c.r[6] = 0x0;
                 c.r[7] = 0xffffffff;
-                c.lr = 0x8014d978; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c984(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d978; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c984(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d978;
             }
             0x8014d978 => { ins += 2;
@@ -6820,14 +6820,14 @@ fn f_8014d928_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x16;
                 c.r[6] = 0x0;
                 c.r[7] = 0xffffffff;
-                c.lr = 0x8014d998; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c984(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d998; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c984(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d998;
             }
             0x8014d998 => { ins += 1;
-                c.lr = 0x8014d99c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014d99c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014d99c;
             }
-            0x8014d99c => { ins += 8;
+            0x8014d99c => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -6835,8 +6835,8 @@ fn f_8014d928_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d928: bad pc {:#x}", pc),
         }
@@ -6859,12 +6859,12 @@ pub fn f_8014d9bc_at(c: &mut Cpu, pc: u32) { f_8014d9bc_b(c, pc) }
 #[inline(always)]
 fn f_8014d9bc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014d9bc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014d9bc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014d9bc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014d9bc => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -6903,7 +6903,7 @@ fn f_8014d9bc_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[13].wrapping_add(0xffffa724), c.r[0]);
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
                 c.stw(c.r[13].wrapping_add(0xffffa724), c.r[0]);
-                c.lr = 0x8014da08; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014da08; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014da08;
             }
             0x8014da08 => { ins += 1;
@@ -6915,7 +6915,7 @@ fn f_8014d9bc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[31].rotate_left(0) & 0xfffffffc;
                 c.stw(c.r[13].wrapping_add(0xffffa724), c.r[3]);
                 c.stw(c.r[13].wrapping_add(0xffffa724), c.r[0]);
-                c.lr = 0x8014da20; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014da20; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014da20;
             }
             0x8014da20 => { ins += 1;
@@ -6927,7 +6927,7 @@ fn f_8014d9bc_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[13].wrapping_add(0xffffa724), c.r[0]);
                 c.r[0] = c.r[0] | 0x2;
                 c.stw(c.r[13].wrapping_add(0xffffa724), c.r[0]);
-                c.lr = 0x8014da38; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014da38; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014da38;
             }
             0x8014da38 => { ins += 3;
@@ -6965,16 +6965,16 @@ fn f_8014d9bc_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014da90;
             }
             0x8014da90 => { ins += 1;
-                c.lr = 0x8014da94; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014ed10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014da94; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014ed10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014da94;
             }
-            0x8014da94 => { ins += 5;
+            0x8014da94 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014d9bc: bad pc {:#x}", pc),
         }
@@ -6997,19 +6997,19 @@ pub fn f_8014daa8_at(c: &mut Cpu, pc: u32) { f_8014daa8_b(c, pc) }
 #[inline(always)]
 fn f_8014daa8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014daa8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014daa8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014daa8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014daa8 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8014dabc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dabc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dabc;
             }
             0x8014dabc => { ins += 10;
@@ -7022,7 +7022,7 @@ fn f_8014daa8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.r[8] | c.r[8];
                 c.r[29] = c.r[9] | c.r[9];
                 c.r[30] = c.r[10] | c.r[10];
-                c.lr = 0x8014dae4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dae4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dae4;
             }
             0x8014dae4 => { ins += 2;
@@ -7041,7 +7041,7 @@ fn f_8014daa8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014db04 => { ins += 2;
                 c.r[3] = c.r[23] | c.r[23];
-                c.lr = 0x8014db0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014635c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014db0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014635c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014db0c;
             }
             0x8014db0c => { ins += 10;
@@ -7085,7 +7085,7 @@ fn f_8014daa8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014db78 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8014db80; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014635c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014db80; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014635c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014db80;
             }
             0x8014db80 => { ins += 10;
@@ -7119,24 +7119,24 @@ fn f_8014daa8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[27] | c.r[27];
                 c.r[6] = c.r[28] | c.r[28];
                 c.r[7] = c.r[29] | c.r[29];
-                c.lr = 0x8014dbe4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162d44(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dbe4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162d44(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dbe4;
             }
             0x8014dbe4 => { ins += 1;
-                c.lr = 0x8014dbe8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dbe8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dbe8;
             }
             0x8014dbe8 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8014dbf0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4810(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dbf0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4810(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dbf0;
             }
-            0x8014dbf0 => { ins += 4;
+            0x8014dbf0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014daa8: bad pc {:#x}", pc),
         }
@@ -7159,12 +7159,12 @@ pub fn f_8014dc00_at(c: &mut Cpu, pc: u32) { f_8014dc00_b(c, pc) }
 #[inline(always)]
 fn f_8014dc00_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014dc00;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014dc00, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014dc00, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014dc00 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -7176,7 +7176,7 @@ fn f_8014dc00_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[29] = c.r[3] | c.r[3];
-                c.lr = 0x8014dc28; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dc28; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dc28;
             }
             0x8014dc28 => { ins += 24;
@@ -7203,22 +7203,22 @@ fn f_8014dc00_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[8].wrapping_add(c.r[11]), c.r[0]);
                 c.stb(c.r[7].wrapping_add(c.r[11]), c.r[0]);
                 c.stb(c.r[6].wrapping_add(c.r[12]), c.r[9]);
-                c.lr = 0x8014dc88; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162d6c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dc88; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162d6c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dc88;
             }
             0x8014dc88 => { ins += 1;
-                c.lr = 0x8014dc8c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dc8c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dc8c;
             }
-            0x8014dc8c => { ins += 7;
+            0x8014dc8c => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014dc00: bad pc {:#x}", pc),
         }
@@ -7241,19 +7241,19 @@ pub fn f_8014dca8_at(c: &mut Cpu, pc: u32) { f_8014dca8_b(c, pc) }
 #[inline(always)]
 fn f_8014dca8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014dca8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014dca8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014dca8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014dca8 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x8014dcbc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dcbc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dcbc;
             }
             0x8014dcbc => { ins += 7;
@@ -7284,7 +7284,7 @@ fn f_8014dca8_b(c: &mut Cpu, mut pc: u32) {
             0x8014dcfc => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0xf8));
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x8));
-                c.lr = 0x8014dd08; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158870(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dd08; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158870(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dd08;
             }
             0x8014dd08 => { ins += 1;
@@ -7293,7 +7293,7 @@ fn f_8014dca8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014dd0c => { ins += 2;
                 c.r[3] = c.r[27] | c.r[27];
-                c.lr = 0x8014dd14; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dd14; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dd14;
             }
             0x8014dd14 => { ins += 2;
@@ -7303,7 +7303,7 @@ fn f_8014dca8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014dd1c => { ins += 2;
                 c.r[3] = c.r[27] | c.r[27];
-                c.lr = 0x8014dd24; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162d18(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dd24; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162d18(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dd24;
             }
             0x8014dd24 => { ins += 2;
@@ -7318,7 +7318,7 @@ fn f_8014dca8_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014dd38;
             }
             0x8014dd38 => { ins += 1;
-                c.lr = 0x8014dd3c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dd3c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dd3c;
             }
             0x8014dd3c => { ins += 15;
@@ -7336,25 +7336,25 @@ fn f_8014dca8_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[5].wrapping_add(c.r[8]), c.r[7]);
                 c.stb(c.r[4].wrapping_add(c.r[9]), c.r[0]);
                 c.stb(c.r[3].wrapping_add(c.r[9]), c.r[0]);
-                c.lr = 0x8014dd78; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dd78; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dd78;
             }
             0x8014dd78 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8014dd80; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162d8c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dd80; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162d8c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dd80;
             }
             0x8014dd80 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x8014dd88; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dd88; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dd88;
             }
-            0x8014dd88 => { ins += 4;
+            0x8014dd88 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014dca8: bad pc {:#x}", pc),
         }
@@ -7377,26 +7377,26 @@ pub fn f_8014dd98_at(c: &mut Cpu, pc: u32) { f_8014dd98_b(c, pc) }
 #[inline(always)]
 fn f_8014dd98_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014dd98;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014dd98, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014dd98, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014dd98 => { ins += 4;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                c.lr = 0x8014dda8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162dac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dda8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162dac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dda8;
             }
-            0x8014dda8 => { ins += 4;
+            0x8014dda8 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014dd98: bad pc {:#x}", pc),
         }
@@ -7419,26 +7419,26 @@ pub fn f_8014ddb8_at(c: &mut Cpu, pc: u32) { f_8014ddb8_b(c, pc) }
 #[inline(always)]
 fn f_8014ddb8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014ddb8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014ddb8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014ddb8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014ddb8 => { ins += 4;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                c.lr = 0x8014ddc8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162de0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ddc8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162de0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ddc8;
             }
-            0x8014ddc8 => { ins += 4;
+            0x8014ddc8 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014ddb8: bad pc {:#x}", pc),
         }
@@ -7461,12 +7461,12 @@ pub fn f_8014ddd8_at(c: &mut Cpu, pc: u32) { f_8014ddd8_b(c, pc) }
 #[inline(always)]
 fn f_8014ddd8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014ddd8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014ddd8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014ddd8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014ddd8 => { ins += 10;
                 c.r[3] = 0x80430000;
@@ -7487,7 +7487,7 @@ fn f_8014ddd8_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 1) { pc = 0x8014de54; continue; }
                 pc = 0x8014de0c;
             }
-            0x8014de0c => { ins += 7;
+            0x8014de0c => { ins += 8;
                 c.r[0] = c.r[6].wrapping_add(0x7);
                 c.r[3] = 0x80430000;
                 c.r[0] = c.r[0].rotate_left(29) & 0x1fffffff;
@@ -7511,7 +7511,7 @@ fn f_8014ddd8_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x8014de28; continue; }
                 pc = 0x8014de54;
             }
-            0x8014de54 => { ins += 10;
+            0x8014de54 => { ins += 13;
                 c.r[6] = c.lbz_t(ins, c.r[4].wrapping_add(0x210));
                 c.r[5] = c.r[7].wrapping_mul(0x64);
                 c.r[3] = 0x80430000;
@@ -7533,8 +7533,8 @@ fn f_8014ddd8_b(c: &mut Cpu, mut pc: u32) {
             0x8014de88 => { ins += 3;
                 c.r[0] = 0x0;
                 c.stw(c.r[13].wrapping_add(0xffffa740), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014ddd8: bad pc {:#x}", pc),
         }
@@ -7557,12 +7557,12 @@ pub fn f_8014de94_at(c: &mut Cpu, pc: u32) { f_8014de94_b(c, pc) }
 #[inline(always)]
 fn f_8014de94_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014de94;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014de94, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014de94, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014de94 => { ins += 31;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -7595,15 +7595,15 @@ fn f_8014de94_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[4] * c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] - c.f[3]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[4] * c.f[0]); c.f[3] = v; c.ps1[3] = v; }
-                c.lr = 0x8014df10; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014df10; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014df10;
             }
-            0x8014df10 => { ins += 4;
+            0x8014df10 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014de94: bad pc {:#x}", pc),
         }
@@ -7626,19 +7626,19 @@ pub fn f_8014df20_at(c: &mut Cpu, pc: u32) { f_8014df20_b(c, pc) }
 #[inline(never)]
 fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014df20;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014df20, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014df20, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014df20 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffff90); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x74), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x70);
-                c.lr = 0x8014df34; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014df34; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014df34;
             }
             0x8014df34 => { ins += 3;
@@ -7689,7 +7689,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[0] = c.r[0] | 0x40000000;
                 c.stw(c.r[1].wrapping_add(0x8), c.r[0]);
-                c.lr = 0x8014dfa0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162f88(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014dfa0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162f88(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014dfa0;
             }
             0x8014dfa0 => { ins += 10;
@@ -7731,7 +7731,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x4c));
                 c.stb(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[4] = c.lbz_t(ins, c.r[28].wrapping_add(0xf));
-                c.lr = 0x8014e000; { c.steps = st; c.instrs = ins; c.cr = cr; f_801628b4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e000; { c.steps = st; c.cycles = ins; c.cr = cr; f_801628b4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e000;
             }
             0x8014e000 => { ins += 3;
@@ -7740,7 +7740,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[28].wrapping_add(0x27), c.r[0]);
                 pc = 0x8014e00c;
             }
-            0x8014e00c => { ins += 13;
+            0x8014e00c => { ins += 15;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x4c));
                 c.r[4] = 0x10000;
                 c.r[8] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
@@ -7753,10 +7753,10 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[10] = 0x1;
                 c.r[8] = c.lwz_t(ins, c.r[8].wrapping_add(c.r[0]));
                 c.r[7] = 0xffffffff;
-                c.lr = 0x8014e040; { c.steps = st; c.instrs = ins; c.cr = cr; f_801624a8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e040; { c.steps = st; c.cycles = ins; c.cr = cr; f_801624a8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e040;
             }
-            0x8014e040 => { ins += 21;
+            0x8014e040 => { ins += 37;
                 c.r[5] = c.lwz_t(ins, c.r[28].wrapping_add(0x54));
                 c.r[4] = 0x43300000;
                 c.r[3] = 0x80430000;
@@ -7777,7 +7777,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.f[0] = fctiwz(c.f[0]);
                 { let ea = c.r[1].wrapping_add(0x38); let v = c.f[0]; c.stfd(ea, v); }
                 c.r[4] = c.lwz_t(ins, c.r[1].wrapping_add(0x3c));
-                c.lr = 0x8014e094; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016292c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e094; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016292c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e094;
             }
             0x8014e094 => { ins += 28;
@@ -7808,13 +7808,13 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[4] * c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] - c.f[3]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[4] * c.f[0]); c.f[3] = v; c.ps1[3] = v; }
-                c.lr = 0x8014e104; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e104; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e104;
             }
             0x8014e104 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x4c));
                 c.r[4] = c.lbz_t(ins, c.r[28].wrapping_add(0x60));
-                c.lr = 0x8014e110; { c.steps = st; c.instrs = ins; c.cr = cr; f_801628c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e110; { c.steps = st; c.cycles = ins; c.cr = cr; f_801628c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e110;
             }
             0x8014e110 => { ins += 5;
@@ -7833,7 +7833,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = 0x0;
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[8] = 0x0;
-                c.lr = 0x8014e140; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e140; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e140;
             }
             0x8014e140 => { ins += 1;
@@ -7842,7 +7842,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e144 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x4c));
-                c.lr = 0x8014e14c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162e14(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e14c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162e14(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e14c;
             }
             0x8014e14c => { ins += 3;
@@ -7851,7 +7851,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014e178; continue; }
                 pc = 0x8014e158;
             }
-            0x8014e158 => { ins += 8;
+            0x8014e158 => { ins += 14;
                 c.r[4] = 0x24920000;
                 c.r[0] = c.r[4].wrapping_add(0x4925);
                 c.r[4] = mulhwu(c.r[0], c.r[3]);
@@ -7890,7 +7890,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014e760; continue;
                 pc = 0x8014e1a0;
             }
-            0x8014e1a0 => { ins += 10;
+            0x8014e1a0 => { ins += 11;
                 c.r[6] = c.lwz_t(ins, c.r[28].wrapping_add(0x14));
                 c.r[5] = c.r[0].rotate_left(1) & 0xfffffffe;
                 c.r[12] = c.lwz_t(ins, c.r[28].wrapping_add(0x10));
@@ -7900,7 +7900,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x0;
                 c.r[6] = 0x0;
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014e1c8; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014e1c8; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014e1c8;
             }
             0x8014e1c8 => { ins += 2;
@@ -7914,7 +7914,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014e760; continue; }
                 pc = 0x8014e1dc;
             }
-            0x8014e1dc => { ins += 9;
+            0x8014e1dc => { ins += 52;
                 c.r[5] = c.lwz_t(ins, c.r[28].wrapping_add(0x20));
                 c.r[6] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[4] = c.r[5].wrapping_add(c.r[3]);
@@ -7940,7 +7940,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[0].rotate_left(1) & 0xfffffffe;
                 c.r[7] = 0x0;
                 c.r[8] = 0x0;
-                c.lr = 0x8014e228; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e228; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e228;
             }
             0x8014e228 => { ins += 1;
@@ -7955,7 +7955,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[0].rotate_left(1) & 0xfffffffe;
                 c.r[7] = 0x0;
                 c.r[8] = 0x0;
-                c.lr = 0x8014e24c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e24c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e24c;
             }
             0x8014e24c => { ins += 2;
@@ -7963,7 +7963,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014e760; continue;
                 pc = 0x8014e254;
             }
-            0x8014e254 => { ins += 16;
+            0x8014e254 => { ins += 21;
                 c.r[4] = 0x24920000;
                 c.r[8] = c.lwz_t(ins, c.r[28].wrapping_add(0x14));
                 c.r[4] = c.r[4].wrapping_add(0x4925);
@@ -7979,7 +7979,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[0].rotate_left(0) & 0xfffffff8;
                 c.r[3] = c.r[8].wrapping_add(c.r[30]);
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014e294; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014e294; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014e294;
             }
             0x8014e294 => { ins += 2;
@@ -7993,7 +7993,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014e760; continue; }
                 pc = 0x8014e2a8;
             }
-            0x8014e2a8 => { ins += 9;
+            0x8014e2a8 => { ins += 52;
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x20));
                 c.r[4] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[5] = c.r[0].wrapping_add(c.r[3]);
@@ -8011,7 +8011,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014e314; continue; }
                 pc = 0x8014e2d4;
             }
-            0x8014e2d4 => { ins += 15;
+            0x8014e2d4 => { ins += 19;
                 c.r[3] = 0x24920000;
                 c.r[0] = c.r[27].wrapping_add(0xd);
                 c.r[4] = c.r[3].wrapping_add(0x4925);
@@ -8026,7 +8026,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].wrapping_add(c.r[5]);
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffff8;
                 c.r[5] = c.r[0].wrapping_sub(c.r[30]);
-                c.lr = 0x8014e310; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e310; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e310;
             }
             0x8014e310 => { ins += 1;
@@ -8041,7 +8041,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[5] = c.r[0].wrapping_sub(c.r[30]);
                 c.r[8] = 0x0;
-                c.lr = 0x8014e334; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e334; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e334;
             }
             0x8014e334 => { ins += 2;
@@ -8072,7 +8072,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014e760; continue;
                 pc = 0x8014e35c;
             }
-            0x8014e35c => { ins += 11;
+            0x8014e35c => { ins += 12;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[6] = c.r[0].rotate_left(1) & 0xfffffffe;
                 c.r[7] = c.lwz_t(ins, c.r[28].wrapping_add(0x14));
@@ -8083,7 +8083,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.lwz_t(ins, c.r[28].wrapping_add(0x50));
                 c.r[6] = 0x0;
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014e388; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014e388; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014e388;
             }
             0x8014e388 => { ins += 2;
@@ -8097,7 +8097,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014e760; continue; }
                 pc = 0x8014e39c;
             }
-            0x8014e39c => { ins += 9;
+            0x8014e39c => { ins += 52;
                 c.r[7] = c.lwz_t(ins, c.r[28].wrapping_add(0x20));
                 c.r[4] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[5] = c.r[7].wrapping_add(c.r[3]);
@@ -8123,7 +8123,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[5] = c.r[0].wrapping_sub(c.r[4]);
                 c.r[8] = 0x0;
-                c.lr = 0x8014e3e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e3e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e3e8;
             }
             0x8014e3e8 => { ins += 1;
@@ -8138,7 +8138,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[0].rotate_left(1) & 0xfffffffe;
                 c.r[7] = 0x0;
                 c.r[8] = 0x0;
-                c.lr = 0x8014e40c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e40c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e40c;
             }
             0x8014e40c => { ins += 2;
@@ -8146,7 +8146,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014e760; continue;
                 pc = 0x8014e414;
             }
-            0x8014e414 => { ins += 17;
+            0x8014e414 => { ins += 22;
                 c.r[4] = 0x24920000;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[4] = c.r[4].wrapping_add(0x4925);
@@ -8163,7 +8163,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[0].rotate_left(0) & 0xfffffff8;
                 c.r[3] = c.r[8].wrapping_add(c.r[30]);
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014e458; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014e458; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014e458;
             }
             0x8014e458 => { ins += 2;
@@ -8177,7 +8177,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014e760; continue; }
                 pc = 0x8014e46c;
             }
-            0x8014e46c => { ins += 9;
+            0x8014e46c => { ins += 52;
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x20));
                 c.r[4] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[5] = c.r[0].wrapping_add(c.r[3]);
@@ -8203,14 +8203,14 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[5] = c.r[0].wrapping_sub(c.r[30]);
                 c.r[8] = 0x0;
-                c.lr = 0x8014e4b8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e4b8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e4b8;
             }
             0x8014e4b8 => { ins += 1;
                 pc = 0x8014e4f8; continue;
                 pc = 0x8014e4bc;
             }
-            0x8014e4bc => { ins += 15;
+            0x8014e4bc => { ins += 19;
                 c.r[3] = 0x24920000;
                 c.r[0] = c.r[27].wrapping_add(0xd);
                 c.r[4] = c.r[3].wrapping_add(0x4925);
@@ -8225,7 +8225,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].wrapping_add(c.r[5]);
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffff8;
                 c.r[5] = c.r[0].wrapping_sub(c.r[30]);
-                c.lr = 0x8014e4f8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e4f8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e4f8;
             }
             0x8014e4f8 => { ins += 2;
@@ -8251,7 +8251,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014e760; continue;
                 pc = 0x8014e518;
             }
-            0x8014e518 => { ins += 10;
+            0x8014e518 => { ins += 11;
                 c.r[4] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[7] = c.r[0].rotate_left(1) & 0xfffffffe;
                 c.r[5] = c.lwz_t(ins, c.r[28].wrapping_add(0x14));
@@ -8261,7 +8261,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[5].wrapping_add(c.r[7]);
                 c.r[7] = c.lwz_t(ins, c.r[28].wrapping_add(0x50));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014e540; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014e540; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014e540;
             }
             0x8014e540 => { ins += 2;
@@ -8275,7 +8275,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014e760; continue; }
                 pc = 0x8014e554;
             }
-            0x8014e554 => { ins += 9;
+            0x8014e554 => { ins += 52;
                 c.r[7] = c.lwz_t(ins, c.r[28].wrapping_add(0x20));
                 c.r[6] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[5] = c.r[7].wrapping_add(c.r[3]);
@@ -8302,7 +8302,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[5] = c.r[0].wrapping_sub(c.r[4]);
                 c.r[8] = 0x0;
-                c.lr = 0x8014e5a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e5a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e5a4;
             }
             0x8014e5a4 => { ins += 7;
@@ -8312,7 +8312,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = 0x0;
                 c.r[7] = 0x0;
                 c.r[8] = 0x0;
-                c.lr = 0x8014e5c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e5c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e5c0;
             }
             0x8014e5c0 => { ins += 1;
@@ -8332,7 +8332,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[5] = c.r[0].wrapping_sub(c.r[4]);
                 c.r[8] = 0x0;
-                c.lr = 0x8014e5ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e5ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e5ec;
             }
             0x8014e5ec => { ins += 1;
@@ -8347,7 +8347,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[0].rotate_left(1) & 0xfffffffe;
                 c.r[7] = 0x0;
                 c.r[8] = 0x0;
-                c.lr = 0x8014e610; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e610; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e610;
             }
             0x8014e610 => { ins += 2;
@@ -8355,7 +8355,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014e760; continue;
                 pc = 0x8014e618;
             }
-            0x8014e618 => { ins += 16;
+            0x8014e618 => { ins += 21;
                 c.r[4] = 0x24920000;
                 c.r[5] = c.lwz_t(ins, c.r[28].wrapping_add(0x14));
                 c.r[6] = c.r[4].wrapping_add(0x4925);
@@ -8371,7 +8371,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[27] = c.r[0].rotate_left(0) & 0xfffffff8;
                 c.r[3] = c.r[5].wrapping_add(c.r[27]);
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014e658; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014e658; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014e658;
             }
             0x8014e658 => { ins += 2;
@@ -8385,7 +8385,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014e760; continue; }
                 pc = 0x8014e66c;
             }
-            0x8014e66c => { ins += 9;
+            0x8014e66c => { ins += 52;
                 c.r[6] = c.lwz_t(ins, c.r[28].wrapping_add(0x20));
                 c.r[7] = c.lwz_t(ins, c.r[28].wrapping_add(0x18));
                 c.r[5] = c.r[6].wrapping_add(c.r[3]);
@@ -8412,10 +8412,10 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[5] = c.r[0].wrapping_sub(c.r[27]);
                 c.r[8] = 0x0;
-                c.lr = 0x8014e6bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e6bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e6bc;
             }
-            0x8014e6bc => { ins += 13;
+            0x8014e6bc => { ins += 17;
                 c.r[4] = 0x24920000;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(0x14));
                 c.r[0] = c.r[4].wrapping_add(0x4925);
@@ -8428,7 +8428,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(31) & 0x7fffffff;
                 c.r[0] = c.r[0].wrapping_add(c.r[5]);
                 c.r[5] = c.r[0].rotate_left(0) & 0xfffffff8;
-                c.lr = 0x8014e6f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e6f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e6f0;
             }
             0x8014e6f0 => { ins += 1;
@@ -8448,14 +8448,14 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.lbz_t(ins, c.r[28].wrapping_add(0xe));
                 c.r[5] = c.r[0].wrapping_sub(c.r[27]);
                 c.r[8] = 0x0;
-                c.lr = 0x8014e71c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e71c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e71c;
             }
             0x8014e71c => { ins += 1;
                 pc = 0x8014e75c; continue;
                 pc = 0x8014e720;
             }
-            0x8014e720 => { ins += 15;
+            0x8014e720 => { ins += 19;
                 c.r[3] = 0x24920000;
                 c.r[0] = c.r[30].wrapping_add(0xd);
                 c.r[4] = c.r[3].wrapping_add(0x4925);
@@ -8470,7 +8470,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].wrapping_add(c.r[5]);
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffff8;
                 c.r[5] = c.r[0].wrapping_sub(c.r[27]);
-                c.lr = 0x8014e75c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e75c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e75c;
             }
             0x8014e75c => { ins += 1;
@@ -8503,7 +8503,7 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[4] = c.r[0].rotate_left(8) & 0xff;
                 c.stb(c.r[28].wrapping_add(0xf), c.r[4]);
-                c.lr = 0x8014e7a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801628b4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e7a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801628b4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e7a0;
             }
             0x8014e7a0 => { ins += 2;
@@ -8519,15 +8519,15 @@ fn f_8014df20_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e7b4 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x70);
-                c.lr = 0x8014e7bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e7bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e7bc;
             }
-            0x8014e7bc => { ins += 4;
+            0x8014e7bc => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x74));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x70);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014df20: bad pc {:#x}", pc),
         }
@@ -8550,16 +8550,16 @@ pub fn f_8014e7cc_at(c: &mut Cpu, pc: u32) { f_8014e7cc_b(c, pc) }
 #[inline(always)]
 fn f_8014e7cc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014e7cc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014e7cc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014e7cc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014e7cc => { ins += 1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014e7cc: bad pc {:#x}", pc),
         }
@@ -8582,14 +8582,14 @@ pub fn f_8014e7d0_at(c: &mut Cpu, pc: u32) { f_8014e7d0_b(c, pc) }
 #[inline(always)]
 fn f_8014e7d0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014e7d0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014e7d0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014e7d0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8014e7d0 => { ins += 11;
+            0x8014e7d0 => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.r[4] = c.r[3].wrapping_mul(0x64);
@@ -8619,10 +8619,10 @@ fn f_8014e7d0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e810 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[31].wrapping_add(0x4c));
-                c.lr = 0x8014e818; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e818; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e818;
             }
-            0x8014e818 => { ins += 10;
+            0x8014e818 => { ins += 11;
                 c.r[0] = 0x3;
                 c.r[3] = 0x0;
                 c.stb(c.r[31].wrapping_add(0xc), c.r[0]);
@@ -8632,16 +8632,16 @@ fn f_8014e7d0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[12] = c.lwz_t(ins, c.r[31].wrapping_add(0x10));
                 c.r[7] = c.lwz_t(ins, c.r[31].wrapping_add(0x50));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8014e840; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8014e840; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8014e840;
             }
-            0x8014e840 => { ins += 5;
+            0x8014e840 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014e7d0: bad pc {:#x}", pc),
         }
@@ -8664,14 +8664,14 @@ pub fn f_8014e854_at(c: &mut Cpu, pc: u32) { f_8014e854_b(c, pc) }
 #[inline(always)]
 fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014e854;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014e854, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014e854, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8014e854 => { ins += 5;
+            0x8014e854 => { ins += 6;
                 c.r[4] = 0x80430000;
                 c.r[0] = 0x8;
                 c.r[4] = c.r[4].wrapping_add(0x5ff8);
@@ -8693,7 +8693,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e880 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e888;
             }
             0x8014e888 => { ins += 5;
@@ -8712,7 +8712,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e8a8 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e8b0;
             }
             0x8014e8b0 => { ins += 5;
@@ -8731,7 +8731,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e8d0 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e8d8;
             }
             0x8014e8d8 => { ins += 5;
@@ -8750,7 +8750,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e8f8 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e900;
             }
             0x8014e900 => { ins += 5;
@@ -8769,7 +8769,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e920 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e928;
             }
             0x8014e928 => { ins += 5;
@@ -8788,7 +8788,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e948 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e950;
             }
             0x8014e950 => { ins += 5;
@@ -8807,7 +8807,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e970 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e978;
             }
             0x8014e978 => { ins += 5;
@@ -8826,7 +8826,7 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e998 => { ins += 2;
                 c.r[3] = c.r[5] | c.r[5];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014e9a0;
             }
             0x8014e9a0 => { ins += 3;
@@ -8837,8 +8837,8 @@ fn f_8014e854_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014e9ac => { ins += 2;
                 c.r[3] = 0xffffffff;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014e854: bad pc {:#x}", pc),
         }
@@ -8861,19 +8861,19 @@ pub fn f_8014e9b4_at(c: &mut Cpu, pc: u32) { f_8014e9b4_b(c, pc) }
 #[inline(never)]
 fn f_8014e9b4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014e9b4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014e9b4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014e9b4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014e9b4 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x8014e9c8; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e9c8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e9c8;
             }
             0x8014e9c8 => { ins += 6;
@@ -8882,10 +8882,10 @@ fn f_8014e9b4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[27] = c.r[5] | c.r[5];
                 c.r[28] = c.r[6] | c.r[6];
                 c.r[29] = c.r[7] | c.r[7];
-                c.lr = 0x8014e9e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014e9e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014e9e0;
             }
-            0x8014e9e0 => { ins += 5;
+            0x8014e9e0 => { ins += 6;
                 c.r[3] = 0x80430000;
                 c.r[0] = 0x8;
                 c.r[4] = c.r[3].wrapping_add(0x5ff8);
@@ -9051,7 +9051,7 @@ fn f_8014e9b4_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014ec7c; continue; }
                 pc = 0x8014eb28;
             }
-            0x8014eb28 => { ins += 8;
+            0x8014eb28 => { ins += 10;
                 c.r[31] = c.r[3].wrapping_mul(0x64);
                 c.r[3] = 0x80430000;
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
@@ -9083,7 +9083,7 @@ fn f_8014e9b4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014ebcc; continue;
                 pc = 0x8014eb6c;
             }
-            0x8014eb6c => { ins += 24;
+            0x8014eb6c => { ins += 40;
                 c.r[4] = 0x24920000;
                 c.r[3] = c.r[27].wrapping_add(0xd);
                 c.r[7] = c.r[4].wrapping_add(0x4925);
@@ -9125,7 +9125,7 @@ fn f_8014e9b4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lwz_t(ins, c.r[6].wrapping_add(0x14));
                 c.r[8] = 0x0;
                 c.r[6] = c.lbz_t(ins, c.r[6].wrapping_add(0xe));
-                c.lr = 0x8014ebfc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ebfc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ebfc;
             }
             0x8014ebfc => { ins += 2;
@@ -9143,7 +9143,7 @@ fn f_8014e9b4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lwz_t(ins, c.r[6].wrapping_add(0x14));
                 c.r[8] = 0x0;
                 c.r[6] = c.lbz_t(ins, c.r[6].wrapping_add(0xe));
-                c.lr = 0x8014ec2c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ec2c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162eb8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ec2c;
             }
             0x8014ec2c => { ins += 3;
@@ -9172,24 +9172,24 @@ fn f_8014e9b4_b(c: &mut Cpu, mut pc: u32) {
             0x8014ec70 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[6]);
                 c.r[4] = c.lbz_t(ins, c.r[5]);
-                c.lr = 0x8014ec7c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801628b4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ec7c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801628b4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ec7c;
             }
             0x8014ec7c => { ins += 1;
-                c.lr = 0x8014ec80; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ec80; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ec80;
             }
             0x8014ec80 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x8014ec88; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ec88; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ec88;
             }
-            0x8014ec88 => { ins += 4;
+            0x8014ec88 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014e9b4: bad pc {:#x}", pc),
         }
@@ -9212,12 +9212,12 @@ pub fn f_8014ec98_at(c: &mut Cpu, pc: u32) { f_8014ec98_b(c, pc) }
 #[inline(always)]
 fn f_8014ec98_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014ec98;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014ec98, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014ec98, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014ec98 => { ins += 3;
                 c.r[5] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa724));
@@ -9231,20 +9231,20 @@ fn f_8014ec98_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.stb(c.r[3], c.r[5]);
                 c.stb(c.r[4], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014ecb8;
             }
             0x8014ecb8 => { ins += 2;
                 c.r[0] = c.r[5].rotate_left(0) & 0x2;
                 cr_rc(&mut cr, c.xer, c.r[0]);
-                if !cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if !cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014ecc0;
             }
             0x8014ecc0 => { ins += 3;
                 c.r[0] = 0x0;
                 c.stb(c.r[4], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014ec98: bad pc {:#x}", pc),
         }
@@ -9267,12 +9267,12 @@ pub fn f_8014eccc_at(c: &mut Cpu, pc: u32) { f_8014eccc_b(c, pc) }
 #[inline(always)]
 fn f_8014eccc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014eccc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014eccc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014eccc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014eccc => { ins += 5;
                 c.stb(c.r[3].wrapping_add(0x5e), c.r[5]);
@@ -9305,8 +9305,8 @@ fn f_8014eccc_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[3].wrapping_add(0x5b), c.r[6]);
                 c.stb(c.r[3].wrapping_add(0x5c), c.r[7]);
                 c.stb(c.r[3].wrapping_add(0x5d), c.r[8]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014eccc: bad pc {:#x}", pc),
         }
@@ -9329,12 +9329,12 @@ pub fn f_8014ed10_at(c: &mut Cpu, pc: u32) { f_8014ed10_b(c, pc) }
 #[inline(always)]
 fn f_8014ed10_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014ed10;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014ed10, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014ed10, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014ed10 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -9343,7 +9343,7 @@ fn f_8014ed10_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x2c), c.r[31]);
                 c.stw(c.r[1].wrapping_add(0x28), c.r[30]);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[29]);
-                c.lr = 0x8014ed2c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ed2c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ed2c;
             }
             0x8014ed2c => { ins += 6;
@@ -9425,7 +9425,7 @@ fn f_8014ed10_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[4] * c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] - c.f[3]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[4] * c.f[0]); c.f[3] = v; c.ps1[3] = v; }
-                c.lr = 0x8014ee0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ee0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ee0c;
             }
             0x8014ee0c => { ins += 2;
@@ -9440,18 +9440,18 @@ fn f_8014ed10_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014ee20;
             }
             0x8014ee20 => { ins += 1;
-                c.lr = 0x8014ee24; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ee24; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ee24;
             }
-            0x8014ee24 => { ins += 7;
+            0x8014ee24 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x2c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x28));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014ed10: bad pc {:#x}", pc),
         }
@@ -9474,19 +9474,19 @@ pub fn f_8014ee40_at(c: &mut Cpu, pc: u32) { f_8014ee40_b(c, pc) }
 #[inline(never)]
 fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014ee40;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014ee40, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014ee40, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014ee40 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x54), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014ee54; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47ac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ee54; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47ac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ee54;
             }
             0x8014ee54 => { ins += 15;
@@ -9504,10 +9504,10 @@ fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
                 c.r[18] = c.r[8] | c.r[8];
                 c.r[19] = c.r[9] | c.r[9];
                 c.r[20] = c.r[10] | c.r[10];
-                c.lr = 0x8014ee90; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ee90; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ee90;
             }
-            0x8014ee90 => { ins += 6;
+            0x8014ee90 => { ins += 7;
                 c.r[3] = 0x80430000;
                 c.r[0] = 0x8;
                 c.r[6] = c.r[3].wrapping_add(0x5ff8);
@@ -9606,7 +9606,7 @@ fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[4].wrapping_add(0x1);
                 pc = 0x8014ef74;
             }
-            0x8014ef74 => { ins += 4;
+            0x8014ef74 => { ins += 5;
                 c.r[0] = 0x8;
                 c.r[5] = c.r[6] | c.r[6];
                 c.r[3] = 0x0;
@@ -9734,7 +9734,7 @@ fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8014ef58; continue; }
                 pc = 0x8014f090;
             }
-            0x8014f090 => { ins += 10;
+            0x8014f090 => { ins += 12;
                 c.r[16] = c.r[7].wrapping_mul(0x64);
                 c.r[3] = 0x80430000;
                 c.stw(c.r[13].wrapping_add(0xffffa740), c.r[4]);
@@ -9744,7 +9744,7 @@ fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[5].wrapping_add(0x4), c.r[17]);
                 c.r[3] = c.r[29] | c.r[29];
                 c.stw(c.r[5].wrapping_add(0x8), c.r[23]);
-                c.lr = 0x8014f0b8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014f298(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f0b8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014f298(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f0b8;
             }
             0x8014f0b8 => { ins += 11;
@@ -9866,7 +9866,7 @@ fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[5].wrapping_add(0x50), c.r[25]);
                 c.stw(c.r[6].wrapping_add(c.r[16]), c.r[4]);
                 c.stb(c.r[5].wrapping_add(0xc), c.r[0]);
-                c.lr = 0x8014f21c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162f48(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f21c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162f48(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f21c;
             }
             0x8014f21c => { ins += 7;
@@ -9887,7 +9887,7 @@ fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014f240 => { ins += 2;
                 c.r[3] = c.r[17] | c.r[17];
-                c.lr = 0x8014f248; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014ff0c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f248; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014ff0c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f248;
             }
             0x8014f248 => { ins += 2;
@@ -9921,21 +9921,21 @@ fn f_8014ee40_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014f278;
             }
             0x8014f278 => { ins += 1;
-                c.lr = 0x8014f27c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f27c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f27c;
             }
             0x8014f27c => { ins += 3;
                 c.r[3] = c.r[17] | c.r[17];
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014f288; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47f8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f288; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47f8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f288;
             }
-            0x8014f288 => { ins += 4;
+            0x8014f288 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014ee40: bad pc {:#x}", pc),
         }
@@ -9958,12 +9958,12 @@ pub fn f_8014f298_at(c: &mut Cpu, pc: u32) { f_8014f298_b(c, pc) }
 #[inline(always)]
 fn f_8014f298_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014f298;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014f298, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014f298, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014f298 => { ins += 2;
                 c.r[0] = c.r[4].rotate_left(0) & 0x1;
@@ -9971,7 +9971,7 @@ fn f_8014f298_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014f2cc; continue; }
                 pc = 0x8014f2a0;
             }
-            0x8014f2a0 => { ins += 11;
+            0x8014f2a0 => { ins += 15;
                 c.r[4] = 0x24920000;
                 c.r[0] = c.r[3].wrapping_add(0xd);
                 c.r[3] = c.r[4].wrapping_add(0x4925);
@@ -9982,15 +9982,15 @@ fn f_8014f298_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[0].rotate_left(0) & 0xfffffff8;
                 c.r[0] = c.r[3].wrapping_add(0x1f);
                 c.r[3] = c.r[0].rotate_left(0) & 0xffffffe0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8014f2cc;
             }
             0x8014f2cc => { ins += 4;
                 c.r[3] = c.r[3].rotate_left(1) & 0xfffffffe;
                 c.r[0] = c.r[3].wrapping_add(0x1f);
                 c.r[3] = c.r[0].rotate_left(0) & 0xffffffe0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014f298: bad pc {:#x}", pc),
         }
@@ -10013,19 +10013,19 @@ pub fn f_8014f2dc_at(c: &mut Cpu, pc: u32) { f_8014f2dc_b(c, pc) }
 #[inline(never)]
 fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014f2dc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014f2dc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014f2dc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014f2dc => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x54), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014f2f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f2f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f2f0;
             }
             0x8014f2f0 => { ins += 7;
@@ -10035,10 +10035,10 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[26] = c.r[6] | c.r[6];
                 c.r[27] = c.r[7] | c.r[7];
                 c.r[28] = c.r[8] | c.r[8];
-                c.lr = 0x8014f30c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f30c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f30c;
             }
-            0x8014f30c => { ins += 6;
+            0x8014f30c => { ins += 7;
                 c.r[3] = 0x80430000;
                 c.r[0] = 0x8;
                 c.r[30] = c.r[3].wrapping_add(0x5ff8);
@@ -10205,7 +10205,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014f81c; continue; }
                 pc = 0x8014f458;
             }
-            0x8014f458 => { ins += 11;
+            0x8014f458 => { ins += 13;
                 c.r[31] = c.r[3].wrapping_mul(0x64);
                 c.r[3] = 0x80430000;
                 c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa724));
@@ -10289,7 +10289,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[4] * c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] - c.f[3]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[4] * c.f[0]); c.f[3] = v; c.ps1[3] = v; }
-                c.lr = 0x8014f564; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f564; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f564;
             }
             0x8014f564 => { ins += 6;
@@ -10302,10 +10302,10 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014f57c;
             }
             0x8014f57c => { ins += 1;
-                c.lr = 0x8014f580; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f580; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f580;
             }
-            0x8014f580 => { ins += 3;
+            0x8014f580 => { ins += 4;
                 c.r[0] = 0x8;
                 c.r[3] = 0x0;
                 c.mtspr(9, c.r[0]);
@@ -10469,7 +10469,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014f818; continue; }
                 pc = 0x8014f6c0;
             }
-            0x8014f6c0 => { ins += 11;
+            0x8014f6c0 => { ins += 13;
                 c.r[30] = c.r[3].wrapping_mul(0x64);
                 c.r[3] = 0x80430000;
                 c.stb(c.r[1].wrapping_add(0x8), c.r[26]);
@@ -10480,7 +10480,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[1].wrapping_add(0x9);
                 c.stb(c.r[1].wrapping_add(0x9), c.r[25]);
                 c.stb(c.r[31].wrapping_add(0x5f), c.r[26]);
-                c.lr = 0x8014f6ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014ec98(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f6ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014ec98(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f6ec;
             }
             0x8014f6ec => { ins += 10;
@@ -10524,7 +10524,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[4] * c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] - c.f[3]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[4] * c.f[0]); c.f[3] = v; c.ps1[3] = v; }
-                c.lr = 0x8014f784; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f784; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162a58(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f784;
             }
             0x8014f784 => { ins += 4;
@@ -10535,12 +10535,12 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014f794;
             }
             0x8014f794 => { ins += 1;
-                c.lr = 0x8014f798; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f798; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f798;
             }
             0x8014f798 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8014f7a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f7a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f7a0;
             }
             0x8014f7a0 => { ins += 3;
@@ -10549,7 +10549,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8014f814; continue; }
                 pc = 0x8014f7ac;
             }
-            0x8014f7ac => { ins += 11;
+            0x8014f7ac => { ins += 13;
                 c.r[30] = c.r[3].wrapping_mul(0x64);
                 c.r[3] = 0x80430000;
                 c.r[4] = c.r[24] | c.r[24];
@@ -10560,7 +10560,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[26] | c.r[26];
                 c.r[7] = c.r[27] | c.r[27];
                 c.r[8] = c.r[28] | c.r[28];
-                c.lr = 0x8014f7d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014eccc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f7d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014eccc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f7d8;
             }
             0x8014f7d8 => { ins += 3;
@@ -10571,7 +10571,7 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014f7e4 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8014f7ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014de94(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f7ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014de94(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f7ec;
             }
             0x8014f7ec => { ins += 4;
@@ -10587,32 +10587,32 @@ fn f_8014f2dc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[26] | c.r[26];
                 c.r[7] = c.r[27] | c.r[27];
                 c.r[8] = c.r[28] | c.r[28];
-                c.lr = 0x8014f814; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014f2dc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f814; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014f2dc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f814;
             }
             0x8014f814 => { ins += 1;
-                c.lr = 0x8014f818; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f818; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f818;
             }
             0x8014f818 => { ins += 1;
-                c.lr = 0x8014f81c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f81c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f81c;
             }
             0x8014f81c => { ins += 1;
-                c.lr = 0x8014f820; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f820; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f820;
             }
             0x8014f820 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8014f828; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4818(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f828; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4818(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f828;
             }
-            0x8014f828 => { ins += 4;
+            0x8014f828 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014f2dc: bad pc {:#x}", pc),
         }
@@ -10635,27 +10635,27 @@ pub fn f_8014f838_at(c: &mut Cpu, pc: u32) { f_8014f838_b(c, pc) }
 #[inline(never)]
 fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014f838;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014f838, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014f838, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014f838 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8014f84c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f84c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f84c;
             }
             0x8014f84c => { ins += 2;
                 c.r[25] = c.r[3] | c.r[3];
-                c.lr = 0x8014f854; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f854; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f854;
             }
-            0x8014f854 => { ins += 6;
+            0x8014f854 => { ins += 7;
                 c.r[3] = 0x80430000;
                 c.r[0] = 0x8;
                 c.r[30] = c.r[3].wrapping_add(0x5ff8);
@@ -10824,16 +10824,16 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014f9a0 => { ins += 2;
                 c.r[3] = c.r[25] | c.r[25];
-                c.lr = 0x8014f9a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f9a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f9a8;
             }
-            0x8014f9a8 => { ins += 6;
+            0x8014f9a8 => { ins += 8;
                 c.r[3] = 0x80430000;
                 c.r[3] = c.r[3].wrapping_add(0x5ff8);
                 c.r[31] = c.r[26].wrapping_mul(0x64);
                 c.r[29] = c.r[3].wrapping_add(0xe);
                 c.r[3] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[31]));
-                c.lr = 0x8014f9c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f9c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f9c0;
             }
             0x8014f9c0 => { ins += 6;
@@ -10846,10 +10846,10 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014f9d8;
             }
             0x8014f9d8 => { ins += 1;
-                c.lr = 0x8014f9dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014f9dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014f9dc;
             }
-            0x8014f9dc => { ins += 4;
+            0x8014f9dc => { ins += 5;
                 c.r[0] = 0x8;
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[27] = 0x0;
@@ -11016,13 +11016,13 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014fb20 => { ins += 2;
                 c.r[3] = c.r[26] | c.r[26];
-                c.lr = 0x8014fb28; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fb28; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fb28;
             }
-            0x8014fb28 => { ins += 3;
+            0x8014fb28 => { ins += 5;
                 c.r[28] = c.r[27].wrapping_mul(0x64);
                 c.r[3] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[28]));
-                c.lr = 0x8014fb34; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fb34; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fb34;
             }
             0x8014fb34 => { ins += 6;
@@ -11035,10 +11035,10 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fb4c;
             }
             0x8014fb4c => { ins += 1;
-                c.lr = 0x8014fb50; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fb50; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fb50;
             }
-            0x8014fb50 => { ins += 4;
+            0x8014fb50 => { ins += 5;
                 c.r[0] = 0x8;
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[27] = 0x0;
@@ -11205,13 +11205,13 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014fc94 => { ins += 2;
                 c.r[3] = c.r[26] | c.r[26];
-                c.lr = 0x8014fc9c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fc9c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fc9c;
             }
-            0x8014fc9c => { ins += 3;
+            0x8014fc9c => { ins += 5;
                 c.r[27] = c.r[27].wrapping_mul(0x64);
                 c.r[3] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[27]));
-                c.lr = 0x8014fca8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fca8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fca8;
             }
             0x8014fca8 => { ins += 6;
@@ -11224,10 +11224,10 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fcc0;
             }
             0x8014fcc0 => { ins += 1;
-                c.lr = 0x8014fcc4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fcc4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fcc4;
             }
-            0x8014fcc4 => { ins += 3;
+            0x8014fcc4 => { ins += 4;
                 c.r[0] = 0x8;
                 c.r[25] = 0x0;
                 c.mtspr(9, c.r[0]);
@@ -11393,13 +11393,13 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014fe04 => { ins += 2;
                 c.r[3] = c.r[26] | c.r[26];
-                c.lr = 0x8014fe0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe0c;
             }
-            0x8014fe0c => { ins += 3;
+            0x8014fe0c => { ins += 5;
                 c.r[30] = c.r[25].wrapping_mul(0x64);
                 c.r[3] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[30]));
-                c.lr = 0x8014fe18; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe18; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe18;
             }
             0x8014fe18 => { ins += 6;
@@ -11412,12 +11412,12 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fe30;
             }
             0x8014fe30 => { ins += 1;
-                c.lr = 0x8014fe34; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe34; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe34;
             }
             0x8014fe34 => { ins += 2;
                 c.r[3] = c.r[25] | c.r[25];
-                c.lr = 0x8014fe3c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe3c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe3c;
             }
             0x8014fe3c => { ins += 4;
@@ -11429,13 +11429,13 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8014fe4c => { ins += 2;
                 c.r[3] = c.r[25] | c.r[25];
-                c.lr = 0x8014fe54; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe54; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe54;
             }
-            0x8014fe54 => { ins += 3;
+            0x8014fe54 => { ins += 5;
                 c.r[25] = c.r[26].wrapping_mul(0x64);
                 c.r[3] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[25]));
-                c.lr = 0x8014fe60; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe60; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162f68(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe60;
             }
             0x8014fe60 => { ins += 6;
@@ -11448,7 +11448,7 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fe78;
             }
             0x8014fe78 => { ins += 1;
-                c.lr = 0x8014fe7c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014f838(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe7c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014f838(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe7c;
             }
             0x8014fe7c => { ins += 5;
@@ -11460,7 +11460,7 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fe90;
             }
             0x8014fe90 => { ins += 1;
-                c.lr = 0x8014fe94; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fe94; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fe94;
             }
             0x8014fe94 => { ins += 5;
@@ -11472,7 +11472,7 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fea8;
             }
             0x8014fea8 => { ins += 1;
-                c.lr = 0x8014feac; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014feac; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014feac;
             }
             0x8014feac => { ins += 5;
@@ -11484,7 +11484,7 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fec0;
             }
             0x8014fec0 => { ins += 1;
-                c.lr = 0x8014fec4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fec4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fec4;
             }
             0x8014fec4 => { ins += 5;
@@ -11496,7 +11496,7 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fed8;
             }
             0x8014fed8 => { ins += 1;
-                c.lr = 0x8014fedc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fedc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fedc;
             }
             0x8014fedc => { ins += 5;
@@ -11508,20 +11508,20 @@ fn f_8014f838_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8014fef0;
             }
             0x8014fef0 => { ins += 1;
-                c.lr = 0x8014fef4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fef4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fef4;
             }
             0x8014fef4 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8014fefc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014fefc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014fefc;
             }
-            0x8014fefc => { ins += 4;
+            0x8014fefc => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014f838: bad pc {:#x}", pc),
         }
@@ -11544,12 +11544,12 @@ pub fn f_8014ff0c_at(c: &mut Cpu, pc: u32) { f_8014ff0c_b(c, pc) }
 #[inline(never)]
 fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8014ff0c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8014ff0c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8014ff0c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8014ff0c => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -11561,10 +11561,10 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[3] | c.r[3];
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = 0x0;
-                c.lr = 0x8014ff34; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8014ff34; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8014ff34;
             }
-            0x8014ff34 => { ins += 6;
+            0x8014ff34 => { ins += 7;
                 c.r[3] = 0x80430000;
                 c.r[0] = 0x8;
                 c.r[30] = c.r[3].wrapping_add(0x5ff8);
@@ -11731,7 +11731,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015053c; continue; }
                 pc = 0x80150080;
             }
-            0x80150080 => { ins += 7;
+            0x80150080 => { ins += 9;
                 c.r[3] = 0x80430000;
                 c.r[3] = c.r[3].wrapping_add(0x5ff8);
                 c.r[28] = c.r[4].wrapping_mul(0x64);
@@ -11744,7 +11744,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
             0x8015009c => { ins += 3;
                 c.r[3] = c.r[3].wrapping_add(c.r[28]);
                 c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x58));
-                c.lr = 0x801500a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801500a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801500a8;
             }
             0x801500a8 => { ins += 7;
@@ -11758,7 +11758,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801500c4;
             }
             0x801500c4 => { ins += 1;
-                c.lr = 0x801500c8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801500c8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801500c8;
             }
             0x801500c8 => { ins += 2;
@@ -11784,10 +11784,10 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801500f8 => { ins += 2;
                 c.r[31] = 0x0;
-                c.lr = 0x80150100; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150100; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150100;
             }
-            0x80150100 => { ins += 4;
+            0x80150100 => { ins += 5;
                 c.r[0] = 0x8;
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[3] = 0x0;
@@ -11952,7 +11952,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015052c; continue; }
                 pc = 0x80150244;
             }
-            0x80150244 => { ins += 4;
+            0x80150244 => { ins += 6;
                 c.r[28] = c.r[3].wrapping_mul(0x64);
                 c.r[0] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[28]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x3);
@@ -11964,7 +11964,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[28]);
                 c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x58));
-                c.lr = 0x80150268; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150268; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150268;
             }
             0x80150268 => { ins += 7;
@@ -11978,7 +11978,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150284;
             }
             0x80150284 => { ins += 1;
-                c.lr = 0x80150288; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150288; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150288;
             }
             0x80150288 => { ins += 2;
@@ -12004,10 +12004,10 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801502b8 => { ins += 2;
                 c.r[31] = 0x0;
-                c.lr = 0x801502c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801502c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801502c0;
             }
-            0x801502c0 => { ins += 3;
+            0x801502c0 => { ins += 4;
                 c.r[0] = 0x8;
                 c.r[3] = 0x0;
                 c.mtspr(9, c.r[0]);
@@ -12171,7 +12171,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150520; continue; }
                 pc = 0x80150400;
             }
-            0x80150400 => { ins += 4;
+            0x80150400 => { ins += 6;
                 c.r[28] = c.r[3].wrapping_mul(0x64);
                 c.r[0] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[28]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x3);
@@ -12183,7 +12183,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[28]);
                 c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x58));
-                c.lr = 0x80150424; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150424; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150424;
             }
             0x80150424 => { ins += 7;
@@ -12197,7 +12197,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150440;
             }
             0x80150440 => { ins += 1;
-                c.lr = 0x80150444; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150444; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150444;
             }
             0x80150444 => { ins += 2;
@@ -12223,12 +12223,12 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80150474 => { ins += 2;
                 c.r[31] = 0x0;
-                c.lr = 0x8015047c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015047c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015047c;
             }
             0x8015047c => { ins += 2;
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x80150484; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150484; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150484;
             }
             0x80150484 => { ins += 3;
@@ -12237,7 +12237,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150514; continue; }
                 pc = 0x80150490;
             }
-            0x80150490 => { ins += 4;
+            0x80150490 => { ins += 6;
                 c.r[28] = c.r[3].wrapping_mul(0x64);
                 c.r[0] = c.lbz_t(ins, c.r[29].wrapping_add(c.r[28]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x3);
@@ -12249,7 +12249,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[28]);
                 c.r[3] = c.lbz_t(ins, c.r[3].wrapping_add(0x58));
-                c.lr = 0x801504b4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801504b4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801504b4;
             }
             0x801504b4 => { ins += 7;
@@ -12263,7 +12263,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801504d0;
             }
             0x801504d0 => { ins += 1;
-                c.lr = 0x801504d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801504d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801504d4;
             }
             0x801504d4 => { ins += 2;
@@ -12288,7 +12288,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150504;
             }
             0x80150504 => { ins += 1;
-                c.lr = 0x80150508; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014ff0c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150508; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014ff0c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150508;
             }
             0x80150508 => { ins += 2;
@@ -12301,7 +12301,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150514;
             }
             0x80150514 => { ins += 1;
-                c.lr = 0x80150518; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150518; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150518;
             }
             0x80150518 => { ins += 1;
@@ -12313,7 +12313,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150520;
             }
             0x80150520 => { ins += 1;
-                c.lr = 0x80150524; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150524; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150524;
             }
             0x80150524 => { ins += 1;
@@ -12325,7 +12325,7 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015052c;
             }
             0x8015052c => { ins += 1;
-                c.lr = 0x80150530; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150530; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150530;
             }
             0x80150530 => { ins += 2;
@@ -12338,14 +12338,14 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015053c;
             }
             0x8015053c => { ins += 1;
-                c.lr = 0x80150540; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150540; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150540;
             }
             0x80150540 => { ins += 1;
                 c.r[3] = c.r[28] | c.r[28];
                 pc = 0x80150544;
             }
-            0x80150544 => { ins += 8;
+            0x80150544 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -12353,8 +12353,8 @@ fn f_8014ff0c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8014ff0c: bad pc {:#x}", pc),
         }
@@ -12377,12 +12377,12 @@ pub fn f_80150564_at(c: &mut Cpu, pc: u32) { f_80150564_b(c, pc) }
 #[inline(never)]
 fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80150564;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80150564, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80150564, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80150564 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -12392,10 +12392,10 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x18), c.r[30]);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[29] = c.r[3] | c.r[3];
-                c.lr = 0x80150584; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150584; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150584;
             }
-            0x80150584 => { ins += 6;
+            0x80150584 => { ins += 7;
                 c.r[3] = 0x80430000;
                 c.r[0] = 0x8;
                 c.r[31] = c.r[3].wrapping_add(0x5ff8);
@@ -12562,7 +12562,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150c58; continue; }
                 pc = 0x801506d0;
             }
-            0x801506d0 => { ins += 7;
+            0x801506d0 => { ins += 9;
                 c.r[3] = 0x80430000;
                 c.r[3] = c.r[3].wrapping_add(0x5ff8);
                 c.r[29] = c.r[4].wrapping_mul(0x64);
@@ -12582,7 +12582,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[29]);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x4c));
-                c.lr = 0x80150708; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150708; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150708;
             }
             0x80150708 => { ins += 2;
@@ -12600,10 +12600,10 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150728;
             }
             0x80150728 => { ins += 1;
-                c.lr = 0x8015072c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015072c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015072c;
             }
-            0x8015072c => { ins += 4;
+            0x8015072c => { ins += 5;
                 c.r[0] = 0x8;
                 c.r[4] = c.r[31] | c.r[31];
                 c.r[3] = 0x0;
@@ -12768,7 +12768,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150c54; continue; }
                 pc = 0x80150870;
             }
-            0x80150870 => { ins += 4;
+            0x80150870 => { ins += 6;
                 c.r[29] = c.r[3].wrapping_mul(0x64);
                 c.r[0] = c.lbz_t(ins, c.r[30].wrapping_add(c.r[29]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1);
@@ -12785,7 +12785,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[29]);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x4c));
-                c.lr = 0x8015089c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015089c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015089c;
             }
             0x8015089c => { ins += 2;
@@ -12803,10 +12803,10 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801508bc;
             }
             0x801508bc => { ins += 1;
-                c.lr = 0x801508c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801508c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801508c0;
             }
-            0x801508c0 => { ins += 4;
+            0x801508c0 => { ins += 5;
                 c.r[0] = 0x8;
                 c.r[4] = c.r[31] | c.r[31];
                 c.r[3] = 0x0;
@@ -12971,7 +12971,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150c50; continue; }
                 pc = 0x80150a04;
             }
-            0x80150a04 => { ins += 4;
+            0x80150a04 => { ins += 6;
                 c.r[29] = c.r[3].wrapping_mul(0x64);
                 c.r[0] = c.lbz_t(ins, c.r[30].wrapping_add(c.r[29]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1);
@@ -12988,7 +12988,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[29]);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x4c));
-                c.lr = 0x80150a30; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150a30; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150a30;
             }
             0x80150a30 => { ins += 2;
@@ -13006,10 +13006,10 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150a50;
             }
             0x80150a50 => { ins += 1;
-                c.lr = 0x80150a54; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150a54; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150a54;
             }
-            0x80150a54 => { ins += 3;
+            0x80150a54 => { ins += 4;
                 c.r[0] = 0x8;
                 c.r[3] = 0x0;
                 c.mtspr(9, c.r[0]);
@@ -13173,7 +13173,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150c4c; continue; }
                 pc = 0x80150b94;
             }
-            0x80150b94 => { ins += 4;
+            0x80150b94 => { ins += 6;
                 c.r[29] = c.r[3].wrapping_mul(0x64);
                 c.r[0] = c.lbz_t(ins, c.r[30].wrapping_add(c.r[29]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1);
@@ -13190,7 +13190,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[29]);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x4c));
-                c.lr = 0x80150bc0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150bc0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150bc0;
             }
             0x80150bc0 => { ins += 2;
@@ -13208,12 +13208,12 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150be0;
             }
             0x80150be0 => { ins += 1;
-                c.lr = 0x80150be4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150be4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150be4;
             }
             0x80150be4 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x80150bec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150bec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014e854(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150bec;
             }
             0x80150bec => { ins += 3;
@@ -13222,7 +13222,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150c48; continue; }
                 pc = 0x80150bf8;
             }
-            0x80150bf8 => { ins += 4;
+            0x80150bf8 => { ins += 6;
                 c.r[29] = c.r[3].wrapping_mul(0x64);
                 c.r[0] = c.lbz_t(ins, c.r[30].wrapping_add(c.r[29]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x1);
@@ -13239,7 +13239,7 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x5ff8);
                 c.r[3] = c.r[0].wrapping_add(c.r[29]);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x4c));
-                c.lr = 0x80150c24; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c24; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158424(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c24;
             }
             0x80150c24 => { ins += 2;
@@ -13257,38 +13257,38 @@ fn f_80150564_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150c44;
             }
             0x80150c44 => { ins += 1;
-                c.lr = 0x80150c48; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c48; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150564(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c48;
             }
             0x80150c48 => { ins += 1;
-                c.lr = 0x80150c4c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c4c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c4c;
             }
             0x80150c4c => { ins += 1;
-                c.lr = 0x80150c50; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c50; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c50;
             }
             0x80150c50 => { ins += 1;
-                c.lr = 0x80150c54; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c54; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c54;
             }
             0x80150c54 => { ins += 1;
-                c.lr = 0x80150c58; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c58; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c58;
             }
             0x80150c58 => { ins += 1;
-                c.lr = 0x80150c5c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c5c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c5c;
             }
-            0x80150c5c => { ins += 7;
+            0x80150c5c => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80150564: bad pc {:#x}", pc),
         }
@@ -13311,12 +13311,12 @@ pub fn f_80150c78_at(c: &mut Cpu, pc: u32) { f_80150c78_b(c, pc) }
 #[inline(never)]
 fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80150c78;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80150c78, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80150c78, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80150c78 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -13326,7 +13326,7 @@ fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
                 c.r[31] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x8), c.r[30]);
                 c.r[30] = c.r[3] | c.r[3];
-                c.lr = 0x80150c98; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150c98; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150c98;
             }
             0x80150c98 => { ins += 6;
@@ -13385,7 +13385,7 @@ fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x80150dd0; continue; }
                 pc = 0x80150d18;
             }
-            0x80150d18 => { ins += 3;
+            0x80150d18 => { ins += 4;
                 c.r[0] = c.r[3].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[0]);
                 c.mtspr(9, c.r[0]);
@@ -13435,7 +13435,7 @@ fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150dd0; continue; }
                 pc = 0x80150db4;
             }
-            0x80150db4 => { ins += 1;
+            0x80150db4 => { ins += 2;
                 c.mtspr(9, c.r[3]);
                 pc = 0x80150db8;
             }
@@ -13456,7 +13456,7 @@ fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150de0;
             }
             0x80150de0 => { ins += 1;
-                c.lr = 0x80150de4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150de4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150de4;
             }
             0x80150de4 => { ins += 2;
@@ -13468,7 +13468,7 @@ fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[4].wrapping_add(0x6));
                 c.r[0] = c.r[3].wrapping_add(0x1);
                 c.sth(c.r[4].wrapping_add(0x6), c.r[0]);
-                c.lr = 0x80150dfc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150dfc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150dfc;
             }
             0x80150dfc => { ins += 2;
@@ -13489,7 +13489,7 @@ fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150e1c;
             }
             0x80150e1c => { ins += 1;
-                c.lr = 0x80150e20; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150e20; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150e20;
             }
             0x80150e20 => { ins += 2;
@@ -13506,21 +13506,21 @@ fn f_80150c78_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[3].wrapping_add(0x4), c.r[30]);
                 c.stw(c.r[4].wrapping_add(c.r[5]), c.r[31]);
                 c.sth(c.r[3].wrapping_add(0x6), c.r[0]);
-                c.lr = 0x80150e4c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150e4c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150e4c;
             }
             0x80150e4c => { ins += 1;
                 c.r[3] = 0x1;
                 pc = 0x80150e50;
             }
-            0x80150e50 => { ins += 6;
+            0x80150e50 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80150c78: bad pc {:#x}", pc),
         }
@@ -13543,12 +13543,12 @@ pub fn f_80150e68_at(c: &mut Cpu, pc: u32) { f_80150e68_b(c, pc) }
 #[inline(always)]
 fn f_80150e68_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80150e68;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80150e68, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80150e68, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80150e68 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -13556,7 +13556,7 @@ fn f_80150e68_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x80150e80; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150e80; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150e80;
             }
             0x80150e80 => { ins += 6;
@@ -13611,7 +13611,7 @@ fn f_80150e68_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80150fb0; continue; }
                 pc = 0x80150ef8;
             }
-            0x80150ef8 => { ins += 3;
+            0x80150ef8 => { ins += 4;
                 c.r[0] = c.r[3].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[0]);
                 c.mtspr(9, c.r[0]);
@@ -13661,7 +13661,7 @@ fn f_80150e68_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80150fb0; continue; }
                 pc = 0x80150f94;
             }
-            0x80150f94 => { ins += 1;
+            0x80150f94 => { ins += 2;
                 c.mtspr(9, c.r[3]);
                 pc = 0x80150f98;
             }
@@ -13678,7 +13678,7 @@ fn f_80150e68_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa786));
                 c.r[0] = c.r[3].wrapping_add(0xffffffff);
                 c.sth(c.r[13].wrapping_add(0xffffa786), c.r[0]);
-                c.lr = 0x80150fc0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150fc0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150fc0;
             }
             0x80150fc0 => { ins += 2;
@@ -13687,20 +13687,20 @@ fn f_80150e68_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80150fc8;
             }
             0x80150fc8 => { ins += 1;
-                c.lr = 0x80150fcc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80150fcc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80150fcc;
             }
             0x80150fcc => { ins += 1;
                 c.r[3] = 0x0;
                 pc = 0x80150fd0;
             }
-            0x80150fd0 => { ins += 5;
+            0x80150fd0 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80150e68: bad pc {:#x}", pc),
         }
@@ -13723,12 +13723,12 @@ pub fn f_80150fe4_at(c: &mut Cpu, pc: u32) { f_80150fe4_b(c, pc) }
 #[inline(never)]
 fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80150fe4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80150fe4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80150fe4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80150fe4 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -13740,7 +13740,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[29] = c.r[3] | c.r[3];
-                c.lr = 0x8015100c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015100c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015100c;
             }
             0x8015100c => { ins += 6;
@@ -13773,7 +13773,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801511c0; continue; }
                 pc = 0x80151048;
             }
-            0x80151048 => { ins += 8;
+            0x80151048 => { ins += 10;
                 c.r[0] = c.r[8].wrapping_mul(0xc);
                 c.r[3] = 0x80440000;
                 c.r[6] = c.r[29].rotate_left(0) & 0xffff;
@@ -13789,7 +13789,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015119c; continue; }
                 pc = 0x80151070;
             }
-            0x80151070 => { ins += 7;
+            0x80151070 => { ins += 9;
                 c.r[3] = c.r[7].wrapping_add(0xffffffff);
                 c.r[0] = c.r[3].wrapping_mul(0xc);
                 cr_cmps(&mut cr, c.xer, 0, c.r[3], c.r[8]);
@@ -13799,7 +13799,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x8015118c; continue; }
                 pc = 0x8015108c;
             }
-            0x8015108c => { ins += 3;
+            0x8015108c => { ins += 4;
                 c.r[0] = c.r[3].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[0]);
                 c.mtspr(9, c.r[0]);
@@ -13865,7 +13865,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015118c; continue; }
                 pc = 0x80151168;
             }
-            0x80151168 => { ins += 1;
+            0x80151168 => { ins += 2;
                 c.mtspr(9, c.r[3]);
                 pc = 0x8015116c;
             }
@@ -13888,7 +13888,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015119c;
             }
             0x8015119c => { ins += 1;
-                c.lr = 0x801511a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801511a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801511a0;
             }
             0x801511a0 => { ins += 2;
@@ -13900,7 +13900,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[4].wrapping_add(0x8));
                 c.r[0] = c.r[3].wrapping_add(0x1);
                 c.sth(c.r[4].wrapping_add(0x8), c.r[0]);
-                c.lr = 0x801511b8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801511b8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801511b8;
             }
             0x801511b8 => { ins += 2;
@@ -13921,7 +13921,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801511d8;
             }
             0x801511d8 => { ins += 1;
-                c.lr = 0x801511dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801511dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801511dc;
             }
             0x801511dc => { ins += 2;
@@ -13929,7 +13929,7 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80151210; continue;
                 pc = 0x801511e4;
             }
-            0x801511e4 => { ins += 10;
+            0x801511e4 => { ins += 12;
                 c.r[5] = c.r[8].wrapping_mul(0xc);
                 c.r[3] = 0x80440000;
                 c.r[0] = 0x1;
@@ -13939,22 +13939,22 @@ fn f_80150fe4_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[4].wrapping_add(c.r[5]), c.r[30]);
                 c.sth(c.r[3].wrapping_add(0x6), c.r[31]);
                 c.sth(c.r[3].wrapping_add(0x8), c.r[0]);
-                c.lr = 0x8015120c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015120c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015120c;
             }
             0x8015120c => { ins += 1;
                 c.r[3] = 0x1;
                 pc = 0x80151210;
             }
-            0x80151210 => { ins += 7;
+            0x80151210 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80150fe4: bad pc {:#x}", pc),
         }
@@ -13977,12 +13977,12 @@ pub fn f_8015122c_at(c: &mut Cpu, pc: u32) { f_8015122c_b(c, pc) }
 #[inline(always)]
 fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015122c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015122c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015122c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015122c => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -13990,7 +13990,7 @@ fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x80151244; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151244; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151244;
             }
             0x80151244 => { ins += 6;
@@ -14023,7 +14023,7 @@ fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x801513d4; continue; }
                 pc = 0x80151280;
             }
-            0x80151280 => { ins += 9;
+            0x80151280 => { ins += 11;
                 c.r[0] = c.r[7].wrapping_mul(0xc);
                 c.r[3] = 0x80440000;
                 c.r[5] = c.r[3].wrapping_add(0xffff80f8);
@@ -14036,7 +14036,7 @@ fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x801513d4; continue; }
                 pc = 0x801512a4;
             }
-            0x801512a4 => { ins += 6;
+            0x801512a4 => { ins += 8;
                 c.r[3] = c.r[7].wrapping_add(0x1);
                 c.r[0] = c.r[3].wrapping_mul(0xc);
                 cr_cmps(&mut cr, c.xer, 0, c.r[3], c.r[6]);
@@ -14045,7 +14045,7 @@ fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801513bc; continue; }
                 pc = 0x801512bc;
             }
-            0x801512bc => { ins += 3;
+            0x801512bc => { ins += 4;
                 c.r[0] = c.r[3].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[0]);
                 c.mtspr(9, c.r[0]);
@@ -14111,7 +14111,7 @@ fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x801513bc; continue; }
                 pc = 0x80151398;
             }
-            0x80151398 => { ins += 1;
+            0x80151398 => { ins += 2;
                 c.mtspr(9, c.r[3]);
                 pc = 0x8015139c;
             }
@@ -14130,7 +14130,7 @@ fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa784));
                 c.r[0] = c.r[3].wrapping_add(0xffffffff);
                 c.sth(c.r[13].wrapping_add(0xffffa784), c.r[0]);
-                c.lr = 0x801513cc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801513cc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801513cc;
             }
             0x801513cc => { ins += 2;
@@ -14139,20 +14139,20 @@ fn f_8015122c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801513d4;
             }
             0x801513d4 => { ins += 1;
-                c.lr = 0x801513d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801513d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801513d8;
             }
             0x801513d8 => { ins += 1;
                 c.r[3] = 0x0;
                 pc = 0x801513dc;
             }
-            0x801513dc => { ins += 5;
+            0x801513dc => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015122c: bad pc {:#x}", pc),
         }
@@ -14175,12 +14175,12 @@ pub fn f_801513f0_at(c: &mut Cpu, pc: u32) { f_801513f0_b(c, pc) }
 #[inline(never)]
 fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801513f0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801513f0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801513f0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801513f0 => { ins += 9;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -14191,7 +14191,7 @@ fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x18), c.r[30]);
                 c.r[30] = c.r[3] | c.r[3];
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
-                c.lr = 0x80151414; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151414; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151414;
             }
             0x80151414 => { ins += 6;
@@ -14250,7 +14250,7 @@ fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x8015154c; continue; }
                 pc = 0x80151494;
             }
-            0x80151494 => { ins += 3;
+            0x80151494 => { ins += 4;
                 c.r[0] = c.r[3].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[0]);
                 c.mtspr(9, c.r[0]);
@@ -14300,7 +14300,7 @@ fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015154c; continue; }
                 pc = 0x80151530;
             }
-            0x80151530 => { ins += 1;
+            0x80151530 => { ins += 2;
                 c.mtspr(9, c.r[3]);
                 pc = 0x80151534;
             }
@@ -14321,7 +14321,7 @@ fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015155c;
             }
             0x8015155c => { ins += 1;
-                c.lr = 0x80151560; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151560; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151560;
             }
             0x80151560 => { ins += 2;
@@ -14330,7 +14330,7 @@ fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80151568;
             }
             0x80151568 => { ins += 1;
-                c.lr = 0x8015156c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015156c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015156c;
             }
             0x8015156c => { ins += 8;
@@ -14357,7 +14357,7 @@ fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801515a4;
             }
             0x801515a4 => { ins += 1;
-                c.lr = 0x801515a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801515a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801515a8;
             }
             0x801515a8 => { ins += 2;
@@ -14374,22 +14374,22 @@ fn f_801513f0_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[3].wrapping_add(0x4), c.r[30]);
                 c.stw(c.r[4].wrapping_add(c.r[5]), c.r[31]);
                 c.sth(c.r[3].wrapping_add(0x6), c.r[0]);
-                c.lr = 0x801515d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801515d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801515d4;
             }
             0x801515d4 => { ins += 1;
                 c.r[3] = 0x1;
                 pc = 0x801515d8;
             }
-            0x801515d8 => { ins += 7;
+            0x801515d8 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801513f0: bad pc {:#x}", pc),
         }
@@ -14412,12 +14412,12 @@ pub fn f_801515f4_at(c: &mut Cpu, pc: u32) { f_801515f4_b(c, pc) }
 #[inline(always)]
 fn f_801515f4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801515f4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801515f4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801515f4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801515f4 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -14425,7 +14425,7 @@ fn f_801515f4_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x8015160c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015160c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015160c;
             }
             0x8015160c => { ins += 6;
@@ -14480,7 +14480,7 @@ fn f_801515f4_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015173c; continue; }
                 pc = 0x80151684;
             }
-            0x80151684 => { ins += 3;
+            0x80151684 => { ins += 4;
                 c.r[0] = c.r[3].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[0]);
                 c.mtspr(9, c.r[0]);
@@ -14530,7 +14530,7 @@ fn f_801515f4_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015173c; continue; }
                 pc = 0x80151720;
             }
-            0x80151720 => { ins += 1;
+            0x80151720 => { ins += 2;
                 c.mtspr(9, c.r[3]);
                 pc = 0x80151724;
             }
@@ -14547,7 +14547,7 @@ fn f_801515f4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa788));
                 c.r[0] = c.r[3].wrapping_add(0xffffffff);
                 c.sth(c.r[13].wrapping_add(0xffffa788), c.r[0]);
-                c.lr = 0x8015174c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015174c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015174c;
             }
             0x8015174c => { ins += 2;
@@ -14556,20 +14556,20 @@ fn f_801515f4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80151754;
             }
             0x80151754 => { ins += 1;
-                c.lr = 0x80151758; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151758; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151758;
             }
             0x80151758 => { ins += 1;
                 c.r[3] = 0x0;
                 pc = 0x8015175c;
             }
-            0x8015175c => { ins += 5;
+            0x8015175c => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801515f4: bad pc {:#x}", pc),
         }
@@ -14592,12 +14592,12 @@ pub fn f_80151770_at(c: &mut Cpu, pc: u32) { f_80151770_b(c, pc) }
 #[inline(never)]
 fn f_80151770_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80151770;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80151770, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80151770, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80151770 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -14661,7 +14661,7 @@ fn f_80151770_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801517f8;
             }
             0x801517f8 => { ins += 1;
-                c.lr = 0x801517fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801517fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801517fc;
             }
             0x801517fc => { ins += 3;
@@ -14670,7 +14670,7 @@ fn f_80151770_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015188c; continue;
                 pc = 0x80151808;
             }
-            0x80151808 => { ins += 8;
+            0x80151808 => { ins += 9;
                 c.r[8] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa78a));
                 c.r[3] = c.r[11].rotate_left(5) & 0x1fffe0;
                 c.r[7] = c.r[31] | c.r[31];
@@ -14739,7 +14739,7 @@ fn f_80151770_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x80151808; continue; }
                 pc = 0x80151898;
             }
-            0x80151898 => { ins += 11;
+            0x80151898 => { ins += 13;
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa78a));
                 c.r[3] = 0x80440000;
                 c.r[3] = c.r[3].wrapping_add(0xffffccf8);
@@ -14750,7 +14750,7 @@ fn f_80151770_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].wrapping_add(c.r[5]);
                 c.sth(c.r[3].wrapping_add(0x8), c.r[30]);
                 c.stw(c.r[3].wrapping_add(0x4), c.r[29]);
-                c.lr = 0x801518c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801518c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801518c4;
             }
             0x801518c4 => { ins += 2;
@@ -14767,7 +14767,7 @@ fn f_80151770_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x1;
                 pc = 0x801518d8;
             }
-            0x801518d8 => { ins += 8;
+            0x801518d8 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -14775,8 +14775,8 @@ fn f_80151770_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80151770: bad pc {:#x}", pc),
         }
@@ -14799,14 +14799,14 @@ pub fn f_801518f8_at(c: &mut Cpu, pc: u32) { f_801518f8_b(c, pc) }
 #[inline(always)]
 fn f_801518f8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801518f8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801518f8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801518f8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x801518f8 => { ins += 13;
+            0x801518f8 => { ins += 14;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.r[4] = 0x80440000;
@@ -14865,7 +14865,7 @@ fn f_801518f8_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x801519ac; continue; }
                 pc = 0x80151978;
             }
-            0x80151978 => { ins += 13;
+            0x80151978 => { ins += 15;
                 c.r[3] = c.r[5].wrapping_mul(0xc);
                 c.r[4] = 0x80440000;
                 c.r[6] = c.lwz_t(ins, c.r[31].wrapping_add(0x4));
@@ -14878,10 +14878,10 @@ fn f_801518f8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[6].wrapping_add(c.r[5]);
                 c.stw(c.r[31].wrapping_add(0x8), c.r[5]);
                 c.stw(c.r[1].wrapping_add(0x8), c.r[0]);
-                c.lr = 0x801519ac; { c.steps = st; c.instrs = ins; c.cr = cr; f_80163050(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801519ac; { c.steps = st; c.cycles = ins; c.cr = cr; f_80163050(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801519ac;
             }
-            0x801519ac => { ins += 9;
+            0x801519ac => { ins += 10;
                 c.r[4] = c.lhz_t(ins, c.r[31].wrapping_add(0x2));
                 c.r[3] = 0x1;
                 c.r[0] = c.r[4].wrapping_add(0x1);
@@ -14890,8 +14890,8 @@ fn f_801518f8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801518f8: bad pc {:#x}", pc),
         }
@@ -14914,14 +14914,14 @@ pub fn f_801519d0_at(c: &mut Cpu, pc: u32) { f_801519d0_b(c, pc) }
 #[inline(always)]
 fn f_801519d0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801519d0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801519d0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801519d0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x801519d0 => { ins += 10;
+            0x801519d0 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.r[4] = 0x80440000;
@@ -14961,7 +14961,7 @@ fn f_801519d0_b(c: &mut Cpu, mut pc: u32) {
             0x80151a28 => { ins += 3;
                 c.r[4] = c.lwz_t(ins, c.r[5].wrapping_add(0x8));
                 c.r[3] = c.r[5].wrapping_add(0xc);
-                c.lr = 0x80151a34; { c.steps = st; c.instrs = ins; c.cr = cr; f_80163104(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151a34; { c.steps = st; c.cycles = ins; c.cr = cr; f_80163104(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151a34;
             }
             0x80151a34 => { ins += 2;
@@ -14988,12 +14988,12 @@ fn f_801519d0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x80151a58;
             }
-            0x80151a58 => { ins += 4;
+            0x80151a58 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801519d0: bad pc {:#x}", pc),
         }
@@ -15016,12 +15016,12 @@ pub fn f_80151a68_at(c: &mut Cpu, pc: u32) { f_80151a68_b(c, pc) }
 #[inline(always)]
 fn f_80151a68_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80151a68;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80151a68, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80151a68, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80151a68 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -15068,7 +15068,7 @@ fn f_80151a68_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80151ad0;
             }
             0x80151ad0 => { ins += 1;
-                c.lr = 0x80151ad4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151ad4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151ad4;
             }
             0x80151ad4 => { ins += 11;
@@ -15086,7 +15086,7 @@ fn f_80151a68_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 1) { pc = 0x80151b4c; continue; }
                 pc = 0x80151b00;
             }
-            0x80151b00 => { ins += 3;
+            0x80151b00 => { ins += 4;
                 c.r[0] = c.r[5].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[0]);
                 c.mtspr(9, c.r[0]);
@@ -15112,7 +15112,7 @@ fn f_80151a68_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80151b4c; continue; }
                 pc = 0x80151b3c;
             }
-            0x80151b3c => { ins += 1;
+            0x80151b3c => { ins += 2;
                 c.mtspr(9, c.r[5]);
                 pc = 0x80151b40;
             }
@@ -15126,7 +15126,7 @@ fn f_80151a68_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa780));
                 c.r[0] = c.r[3].wrapping_add(0x1);
                 c.sth(c.r[13].wrapping_add(0xffffa780), c.r[0]);
-                c.lr = 0x80151b5c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151b5c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151b5c;
             }
             0x80151b5c => { ins += 2;
@@ -15138,15 +15138,15 @@ fn f_80151a68_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x80151b68;
             }
-            0x80151b68 => { ins += 7;
+            0x80151b68 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80151a68: bad pc {:#x}", pc),
         }
@@ -15169,12 +15169,12 @@ pub fn f_80151b84_at(c: &mut Cpu, pc: u32) { f_80151b84_b(c, pc) }
 #[inline(never)]
 fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80151b84;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80151b84, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80151b84, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80151b84 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -15184,7 +15184,7 @@ fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
                 c.r[31] = c.r[4] | c.r[4];
                 c.stw(c.r[1].wrapping_add(0x8), c.r[30]);
                 c.r[30] = c.r[3] | c.r[3];
-                c.lr = 0x80151ba4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151ba4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151ba4;
             }
             0x80151ba4 => { ins += 7;
@@ -15254,7 +15254,7 @@ fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[6].wrapping_add(0x6));
                 c.r[0] = c.r[3].wrapping_add(0x1);
                 c.sth(c.r[6].wrapping_add(0x6), c.r[0]);
-                c.lr = 0x80151c50; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151c50; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151c50;
             }
             0x80151c50 => { ins += 2;
@@ -15272,7 +15272,7 @@ fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80151e68; continue; }
                 pc = 0x80151c68;
             }
-            0x80151c68 => { ins += 5;
+            0x80151c68 => { ins += 6;
                 c.r[6] = 0x80440000;
                 c.r[5] = 0x40;
                 c.r[6] = c.r[6].wrapping_add(0xffffd6f8);
@@ -15394,7 +15394,7 @@ fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x80151e24; continue; }
                 pc = 0x80151d6c;
             }
-            0x80151d6c => { ins += 3;
+            0x80151d6c => { ins += 4;
                 c.r[5] = c.r[6].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[5]);
                 c.mtspr(9, c.r[5]);
@@ -15444,7 +15444,7 @@ fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80151e24; continue; }
                 pc = 0x80151e08;
             }
-            0x80151e08 => { ins += 1;
+            0x80151e08 => { ins += 2;
                 c.mtspr(9, c.r[6]);
                 pc = 0x80151e0c;
             }
@@ -15472,7 +15472,7 @@ fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[7].wrapping_add(0x6), c.r[6]);
                 c.sth(c.r[3].wrapping_add(c.r[0]), c.r[5]);
                 c.sth(c.r[13].wrapping_add(0xffffa782), c.r[4]);
-                c.lr = 0x80151e60; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151e60; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151e60;
             }
             0x80151e60 => { ins += 2;
@@ -15481,21 +15481,21 @@ fn f_80151b84_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80151e68;
             }
             0x80151e68 => { ins += 1;
-                c.lr = 0x80151e6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151e6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151e6c;
             }
             0x80151e6c => { ins += 1;
                 c.r[3] = 0x0;
                 pc = 0x80151e70;
             }
-            0x80151e70 => { ins += 6;
+            0x80151e70 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80151b84: bad pc {:#x}", pc),
         }
@@ -15518,12 +15518,12 @@ pub fn f_80151e88_at(c: &mut Cpu, pc: u32) { f_80151e88_b(c, pc) }
 #[inline(never)]
 fn f_80151e88_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80151e88;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80151e88, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80151e88, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80151e88 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -15531,7 +15531,7 @@ fn f_80151e88_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.stw(c.r[1].wrapping_add(0xc), c.r[31]);
                 c.r[31] = c.r[3] | c.r[3];
-                c.lr = 0x80151ea0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80151ea0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80151ea0;
             }
             0x80151ea0 => { ins += 7;
@@ -15600,7 +15600,7 @@ fn f_80151e88_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80151ffc; continue; }
                 pc = 0x80151f44;
             }
-            0x80151f44 => { ins += 3;
+            0x80151f44 => { ins += 4;
                 c.r[5] = c.r[6].rotate_left(29) & 0x1fffffff;
                 cr_rc(&mut cr, c.xer, c.r[5]);
                 c.mtspr(9, c.r[5]);
@@ -15650,7 +15650,7 @@ fn f_80151e88_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80151ffc; continue; }
                 pc = 0x80151fe0;
             }
-            0x80151fe0 => { ins += 1;
+            0x80151fe0 => { ins += 2;
                 c.mtspr(9, c.r[6]);
                 pc = 0x80151fe4;
             }
@@ -15663,7 +15663,7 @@ fn f_80151e88_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x80151fe4; continue; }
                 pc = 0x80151ffc;
             }
-            0x80151ffc => { ins += 5;
+            0x80151ffc => { ins += 6;
                 c.r[6] = 0x80440000;
                 c.r[5] = 0x40;
                 c.r[6] = c.r[6].wrapping_add(0xffffd6f8);
@@ -15782,17 +15782,17 @@ fn f_80151e88_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801520f0;
             }
             0x801520f0 => { ins += 1;
-                c.lr = 0x801520f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801520f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801520f4;
             }
-            0x801520f4 => { ins += 6;
+            0x801520f4 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[3] = 0x0;
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80151e88: bad pc {:#x}", pc),
         }
@@ -15815,19 +15815,19 @@ pub fn f_8015210c_at(c: &mut Cpu, pc: u32) { f_8015210c_b(c, pc) }
 #[inline(always)]
 fn f_8015210c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015210c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015210c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015210c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015210c => { ins += 4;
                 c.r[4] = c.lhz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[0] = c.lhz_t(ins, c.r[3].wrapping_add(0x4));
                 c.r[3] = c.r[0].wrapping_sub(c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015210c: bad pc {:#x}", pc),
         }
@@ -15850,12 +15850,12 @@ pub fn f_8015211c_at(c: &mut Cpu, pc: u32) { f_8015211c_b(c, pc) }
 #[inline(always)]
 fn f_8015211c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015211c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015211c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015211c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015211c => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -15885,7 +15885,7 @@ fn f_8015211c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[0].wrapping_add(c.r[3]);
                 c.r[3] = c.r[13].wrapping_add(0xffffa770);
                 c.r[6] = 0x8;
-                c.lr = 0x80152180; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152180; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152180;
             }
             0x80152180 => { ins += 3;
@@ -15903,12 +15903,12 @@ fn f_8015211c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x80152198;
             }
-            0x80152198 => { ins += 4;
+            0x80152198 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015211c: bad pc {:#x}", pc),
         }
@@ -15931,19 +15931,19 @@ pub fn f_801521a8_at(c: &mut Cpu, pc: u32) { f_801521a8_b(c, pc) }
 #[inline(always)]
 fn f_801521a8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801521a8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801521a8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801521a8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801521a8 => { ins += 4;
                 c.r[4] = c.lhz_t(ins, c.r[4]);
                 c.r[0] = c.lhz_t(ins, c.r[3]);
                 c.r[3] = c.r[0].wrapping_sub(c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801521a8: bad pc {:#x}", pc),
         }
@@ -15966,19 +15966,19 @@ pub fn f_801521b8_at(c: &mut Cpu, pc: u32) { f_801521b8_b(c, pc) }
 #[inline(always)]
 fn f_801521b8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801521b8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801521b8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801521b8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801521b8 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x801521cc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801521cc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801521cc;
             }
             0x801521cc => { ins += 10;
@@ -16000,7 +16000,7 @@ fn f_801521b8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lhz_t(ins, c.r[27].wrapping_add(0x8));
                 c.r[7] = c.r[29] | c.r[29];
                 c.r[6] = 0x20;
-                c.lr = 0x8015220c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015220c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015220c;
             }
             0x8015220c => { ins += 3;
@@ -16045,7 +16045,7 @@ fn f_801521b8_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x801522a8; continue; }
                 pc = 0x80152290;
             }
-            0x80152290 => { ins += 6;
+            0x80152290 => { ins += 8;
                 c.r[0] = c.r[31].wrapping_mul(0xc);
                 c.r[3] = 0x80440000;
                 c.r[3] = c.r[3].wrapping_add(0xffffccf8);
@@ -16076,15 +16076,15 @@ fn f_801521b8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801522c8 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x801522d0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801522d0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801522d0;
             }
-            0x801522d0 => { ins += 4;
+            0x801522d0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801521b8: bad pc {:#x}", pc),
         }
@@ -16107,19 +16107,19 @@ pub fn f_801522e0_at(c: &mut Cpu, pc: u32) { f_801522e0_b(c, pc) }
 #[inline(always)]
 fn f_801522e0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801522e0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801522e0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801522e0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801522e0 => { ins += 4;
                 c.r[4] = c.lhz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[0] = c.lhz_t(ins, c.r[3].wrapping_add(0x4));
                 c.r[3] = c.r[0].wrapping_sub(c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801522e0: bad pc {:#x}", pc),
         }
@@ -16142,12 +16142,12 @@ pub fn f_801522f0_at(c: &mut Cpu, pc: u32) { f_801522f0_b(c, pc) }
 #[inline(always)]
 fn f_801522f0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801522f0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801522f0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801522f0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801522f0 => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -16162,7 +16162,7 @@ fn f_801522f0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[13].wrapping_add(0xffffa75c);
                 c.r[5] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa788));
                 c.r[6] = 0x8;
-                c.lr = 0x80152324; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152324; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152324;
             }
             0x80152324 => { ins += 3;
@@ -16180,12 +16180,12 @@ fn f_801522f0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x8015233c;
             }
-            0x8015233c => { ins += 4;
+            0x8015233c => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801522f0: bad pc {:#x}", pc),
         }
@@ -16208,12 +16208,12 @@ pub fn f_8015234c_at(c: &mut Cpu, pc: u32) { f_8015234c_b(c, pc) }
 #[inline(always)]
 fn f_8015234c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015234c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015234c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015234c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015234c => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -16228,7 +16228,7 @@ fn f_8015234c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[13].wrapping_add(0xffffa750);
                 c.r[5] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa786));
                 c.r[6] = 0x8;
-                c.lr = 0x80152380; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152380; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152380;
             }
             0x80152380 => { ins += 3;
@@ -16246,12 +16246,12 @@ fn f_8015234c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x80152398;
             }
-            0x80152398 => { ins += 4;
+            0x80152398 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015234c: bad pc {:#x}", pc),
         }
@@ -16274,19 +16274,19 @@ pub fn f_801523a8_at(c: &mut Cpu, pc: u32) { f_801523a8_b(c, pc) }
 #[inline(always)]
 fn f_801523a8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801523a8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801523a8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801523a8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801523a8 => { ins += 4;
                 c.r[4] = c.lhz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[0] = c.lhz_t(ins, c.r[3].wrapping_add(0x4));
                 c.r[3] = c.r[0].wrapping_sub(c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801523a8: bad pc {:#x}", pc),
         }
@@ -16309,12 +16309,12 @@ pub fn f_801523b8_at(c: &mut Cpu, pc: u32) { f_801523b8_b(c, pc) }
 #[inline(always)]
 fn f_801523b8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801523b8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801523b8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801523b8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801523b8 => { ins += 17;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -16333,7 +16333,7 @@ fn f_801523b8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[8] | c.r[8];
                 c.r[5] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa784));
                 c.r[6] = 0xc;
-                c.lr = 0x801523fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801523fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801523fc;
             }
             0x801523fc => { ins += 3;
@@ -16354,13 +16354,13 @@ fn f_801523b8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x80152420;
             }
-            0x80152420 => { ins += 5;
+            0x80152420 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801523b8: bad pc {:#x}", pc),
         }
@@ -16383,19 +16383,19 @@ pub fn f_80152434_at(c: &mut Cpu, pc: u32) { f_80152434_b(c, pc) }
 #[inline(always)]
 fn f_80152434_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80152434;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80152434, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80152434, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80152434 => { ins += 4;
                 c.r[4] = c.lhz_t(ins, c.r[4]);
                 c.r[0] = c.lhz_t(ins, c.r[3]);
                 c.r[3] = c.r[0].wrapping_sub(c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80152434: bad pc {:#x}", pc),
         }
@@ -16418,12 +16418,12 @@ pub fn f_80152444_at(c: &mut Cpu, pc: u32) { f_80152444_b(c, pc) }
 #[inline(always)]
 fn f_80152444_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80152444;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80152444, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80152444, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80152444 => { ins += 16;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -16450,7 +16450,7 @@ fn f_80152444_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x2));
                 c.r[7] = c.r[31] | c.r[31];
                 c.r[6] = 0xa;
-                c.lr = 0x8015249c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015249c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162118(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015249c;
             }
             0x8015249c => { ins += 2;
@@ -16477,7 +16477,7 @@ fn f_80152444_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x801524c0;
             }
-            0x801524c0 => { ins += 8;
+            0x801524c0 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -16485,8 +16485,8 @@ fn f_80152444_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80152444: bad pc {:#x}", pc),
         }
@@ -16509,12 +16509,12 @@ pub fn f_801524e0_at(c: &mut Cpu, pc: u32) { f_801524e0_b(c, pc) }
 #[inline(always)]
 fn f_801524e0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801524e0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801524e0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801524e0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801524e0 => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -16532,7 +16532,7 @@ fn f_801524e0_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801525b0; continue; }
                 pc = 0x80152514;
             }
-            0x80152514 => { ins += 4;
+            0x80152514 => { ins += 5;
                 c.r[5] = 0x80440000;
                 c.r[0] = 0x20;
                 c.r[5] = c.r[5].wrapping_add(0xffffd6f8);
@@ -16578,15 +16578,15 @@ fn f_801524e0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801525b0;
             }
             0x801525b0 => { ins += 1;
-                c.lr = 0x801525b4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016300c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801525b4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016300c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801525b4;
             }
-            0x801525b4 => { ins += 4;
+            0x801525b4 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801524e0: bad pc {:#x}", pc),
         }
@@ -16609,26 +16609,26 @@ pub fn f_801525c4_at(c: &mut Cpu, pc: u32) { f_801525c4_b(c, pc) }
 #[inline(always)]
 fn f_801525c4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801525c4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801525c4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801525c4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801525c4 => { ins += 4;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                c.lr = 0x801525d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80163030(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801525d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80163030(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801525d4;
             }
-            0x801525d4 => { ins += 4;
+            0x801525d4 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801525c4: bad pc {:#x}", pc),
         }
@@ -16651,12 +16651,12 @@ pub fn f_801525e4_at(c: &mut Cpu, pc: u32) { f_801525e4_b(c, pc) }
 #[inline(never)]
 fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801525e4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801525e4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801525e4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801525e4 => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -16760,7 +16760,7 @@ fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
             0x801526e0 => { ins += 3;
                 c.r[0] = c.lwz_t(ins, c.r[30].wrapping_add(0xf4));
                 c.r[3] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x801526ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801526ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801526ec;
             }
             0x801526ec => { ins += 2;
@@ -16801,10 +16801,10 @@ fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80152740;
             }
             0x80152740 => { ins += 1;
-                c.lr = 0x80152744; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152744; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152744;
             }
-            0x80152744 => { ins += 6;
+            0x80152744 => { ins += 49;
                 c.r[4] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.r[3] = c.r[3].rotate_left(0) & 0xffff;
                 c.r[0] = divwu(c.r[3], c.r[4]);
@@ -16828,7 +16828,7 @@ fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80152774 => { ins += 2;
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x8015277c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015277c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015277c;
             }
             0x8015277c => { ins += 1;
@@ -16838,7 +16838,7 @@ fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
             0x80152780 => { ins += 3;
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x8015278c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015278c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015278c;
             }
             0x8015278c => { ins += 2;
@@ -16950,13 +16950,13 @@ fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80152894 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8015289c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156b38(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015289c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156b38(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015289c;
             }
             0x8015289c => { ins += 3;
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[4] = 0x1;
-                c.lr = 0x801528a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801528a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801528a8;
             }
             0x801528a8 => { ins += 2;
@@ -16968,7 +16968,7 @@ fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x801528b4;
             }
-            0x801528b4 => { ins += 8;
+            0x801528b4 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -16976,8 +16976,8 @@ fn f_801525e4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801525e4: bad pc {:#x}", pc),
         }
@@ -17000,12 +17000,12 @@ pub fn f_801528d4_at(c: &mut Cpu, pc: u32) { f_801528d4_b(c, pc) }
 #[inline(always)]
 fn f_801528d4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801528d4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801528d4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801528d4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801528d4 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -17017,7 +17017,7 @@ fn f_801528d4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[3] | c.r[3];
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = c.r[0].rotate_left(16) & 0xffff;
-                c.lr = 0x801528fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801528fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801528fc;
             }
             0x801528fc => { ins += 2;
@@ -17065,26 +17065,26 @@ fn f_801528d4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80152978 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x80152980; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152980; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152980;
             }
             0x80152980 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x80152988; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152988; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152988;
             }
             0x80152988 => { ins += 1;
                 c.r[3] = 0x1;
                 pc = 0x8015298c;
             }
-            0x8015298c => { ins += 6;
+            0x8015298c => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801528d4: bad pc {:#x}", pc),
         }
@@ -17107,12 +17107,12 @@ pub fn f_801529a4_at(c: &mut Cpu, pc: u32) { f_801529a4_b(c, pc) }
 #[inline(always)]
 fn f_801529a4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801529a4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801529a4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801529a4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801529a4 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -17135,10 +17135,10 @@ fn f_801529a4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801529d8;
             }
             0x801529d8 => { ins += 1;
-                c.lr = 0x801529dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801529dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801529dc;
             }
-            0x801529dc => { ins += 8;
+            0x801529dc => { ins += 51;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x4));
                 c.r[4] = c.r[3].rotate_left(0) & 0xffff;
                 c.r[3] = c.r[0].rotate_left(16) & 0xffff;
@@ -17231,7 +17231,7 @@ fn f_801529a4_b(c: &mut Cpu, mut pc: u32) {
             0x80152aac => { ins += 3;
                 c.r[0] = c.lwz_t(ins, c.r[30].wrapping_add(0xf4));
                 c.r[3] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x80152ab8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152ab8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152ab8;
             }
             0x80152ab8 => { ins += 2;
@@ -17253,14 +17253,14 @@ fn f_801529a4_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x38), c.r[0]);
                 pc = 0x80152ae0;
             }
-            0x80152ae0 => { ins += 6;
+            0x80152ae0 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801529a4: bad pc {:#x}", pc),
         }
@@ -17283,12 +17283,12 @@ pub fn f_80152af8_at(c: &mut Cpu, pc: u32) { f_80152af8_b(c, pc) }
 #[inline(always)]
 fn f_80152af8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80152af8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80152af8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80152af8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80152af8 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -17363,7 +17363,7 @@ fn f_80152af8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[8] = c.r[8].rotate_left(16) & 0xff;
                 c.r[10] = c.lbz_t(ins, c.r[31].wrapping_add(0x121));
                 c.r[9] = c.r[0].rotate_left(16) & 0xff;
-                c.lr = 0x80152bd0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152bd0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156de0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152bd0;
             }
             0x80152bd0 => { ins += 5;
@@ -17374,7 +17374,7 @@ fn f_80152af8_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80152c68; continue; }
                 pc = 0x80152be4;
             }
-            0x80152be4 => { ins += 15;
+            0x80152be4 => { ins += 17;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[6] = c.r[0].wrapping_mul(0x404);
@@ -17392,7 +17392,7 @@ fn f_80152af8_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80152c44; continue; }
                 pc = 0x80152c20;
             }
-            0x80152c20 => { ins += 9;
+            0x80152c20 => { ins += 11;
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[4] = c.r[0].wrapping_add(c.r[6]);
                 c.stw(c.r[4].wrapping_add(0xec), c.r[5]);
@@ -17415,7 +17415,7 @@ fn f_80152af8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[4] = c.r[31] | c.r[31];
                 c.r[3] = c.r[0].wrapping_add(c.r[6]);
-                c.lr = 0x80152c64; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c878(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152c64; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c878(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152c64;
             }
             0x80152c64 => { ins += 1;
@@ -17427,13 +17427,13 @@ fn f_80152af8_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x108), c.r[0]);
                 pc = 0x80152c70;
             }
-            0x80152c70 => { ins += 5;
+            0x80152c70 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x2c));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80152af8: bad pc {:#x}", pc),
         }
@@ -17456,12 +17456,12 @@ pub fn f_80152c84_at(c: &mut Cpu, pc: u32) { f_80152c84_b(c, pc) }
 #[inline(always)]
 fn f_80152c84_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80152c84;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80152c84, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80152c84, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80152c84 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -17522,7 +17522,7 @@ fn f_80152c84_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[31]);
                 c.r[0] = c.r[0].rotate_left(16) & 0xffff;
                 c.stb(c.r[30].wrapping_add(0x12e), c.r[0]);
-                c.lr = 0x80152d14; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158934(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152d14; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158934(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152d14;
             }
             0x80152d14 => { ins += 2;
@@ -17535,7 +17535,7 @@ fn f_80152c84_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x121));
                 c.r[4] = c.lbz_t(ins, c.r[30].wrapping_add(0x122));
                 c.r[5] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x80152d30; { c.steps = st; c.instrs = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152d30; { c.steps = st; c.cycles = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152d30;
             }
             0x80152d30 => { ins += 5;
@@ -17543,17 +17543,17 @@ fn f_80152c84_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[30] | c.r[30];
                 c.stw(c.r[31], c.r[0]);
                 c.r[4] = c.r[31] | c.r[31];
-                c.lr = 0x80152d44; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152d44; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152d44;
             }
-            0x80152d44 => { ins += 6;
+            0x80152d44 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80152c84: bad pc {:#x}", pc),
         }
@@ -17576,12 +17576,12 @@ pub fn f_80152d5c_at(c: &mut Cpu, pc: u32) { f_80152d5c_b(c, pc) }
 #[inline(never)]
 fn f_80152d5c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80152d5c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80152d5c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80152d5c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80152d5c => { ins += 14;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -17597,7 +17597,7 @@ fn f_80152d5c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[4].wrapping_add(0x5f30);
                 c.r[31] = c.r[0].rotate_left(24) & 0xffff;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x80152d94; { c.steps = st; c.instrs = ins; c.cr = cr; f_801521b8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152d94; { c.steps = st; c.cycles = ins; c.cr = cr; f_801521b8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152d94;
             }
             0x80152d94 => { ins += 2;
@@ -17642,7 +17642,7 @@ fn f_80152d5c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80152e6c; continue;
                 pc = 0x80152ddc;
             }
-            0x80152ddc => { ins += 17;
+            0x80152ddc => { ins += 25;
                 c.r[5] = c.lwz_t(ins, c.r[30].wrapping_add(0x154));
                 c.r[4] = 0x2040000;
                 c.r[3] = 0x80440000;
@@ -17662,7 +17662,7 @@ fn f_80152d5c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80152e6c; continue;
                 pc = 0x80152e20;
             }
-            0x80152e20 => { ins += 15;
+            0x80152e20 => { ins += 23;
                 c.r[5] = c.lwz_t(ins, c.r[30].wrapping_add(0x154));
                 c.r[4] = 0x2040000;
                 c.r[0] = c.lwz_t(ins, c.r[29].wrapping_add(0x4));
@@ -17731,7 +17731,7 @@ fn f_80152d5c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[8].rotate_left(0) & 0xff;
                 c.r[9] = c.r[9].rotate_left(27) & 0x7ffffff;
                 c.r[7] = (c.r[11].rotate_left(24) & 0xff000000) | (c.r[7] & 0xffffff);
-                c.lr = 0x80152f04; { c.steps = st; c.instrs = ins; c.cr = cr; f_801624a8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152f04; { c.steps = st; c.cycles = ins; c.cr = cr; f_801624a8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152f04;
             }
             0x80152f04 => { ins += 7;
@@ -17746,7 +17746,7 @@ fn f_80152d5c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80152f20 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x80152f28; { c.steps = st; c.instrs = ins; c.cr = cr; f_801530d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152f28; { c.steps = st; c.cycles = ins; c.cr = cr; f_801530d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152f28;
             }
             0x80152f28 => { ins += 5;
@@ -17754,18 +17754,18 @@ fn f_80152d5c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[0] = c.r[0] | 0x20;
                 c.stw(c.r[30].wrapping_add(0x118), c.r[0]);
-                c.lr = 0x80152f3c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c07c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152f3c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c07c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152f3c;
             }
-            0x80152f3c => { ins += 7;
+            0x80152f3c => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80152d5c: bad pc {:#x}", pc),
         }
@@ -17788,12 +17788,12 @@ pub fn f_80152f58_at(c: &mut Cpu, pc: u32) { f_80152f58_b(c, pc) }
 #[inline(always)]
 fn f_80152f58_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80152f58;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80152f58, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80152f58, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80152f58 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -17839,7 +17839,7 @@ fn f_80152f58_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80152fc8 => { ins += 2;
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80152fd0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152fd0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152fd0;
             }
             0x80152fd0 => { ins += 1;
@@ -17849,7 +17849,7 @@ fn f_80152f58_b(c: &mut Cpu, mut pc: u32) {
             0x80152fd4 => { ins += 3;
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80152fe0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80152fe0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80152fe0;
             }
             0x80152fe0 => { ins += 3;
@@ -17950,14 +17950,14 @@ fn f_80152f58_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x114), c.r[0]);
                 pc = 0x801530bc;
             }
-            0x801530bc => { ins += 6;
+            0x801530bc => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80152f58: bad pc {:#x}", pc),
         }
@@ -17980,12 +17980,12 @@ pub fn f_801530d4_at(c: &mut Cpu, pc: u32) { f_801530d4_b(c, pc) }
 #[inline(always)]
 fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801530d4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801530d4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801530d4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801530d4 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(0x128));
@@ -18001,14 +18001,14 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.sth(c.r[3].wrapping_add(0x12c), c.r[4]);
                 c.stb(c.r[3].wrapping_add(0x12e), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80153100;
             }
             0x80153100 => { ins += 1;
                 if !cr_bit(cr, 0) { pc = 0x801531b0; continue; }
                 pc = 0x80153104;
             }
-            0x80153104 => { ins += 7;
+            0x80153104 => { ins += 47;
                 c.r[4] = c.r[6].rotate_left(12) & 0xfffff000;
                 c.r[0] = 0xb;
                 c.r[6] = divwu(c.r[4], c.r[7]);
@@ -18030,7 +18030,7 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x80153120; continue; }
                 pc = 0x80153138;
             }
-            0x80153138 => { ins += 7;
+            0x80153138 => { ins += 46;
                 c.r[0] = 0x1;
                 c.r[4] = 0x80370000;
                 c.r[0] = slw(c.r[0], c.r[10]);
@@ -18052,7 +18052,7 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153154; continue;
                 pc = 0x8015316c;
             }
-            0x8015316c => { ins += 17;
+            0x8015316c => { ins += 60;
                 c.r[0] = c.r[10].wrapping_mul(0xc);
                 c.r[6] = c.r[5].rotate_left(8) & 0xff;
                 c.r[4] = 0x80370000;
@@ -18069,10 +18069,10 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].wrapping_sub(c.r[5]);
                 c.r[0] = divwu(c.r[4], c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x12e), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801531b0;
             }
-            0x801531b0 => { ins += 7;
+            0x801531b0 => { ins += 47;
                 c.r[4] = c.r[7].rotate_left(12) & 0xfffff000;
                 c.r[0] = 0xb;
                 c.r[6] = divwu(c.r[4], c.r[6]);
@@ -18094,7 +18094,7 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x801531cc; continue; }
                 pc = 0x801531e4;
             }
-            0x801531e4 => { ins += 7;
+            0x801531e4 => { ins += 46;
                 c.r[0] = 0x1;
                 c.r[4] = 0x80370000;
                 c.r[0] = slw(c.r[0], c.r[8]);
@@ -18116,7 +18116,7 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153200; continue;
                 pc = 0x80153218;
             }
-            0x80153218 => { ins += 5;
+            0x80153218 => { ins += 7;
                 c.r[4] = c.r[8].wrapping_mul(0xc);
                 c.r[0] = c.r[5].rotate_left(8) & 0xff;
                 c.r[4] = c.r[7].wrapping_add(c.r[4]);
@@ -18128,10 +18128,10 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.stb(c.r[3].wrapping_add(0x12e), c.r[0]);
                 c.sth(c.r[3].wrapping_add(0x12c), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015323c;
             }
-            0x8015323c => { ins += 14;
+            0x8015323c => { ins += 55;
                 c.r[0] = c.r[0].wrapping_sub(c.r[4]);
                 c.r[4] = 0x80370000;
                 c.sth(c.r[3].wrapping_add(0x12c), c.r[0]);
@@ -18145,8 +18145,8 @@ fn f_801530d4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].wrapping_sub(c.r[5]);
                 c.r[0] = divwu(c.r[4], c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x12e), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801530d4: bad pc {:#x}", pc),
         }
@@ -18169,12 +18169,12 @@ pub fn f_80153274_at(c: &mut Cpu, pc: u32) { f_80153274_b(c, pc) }
 #[inline(never)]
 fn f_80153274_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153274;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153274, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153274, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153274 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -18186,7 +18186,7 @@ fn f_80153274_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[4] | c.r[4];
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = c.r[0].rotate_left(24) & 0xffff;
-                c.lr = 0x8015329c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015329c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015329c;
             }
             0x8015329c => { ins += 2;
@@ -18222,7 +18222,7 @@ fn f_80153274_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[1].wrapping_add(0xe), c.r[0]);
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0xf4));
                 c.r[3] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x80153304; { c.steps = st; c.instrs = ins; c.cr = cr; f_801626ac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153304; { c.steps = st; c.cycles = ins; c.cr = cr; f_801626ac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153304;
             }
             0x80153304 => { ins += 1;
@@ -18345,7 +18345,7 @@ fn f_80153274_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[1].wrapping_add(0x8);
                 c.r[5] = 0x1;
                 c.r[3] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x801534a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801626ac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801534a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801626ac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801534a8;
             }
             0x801534a8 => { ins += 3;
@@ -18354,14 +18354,14 @@ fn f_80153274_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x118), c.r[0]);
                 pc = 0x801534b4;
             }
-            0x801534b4 => { ins += 6;
+            0x801534b4 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x4c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x48));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153274: bad pc {:#x}", pc),
         }
@@ -18384,12 +18384,12 @@ pub fn f_801534cc_at(c: &mut Cpu, pc: u32) { f_801534cc_b(c, pc) }
 #[inline(always)]
 fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801534cc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801534cc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801534cc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801534cc => { ins += 14;
                 { let ea = c.r[1].wrapping_add(0xffffffc0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -18405,7 +18405,7 @@ fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lbz_t(ins, c.r[3].wrapping_add(0x121));
                 c.r[5] = c.lbz_t(ins, c.r[30].wrapping_add(0x122));
                 c.r[3] = c.r[0].rotate_left(8) & 0xff;
-                c.lr = 0x80153504; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153504; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153504;
             }
             0x80153504 => { ins += 9;
@@ -18417,7 +18417,7 @@ fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lbz_t(ins, c.r[30].wrapping_add(0x121));
                 c.r[3] = c.r[0].rotate_left(24) & 0xff;
                 c.r[5] = c.lbz_t(ins, c.r[30].wrapping_add(0x122));
-                c.lr = 0x80153528; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153528; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153528;
             }
             0x80153528 => { ins += 10;
@@ -18430,7 +18430,7 @@ fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lbz_t(ins, c.r[30].wrapping_add(0x121));
                 c.r[5] = c.lbz_t(ins, c.r[30].wrapping_add(0x122));
                 c.r[3] = c.r[0].rotate_left(16) & 0xff;
-                c.lr = 0x80153550; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153550; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153550;
             }
             0x80153550 => { ins += 8;
@@ -18441,7 +18441,7 @@ fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[0] * c.f[31]); c.f[1] = v; c.ps1[1] = v; }
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 c.stw(c.r[1].wrapping_add(0xc), c.r[0]);
-                c.lr = 0x80153570; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153570; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153570;
             }
             0x80153570 => { ins += 10;
@@ -18454,7 +18454,7 @@ fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lbz_t(ins, c.r[30].wrapping_add(0x121));
                 c.r[5] = c.lbz_t(ins, c.r[30].wrapping_add(0x122));
                 c.r[3] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x80153598; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153598; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153598;
             }
             0x80153598 => { ins += 13;
@@ -18470,10 +18470,10 @@ fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[1].wrapping_add(0x12), c.r[3]);
                 c.r[0] = c.lwz_t(ins, c.r[30].wrapping_add(0xf4));
                 c.r[3] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x801535cc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801626ac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801535cc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801626ac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801535cc;
             }
-            0x801535cc => { ins += 11;
+            0x801535cc => { ins += 12;
                 c.r[0] = c.lwz_t(ins, c.r[30].wrapping_add(0x118));
                 c.r[0] = c.r[0] | 0x100;
                 c.stw(c.r[30].wrapping_add(0x118), c.r[0]);
@@ -18484,8 +18484,8 @@ fn f_801534cc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x28));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x40);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801534cc: bad pc {:#x}", pc),
         }
@@ -18508,19 +18508,19 @@ pub fn f_801535f8_at(c: &mut Cpu, pc: u32) { f_801535f8_b(c, pc) }
 #[inline(never)]
 fn f_801535f8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801535f8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801535f8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801535f8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801535f8 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x54), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8015360c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015360c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015360c;
             }
             0x8015360c => { ins += 5;
@@ -18528,7 +18528,7 @@ fn f_801535f8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[31] = c.r[3] | c.r[3];
                 c.r[27] = c.r[4] | c.r[4];
                 c.r[3] = c.r[0].rotate_left(24) & 0xffff;
-                c.lr = 0x80153620; { c.steps = st; c.instrs = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153620; { c.steps = st; c.cycles = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153620;
             }
             0x80153620 => { ins += 2;
@@ -18546,7 +18546,7 @@ fn f_801535f8_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x80153678; continue; }
                 pc = 0x80153644;
             }
-            0x80153644 => { ins += 13;
+            0x80153644 => { ins += 17;
                 c.r[0] = c.lwz_t(ins, c.r[27].wrapping_add(0x4));
                 c.r[4] = 0x51ec0000;
                 c.r[4] = c.r[4].wrapping_add(0xffff851f);
@@ -18562,7 +18562,7 @@ fn f_801535f8_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801536a8; continue;
                 pc = 0x80153678;
             }
-            0x80153678 => { ins += 12;
+            0x80153678 => { ins += 16;
                 c.r[0] = c.lwz_t(ins, c.r[27].wrapping_add(0x4));
                 c.r[4] = 0x51ec0000;
                 c.r[4] = c.r[4].wrapping_add(0xffff851f);
@@ -18679,13 +18679,13 @@ fn f_801535f8_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[31].wrapping_add(0x1dc), c.r[3]);
                 c.r[3] = c.r[4] | c.r[4];
                 c.stb(c.r[31].wrapping_add(0x202), c.r[0]);
-                c.lr = 0x80153810; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158cd4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153810; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158cd4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153810;
             }
             0x80153810 => { ins += 3;
                 c.stw(c.r[31].wrapping_add(0x1f0), c.r[3]);
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8015381c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158cd4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015381c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158cd4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015381c;
             }
             0x8015381c => { ins += 4;
@@ -18707,7 +18707,7 @@ fn f_801535f8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.addc(!c.r[0], 0xc1, 1);
                 c.sth(c.r[31].wrapping_add(0x1f8), c.r[0]);
                 c.stw(c.r[31].wrapping_add(0x1fc), c.r[28]);
-                c.lr = 0x80153850; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158f98(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153850; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158f98(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153850;
             }
             0x80153850 => { ins += 3;
@@ -18718,15 +18718,15 @@ fn f_801535f8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015385c => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x80153864; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153864; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153864;
             }
-            0x80153864 => { ins += 4;
+            0x80153864 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801535f8: bad pc {:#x}", pc),
         }
@@ -18749,12 +18749,12 @@ pub fn f_80153874_at(c: &mut Cpu, pc: u32) { f_80153874_b(c, pc) }
 #[inline(always)]
 fn f_80153874_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153874;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153874, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153874, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153874 => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -18769,7 +18769,7 @@ fn f_80153874_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[31] = c.r[0].rotate_left(16) & 0xffff;
                 c.stw(c.r[29].wrapping_add(0x188), c.r[31]);
-                c.lr = 0x801538a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801538a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801538a8;
             }
             0x801538a8 => { ins += 12;
@@ -18787,7 +18787,7 @@ fn f_80153874_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x801538e4; continue; }
                 pc = 0x801538d8;
             }
-            0x801538d8 => { ins += 3;
+            0x801538d8 => { ins += 42;
                 c.r[0] = divw(c.r[3], c.r[31]);
                 c.stw(c.r[29].wrapping_add(0x178), c.r[0]);
                 pc = 0x801538e8; continue;
@@ -18797,7 +18797,7 @@ fn f_80153874_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[29].wrapping_add(0x178), c.r[3]);
                 pc = 0x801538e8;
             }
-            0x801538e8 => { ins += 10;
+            0x801538e8 => { ins += 11;
                 c.r[0] = c.lwz_t(ins, c.r[29].wrapping_add(0x114));
                 c.r[0] = c.r[0] | 0x2000;
                 c.stw(c.r[29].wrapping_add(0x114), c.r[0]);
@@ -18807,8 +18807,8 @@ fn f_80153874_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153874: bad pc {:#x}", pc),
         }
@@ -18831,12 +18831,12 @@ pub fn f_80153910_at(c: &mut Cpu, pc: u32) { f_80153910_b(c, pc) }
 #[inline(always)]
 fn f_80153910_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153910;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153910, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153910, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153910 => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -18851,7 +18851,7 @@ fn f_80153910_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[31] = c.r[0].rotate_left(16) & 0xffff;
                 c.stw(c.r[29].wrapping_add(0x18c), c.r[31]);
-                c.lr = 0x80153944; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153944; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153944;
             }
             0x80153944 => { ins += 12;
@@ -18869,7 +18869,7 @@ fn f_80153910_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80153980; continue; }
                 pc = 0x80153974;
             }
-            0x80153974 => { ins += 3;
+            0x80153974 => { ins += 42;
                 c.r[0] = divw(c.r[3], c.r[31]);
                 c.stw(c.r[29].wrapping_add(0x17c), c.r[0]);
                 pc = 0x80153984; continue;
@@ -18879,7 +18879,7 @@ fn f_80153910_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[29].wrapping_add(0x17c), c.r[3]);
                 pc = 0x80153984;
             }
-            0x80153984 => { ins += 10;
+            0x80153984 => { ins += 11;
                 c.r[0] = c.lwz_t(ins, c.r[29].wrapping_add(0x114));
                 c.r[0] = c.r[0] | 0x2000;
                 c.stw(c.r[29].wrapping_add(0x114), c.r[0]);
@@ -18889,8 +18889,8 @@ fn f_80153910_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153910: bad pc {:#x}", pc),
         }
@@ -18913,12 +18913,12 @@ pub fn f_801539ac_at(c: &mut Cpu, pc: u32) { f_801539ac_b(c, pc) }
 #[inline(always)]
 fn f_801539ac_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801539ac;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801539ac, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801539ac, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801539ac => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -18935,7 +18935,7 @@ fn f_801539ac_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x80153a04; continue; }
                 pc = 0x801539d8;
             }
-            0x801539d8 => { ins += 11;
+            0x801539d8 => { ins += 19;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x154));
                 c.r[3] = 0x2040000;
                 c.r[3] = c.r[3].wrapping_add(0x811);
@@ -18949,7 +18949,7 @@ fn f_801539ac_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153a2c; continue;
                 pc = 0x80153a04;
             }
-            0x80153a04 => { ins += 10;
+            0x80153a04 => { ins += 18;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x158));
                 c.r[3] = 0x2040000;
                 c.r[3] = c.r[3].wrapping_add(0x811);
@@ -18990,7 +18990,7 @@ fn f_801539ac_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153a74;
             }
             0x80153a74 => { ins += 1;
-                c.lr = 0x80153a78; { c.steps = st; c.instrs = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153a78; { c.steps = st; c.cycles = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153a78;
             }
             0x80153a78 => { ins += 2;
@@ -19005,7 +19005,7 @@ fn f_801539ac_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80153ab0; continue; }
                 pc = 0x80153a90;
             }
-            0x80153a90 => { ins += 8;
+            0x80153a90 => { ins += 12;
                 c.r[4] = c.r[3].wrapping_add(c.r[0]);
                 c.r[6] = c.lbz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 c.r[3] = c.lbz_t(ins, c.r[4].wrapping_add(0x1));
@@ -19021,7 +19021,7 @@ fn f_801539ac_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.r[0].rotate_left(16) & 0xffff0000;
                 pc = 0x80153ab8;
             }
-            0x80153ab8 => { ins += 10;
+            0x80153ab8 => { ins += 11;
                 c.stw(c.r[31].wrapping_add(0x154), c.r[30]);
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x114));
                 c.r[0] = c.r[0] | 0x1000;
@@ -19031,8 +19031,8 @@ fn f_801539ac_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801539ac: bad pc {:#x}", pc),
         }
@@ -19055,19 +19055,19 @@ pub fn f_80153ae0_at(c: &mut Cpu, pc: u32) { f_80153ae0_b(c, pc) }
 #[inline(always)]
 fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153ae0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153ae0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153ae0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153ae0 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x80153af4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153af4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153af4;
             }
             0x80153af4 => { ins += 9;
@@ -19085,7 +19085,7 @@ fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80153b18 => { ins += 2;
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80153b20; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153b20; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153b20;
             }
             0x80153b20 => { ins += 1;
@@ -19095,12 +19095,12 @@ fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
             0x80153b24 => { ins += 3;
                 c.r[4] = c.r[29] | c.r[29];
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80153b30; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153b30; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153b30;
             }
             0x80153b30 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
-                c.lr = 0x80153b38; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162214(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153b38; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162214(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153b38;
             }
             0x80153b38 => { ins += 2;
@@ -19113,7 +19113,7 @@ fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[31] = 0x1;
                 pc = 0x80153b44;
             }
-            0x80153b44 => { ins += 10;
+            0x80153b44 => { ins += 14;
                 c.r[6] = c.lwz_t(ins, c.r[27]);
                 c.r[0] = 0x7f0000;
                 c.r[5] = c.lwz_t(ins, c.r[29].wrapping_add(0x154));
@@ -19140,7 +19140,7 @@ fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153b88;
             }
             0x80153b88 => { ins += 1;
-                c.lr = 0x80153b8c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153b8c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153b8c;
             }
             0x80153b8c => { ins += 2;
@@ -19155,7 +19155,7 @@ fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80153bc4; continue; }
                 pc = 0x80153ba4;
             }
-            0x80153ba4 => { ins += 8;
+            0x80153ba4 => { ins += 12;
                 c.r[4] = c.r[3].wrapping_add(c.r[0]);
                 c.r[6] = c.lbz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 c.r[3] = c.lbz_t(ins, c.r[4].wrapping_add(0x1));
@@ -19171,7 +19171,7 @@ fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.r[0].rotate_left(16) & 0xffff0000;
                 pc = 0x80153bcc;
             }
-            0x80153bcc => { ins += 13;
+            0x80153bcc => { ins += 52;
                 c.r[0] = c.r[28].wrapping_sub(c.r[30]);
                 c.stw(c.r[29].wrapping_add(0x198), c.r[28]);
                 c.r[4] = divw(c.r[0], c.r[31]);
@@ -19184,15 +19184,15 @@ fn f_80153ae0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lwz_t(ins, c.r[29].wrapping_add(0x118));
                 c.r[0] = c.r[4] | c.r[0];
                 c.stw(c.r[29].wrapping_add(0x118), c.r[0]);
-                c.lr = 0x80153c00; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153c00; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153c00;
             }
-            0x80153c00 => { ins += 4;
+            0x80153c00 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153ae0: bad pc {:#x}", pc),
         }
@@ -19215,12 +19215,12 @@ pub fn f_80153c10_at(c: &mut Cpu, pc: u32) { f_80153c10_b(c, pc) }
 #[inline(always)]
 fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153c10;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153c10, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153c10, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153c10 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -19243,7 +19243,7 @@ fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80153c4c => { ins += 2;
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80153c54; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153c54; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153c54;
             }
             0x80153c54 => { ins += 1;
@@ -19253,12 +19253,12 @@ fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
             0x80153c58 => { ins += 3;
                 c.r[4] = c.r[31] | c.r[31];
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80153c64; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153c64; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153c64;
             }
             0x80153c64 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
-                c.lr = 0x80153c6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162214(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153c6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162214(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153c6c;
             }
             0x80153c6c => { ins += 2;
@@ -19271,7 +19271,7 @@ fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = 0x1;
                 pc = 0x80153c78;
             }
-            0x80153c78 => { ins += 10;
+            0x80153c78 => { ins += 14;
                 c.r[6] = c.lwz_t(ins, c.r[28]);
                 c.r[0] = 0x7f0000;
                 c.r[5] = c.lwz_t(ins, c.r[31].wrapping_add(0x154));
@@ -19298,7 +19298,7 @@ fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153cbc;
             }
             0x80153cbc => { ins += 1;
-                c.lr = 0x80153cc0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153cc0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801522f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153cc0;
             }
             0x80153cc0 => { ins += 2;
@@ -19313,7 +19313,7 @@ fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80153cf8; continue; }
                 pc = 0x80153cd8;
             }
-            0x80153cd8 => { ins += 8;
+            0x80153cd8 => { ins += 12;
                 c.r[4] = c.r[3].wrapping_add(c.r[0]);
                 c.r[6] = c.lbz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 c.r[3] = c.lbz_t(ins, c.r[4].wrapping_add(0x1));
@@ -19329,7 +19329,7 @@ fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.r[0].rotate_left(16) & 0xffff0000;
                 pc = 0x80153d00;
             }
-            0x80153d00 => { ins += 19;
+            0x80153d00 => { ins += 59;
                 c.r[4] = divw(c.r[29], c.r[30]);
                 c.r[3] = 0x10000;
                 c.stw(c.r[31].wrapping_add(0x198), c.r[29]);
@@ -19348,8 +19348,8 @@ fn f_80153c10_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153c10: bad pc {:#x}", pc),
         }
@@ -19372,19 +19372,19 @@ pub fn f_80153d4c_at(c: &mut Cpu, pc: u32) { f_80153d4c_b(c, pc) }
 #[inline(never)]
 fn f_80153d4c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153d4c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153d4c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153d4c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153d4c => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80153d60; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153d60; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153d60;
             }
             0x80153d60 => { ins += 5;
@@ -19470,10 +19470,10 @@ fn f_80153d4c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153e00;
             }
             0x80153e00 => { ins += 1;
-                c.lr = 0x80153e04; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153e04; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153e04;
             }
-            0x80153e04 => { ins += 12;
+            0x80153e04 => { ins += 18;
                 c.r[4] = 0x28c0000;
                 c.r[5] = c.r[3].rotate_left(0) & 0xffff;
                 c.r[0] = c.r[4].wrapping_add(0x1979);
@@ -19495,10 +19495,10 @@ fn f_80153d4c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80153e3c => { ins += 2;
                 c.r[31] = c.r[31].rotate_left(0) & 0xff;
-                c.lr = 0x80153e44; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153e44; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153e44;
             }
-            0x80153e44 => { ins += 23;
+            0x80153e44 => { ins += 66;
                 c.r[0] = c.r[30].rotate_left(0) & 0xff;
                 c.r[7] = c.r[3].rotate_left(0) & 0xffff;
                 c.r[4] = c.r[0].wrapping_sub(c.r[31]);
@@ -19521,7 +19521,7 @@ fn f_80153d4c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[29]);
                 c.r[0] = c.r[0].rotate_left(16) & 0xffff;
                 c.stb(c.r[28].wrapping_add(0x12e), c.r[0]);
-                c.lr = 0x80153ea0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158934(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153ea0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158934(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153ea0;
             }
             0x80153ea0 => { ins += 2;
@@ -19534,7 +19534,7 @@ fn f_80153d4c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[28].wrapping_add(0x121));
                 c.r[4] = c.lbz_t(ins, c.r[28].wrapping_add(0x122));
                 c.r[5] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x80153ebc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153ebc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153ebc;
             }
             0x80153ebc => { ins += 5;
@@ -19542,20 +19542,20 @@ fn f_80153d4c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[28] | c.r[28];
                 c.stw(c.r[29], c.r[0]);
                 c.r[4] = c.r[29] | c.r[29];
-                c.lr = 0x80153ed0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153ed0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153ed0;
             }
             0x80153ed0 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80153ed8; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153ed8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153ed8;
             }
-            0x80153ed8 => { ins += 4;
+            0x80153ed8 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153d4c: bad pc {:#x}", pc),
         }
@@ -19578,12 +19578,12 @@ pub fn f_80153ee8_at(c: &mut Cpu, pc: u32) { f_80153ee8_b(c, pc) }
 #[inline(always)]
 fn f_80153ee8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153ee8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153ee8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153ee8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153ee8 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -19616,7 +19616,7 @@ fn f_80153ee8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80153f3c;
             }
-            0x80153f3c => { ins += 9;
+            0x80153f3c => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -19629,7 +19629,7 @@ fn f_80153ee8_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80153f88; continue; }
                 pc = 0x80153f60;
             }
-            0x80153f60 => { ins += 10;
+            0x80153f60 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -19642,7 +19642,7 @@ fn f_80153ee8_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80153fac; continue;
                 pc = 0x80153f88;
             }
-            0x80153f88 => { ins += 9;
+            0x80153f88 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -19662,10 +19662,10 @@ fn f_80153ee8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x80153fcc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80153fcc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80153fcc;
             }
-            0x80153fcc => { ins += 8;
+            0x80153fcc => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x1;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -19673,8 +19673,8 @@ fn f_80153ee8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153ee8: bad pc {:#x}", pc),
         }
@@ -19697,12 +19697,12 @@ pub fn f_80153fec_at(c: &mut Cpu, pc: u32) { f_80153fec_b(c, pc) }
 #[inline(always)]
 fn f_80153fec_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80153fec;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80153fec, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80153fec, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80153fec => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -19735,7 +19735,7 @@ fn f_80153fec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154040;
             }
-            0x80154040 => { ins += 9;
+            0x80154040 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -19748,7 +19748,7 @@ fn f_80153fec_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015408c; continue; }
                 pc = 0x80154064;
             }
-            0x80154064 => { ins += 10;
+            0x80154064 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -19761,7 +19761,7 @@ fn f_80153fec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801540b0; continue;
                 pc = 0x8015408c;
             }
-            0x8015408c => { ins += 9;
+            0x8015408c => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -19781,10 +19781,10 @@ fn f_80153fec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801540d0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801540d0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801540d0;
             }
-            0x801540d0 => { ins += 8;
+            0x801540d0 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x2;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -19792,8 +19792,8 @@ fn f_80153fec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80153fec: bad pc {:#x}", pc),
         }
@@ -19816,12 +19816,12 @@ pub fn f_801540f0_at(c: &mut Cpu, pc: u32) { f_801540f0_b(c, pc) }
 #[inline(always)]
 fn f_801540f0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801540f0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801540f0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801540f0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801540f0 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -19854,7 +19854,7 @@ fn f_801540f0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154144;
             }
-            0x80154144 => { ins += 9;
+            0x80154144 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -19867,7 +19867,7 @@ fn f_801540f0_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80154190; continue; }
                 pc = 0x80154168;
             }
-            0x80154168 => { ins += 10;
+            0x80154168 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -19880,7 +19880,7 @@ fn f_801540f0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801541b4; continue;
                 pc = 0x80154190;
             }
-            0x80154190 => { ins += 9;
+            0x80154190 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -19900,10 +19900,10 @@ fn f_801540f0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801541d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801541d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801541d4;
             }
-            0x801541d4 => { ins += 8;
+            0x801541d4 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x8;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -19911,8 +19911,8 @@ fn f_801540f0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801540f0: bad pc {:#x}", pc),
         }
@@ -19935,12 +19935,12 @@ pub fn f_801541f4_at(c: &mut Cpu, pc: u32) { f_801541f4_b(c, pc) }
 #[inline(always)]
 fn f_801541f4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801541f4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801541f4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801541f4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801541f4 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -19973,7 +19973,7 @@ fn f_801541f4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154248;
             }
-            0x80154248 => { ins += 9;
+            0x80154248 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -19986,7 +19986,7 @@ fn f_801541f4_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80154294; continue; }
                 pc = 0x8015426c;
             }
-            0x8015426c => { ins += 10;
+            0x8015426c => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -19999,7 +19999,7 @@ fn f_801541f4_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801542b8; continue;
                 pc = 0x80154294;
             }
-            0x80154294 => { ins += 9;
+            0x80154294 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20019,10 +20019,10 @@ fn f_801541f4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801542d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801542d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801542d8;
             }
-            0x801542d8 => { ins += 8;
+            0x801542d8 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x20;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20030,8 +20030,8 @@ fn f_801541f4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801541f4: bad pc {:#x}", pc),
         }
@@ -20054,12 +20054,12 @@ pub fn f_801542f8_at(c: &mut Cpu, pc: u32) { f_801542f8_b(c, pc) }
 #[inline(always)]
 fn f_801542f8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801542f8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801542f8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801542f8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801542f8 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20092,7 +20092,7 @@ fn f_801542f8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x8015434c;
             }
-            0x8015434c => { ins += 9;
+            0x8015434c => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20105,7 +20105,7 @@ fn f_801542f8_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80154398; continue; }
                 pc = 0x80154370;
             }
-            0x80154370 => { ins += 10;
+            0x80154370 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20118,7 +20118,7 @@ fn f_801542f8_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801543bc; continue;
                 pc = 0x80154398;
             }
-            0x80154398 => { ins += 9;
+            0x80154398 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20138,10 +20138,10 @@ fn f_801542f8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801543dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801543dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801543dc;
             }
-            0x801543dc => { ins += 8;
+            0x801543dc => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x40;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20149,8 +20149,8 @@ fn f_801542f8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801542f8: bad pc {:#x}", pc),
         }
@@ -20173,12 +20173,12 @@ pub fn f_801543fc_at(c: &mut Cpu, pc: u32) { f_801543fc_b(c, pc) }
 #[inline(always)]
 fn f_801543fc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801543fc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801543fc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801543fc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801543fc => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20211,7 +20211,7 @@ fn f_801543fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154450;
             }
-            0x80154450 => { ins += 9;
+            0x80154450 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20224,7 +20224,7 @@ fn f_801543fc_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015449c; continue; }
                 pc = 0x80154474;
             }
-            0x80154474 => { ins += 10;
+            0x80154474 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20237,7 +20237,7 @@ fn f_801543fc_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801544c0; continue;
                 pc = 0x8015449c;
             }
-            0x8015449c => { ins += 9;
+            0x8015449c => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20257,10 +20257,10 @@ fn f_801543fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801544e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801544e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801544e0;
             }
-            0x801544e0 => { ins += 8;
+            0x801544e0 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x80;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20268,8 +20268,8 @@ fn f_801543fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801543fc: bad pc {:#x}", pc),
         }
@@ -20292,12 +20292,12 @@ pub fn f_80154500_at(c: &mut Cpu, pc: u32) { f_80154500_b(c, pc) }
 #[inline(always)]
 fn f_80154500_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154500;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154500, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154500, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80154500 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20330,7 +20330,7 @@ fn f_80154500_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154554;
             }
-            0x80154554 => { ins += 9;
+            0x80154554 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20343,7 +20343,7 @@ fn f_80154500_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801545a0; continue; }
                 pc = 0x80154578;
             }
-            0x80154578 => { ins += 10;
+            0x80154578 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20356,7 +20356,7 @@ fn f_80154500_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801545c4; continue;
                 pc = 0x801545a0;
             }
-            0x801545a0 => { ins += 9;
+            0x801545a0 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20376,10 +20376,10 @@ fn f_80154500_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801545e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801545e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801545e4;
             }
-            0x801545e4 => { ins += 8;
+            0x801545e4 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x200;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20387,8 +20387,8 @@ fn f_80154500_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154500: bad pc {:#x}", pc),
         }
@@ -20411,12 +20411,12 @@ pub fn f_80154604_at(c: &mut Cpu, pc: u32) { f_80154604_b(c, pc) }
 #[inline(always)]
 fn f_80154604_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154604;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154604, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154604, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80154604 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20449,7 +20449,7 @@ fn f_80154604_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154658;
             }
-            0x80154658 => { ins += 9;
+            0x80154658 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20462,7 +20462,7 @@ fn f_80154604_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801546a4; continue; }
                 pc = 0x8015467c;
             }
-            0x8015467c => { ins += 10;
+            0x8015467c => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20475,7 +20475,7 @@ fn f_80154604_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801546c8; continue;
                 pc = 0x801546a4;
             }
-            0x801546a4 => { ins += 9;
+            0x801546a4 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20495,10 +20495,10 @@ fn f_80154604_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801546e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801546e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801546e8;
             }
-            0x801546e8 => { ins += 8;
+            0x801546e8 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x100;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20506,8 +20506,8 @@ fn f_80154604_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154604: bad pc {:#x}", pc),
         }
@@ -20530,12 +20530,12 @@ pub fn f_80154708_at(c: &mut Cpu, pc: u32) { f_80154708_b(c, pc) }
 #[inline(always)]
 fn f_80154708_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154708;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154708, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154708, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80154708 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20568,7 +20568,7 @@ fn f_80154708_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x8015475c;
             }
-            0x8015475c => { ins += 9;
+            0x8015475c => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20581,7 +20581,7 @@ fn f_80154708_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801547a8; continue; }
                 pc = 0x80154780;
             }
-            0x80154780 => { ins += 10;
+            0x80154780 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20594,7 +20594,7 @@ fn f_80154708_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801547cc; continue;
                 pc = 0x801547a8;
             }
-            0x801547a8 => { ins += 9;
+            0x801547a8 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20614,10 +20614,10 @@ fn f_80154708_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801547ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801547ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801547ec;
             }
-            0x801547ec => { ins += 8;
+            0x801547ec => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x400;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20625,8 +20625,8 @@ fn f_80154708_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154708: bad pc {:#x}", pc),
         }
@@ -20649,12 +20649,12 @@ pub fn f_8015480c_at(c: &mut Cpu, pc: u32) { f_8015480c_b(c, pc) }
 #[inline(always)]
 fn f_8015480c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015480c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015480c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015480c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015480c => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20687,7 +20687,7 @@ fn f_8015480c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154860;
             }
-            0x80154860 => { ins += 9;
+            0x80154860 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20700,7 +20700,7 @@ fn f_8015480c_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801548ac; continue; }
                 pc = 0x80154884;
             }
-            0x80154884 => { ins += 10;
+            0x80154884 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20713,7 +20713,7 @@ fn f_8015480c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801548d0; continue;
                 pc = 0x801548ac;
             }
-            0x801548ac => { ins += 9;
+            0x801548ac => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20733,10 +20733,10 @@ fn f_8015480c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801548f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801548f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801548f0;
             }
-            0x801548f0 => { ins += 8;
+            0x801548f0 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x800;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20744,8 +20744,8 @@ fn f_8015480c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015480c: bad pc {:#x}", pc),
         }
@@ -20768,12 +20768,12 @@ pub fn f_80154910_at(c: &mut Cpu, pc: u32) { f_80154910_b(c, pc) }
 #[inline(always)]
 fn f_80154910_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154910;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154910, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154910, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80154910 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20806,7 +20806,7 @@ fn f_80154910_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154964;
             }
-            0x80154964 => { ins += 9;
+            0x80154964 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20819,7 +20819,7 @@ fn f_80154910_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x801549b0; continue; }
                 pc = 0x80154988;
             }
-            0x80154988 => { ins += 10;
+            0x80154988 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20832,7 +20832,7 @@ fn f_80154910_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801549d4; continue;
                 pc = 0x801549b0;
             }
-            0x801549b0 => { ins += 9;
+            0x801549b0 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20852,10 +20852,10 @@ fn f_80154910_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x801549f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801549f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801549f4;
             }
-            0x801549f4 => { ins += 8;
+            0x801549f4 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x4;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20863,8 +20863,8 @@ fn f_80154910_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154910: bad pc {:#x}", pc),
         }
@@ -20887,12 +20887,12 @@ pub fn f_80154a14_at(c: &mut Cpu, pc: u32) { f_80154a14_b(c, pc) }
 #[inline(always)]
 fn f_80154a14_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154a14;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154a14, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154a14, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80154a14 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -20925,7 +20925,7 @@ fn f_80154a14_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154a68;
             }
-            0x80154a68 => { ins += 9;
+            0x80154a68 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -20938,7 +20938,7 @@ fn f_80154a14_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80154ab4; continue; }
                 pc = 0x80154a8c;
             }
-            0x80154a8c => { ins += 10;
+            0x80154a8c => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20951,7 +20951,7 @@ fn f_80154a14_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80154ad8; continue;
                 pc = 0x80154ab4;
             }
-            0x80154ab4 => { ins += 9;
+            0x80154ab4 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -20971,10 +20971,10 @@ fn f_80154a14_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x80154af8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154af8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154af8;
             }
-            0x80154af8 => { ins += 8;
+            0x80154af8 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x10;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -20982,8 +20982,8 @@ fn f_80154a14_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154a14: bad pc {:#x}", pc),
         }
@@ -21006,12 +21006,12 @@ pub fn f_80154b18_at(c: &mut Cpu, pc: u32) { f_80154b18_b(c, pc) }
 #[inline(always)]
 fn f_80154b18_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154b18;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154b18, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154b18, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80154b18 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -21044,7 +21044,7 @@ fn f_80154b18_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154b6c;
             }
-            0x80154b6c => { ins += 9;
+            0x80154b6c => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[3] = 0x51ec0000;
                 c.r[7] = c.r[3].wrapping_add(0xffff851f);
@@ -21057,7 +21057,7 @@ fn f_80154b18_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80154bb8; continue; }
                 pc = 0x80154b90;
             }
-            0x80154b90 => { ins += 10;
+            0x80154b90 => { ins += 14;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -21070,7 +21070,7 @@ fn f_80154b18_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80154bdc; continue;
                 pc = 0x80154bb8;
             }
-            0x80154bb8 => { ins += 9;
+            0x80154bb8 => { ins += 13;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
@@ -21090,10 +21090,10 @@ fn f_80154b18_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x80154bfc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154bfc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154bfc;
             }
-            0x80154bfc => { ins += 8;
+            0x80154bfc => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x214));
                 c.r[0] = c.r[0] | 0x1000;
                 c.stw(c.r[31].wrapping_add(0x214), c.r[0]);
@@ -21101,8 +21101,8 @@ fn f_80154b18_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154b18: bad pc {:#x}", pc),
         }
@@ -21125,14 +21125,14 @@ pub fn f_80154c1c_at(c: &mut Cpu, pc: u32) { f_80154c1c_b(c, pc) }
 #[inline(always)]
 fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154c1c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154c1c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154c1c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x80154c1c => { ins += 36;
+            0x80154c1c => { ins += 40;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.r[5] = 0x80370000;
@@ -21184,7 +21184,7 @@ fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154cc4;
             }
-            0x80154cc4 => { ins += 9;
+            0x80154cc4 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[5] = 0x51ec0000;
                 c.r[8] = c.r[5].wrapping_add(0xffff851f);
@@ -21197,7 +21197,7 @@ fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80154d10; continue; }
                 pc = 0x80154ce8;
             }
-            0x80154ce8 => { ins += 10;
+            0x80154ce8 => { ins += 14;
                 c.r[7] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[7] = c.r[7].rotate_left(16) & 0xffff;
                 c.r[7] = c.r[7] as u8 as i8 as i32 as u32;
@@ -21210,7 +21210,7 @@ fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80154d34; continue;
                 pc = 0x80154d10;
             }
-            0x80154d10 => { ins += 9;
+            0x80154d10 => { ins += 13;
                 c.r[7] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[7] = c.r[7].rotate_left(16) & 0xffff;
                 c.r[7] = c.r[7] as u8 as i8 as i32 as u32;
@@ -21229,7 +21229,7 @@ fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x80154d50; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154d50; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154d50;
             }
             0x80154d50 => { ins += 2;
@@ -21242,7 +21242,7 @@ fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x121));
                 c.r[5] = c.r[31] | c.r[31];
                 c.r[4] = c.lbz_t(ins, c.r[30].wrapping_add(0x122));
-                c.lr = 0x80154d68; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016039c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154d68; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016039c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154d68;
             }
             0x80154d68 => { ins += 1;
@@ -21255,7 +21255,7 @@ fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x214), c.r[0]);
                 pc = 0x80154d78;
             }
-            0x80154d78 => { ins += 8;
+            0x80154d78 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -21263,8 +21263,8 @@ fn f_80154c1c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154c1c: bad pc {:#x}", pc),
         }
@@ -21287,14 +21287,14 @@ pub fn f_80154d98_at(c: &mut Cpu, pc: u32) { f_80154d98_b(c, pc) }
 #[inline(always)]
 fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154d98;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154d98, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154d98, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x80154d98 => { ins += 36;
+            0x80154d98 => { ins += 40;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.r[5] = 0x80370000;
@@ -21346,7 +21346,7 @@ fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[0].rotate_left(0) & 0xff;
                 pc = 0x80154e40;
             }
-            0x80154e40 => { ins += 9;
+            0x80154e40 => { ins += 13;
                 c.r[0] = c.lwz_t(ins, c.r[4]);
                 c.r[5] = 0x51ec0000;
                 c.r[8] = c.r[5].wrapping_add(0xffff851f);
@@ -21359,7 +21359,7 @@ fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x80154e8c; continue; }
                 pc = 0x80154e64;
             }
-            0x80154e64 => { ins += 10;
+            0x80154e64 => { ins += 14;
                 c.r[7] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[7] = c.r[7].rotate_left(16) & 0xffff;
                 c.r[7] = c.r[7] as u8 as i8 as i32 as u32;
@@ -21372,7 +21372,7 @@ fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80154eb0; continue;
                 pc = 0x80154e8c;
             }
-            0x80154e8c => { ins += 9;
+            0x80154e8c => { ins += 13;
                 c.r[7] = c.lwz_t(ins, c.r[4].wrapping_add(0x4));
                 c.r[7] = c.r[7].rotate_left(16) & 0xffff;
                 c.r[7] = c.r[7] as u8 as i8 as i32 as u32;
@@ -21391,7 +21391,7 @@ fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[8].wrapping_neg();
                 c.r[0] = c.r[7] | c.r[8];
                 c.r[7] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x80154ecc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154ecc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160f10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154ecc;
             }
             0x80154ecc => { ins += 2;
@@ -21404,7 +21404,7 @@ fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x121));
                 c.r[5] = c.r[31] | c.r[31];
                 c.r[4] = c.lbz_t(ins, c.r[30].wrapping_add(0x122));
-                c.lr = 0x80154ee4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016039c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154ee4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016039c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154ee4;
             }
             0x80154ee4 => { ins += 1;
@@ -21417,7 +21417,7 @@ fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x214), c.r[0]);
                 pc = 0x80154ef4;
             }
-            0x80154ef4 => { ins += 8;
+            0x80154ef4 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -21425,8 +21425,8 @@ fn f_80154d98_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154d98: bad pc {:#x}", pc),
         }
@@ -21449,12 +21449,12 @@ pub fn f_80154f14_at(c: &mut Cpu, pc: u32) { f_80154f14_b(c, pc) }
 #[inline(always)]
 fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80154f14;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80154f14, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80154f14, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80154f14 => { ins += 16;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -21478,7 +21478,7 @@ fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80154f54 => { ins += 2;
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80154f5c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154f5c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154f5c;
             }
             0x80154f5c => { ins += 1;
@@ -21488,7 +21488,7 @@ fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
             0x80154f60 => { ins += 3;
                 c.r[4] = c.r[31] | c.r[31];
                 c.r[3] = c.r[1].wrapping_add(0x8);
-                c.lr = 0x80154f6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154f6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154f6c;
             }
             0x80154f6c => { ins += 6;
@@ -21532,7 +21532,7 @@ fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lbz_t(ins, c.r[31].wrapping_add(0x122));
                 c.r[3] = 0x41;
                 c.r[6] = 0x0;
-                c.lr = 0x80154fbc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154fbc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154fbc;
             }
             0x80154fbc => { ins += 9;
@@ -21557,7 +21557,7 @@ fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lbz_t(ins, c.r[31].wrapping_add(0x122));
                 c.r[3] = 0x41;
                 c.r[6] = 0x7f;
-                c.lr = 0x80154ffc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80154ffc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801603c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80154ffc;
             }
             0x80154ffc => { ins += 10;
@@ -21576,7 +21576,7 @@ fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80155024 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8015502c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014a2b4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015502c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014a2b4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015502c;
             }
             0x8015502c => { ins += 4;
@@ -21595,7 +21595,7 @@ fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
             0x80155048 => { ins += 3;
                 c.r[5] = c.lbz_t(ins, c.r[31].wrapping_add(0x122));
                 c.r[3] = 0x41;
-                c.lr = 0x80155054; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155054; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155054;
             }
             0x80155054 => { ins += 3;
@@ -21604,14 +21604,14 @@ fn f_80154f14_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 1) { pc = 0x80154ffc; continue; }
                 pc = 0x80155060;
             }
-            0x80155060 => { ins += 6;
+            0x80155060 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80154f14: bad pc {:#x}", pc),
         }
@@ -21634,12 +21634,12 @@ pub fn f_80155078_at(c: &mut Cpu, pc: u32) { f_80155078_b(c, pc) }
 #[inline(always)]
 fn f_80155078_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80155078;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80155078, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80155078, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80155078 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -21651,7 +21651,7 @@ fn f_80155078_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015508c => { ins += 2;
                 c.r[4] = c.r[5] | c.r[5];
-                c.lr = 0x80155094; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155094; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155094;
             }
             0x80155094 => { ins += 2;
@@ -21680,13 +21680,13 @@ fn f_80155078_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(0xffffffc0));
                 pc = 0x801550cc;
             }
-            0x801550cc => { ins += 5;
+            0x801550cc => { ins += 6;
                 c.r[3] = c.r[0] as u16 as i16 as i32 as u32;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80155078: bad pc {:#x}", pc),
         }
@@ -21709,19 +21709,19 @@ pub fn f_801550e0_at(c: &mut Cpu, pc: u32) { f_801550e0_b(c, pc) }
 #[inline(never)]
 fn f_801550e0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801550e0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801550e0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801550e0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801550e0 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x801550f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801550f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801550f4;
             }
             0x801550f4 => { ins += 8;
@@ -21737,7 +21737,7 @@ fn f_801550e0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155114;
             }
             0x80155114 => { ins += 1;
-                c.lr = 0x80155118; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155118; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155118;
             }
             0x80155118 => { ins += 2;
@@ -21790,7 +21790,7 @@ fn f_801550e0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80155180 => { ins += 2;
                 c.r[3] = c.r[27] | c.r[27];
-                c.lr = 0x80155188; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155188; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155188;
             }
             0x80155188 => { ins += 2;
@@ -21871,7 +21871,7 @@ fn f_801550e0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155230; continue;
                 pc = 0x8015520c;
             }
-            0x8015520c => { ins += 3;
+            0x8015520c => { ins += 7;
                 c.r[0] = c.r[3] as u16 as i16 as i32 as u32;
                 c.r[30] = c.r[31].wrapping_mul(c.r[0]);
                 pc = 0x80155230; continue;
@@ -21883,7 +21883,7 @@ fn f_801550e0_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015522c; continue; }
                 pc = 0x80155220;
             }
-            0x80155220 => { ins += 3;
+            0x80155220 => { ins += 42;
                 c.r[0] = c.r[3] as u16 as i16 as i32 as u32;
                 c.r[30] = divw(c.r[31], c.r[0]);
                 pc = 0x80155230; continue;
@@ -21924,7 +21924,7 @@ fn f_801550e0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80155264 => { ins += 2;
                 c.r[5] = c.r[0] as u16 as i16 as i32 as u32;
-                c.lr = 0x8015526c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161e8c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015526c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161e8c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015526c;
             }
             0x8015526c => { ins += 1;
@@ -21996,15 +21996,15 @@ fn f_801550e0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801552e8 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x801552f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801552f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801552f0;
             }
-            0x801552f0 => { ins += 4;
+            0x801552f0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801550e0: bad pc {:#x}", pc),
         }
@@ -22027,19 +22027,19 @@ pub fn f_80155300_at(c: &mut Cpu, pc: u32) { f_80155300_b(c, pc) }
 #[inline(always)]
 fn f_80155300_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80155300;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80155300, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80155300, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80155300 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80155314; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155314; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155314;
             }
             0x80155314 => { ins += 7;
@@ -22054,7 +22054,7 @@ fn f_80155300_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155330;
             }
             0x80155330 => { ins += 1;
-                c.lr = 0x80155334; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155334; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155334;
             }
             0x80155334 => { ins += 2;
@@ -22094,7 +22094,7 @@ fn f_80155300_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80155380 => { ins += 2;
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x80155388; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155388; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161d90(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155388;
             }
             0x80155388 => { ins += 2;
@@ -22186,15 +22186,15 @@ fn f_80155300_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80155434 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x8015543c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015543c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4824(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015543c;
             }
-            0x8015543c => { ins += 4;
+            0x8015543c => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80155300: bad pc {:#x}", pc),
         }
@@ -22217,12 +22217,12 @@ pub fn f_8015544c_at(c: &mut Cpu, pc: u32) { f_8015544c_b(c, pc) }
 #[inline(never)]
 fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015544c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015544c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015544c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015544c => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -22273,7 +22273,7 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155580; continue;
                 pc = 0x801554c4;
             }
-            0x801554c4 => { ins += 7;
+            0x801554c4 => { ins += 9;
                 c.r[0] = c.r[28].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[0].wrapping_mul(0x404);
@@ -22292,7 +22292,7 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
             0x801554ec => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0xf8));
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x8));
-                c.lr = 0x801554f8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801554f8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801554f8;
             }
             0x801554f8 => { ins += 3;
@@ -22301,7 +22301,7 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015557c; continue; }
                 pc = 0x80155504;
             }
-            0x80155504 => { ins += 7;
+            0x80155504 => { ins += 9;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[0].wrapping_mul(0x404);
@@ -22340,7 +22340,7 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0x58));
                 c.stw(c.r[3].wrapping_add(0x34), c.r[4]);
                 c.stw(c.r[3].wrapping_add(0x58), c.r[0]);
-                c.lr = 0x8015557c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015557c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015557c;
             }
             0x8015557c => { ins += 1;
@@ -22364,12 +22364,12 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80155670; continue; }
                 pc = 0x801555a0;
             }
-            0x801555a0 => { ins += 5;
+            0x801555a0 => { ins += 6;
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0xf8));
                 c.r[4] = c.r[29] | c.r[29];
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x8));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x801555b4; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x801555b4; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x801555b4;
             }
             0x801555b4 => { ins += 1;
@@ -22398,7 +22398,7 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801555e8;
             }
             0x801555e8 => { ins += 1;
-                c.lr = 0x801555ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801555ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_801577c8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801555ec;
             }
             0x801555ec => { ins += 3;
@@ -22407,7 +22407,7 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80155670; continue; }
                 pc = 0x801555f8;
             }
-            0x801555f8 => { ins += 7;
+            0x801555f8 => { ins += 9;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[0].wrapping_mul(0x404);
@@ -22446,10 +22446,10 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0x58));
                 c.stw(c.r[3].wrapping_add(0x34), c.r[4]);
                 c.stw(c.r[3].wrapping_add(0x58), c.r[0]);
-                c.lr = 0x80155670; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155670; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155670;
             }
-            0x80155670 => { ins += 8;
+            0x80155670 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -22457,8 +22457,8 @@ fn f_8015544c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015544c: bad pc {:#x}", pc),
         }
@@ -22481,12 +22481,12 @@ pub fn f_80155690_at(c: &mut Cpu, pc: u32) { f_80155690_b(c, pc) }
 #[inline(always)]
 fn f_80155690_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80155690;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80155690, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80155690, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80155690 => { ins += 3;
                 c.r[4] = c.lwz_t(ins, c.r[4]);
@@ -22507,7 +22507,7 @@ fn f_80155690_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(2) & 0x3fc;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stw(c.r[3].wrapping_add(0xac), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801556c0;
             }
             0x801556c0 => { ins += 6;
@@ -22516,7 +22516,7 @@ fn f_80155690_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].wrapping_add(0x56b4);
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stw(c.r[3].wrapping_add(0xffffffc0), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801556d8;
             }
             0x801556d8 => { ins += 4;
@@ -22530,7 +22530,7 @@ fn f_80155690_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(2) & 0x3fc;
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stw(c.r[3].wrapping_add(0xac), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801556f8;
             }
             0x801556f8 => { ins += 6;
@@ -22539,8 +22539,8 @@ fn f_80155690_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].wrapping_add(0x56b4);
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stw(c.r[3].wrapping_add(0xffffffc0), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80155690: bad pc {:#x}", pc),
         }
@@ -22563,19 +22563,19 @@ pub fn f_80155710_at(c: &mut Cpu, pc: u32) { f_80155710_b(c, pc) }
 #[inline(always)]
 fn f_80155710_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80155710;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80155710, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80155710, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80155710 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80155724; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155724; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155724;
             }
             0x80155724 => { ins += 10;
@@ -22633,7 +22633,7 @@ fn f_80155710_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801557ac;
             }
             0x801557ac => { ins += 1;
-                c.lr = 0x801557b0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156940(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801557b0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156940(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801557b0;
             }
             0x801557b0 => { ins += 1;
@@ -22642,7 +22642,7 @@ fn f_80155710_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801557b4 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x801557bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801557bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801557bc;
             }
             0x801557bc => { ins += 2;
@@ -22662,15 +22662,15 @@ fn f_80155710_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801557d4 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x801557dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801557dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801557dc;
             }
-            0x801557dc => { ins += 4;
+            0x801557dc => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80155710: bad pc {:#x}", pc),
         }
@@ -22693,12 +22693,12 @@ pub fn f_801557ec_at(c: &mut Cpu, pc: u32) { f_801557ec_b(c, pc) }
 #[inline(never)]
 fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801557ec;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801557ec, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801557ec, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801557ec => { ins += 1;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -22717,7 +22717,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801557fc;
             }
             0x801557fc => { ins += 1;
-                c.lr = 0x80155800; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155800; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155800;
             }
             0x80155800 => { ins += 1;
@@ -22823,7 +22823,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155864;
             }
             0x80155864 => { ins += 1;
-                c.lr = 0x80155868; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155868; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155868;
             }
             0x80155868 => { ins += 1;
@@ -22935,7 +22935,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801558d4;
             }
             0x801558d4 => { ins += 1;
-                c.lr = 0x801558d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161a9c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801558d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161a9c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801558d8;
             }
             0x801558d8 => { ins += 1;
@@ -22947,7 +22947,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801558e0;
             }
             0x801558e0 => { ins += 1;
-                c.lr = 0x801558e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801610f8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801558e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801610f8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801558e4;
             }
             0x801558e4 => { ins += 1;
@@ -22991,7 +22991,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015590c;
             }
             0x8015590c => { ins += 1;
-                c.lr = 0x80155910; { c.steps = st; c.instrs = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155910; { c.steps = st; c.cycles = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155910;
             }
             0x80155910 => { ins += 1;
@@ -22999,7 +22999,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155914;
             }
             0x80155914 => { ins += 1;
-                c.lr = 0x80155918; { c.steps = st; c.instrs = ins; c.cr = cr; f_801589a8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155918; { c.steps = st; c.cycles = ins; c.cr = cr; f_801589a8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155918;
             }
             0x80155918 => { ins += 1;
@@ -23059,7 +23059,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155950;
             }
             0x80155950 => { ins += 1;
-                c.lr = 0x80155954; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155954; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155954;
             }
             0x80155954 => { ins += 1;
@@ -23083,7 +23083,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155968;
             }
             0x80155968 => { ins += 1;
-                c.lr = 0x8015596c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160ea0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015596c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160ea0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015596c;
             }
             0x8015596c => { ins += 1;
@@ -23259,7 +23259,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155a18;
             }
             0x80155a18 => { ins += 1;
-                c.lr = 0x80155a1c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155a1c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155a1c;
             }
             0x80155a1c => { ins += 1;
@@ -23299,7 +23299,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155a40;
             }
             0x80155a40 => { ins += 1;
-                c.lr = 0x80155a44; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014bfd4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155a44; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014bfd4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155a44;
             }
             0x80155a44 => { ins += 1;
@@ -23410,12 +23410,12 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 pc = 0x80155ab0;
             }
-            0x80155ab0 => { ins += 1;
+            0x80155ab0 => { ins += 2;
                 c.mtspr(9, c.r[0]);
                 pc = 0x80155ab4;
             }
             0x80155ab4 => { ins += 1;
-                if true { let t = c.ctr; if (0x801557ec..0x80156744).contains(&t) { pc = t; continue; } { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { let t = c.ctr; if (0x801557ec..0x80156744).contains(&t) { pc = t; continue; } { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80155ab8;
             }
             0x80155ab8 => { ins += 1;
@@ -23423,7 +23423,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155abc;
             }
             0x80155abc => { ins += 1;
-                c.lr = 0x80155ac0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155ac0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155ac0;
             }
             0x80155ac0 => { ins += 1;
@@ -23431,7 +23431,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155ac4;
             }
             0x80155ac4 => { ins += 1;
-                c.lr = 0x80155ac8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155ac8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155ac8;
             }
             0x80155ac8 => { ins += 1;
@@ -23447,7 +23447,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155ad4;
             }
             0x80155ad4 => { ins += 1;
-                c.lr = 0x80155ad8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155ad8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155ad8;
             }
             0x80155ad8 => { ins += 1;
@@ -23455,7 +23455,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155adc;
             }
             0x80155adc => { ins += 1;
-                c.lr = 0x80155ae0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155ae0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155ae0;
             }
             0x80155ae0 => { ins += 1;
@@ -23487,7 +23487,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155afc;
             }
             0x80155afc => { ins += 1;
-                c.lr = 0x80155b00; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155b00; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155b00;
             }
             0x80155b00 => { ins += 1;
@@ -23547,7 +23547,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155b38;
             }
             0x80155b38 => { ins += 1;
-                c.lr = 0x80155b3c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155b3c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155b3c;
             }
             0x80155b3c => { ins += 1;
@@ -23591,7 +23591,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155b64;
             }
             0x80155b64 => { ins += 1;
-                c.lr = 0x80155b68; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155b68; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155b68;
             }
             0x80155b68 => { ins += 1;
@@ -23611,7 +23611,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155b78;
             }
             0x80155b78 => { ins += 1;
-                c.lr = 0x80155b7c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801529a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155b7c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801529a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155b7c;
             }
             0x80155b7c => { ins += 1;
@@ -23623,7 +23623,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155b84;
             }
             0x80155b84 => { ins += 1;
-                c.lr = 0x80155b88; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155b88; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155b88;
             }
             0x80155b88 => { ins += 1;
@@ -23667,7 +23667,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155bb0;
             }
             0x80155bb0 => { ins += 1;
-                c.lr = 0x80155bb4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155bb4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155bb4;
             }
             0x80155bb4 => { ins += 1;
@@ -23675,7 +23675,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155bb8;
             }
             0x80155bb8 => { ins += 1;
-                c.lr = 0x80155bbc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155bbc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155bbc;
             }
             0x80155bbc => { ins += 1;
@@ -23707,7 +23707,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155bd8;
             }
             0x80155bd8 => { ins += 1;
-                c.lr = 0x80155bdc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155bdc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155bdc;
             }
             0x80155bdc => { ins += 1;
@@ -23727,7 +23727,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155bec;
             }
             0x80155bec => { ins += 1;
-                c.lr = 0x80155bf0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80152af8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155bf0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80152af8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155bf0;
             }
             0x80155bf0 => { ins += 1;
@@ -23810,7 +23810,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[4].rotate_left(0) & 0xff;
                 pc = 0x80155c40;
             }
-            0x80155c40 => { ins += 1;
+            0x80155c40 => { ins += 3;
                 c.r[0] = c.r[0].wrapping_mul(0x404);
                 pc = 0x80155c44;
             }
@@ -23831,7 +23831,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155c54;
             }
             0x80155c54 => { ins += 1;
-                c.lr = 0x80155c58; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156940(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155c58; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156940(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155c58;
             }
             0x80155c58 => { ins += 1;
@@ -23875,7 +23875,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155c80;
             }
             0x80155c80 => { ins += 1;
-                c.lr = 0x80155c84; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016173c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155c84; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016173c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155c84;
             }
             0x80155c84 => { ins += 1;
@@ -23903,7 +23903,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155c9c;
             }
             0x80155c9c => { ins += 1;
-                c.lr = 0x80155ca0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155ca0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155ca0;
             }
             0x80155ca0 => { ins += 1;
@@ -23966,7 +23966,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
                 pc = 0x80155cdc;
             }
-            0x80155cdc => { ins += 1;
+            0x80155cdc => { ins += 5;
                 c.r[3] = c.r[4].wrapping_mul(c.r[3]);
                 pc = 0x80155ce0;
             }
@@ -24028,7 +24028,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d18;
             }
             0x80155d18 => { ins += 1;
-                c.lr = 0x80155d1c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153274(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d1c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153274(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d1c;
             }
             0x80155d1c => { ins += 1;
@@ -24044,7 +24044,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d28;
             }
             0x80155d28 => { ins += 1;
-                c.lr = 0x80155d2c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801539ac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d2c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801539ac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d2c;
             }
             0x80155d2c => { ins += 1;
@@ -24060,7 +24060,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d38;
             }
             0x80155d38 => { ins += 1;
-                c.lr = 0x80155d3c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153874(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d3c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153874(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d3c;
             }
             0x80155d3c => { ins += 1;
@@ -24076,7 +24076,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d48;
             }
             0x80155d48 => { ins += 1;
-                c.lr = 0x80155d4c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153ae0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d4c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153ae0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d4c;
             }
             0x80155d4c => { ins += 1;
@@ -24092,7 +24092,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d58;
             }
             0x80155d58 => { ins += 1;
-                c.lr = 0x80155d5c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80152d5c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d5c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80152d5c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d5c;
             }
             0x80155d5c => { ins += 1;
@@ -24108,7 +24108,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d68;
             }
             0x80155d68 => { ins += 1;
-                c.lr = 0x80155d6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d6c;
             }
             0x80155d6c => { ins += 1;
@@ -24132,7 +24132,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d80;
             }
             0x80155d80 => { ins += 1;
-                c.lr = 0x80155d84; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c07c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d84; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c07c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d84;
             }
             0x80155d84 => { ins += 1;
@@ -24140,7 +24140,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155d88;
             }
             0x80155d88 => { ins += 1;
-                c.lr = 0x80155d8c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155d8c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162070(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155d8c;
             }
             0x80155d8c => { ins += 1;
@@ -24168,7 +24168,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155da4;
             }
             0x80155da4 => { ins += 1;
-                c.lr = 0x80155da8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155da8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155da8;
             }
             0x80155da8 => { ins += 1;
@@ -24212,7 +24212,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155dd0;
             }
             0x80155dd0 => { ins += 1;
-                c.lr = 0x80155dd4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153c10(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155dd4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153c10(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155dd4;
             }
             0x80155dd4 => { ins += 1;
@@ -24228,7 +24228,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155de0;
             }
             0x80155de0 => { ins += 1;
-                c.lr = 0x80155de4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153910(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155de4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153910(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155de4;
             }
             0x80155de4 => { ins += 1;
@@ -24244,7 +24244,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155df0;
             }
             0x80155df0 => { ins += 1;
-                c.lr = 0x80155df4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801534cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155df4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801534cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155df4;
             }
             0x80155df4 => { ins += 1;
@@ -24260,7 +24260,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155e00;
             }
             0x80155e00 => { ins += 1;
-                c.lr = 0x80155e04; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153d4c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155e04; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153d4c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155e04;
             }
             0x80155e04 => { ins += 1;
@@ -24276,7 +24276,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155e10;
             }
             0x80155e10 => { ins += 1;
-                c.lr = 0x80155e14; { c.steps = st; c.instrs = ins; c.cr = cr; f_80152c84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155e14; { c.steps = st; c.cycles = ins; c.cr = cr; f_80152c84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155e14;
             }
             0x80155e14 => { ins += 1;
@@ -24312,7 +24312,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155e34;
             }
             0x80155e34 => { ins += 1;
-                c.lr = 0x80155e38; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158934(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155e38; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158934(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155e38;
             }
             0x80155e38 => { ins += 1;
@@ -24340,7 +24340,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155e50;
             }
             0x80155e50 => { ins += 1;
-                c.lr = 0x80155e54; { c.steps = st; c.instrs = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155e54; { c.steps = st; c.cycles = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155e54;
             }
             0x80155e54 => { ins += 1;
@@ -24360,7 +24360,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155e64;
             }
             0x80155e64 => { ins += 1;
-                c.lr = 0x80155e68; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155e68; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155e68;
             }
             0x80155e68 => { ins += 1;
@@ -24469,7 +24469,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155ed0;
             }
             0x80155ed0 => { ins += 1;
-                c.lr = 0x80155ed4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155ed4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801610bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155ed4;
             }
             0x80155ed4 => { ins += 1;
@@ -24489,7 +24489,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155ee4;
             }
             0x80155ee4 => { ins += 1;
-                c.lr = 0x80155ee8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155ee8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155ee8;
             }
             0x80155ee8 => { ins += 1;
@@ -24509,7 +24509,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155ef8;
             }
             0x80155ef8 => { ins += 1;
-                c.lr = 0x80155efc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154f14(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155efc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154f14(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155efc;
             }
             0x80155efc => { ins += 1;
@@ -24525,7 +24525,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155f08;
             }
             0x80155f08 => { ins += 1;
-                c.lr = 0x80155f0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80152f58(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155f0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80152f58(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155f0c;
             }
             0x80155f0c => { ins += 1;
@@ -24582,7 +24582,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155f40;
             }
             0x80155f40 => { ins += 1;
-                c.lr = 0x80155f44; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155f44; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155f44;
             }
             0x80155f44 => { ins += 1;
@@ -24594,7 +24594,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155f4c;
             }
             0x80155f4c => { ins += 1;
-                c.lr = 0x80155f50; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155f50; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155f50;
             }
             0x80155f50 => { ins += 1;
@@ -24626,7 +24626,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155f6c;
             }
             0x80155f6c => { ins += 1;
-                c.lr = 0x80155f70; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155f70; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155f70;
             }
             0x80155f70 => { ins += 1;
@@ -24687,7 +24687,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155fa8;
             }
             0x80155fa8 => { ins += 1;
-                c.lr = 0x80155fac; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155fac; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155fac;
             }
             0x80155fac => { ins += 1;
@@ -24699,7 +24699,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155fb4;
             }
             0x80155fb4 => { ins += 1;
-                c.lr = 0x80155fb8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155fb8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162fb0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155fb8;
             }
             0x80155fb8 => { ins += 1;
@@ -24731,7 +24731,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80155fd4;
             }
             0x80155fd4 => { ins += 1;
-                c.lr = 0x80155fd8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80155fd8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801525e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80155fd8;
             }
             0x80155fd8 => { ins += 1;
@@ -24791,7 +24791,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156010;
             }
             0x80156010 => { ins += 1;
-                c.lr = 0x80156014; { c.steps = st; c.instrs = ins; c.cr = cr; f_801530d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156014; { c.steps = st; c.cycles = ins; c.cr = cr; f_801530d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156014;
             }
             0x80156014 => { ins += 1;
@@ -24807,7 +24807,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156020;
             }
             0x80156020 => { ins += 1;
-                c.lr = 0x80156024; { c.steps = st; c.instrs = ins; c.cr = cr; f_801535f8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156024; { c.steps = st; c.cycles = ins; c.cr = cr; f_801535f8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156024;
             }
             0x80156024 => { ins += 1;
@@ -24835,7 +24835,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(27) & 0x7ffffff;
                 pc = 0x8015603c;
             }
-            0x8015603c => { ins += 1;
+            0x8015603c => { ins += 5;
                 c.r[0] = c.r[0].wrapping_mul(c.r[3]);
                 pc = 0x80156040;
             }
@@ -24859,7 +24859,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(27) & 0x7ffffff;
                 pc = 0x80156054;
             }
-            0x80156054 => { ins += 1;
+            0x80156054 => { ins += 5;
                 c.r[0] = c.r[0].wrapping_mul(c.r[3]);
                 pc = 0x80156058;
             }
@@ -24959,7 +24959,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(8) & 0xffffff00;
                 pc = 0x801560b8;
             }
-            0x801560b8 => { ins += 1;
+            0x801560b8 => { ins += 5;
                 c.r[0] = mulhw(c.r[3], c.r[0]);
                 pc = 0x801560bc;
             }
@@ -25011,7 +25011,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(8) & 0xffffff00;
                 pc = 0x801560ec;
             }
-            0x801560ec => { ins += 1;
+            0x801560ec => { ins += 5;
                 c.r[0] = mulhw(c.r[3], c.r[0]);
                 pc = 0x801560f0;
             }
@@ -25160,7 +25160,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156180;
             }
             0x80156180 => { ins += 1;
-                c.lr = 0x80156184; { c.steps = st; c.instrs = ins; c.cr = cr; f_801528d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156184; { c.steps = st; c.cycles = ins; c.cr = cr; f_801528d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156184;
             }
             0x80156184 => { ins += 1;
@@ -25176,7 +25176,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156190;
             }
             0x80156190 => { ins += 1;
-                c.lr = 0x80156194; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156194; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156194;
             }
             0x80156194 => { ins += 1;
@@ -25370,7 +25370,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156250;
             }
             0x80156250 => { ins += 1;
-                c.lr = 0x80156254; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015544c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156254; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015544c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156254;
             }
             0x80156254 => { ins += 1;
@@ -25498,7 +25498,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801562d0;
             }
             0x801562d0 => { ins += 1;
-                c.lr = 0x801562d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80155690(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801562d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80155690(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801562d4;
             }
             0x801562d4 => { ins += 1;
@@ -25607,7 +25607,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015633c;
             }
             0x8015633c => { ins += 1;
-                c.lr = 0x80156340; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156340; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156340;
             }
             0x80156340 => { ins += 1;
@@ -25647,7 +25647,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156364;
             }
             0x80156364 => { ins += 1;
-                c.lr = 0x80156368; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156368; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156368;
             }
             0x80156368 => { ins += 1;
@@ -25755,7 +25755,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801563d0;
             }
             0x801563d0 => { ins += 1;
-                c.lr = 0x801563d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801563d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801563d4;
             }
             0x801563d4 => { ins += 1;
@@ -25820,7 +25820,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156410;
             }
             0x80156410 => { ins += 1;
-                c.lr = 0x80156414; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156414; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156414;
             }
             0x80156414 => { ins += 1;
@@ -25847,7 +25847,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].rotate_left(24) & 0xffffff;
                 pc = 0x8015642c;
             }
-            0x8015642c => { ins += 1;
+            0x8015642c => { ins += 40;
                 c.r[0] = divwu(c.r[0], c.r[3]);
                 pc = 0x80156430;
             }
@@ -25895,7 +25895,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].rotate_left(0) & 0xffff;
                 pc = 0x8015645c;
             }
-            0x8015645c => { ins += 1;
+            0x8015645c => { ins += 5;
                 c.r[3] = c.r[3].wrapping_mul(c.r[4]);
                 pc = 0x80156460;
             }
@@ -25948,7 +25948,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156490;
             }
             0x80156490 => { ins += 1;
-                c.lr = 0x80156494; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156494; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156494;
             }
             0x80156494 => { ins += 1;
@@ -25964,7 +25964,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801564a0;
             }
             0x801564a0 => { ins += 1;
-                c.lr = 0x801564a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153ee8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801564a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153ee8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801564a4;
             }
             0x801564a4 => { ins += 1;
@@ -25980,7 +25980,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801564b0;
             }
             0x801564b0 => { ins += 1;
-                c.lr = 0x801564b4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80153fec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801564b4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80153fec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801564b4;
             }
             0x801564b4 => { ins += 1;
@@ -25996,7 +25996,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801564c0;
             }
             0x801564c0 => { ins += 1;
-                c.lr = 0x801564c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801540f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801564c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801540f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801564c4;
             }
             0x801564c4 => { ins += 1;
@@ -26012,7 +26012,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801564d0;
             }
             0x801564d0 => { ins += 1;
-                c.lr = 0x801564d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801541f4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801564d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801541f4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801564d4;
             }
             0x801564d4 => { ins += 1;
@@ -26028,7 +26028,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801564e0;
             }
             0x801564e0 => { ins += 1;
-                c.lr = 0x801564e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801542f8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801564e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801542f8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801564e4;
             }
             0x801564e4 => { ins += 1;
@@ -26044,7 +26044,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801564f0;
             }
             0x801564f0 => { ins += 1;
-                c.lr = 0x801564f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801543fc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801564f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801543fc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801564f4;
             }
             0x801564f4 => { ins += 1;
@@ -26060,7 +26060,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156500;
             }
             0x80156500 => { ins += 1;
-                c.lr = 0x80156504; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154500(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156504; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154500(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156504;
             }
             0x80156504 => { ins += 1;
@@ -26076,7 +26076,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156510;
             }
             0x80156510 => { ins += 1;
-                c.lr = 0x80156514; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154910(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156514; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154910(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156514;
             }
             0x80156514 => { ins += 1;
@@ -26092,7 +26092,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156520;
             }
             0x80156520 => { ins += 1;
-                c.lr = 0x80156524; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154a14(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156524; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154a14(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156524;
             }
             0x80156524 => { ins += 1;
@@ -26108,7 +26108,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156530;
             }
             0x80156530 => { ins += 1;
-                c.lr = 0x80156534; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154b18(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156534; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154b18(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156534;
             }
             0x80156534 => { ins += 1;
@@ -26124,7 +26124,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156540;
             }
             0x80156540 => { ins += 1;
-                c.lr = 0x80156544; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154604(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156544; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154604(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156544;
             }
             0x80156544 => { ins += 1;
@@ -26140,7 +26140,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156550;
             }
             0x80156550 => { ins += 1;
-                c.lr = 0x80156554; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154708(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156554; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154708(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156554;
             }
             0x80156554 => { ins += 1;
@@ -26156,7 +26156,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156560;
             }
             0x80156560 => { ins += 1;
-                c.lr = 0x80156564; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015480c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156564; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015480c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156564;
             }
             0x80156564 => { ins += 1;
@@ -26172,7 +26172,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156570;
             }
             0x80156570 => { ins += 1;
-                c.lr = 0x80156574; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154c1c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156574; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154c1c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156574;
             }
             0x80156574 => { ins += 1;
@@ -26188,7 +26188,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156580;
             }
             0x80156580 => { ins += 1;
-                c.lr = 0x80156584; { c.steps = st; c.instrs = ins; c.cr = cr; f_80154d98(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156584; { c.steps = st; c.cycles = ins; c.cr = cr; f_80154d98(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156584;
             }
             0x80156584 => { ins += 1;
@@ -26208,14 +26208,14 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156594;
             }
             0x80156594 => { ins += 1;
-                c.lr = 0x80156598; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156598; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156598;
             }
             0x80156598 => { ins += 1;
                 c.r[0] = c.r[26].rotate_left(24) & 0xff;
                 pc = 0x8015659c;
             }
-            0x8015659c => { ins += 1;
+            0x8015659c => { ins += 3;
                 c.r[0] = c.r[0].wrapping_mul(0xc);
                 pc = 0x801565a0;
             }
@@ -26252,7 +26252,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801565c0;
             }
             0x801565c0 => { ins += 1;
-                c.lr = 0x801565c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801565c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801621bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801565c4;
             }
             0x801565c4 => { ins += 1;
@@ -26328,7 +26328,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015660c;
             }
             0x8015660c => { ins += 1;
-                c.lr = 0x80156610; { c.steps = st; c.instrs = ins; c.cr = cr; f_80155710(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156610; { c.steps = st; c.cycles = ins; c.cr = cr; f_80155710(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156610;
             }
             0x80156610 => { ins += 1;
@@ -26348,7 +26348,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156620;
             }
             0x80156620 => { ins += 1;
-                c.lr = 0x80156624; { c.steps = st; c.instrs = ins; c.cr = cr; f_801629a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156624; { c.steps = st; c.cycles = ins; c.cr = cr; f_801629a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156624;
             }
             0x80156624 => { ins += 1;
@@ -26368,7 +26368,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156634;
             }
             0x80156634 => { ins += 1;
-                c.lr = 0x80156638; { c.steps = st; c.instrs = ins; c.cr = cr; f_801629d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156638; { c.steps = st; c.cycles = ins; c.cr = cr; f_801629d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156638;
             }
             0x80156638 => { ins += 1;
@@ -26400,7 +26400,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156654;
             }
             0x80156654 => { ins += 1;
-                c.lr = 0x80156658; { c.steps = st; c.instrs = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156658; { c.steps = st; c.cycles = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156658;
             }
             0x80156658 => { ins += 1;
@@ -26420,7 +26420,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156668;
             }
             0x80156668 => { ins += 1;
-                c.lr = 0x8015666c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015666c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015666c;
             }
             0x8015666c => { ins += 1;
@@ -26440,7 +26440,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015667c;
             }
             0x8015667c => { ins += 1;
-                c.lr = 0x80156680; { c.steps = st; c.instrs = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156680; { c.steps = st; c.cycles = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156680;
             }
             0x80156680 => { ins += 1;
@@ -26460,7 +26460,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156690;
             }
             0x80156690 => { ins += 1;
-                c.lr = 0x80156694; { c.steps = st; c.instrs = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156694; { c.steps = st; c.cycles = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156694;
             }
             0x80156694 => { ins += 1;
@@ -26480,7 +26480,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801566a4;
             }
             0x801566a4 => { ins += 1;
-                c.lr = 0x801566a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801566a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801550e0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801566a8;
             }
             0x801566a8 => { ins += 1;
@@ -26513,7 +26513,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801566c4;
             }
             0x801566c4 => { ins += 1;
-                c.lr = 0x801566c8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80161e8c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801566c8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80161e8c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801566c8;
             }
             0x801566c8 => { ins += 1;
@@ -26585,7 +26585,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015670c;
             }
             0x8015670c => { ins += 1;
-                c.lr = 0x80156710; { c.steps = st; c.instrs = ins; c.cr = cr; f_80155300(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156710; { c.steps = st; c.cycles = ins; c.cr = cr; f_80155300(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156710;
             }
             0x80156710 => { ins += 1;
@@ -26605,7 +26605,7 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156720;
             }
             0x80156720 => { ins += 1;
-                c.lr = 0x80156724; { c.steps = st; c.instrs = ins; c.cr = cr; f_80155300(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156724; { c.steps = st; c.cycles = ins; c.cr = cr; f_80155300(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156724;
             }
             0x80156724 => { ins += 1;
@@ -26621,14 +26621,14 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156730;
             }
             0x80156730 => { ins += 1;
-                c.lr = 0x80156734; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156734; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156734;
             }
             0x80156734 => { ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 pc = 0x80156738;
             }
-            0x80156738 => { ins += 1;
+            0x80156738 => { ins += 2;
                 c.mtspr(8, c.r[0]);
                 pc = 0x8015673c;
             }
@@ -26637,8 +26637,8 @@ fn f_801557ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80156740;
             }
             0x80156740 => { ins += 1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801557ec: bad pc {:#x}", pc),
         }
@@ -26661,19 +26661,19 @@ pub fn f_80156744_at(c: &mut Cpu, pc: u32) { f_80156744_b(c, pc) }
 #[inline(always)]
 fn f_80156744_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156744;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156744, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156744, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156744 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80156758; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156758; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156758;
             }
             0x80156758 => { ins += 3;
@@ -26685,7 +26685,7 @@ fn f_80156744_b(c: &mut Cpu, mut pc: u32) {
             0x80156764 => { ins += 3;
                 c.r[26] = c.lwz_t(ins, c.r[27].wrapping_add(0x44));
                 c.r[3] = c.r[27] | c.r[27];
-                c.lr = 0x80156770; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156770; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156770;
             }
             0x80156770 => { ins += 3;
@@ -26757,7 +26757,7 @@ fn f_80156744_b(c: &mut Cpu, mut pc: u32) {
             0x80156804 => { ins += 3;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0xf4));
                 c.r[3] = c.r[0].rotate_left(0) & 0xff;
-                c.lr = 0x80156810; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156810; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156810;
             }
             0x80156810 => { ins += 2;
@@ -26785,12 +26785,12 @@ fn f_80156744_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lwz_t(ins, c.r[31].wrapping_add(0x54));
                 c.stw(c.r[31].wrapping_add(0x34), c.r[4]);
                 c.stw(c.r[31].wrapping_add(0x54), c.r[0]);
-                c.lr = 0x80156850; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156850; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156850;
             }
             0x80156850 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x80156858; { c.steps = st; c.instrs = ins; c.cr = cr; f_801557ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156858; { c.steps = st; c.cycles = ins; c.cr = cr; f_801557ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156858;
             }
             0x80156858 => { ins += 1;
@@ -26810,15 +26810,15 @@ fn f_80156744_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[13].wrapping_add(0xffffa79c), c.r[3]);
                 c.stw(c.r[13].wrapping_add(0xffffa798), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80156884; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156884; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156884;
             }
-            0x80156884 => { ins += 4;
+            0x80156884 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156744: bad pc {:#x}", pc),
         }
@@ -26841,12 +26841,12 @@ pub fn f_80156894_at(c: &mut Cpu, pc: u32) { f_80156894_b(c, pc) }
 #[inline(always)]
 fn f_80156894_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156894;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156894, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156894, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156894 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -26878,7 +26878,7 @@ fn f_80156894_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lwz_t(ins, c.r[31].wrapping_add(0x54));
                 c.stw(c.r[31].wrapping_add(0x34), c.r[4]);
                 c.stw(c.r[31].wrapping_add(0x54), c.r[0]);
-                c.lr = 0x801568e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801568e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801568e8;
             }
             0x801568e8 => { ins += 2;
@@ -26911,16 +26911,16 @@ fn f_80156894_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80156924 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8015692c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015692c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015692c;
             }
-            0x8015692c => { ins += 5;
+            0x8015692c => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156894: bad pc {:#x}", pc),
         }
@@ -26943,12 +26943,12 @@ pub fn f_80156940_at(c: &mut Cpu, pc: u32) { f_80156940_b(c, pc) }
 #[inline(always)]
 fn f_80156940_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156940;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156940, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156940, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156940 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -26997,7 +26997,7 @@ fn f_80156940_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x50));
                 c.stw(c.r[31].wrapping_add(0x34), c.r[0]);
                 c.stw(c.r[31].wrapping_add(0x50), c.r[5]);
-                c.lr = 0x801569c8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801569c8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801569c8;
             }
             0x801569c8 => { ins += 2;
@@ -27030,7 +27030,7 @@ fn f_80156940_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80156a04 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x80156a0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156a0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156a0c;
             }
             0x80156a0c => { ins += 1;
@@ -27043,13 +27043,13 @@ fn f_80156940_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x114), c.r[0]);
                 pc = 0x80156a1c;
             }
-            0x80156a1c => { ins += 5;
+            0x80156a1c => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156940: bad pc {:#x}", pc),
         }
@@ -27072,12 +27072,12 @@ pub fn f_80156a30_at(c: &mut Cpu, pc: u32) { f_80156a30_b(c, pc) }
 #[inline(always)]
 fn f_80156a30_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156a30;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156a30, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156a30, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156a30 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -27134,7 +27134,7 @@ fn f_80156a30_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x50));
                 c.stw(c.r[31].wrapping_add(0x34), c.r[0]);
                 c.stw(c.r[31].wrapping_add(0x50), c.r[5]);
-                c.lr = 0x80156ac0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156ac0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156ac0;
             }
             0x80156ac0 => { ins += 2;
@@ -27167,7 +27167,7 @@ fn f_80156a30_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80156afc => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x80156b04; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156b04; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156bdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156b04;
             }
             0x80156b04 => { ins += 8;
@@ -27181,13 +27181,13 @@ fn f_80156a30_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x114), c.r[0]);
                 pc = 0x80156b24;
             }
-            0x80156b24 => { ins += 5;
+            0x80156b24 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156a30: bad pc {:#x}", pc),
         }
@@ -27210,12 +27210,12 @@ pub fn f_80156b38_at(c: &mut Cpu, pc: u32) { f_80156b38_b(c, pc) }
 #[inline(always)]
 fn f_80156b38_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156b38;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156b38, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156b38, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156b38 => { ins += 3;
                 c.r[7] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7a0));
@@ -27261,7 +27261,7 @@ fn f_80156b38_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.stw(c.r[3].wrapping_add(0x44), c.r[0]);
                 c.stw(c.r[3].wrapping_add(0x48), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80156b9c;
             }
             0x80156b9c => { ins += 5;
@@ -27269,7 +27269,7 @@ fn f_80156b38_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.stw(c.r[3].wrapping_add(0x48), c.r[8]);
                 c.stw(c.r[3].wrapping_add(0x44), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80156bb0;
             }
             0x80156bb0 => { ins += 5;
@@ -27292,8 +27292,8 @@ fn f_80156b38_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80156bd4 => { ins += 2;
                 c.stw(c.r[7].wrapping_add(0x48), c.r[3]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156b38: bad pc {:#x}", pc),
         }
@@ -27316,12 +27316,12 @@ pub fn f_80156bdc_at(c: &mut Cpu, pc: u32) { f_80156bdc_b(c, pc) }
 #[inline(always)]
 fn f_80156bdc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156bdc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156bdc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156bdc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156bdc => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -27384,7 +27384,7 @@ fn f_80156bdc_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80156c60 => { ins += 2;
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x80156c68; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c038(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156c68; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c038(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156c68;
             }
             0x80156c68 => { ins += 16;
@@ -27425,13 +27425,13 @@ fn f_80156bdc_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x4c), c.r[0]);
                 pc = 0x80156cd0;
             }
-            0x80156cd0 => { ins += 5;
+            0x80156cd0 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156bdc: bad pc {:#x}", pc),
         }
@@ -27454,17 +27454,17 @@ pub fn f_80156ce4_at(c: &mut Cpu, pc: u32) { f_80156ce4_b(c, pc) }
 #[inline(always)]
 fn f_80156ce4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156ce4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156ce4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156ce4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156ce4 => { ins += 3;
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(0x4c));
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], c.r[4]);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80156cf0;
             }
             0x80156cf0 => { ins += 2;
@@ -27574,8 +27574,8 @@ fn f_80156ce4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80156dd8 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x4c), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156ce4: bad pc {:#x}", pc),
         }
@@ -27598,19 +27598,19 @@ pub fn f_80156de0_at(c: &mut Cpu, pc: u32) { f_80156de0_b(c, pc) }
 #[inline(never)]
 fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80156de0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80156de0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80156de0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80156de0 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x54), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x80156df4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156df4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156df4;
             }
             0x80156df4 => { ins += 16;
@@ -27629,7 +27629,7 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[14] = c.lwz_t(ins, c.r[1].wrapping_add(0x74));
                 c.r[20] = c.r[9] | c.r[9];
                 c.r[21] = c.r[10] | c.r[10];
-                c.lr = 0x80156e34; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156e34; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015211c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156e34;
             }
             0x80156e34 => { ins += 2;
@@ -27647,7 +27647,7 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
             0x80156e44 => { ins += 3;
                 c.r[3] = c.r[22] | c.r[22];
                 c.r[4] = c.r[21] | c.r[21];
-                c.lr = 0x80156e50; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014d740(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156e50; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014d740(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156e50;
             }
             0x80156e50 => { ins += 3;
@@ -27667,7 +27667,7 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[28] | c.r[28];
                 c.r[6] = c.r[0].rotate_left(1) & 0x1;
                 c.r[5] = c.r[17] | c.r[17];
-                c.lr = 0x80156e7c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157a64(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156e7c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157a64(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156e7c;
             }
             0x80156e7c => { ins += 4;
@@ -27677,12 +27677,12 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x801571fc; continue; }
                 pc = 0x80156e8c;
             }
-            0x80156e8c => { ins += 5;
+            0x80156e8c => { ins += 7;
                 c.r[0] = c.r[29].wrapping_mul(0x404);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[28] = c.r[3].wrapping_add(c.r[0]);
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x80156ea0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156ea0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156ea0;
             }
             0x80156ea0 => { ins += 3;
@@ -27807,7 +27807,7 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[5] & c.r[4];
                 c.stw(c.r[28].wrapping_add(0x118), c.r[0]);
                 c.stw(c.r[28].wrapping_add(0x114), c.r[4]);
-                c.lr = 0x80156fc0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80156fc0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80156fc0;
             }
             0x80156fc0 => { ins += 2;
@@ -27836,13 +27836,13 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[29].rotate_left(0) & 0xff;
                 c.r[4] = 0xff;
                 c.r[5] = 0x1;
-                c.lr = 0x80157004; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160aec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157004; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160aec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157004;
             }
             0x80157004 => { ins += 3;
                 c.r[3] = c.r[29].rotate_left(0) & 0xff;
                 c.r[4] = 0xff;
-                c.lr = 0x80157010; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160ed4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157010; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160ed4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157010;
             }
             0x80157010 => { ins += 6;
@@ -27901,13 +27901,13 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[28].wrapping_add(0x3ed), c.r[8]);
                 c.stb(c.r[28].wrapping_add(0x3ec), c.r[8]);
                 c.stw(c.r[28].wrapping_add(0xf4), c.r[5]);
-                c.lr = 0x801570d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801570d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801570d8;
             }
             0x801570d8 => { ins += 3;
                 c.r[3] = c.r[28] | c.r[28];
                 c.r[4] = c.r[26] | c.r[26];
-                c.lr = 0x801570e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801576c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801570e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801576c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801570e4;
             }
             0x801570e4 => { ins += 4;
@@ -27973,7 +27973,7 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80157164 => { ins += 2;
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x8015716c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c038(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015716c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c038(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015716c;
             }
             0x8015716c => { ins += 16;
@@ -28021,7 +28021,7 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801571dc => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x801571e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801571e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801571e4;
             }
             0x801571e4 => { ins += 2;
@@ -28031,12 +28031,12 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801571ec => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x801571f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801571f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801571f4;
             }
             0x801571f4 => { ins += 2;
                 c.r[3] = c.r[28] | c.r[28];
-                c.lr = 0x801571fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801571fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157ec4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801571fc;
             }
             0x801571fc => { ins += 1;
@@ -28045,15 +28045,15 @@ fn f_80156de0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80157200 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x80157208; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157208; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157208;
             }
-            0x80157208 => { ins += 4;
+            0x80157208 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80156de0: bad pc {:#x}", pc),
         }
@@ -28076,12 +28076,12 @@ pub fn f_80157218_at(c: &mut Cpu, pc: u32) { f_80157218_b(c, pc) }
 #[inline(always)]
 fn f_80157218_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80157218;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80157218, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80157218, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80157218 => { ins += 11;
                 c.r[8] = 0x0;
@@ -28118,8 +28118,8 @@ fn f_80157218_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015727c;
             }
             0x8015727c => { ins += 1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80157218: bad pc {:#x}", pc),
         }
@@ -28142,14 +28142,14 @@ pub fn f_80157280_at(c: &mut Cpu, pc: u32) { f_80157280_b(c, pc) }
 #[inline(always)]
 fn f_80157280_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80157280;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80157280, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80157280, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x80157280 => { ins += 10;
+            0x80157280 => { ins += 11;
                 c.r[3] = 0x80440000;
                 c.r[4] = 0x0;
                 c.r[3] = c.r[3].wrapping_add(0x5f50);
@@ -28266,8 +28266,8 @@ fn f_80157280_b(c: &mut Cpu, mut pc: u32) {
             0x80157354 => { ins += 3;
                 c.r[0] = 0x0;
                 c.stw(c.r[6], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80157280: bad pc {:#x}", pc),
         }
@@ -28290,12 +28290,12 @@ pub fn f_80157360_at(c: &mut Cpu, pc: u32) { f_80157360_b(c, pc) }
 #[inline(never)]
 fn f_80157360_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80157360;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80157360, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80157360, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80157360 => { ins += 9;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -28310,7 +28310,7 @@ fn f_80157360_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80157384;
             }
             0x80157384 => { ins += 1;
-                c.lr = 0x80157388; { c.steps = st; c.instrs = ins; c.cr = cr; f_801589fc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157388; { c.steps = st; c.cycles = ins; c.cr = cr; f_801589fc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157388;
             }
             0x80157388 => { ins += 4;
@@ -28320,7 +28320,7 @@ fn f_80157360_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80157450; continue; }
                 pc = 0x80157398;
             }
-            0x80157398 => { ins += 10;
+            0x80157398 => { ins += 12;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[0].wrapping_mul(0x404);
@@ -28333,7 +28333,7 @@ fn f_80157360_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x801573d8; continue; }
                 pc = 0x801573c0;
             }
-            0x801573c0 => { ins += 6;
+            0x801573c0 => { ins += 8;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[0].wrapping_mul(0x404);
@@ -28403,7 +28403,7 @@ fn f_80157360_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80157530; continue; }
                 pc = 0x80157460;
             }
-            0x80157460 => { ins += 20;
+            0x80157460 => { ins += 24;
                 c.r[3] = c.lwz_t(ins, c.r[31].wrapping_add(0xf8));
                 c.r[4] = 0xffffffff;
                 c.stw(c.r[3].wrapping_add(0xc), c.r[5]);
@@ -28648,13 +28648,13 @@ fn f_80157360_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0xfc), c.r[4]);
                 pc = 0x8015769c;
             }
-            0x8015769c => { ins += 5;
+            0x8015769c => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80157360: bad pc {:#x}", pc),
         }
@@ -28677,20 +28677,20 @@ pub fn f_801576b0_at(c: &mut Cpu, pc: u32) { f_801576b0_b(c, pc) }
 #[inline(always)]
 fn f_801576b0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801576b0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801576b0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801576b0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801576b0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(0xf8));
                 c.stw(c.r[3].wrapping_add(0xfc), c.r[0]);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0xf8));
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x8));
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801576b0: bad pc {:#x}", pc),
         }
@@ -28713,12 +28713,12 @@ pub fn f_801576c4_at(c: &mut Cpu, pc: u32) { f_801576c4_b(c, pc) }
 #[inline(always)]
 fn f_801576c4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801576c4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801576c4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801576c4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801576c4 => { ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7b8));
@@ -28786,7 +28786,7 @@ fn f_801576c4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80157740 => { ins += 2;
                 c.r[3] = 0xffffffff;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80157748;
             }
             0x80157748 => { ins += 4;
@@ -28852,13 +28852,13 @@ fn f_801576c4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801577b8 => { ins += 2;
                 c.r[3] = c.r[6] | c.r[6];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801577c0;
             }
             0x801577c0 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0xf4));
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801576c4: bad pc {:#x}", pc),
         }
@@ -28881,12 +28881,12 @@ pub fn f_801577c8_at(c: &mut Cpu, pc: u32) { f_801577c8_b(c, pc) }
 #[inline(always)]
 fn f_801577c8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801577c8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801577c8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801577c8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801577c8 => { ins += 3;
                 c.r[0] = c.r[3].wrapping_add(0x10000);
@@ -28933,13 +28933,13 @@ fn f_801577c8_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80157808 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[4].wrapping_add(0xc));
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80157810;
             }
             0x80157810 => { ins += 2;
                 c.r[3] = 0xffffffff;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801577c8: bad pc {:#x}", pc),
         }
@@ -28962,12 +28962,12 @@ pub fn f_80157818_at(c: &mut Cpu, pc: u32) { f_80157818_b(c, pc) }
 #[inline(never)]
 fn f_80157818_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80157818;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80157818, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80157818, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80157818 => { ins += 14;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -29192,16 +29192,16 @@ fn f_80157818_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[0].rotate_left(17) & 0x1ffff;
                 c.r[3] = c.r[3].rotate_left(0) & 0xff;
                 c.r[4] = (c.r[7].rotate_left(24) & 0xff000000) | (c.r[4] & 0xffffff);
-                c.lr = 0x80157a50; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157a50; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162494(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157a50;
             }
-            0x80157a50 => { ins += 5;
+            0x80157a50 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80157818: bad pc {:#x}", pc),
         }
@@ -29224,19 +29224,19 @@ pub fn f_80157a64_at(c: &mut Cpu, pc: u32) { f_80157a64_b(c, pc) }
 #[inline(never)]
 fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80157a64;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80157a64, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80157a64, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80157a64 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x80157a78; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157a78; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157a78;
             }
             0x80157a78 => { ins += 5;
@@ -29330,7 +29330,7 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80157be0; continue;
                 pc = 0x80157b44;
             }
-            0x80157b44 => { ins += 5;
+            0x80157b44 => { ins += 7;
                 c.r[10] = c.r[31].wrapping_mul(0x404);
                 c.r[10] = c.r[12].wrapping_add(c.r[10]);
                 c.r[22] = c.lhz_t(ins, c.r[10].wrapping_add(0x100));
@@ -29376,7 +29376,7 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80157bd0; continue; }
                 pc = 0x80157bb0;
             }
-            0x80157bb0 => { ins += 6;
+            0x80157bb0 => { ins += 8;
                 c.r[25] = c.r[29].wrapping_mul(0x404);
                 c.r[24] = c.lwz_t(ins, c.r[10].wrapping_add(0x110));
                 c.r[10] = c.r[25].wrapping_add(0x110);
@@ -29446,7 +29446,7 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80157c5c; continue;
                 pc = 0x80157c38;
             }
-            0x80157c38 => { ins += 5;
+            0x80157c38 => { ins += 7;
                 c.r[7] = c.r[23].wrapping_mul(0x404);
                 c.r[0] = c.r[7].wrapping_add(0x100);
                 c.r[0] = c.lhz_t(ins, c.r[12].wrapping_add(c.r[0]));
@@ -29533,7 +29533,7 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80157d6c; continue;
                 pc = 0x80157ce0;
             }
-            0x80157ce0 => { ins += 5;
+            0x80157ce0 => { ins += 7;
                 c.r[10] = c.r[23].wrapping_mul(0x404);
                 c.r[22] = c.r[7].wrapping_add(c.r[10]);
                 c.r[10] = c.lbz_t(ins, c.r[22].wrapping_add(0x11c));
@@ -29572,7 +29572,7 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80157d5c; continue; }
                 pc = 0x80157d3c;
             }
-            0x80157d3c => { ins += 6;
+            0x80157d3c => { ins += 8;
                 c.r[12] = c.r[29].wrapping_mul(0x404);
                 c.r[10] = c.lwz_t(ins, c.r[22].wrapping_add(0x110));
                 c.r[12] = c.r[12].wrapping_add(0x110);
@@ -29632,7 +29632,7 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80157eac; continue;
                 pc = 0x80157da8;
             }
-            0x80157da8 => { ins += 6;
+            0x80157da8 => { ins += 8;
                 c.r[4] = c.r[29].wrapping_mul(0x404);
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = c.r[7].wrapping_add(c.r[4]);
@@ -29704,7 +29704,7 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80157e78; continue;
                 pc = 0x80157e44;
             }
-            0x80157e44 => { ins += 6;
+            0x80157e44 => { ins += 8;
                 c.r[0] = c.r[29].wrapping_mul(0x404);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
@@ -29761,15 +29761,15 @@ fn f_80157a64_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80157eac => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x80157eb4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4810(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157eb4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4810(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157eb4;
             }
-            0x80157eb4 => { ins += 4;
+            0x80157eb4 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80157a64: bad pc {:#x}", pc),
         }
@@ -29792,12 +29792,12 @@ pub fn f_80157ec4_at(c: &mut Cpu, pc: u32) { f_80157ec4_b(c, pc) }
 #[inline(never)]
 fn f_80157ec4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80157ec4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80157ec4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80157ec4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80157ec4 => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -29809,7 +29809,7 @@ fn f_80157ec4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = 0x2;
                 c.stw(c.r[1].wrapping_add(0x8), c.r[30]);
                 c.r[30] = c.r[3] | c.r[3];
-                c.lr = 0x80157eec; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80157eec; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80157eec;
             }
             0x80157eec => { ins += 7;
@@ -29967,7 +29967,7 @@ fn f_80157ec4_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[13].wrapping_add(0xffffa7be), c.r[0]);
                 pc = 0x80158068;
             }
-            0x80158068 => { ins += 8;
+            0x80158068 => { ins += 9;
                 c.r[0] = 0xffffffff;
                 c.stw(c.r[30].wrapping_add(0xf4), c.r[0]);
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
@@ -29975,8 +29975,8 @@ fn f_80157ec4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80157ec4: bad pc {:#x}", pc),
         }
@@ -29999,12 +29999,12 @@ pub fn f_80158088_at(c: &mut Cpu, pc: u32) { f_80158088_b(c, pc) }
 #[inline(never)]
 fn f_80158088_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158088;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158088, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158088, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158088 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -30026,7 +30026,7 @@ fn f_80158088_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 1) { pc = 0x8015816c; continue; }
                 pc = 0x801580c0;
             }
-            0x801580c0 => { ins += 6;
+            0x801580c0 => { ins += 7;
                 c.r[0] = c.r[4].wrapping_add(0x7);
                 c.r[30] = c.r[3].wrapping_add(0xe00);
                 c.r[0] = c.r[0].rotate_left(29) & 0x1fffffff;
@@ -30075,7 +30075,7 @@ fn f_80158088_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x801580d8; continue; }
                 pc = 0x8015816c;
             }
-            0x8015816c => { ins += 9;
+            0x8015816c => { ins += 10;
                 c.r[7] = c.lbz_t(ins, c.r[12].wrapping_add(0x210));
                 c.r[5] = c.r[31].rotate_left(2) & 0xfffffffc;
                 c.r[6] = c.r[3].wrapping_add(0xe00);
@@ -30121,7 +30121,7 @@ fn f_80158088_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 1) { pc = 0x80158238; continue; }
                 pc = 0x801581f4;
             }
-            0x801581f4 => { ins += 6;
+            0x801581f4 => { ins += 7;
                 c.r[0] = c.r[5].wrapping_add(0x7);
                 c.r[7] = c.r[3].wrapping_add(0x800);
                 c.r[0] = c.r[0].rotate_left(29) & 0x1fffffff;
@@ -30144,7 +30144,7 @@ fn f_80158088_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x8015820c; continue; }
                 pc = 0x80158238;
             }
-            0x80158238 => { ins += 9;
+            0x80158238 => { ins += 10;
                 c.r[8] = c.lbz_t(ins, c.r[12].wrapping_add(0x210));
                 c.r[5] = c.r[6].rotate_left(2) & 0xfffffffc;
                 c.r[7] = c.r[3].wrapping_add(0x800);
@@ -30162,7 +30162,7 @@ fn f_80158088_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x8015825c; continue; }
                 pc = 0x80158268;
             }
-            0x80158268 => { ins += 4;
+            0x80158268 => { ins += 5;
                 c.r[0] = 0x8;
                 c.r[4] = c.r[3].wrapping_add(0x900);
                 c.r[3] = 0xff;
@@ -30216,8 +30216,8 @@ fn f_80158088_b(c: &mut Cpu, mut pc: u32) {
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158088: bad pc {:#x}", pc),
         }
@@ -30240,12 +30240,12 @@ pub fn f_80158328_at(c: &mut Cpu, pc: u32) { f_80158328_b(c, pc) }
 #[inline(always)]
 fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158328;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158328, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158328, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158328 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -30259,7 +30259,7 @@ fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x18), c.r[30]);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[29] = c.r[3] | c.r[3];
-                c.lr = 0x80158358; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157a64(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158358; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157a64(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158358;
             }
             0x80158358 => { ins += 4;
@@ -30269,7 +30269,7 @@ fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80158404; continue; }
                 pc = 0x80158368;
             }
-            0x80158368 => { ins += 16;
+            0x80158368 => { ins += 18;
                 c.r[31] = c.r[30].wrapping_mul(0x404);
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[3] = 0x10000;
@@ -30285,7 +30285,7 @@ fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[3].wrapping_add(0x100), c.r[4]);
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[3] = c.r[0].wrapping_add(c.r[31]);
-                c.lr = 0x801583a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801583a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801583a8;
             }
             0x801583a8 => { ins += 7;
@@ -30295,7 +30295,7 @@ fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[4] = c.r[0].wrapping_add(c.r[31]);
                 c.stw(c.r[4].wrapping_add(0xf4), c.r[5]);
-                c.lr = 0x801583c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801583c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801583c4;
             }
             0x801583c4 => { ins += 2;
@@ -30305,14 +30305,14 @@ fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
             }
             0x801583cc => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x801583d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801583d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801583d4;
             }
             0x801583d4 => { ins += 4;
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[4] = 0x2;
                 c.r[3] = c.r[0].wrapping_add(c.r[31]);
-                c.lr = 0x801583e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801583e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801583e4;
             }
             0x801583e4 => { ins += 8;
@@ -30323,10 +30323,10 @@ fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[3].wrapping_add(0x34), c.r[5]);
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[3] = c.r[0].wrapping_add(c.r[31]);
-                c.lr = 0x80158404; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158404; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157818(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158404;
             }
-            0x80158404 => { ins += 8;
+            0x80158404 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
@@ -30334,8 +30334,8 @@ fn f_80158328_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158328: bad pc {:#x}", pc),
         }
@@ -30358,12 +30358,12 @@ pub fn f_80158424_at(c: &mut Cpu, pc: u32) { f_80158424_b(c, pc) }
 #[inline(never)]
 fn f_80158424_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158424;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158424, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158424, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158424 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -30381,7 +30381,7 @@ fn f_80158424_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80158454;
             }
             0x80158454 => { ins += 1;
-                c.lr = 0x80158458; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158458; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016246c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158458;
             }
             0x80158458 => { ins += 2;
@@ -30391,10 +30391,10 @@ fn f_80158424_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80158460 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x80158468; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158468; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158468;
             }
-            0x80158468 => { ins += 9;
+            0x80158468 => { ins += 11;
                 c.r[29] = c.r[30].wrapping_mul(0x404);
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[4] = 0x2;
@@ -30403,7 +30403,7 @@ fn f_80158424_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[30] = c.r[0].wrapping_add(c.r[29]);
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x8015848c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015848c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015848c;
             }
             0x8015848c => { ins += 7;
@@ -30570,15 +30570,15 @@ fn f_80158424_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[3].wrapping_add(0x11c), c.r[4]);
                 pc = 0x80158620;
             }
-            0x80158620 => { ins += 7;
+            0x80158620 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158424: bad pc {:#x}", pc),
         }
@@ -30601,14 +30601,14 @@ pub fn f_8015863c_at(c: &mut Cpu, pc: u32) { f_8015863c_b(c, pc) }
 #[inline(never)]
 fn f_8015863c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015863c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015863c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015863c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8015863c => { ins += 15;
+            0x8015863c => { ins += 17;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.r[4] = 0x80440000;
@@ -30628,7 +30628,7 @@ fn f_8015863c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80158678 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x80158680; { c.steps = st; c.instrs = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158680; { c.steps = st; c.cycles = ins; c.cr = cr; f_80157360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158680;
             }
             0x80158680 => { ins += 13;
@@ -30644,7 +30644,7 @@ fn f_8015863c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = 0x2;
                 c.stw(c.r[30].wrapping_add(0x114), c.r[5]);
                 c.stw(c.r[30].wrapping_add(0x110), c.r[0]);
-                c.lr = 0x801586b4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801586b4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156ce4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801586b4;
             }
             0x801586b4 => { ins += 7;
@@ -30815,23 +30815,23 @@ fn f_8015863c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80158844 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015884c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014e7d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015884c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014e7d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015884c;
             }
             0x8015884c => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x80158854; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158854; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158854;
             }
-            0x80158854 => { ins += 7;
+            0x80158854 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015863c: bad pc {:#x}", pc),
         }
@@ -30854,12 +30854,12 @@ pub fn f_80158870_at(c: &mut Cpu, pc: u32) { f_80158870_b(c, pc) }
 #[inline(always)]
 fn f_80158870_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158870;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158870, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158870, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158870 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -30929,7 +30929,7 @@ fn f_80158870_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80158910; continue;
                 pc = 0x801588e4;
             }
-            0x801588e4 => { ins += 8;
+            0x801588e4 => { ins += 10;
                 c.r[3] = c.r[6].rotate_left(0) & 0xff;
                 c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[3].wrapping_mul(0x404);
@@ -30941,7 +30941,7 @@ fn f_80158870_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80158904;
             }
             0x80158904 => { ins += 1;
-                c.lr = 0x80158908; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158908; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158908;
             }
             0x80158908 => { ins += 1;
@@ -30958,14 +30958,14 @@ fn f_80158870_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x801588e4; continue; }
                 pc = 0x8015891c;
             }
-            0x8015891c => { ins += 6;
+            0x8015891c => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[3] = c.r[5] | c.r[5];
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158870: bad pc {:#x}", pc),
         }
@@ -30988,12 +30988,12 @@ pub fn f_80158934_at(c: &mut Cpu, pc: u32) { f_80158934_b(c, pc) }
 #[inline(always)]
 fn f_80158934_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158934;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158934, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158934, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158934 => { ins += 4;
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0xf4));
@@ -31025,7 +31025,7 @@ fn f_80158934_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80158974 => { ins += 2;
                 c.r[3] = 0x1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015897c;
             }
             0x8015897c => { ins += 7;
@@ -31040,13 +31040,13 @@ fn f_80158934_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80158998 => { ins += 2;
                 c.r[3] = 0x1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801589a0;
             }
             0x801589a0 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158934: bad pc {:#x}", pc),
         }
@@ -31069,24 +31069,24 @@ pub fn f_801589a8_at(c: &mut Cpu, pc: u32) { f_801589a8_b(c, pc) }
 #[inline(always)]
 fn f_801589a8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801589a8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801589a8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801589a8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801589a8 => { ins += 4;
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0xf4));
                 c.r[0] = c.r[4].wrapping_add(0x10000);
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xffff);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801589b8;
             }
             0x801589b8 => { ins += 3;
                 c.r[5] = c.lbz_t(ins, c.r[3].wrapping_add(0x121));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[5], 0xff);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801589c4;
             }
             0x801589c4 => { ins += 4;
@@ -31100,7 +31100,7 @@ fn f_801589a8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x80440000;
                 c.r[3] = c.r[3].wrapping_add(0x6e50);
                 c.stb(c.r[3].wrapping_add(c.r[6]), c.r[6]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x801589e4;
             }
             0x801589e4 => { ins += 6;
@@ -31109,8 +31109,8 @@ fn f_801589a8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x6e90);
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
                 c.stb(c.r[3].wrapping_add(c.r[5]), c.r[6]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801589a8: bad pc {:#x}", pc),
         }
@@ -31133,24 +31133,24 @@ pub fn f_801589fc_at(c: &mut Cpu, pc: u32) { f_801589fc_b(c, pc) }
 #[inline(always)]
 fn f_801589fc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x801589fc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x801589fc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x801589fc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x801589fc => { ins += 4;
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0xf4));
                 c.r[0] = c.r[4].wrapping_add(0x10000);
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0xffff);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80158a0c;
             }
             0x80158a0c => { ins += 3;
                 c.r[5] = c.lbz_t(ins, c.r[3].wrapping_add(0x121));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[5], 0xff);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80158a18;
             }
             0x80158a18 => { ins += 4;
@@ -31165,13 +31165,13 @@ fn f_801589fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].wrapping_add(0x6e50);
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(c.r[6]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], c.r[6]);
-                if !cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if !cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80158a3c;
             }
             0x80158a3c => { ins += 3;
                 c.r[0] = 0xff;
                 c.stb(c.r[3].wrapping_add(c.r[6]), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80158a48;
             }
             0x80158a48 => { ins += 7;
@@ -31181,14 +31181,14 @@ fn f_801589fc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(c.r[5]));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[6], c.r[0]);
-                if !cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if !cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x80158a64;
             }
             0x80158a64 => { ins += 3;
                 c.r[0] = 0xff;
                 c.stb(c.r[3].wrapping_add(c.r[5]), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_801589fc: bad pc {:#x}", pc),
         }
@@ -31211,14 +31211,14 @@ pub fn f_80158a70_at(c: &mut Cpu, pc: u32) { f_80158a70_b(c, pc) }
 #[inline(always)]
 fn f_80158a70_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158a70;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158a70, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158a70, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x80158a70 => { ins += 5;
+            0x80158a70 => { ins += 6;
                 c.r[3] = 0x80440000;
                 c.r[0] = 0x4;
                 c.r[5] = c.r[3].wrapping_add(0x6e90);
@@ -31266,7 +31266,7 @@ fn f_80158a70_b(c: &mut Cpu, mut pc: u32) {
                 c.ctr = c.ctr.wrapping_sub(1); if c.ctr != 0 { pc = 0x80158a84; continue; }
                 pc = 0x80158b18;
             }
-            0x80158b18 => { ins += 4;
+            0x80158b18 => { ins += 5;
                 c.r[3] = 0x80440000;
                 c.r[0] = 0x2;
                 c.r[3] = c.r[3].wrapping_add(0x6e50);
@@ -31311,8 +31311,8 @@ fn f_80158a70_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80158bb0;
             }
             0x80158bb0 => { ins += 1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158a70: bad pc {:#x}", pc),
         }
@@ -31335,12 +31335,12 @@ pub fn f_80158bb4_at(c: &mut Cpu, pc: u32) { f_80158bb4_b(c, pc) }
 #[inline(always)]
 fn f_80158bb4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158bb4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158bb4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158bb4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158bb4 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -31357,8 +31357,8 @@ fn f_80158bb4_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x10); let v = c.f[0]; c.stfd(ea, v); }
                 c.r[3] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158bb4: bad pc {:#x}", pc),
         }
@@ -31381,12 +31381,12 @@ pub fn f_80158bf0_at(c: &mut Cpu, pc: u32) { f_80158bf0_b(c, pc) }
 #[inline(always)]
 fn f_80158bf0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158bf0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158bf0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158bf0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158bf0 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -31454,7 +31454,7 @@ fn f_80158bf0_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[0] - c.f[1]); c.f[0] = v; c.ps1[0] = v; }
                 pc = 0x80158c98;
             }
-            0x80158c98 => { ins += 11;
+            0x80158c98 => { ins += 27;
                 c.r[0] = 0x43300000;
                 c.r[3] = 0x80430000;
                 c.stw(c.r[1].wrapping_add(0x18), c.r[0]);
@@ -31465,15 +31465,15 @@ fn f_80158bf0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x18); c.f[0] = c.lfd(ea); }
                 { let v = s(c.f[0] - c.f[1]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[2] / c.f[0]); c.f[1] = v; c.ps1[1] = v; }
-                c.lr = 0x80158cc4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158cc4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158cc4;
             }
-            0x80158cc4 => { ins += 4;
+            0x80158cc4 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158bf0: bad pc {:#x}", pc),
         }
@@ -31496,12 +31496,12 @@ pub fn f_80158cd4_at(c: &mut Cpu, pc: u32) { f_80158cd4_b(c, pc) }
 #[inline(always)]
 fn f_80158cd4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158cd4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158cd4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158cd4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158cd4 => { ins += 14;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -31517,22 +31517,22 @@ fn f_80158cd4_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x8); c.f[0] = c.lfd(ea); }
                 { let v = s(c.f[0] - c.f[2]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[3] * c.f[0]); c.f[2] = v; c.ps1[2] = v; }
-                c.lr = 0x80158d0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800ce358(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158d0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce358(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158d0c;
             }
             0x80158d0c => { ins += 4;
                 { let v = s(c.f[1]); c.f[1] = v; c.ps1[1] = v; }
                 { let ea = c.r[2].wrapping_add(0xffff9d74); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
                 { let v = s(c.f[0] * c.f[1]); c.f[1] = v; c.ps1[1] = v; }
-                c.lr = 0x80158d1c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158d1c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158d1c;
             }
-            0x80158d1c => { ins += 4;
+            0x80158d1c => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158cd4: bad pc {:#x}", pc),
         }
@@ -31555,12 +31555,12 @@ pub fn f_80158d2c_at(c: &mut Cpu, pc: u32) { f_80158d2c_b(c, pc) }
 #[inline(never)]
 fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158d2c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158d2c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158d2c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158d2c => { ins += 4;
                 c.r[4] = c.lbz_t(ins, c.r[3]);
@@ -31621,7 +31621,7 @@ fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80158dac; continue; }
                 pc = 0x80158d88;
             }
-            0x80158d88 => { ins += 9;
+            0x80158d88 => { ins += 48;
                 c.r[5] = 0x1;
                 c.r[4] = 0x0;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[5]);
@@ -31640,7 +31640,7 @@ fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80158dec; continue; }
                 pc = 0x80158dbc;
             }
-            0x80158dbc => { ins += 12;
+            0x80158dbc => { ins += 51;
                 c.r[4] = 0x2;
                 c.r[6] = 0x7fff0000;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
@@ -31726,7 +31726,7 @@ fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x80158e94; continue; }
                 pc = 0x80158e78;
             }
-            0x80158e78 => { ins += 7;
+            0x80158e78 => { ins += 46;
                 c.r[4] = 0x0;
                 c.r[5] = 0x7fff0000;
                 c.stw(c.r[3].wrapping_add(0x8), c.r[4]);
@@ -31736,7 +31736,7 @@ fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80158f90; continue;
                 pc = 0x80158e94;
             }
-            0x80158e94 => { ins += 8;
+            0x80158e94 => { ins += 47;
                 c.r[4] = 0x0;
                 c.r[5] = 0xc10000;
                 c.stw(c.r[3].wrapping_add(0xc), c.r[4]);
@@ -31747,7 +31747,7 @@ fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80158f90; continue;
                 pc = 0x80158eb4;
             }
-            0x80158eb4 => { ins += 14;
+            0x80158eb4 => { ins += 22;
                 c.r[5] = c.lhz_t(ins, c.r[3].wrapping_add(0x1c));
                 c.r[4] = 0x15390000;
                 c.r[6] = c.r[4].wrapping_add(0x949);
@@ -31764,7 +31764,7 @@ fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80158f24; continue; }
                 pc = 0x80158eec;
             }
-            0x80158eec => { ins += 14;
+            0x80158eec => { ins += 53;
                 c.r[4] = 0x2;
                 c.r[5] = 0x7fff0000;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[4]);
@@ -31819,8 +31819,8 @@ fn f_80158d2c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80158f90 => { ins += 2;
                 c.r[3] = c.r[0] | c.r[0];
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158d2c: bad pc {:#x}", pc),
         }
@@ -31843,12 +31843,12 @@ pub fn f_80158f98_at(c: &mut Cpu, pc: u32) { f_80158f98_b(c, pc) }
 #[inline(always)]
 fn f_80158f98_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158f98;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158f98, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158f98, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158f98 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -31856,15 +31856,15 @@ fn f_80158f98_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.r[0] = 0x0;
                 c.stb(c.r[3].wrapping_add(0x1), c.r[0]);
-                c.lr = 0x80158fb0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158d2c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80158fb0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158d2c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80158fb0;
             }
-            0x80158fb0 => { ins += 4;
+            0x80158fb0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158f98: bad pc {:#x}", pc),
         }
@@ -31887,12 +31887,12 @@ pub fn f_80158fc0_at(c: &mut Cpu, pc: u32) { f_80158fc0_b(c, pc) }
 #[inline(always)]
 fn f_80158fc0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80158fc0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80158fc0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80158fc0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80158fc0 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -31935,7 +31935,7 @@ fn f_80158fc0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801590fc; continue;
                 pc = 0x8015901c;
             }
-            0x8015901c => { ins += 5;
+            0x8015901c => { ins += 44;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x8));
                 c.r[0] = divwu(c.r[0], c.r[4]);
                 c.r[0] = c.r[0].wrapping_neg();
@@ -31983,7 +31983,7 @@ fn f_80158fc0_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[3] * c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] - c.f[1]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[2] * c.f[0]); c.f[1] = v; c.ps1[1] = v; }
-                c.lr = 0x801590ac; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801590ac; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801590ac;
             }
             0x801590ac => { ins += 7;
@@ -32007,7 +32007,7 @@ fn f_80158fc0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801590fc; continue;
                 pc = 0x801590e8;
             }
-            0x801590e8 => { ins += 4;
+            0x801590e8 => { ins += 43;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0xc));
                 c.r[0] = divwu(c.r[0], c.r[3]);
                 c.r[0] = c.r[0].wrapping_neg();
@@ -32018,13 +32018,13 @@ fn f_80158fc0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x801590fc;
             }
-            0x801590fc => { ins += 5;
+            0x801590fc => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80158fc0: bad pc {:#x}", pc),
         }
@@ -32047,12 +32047,12 @@ pub fn f_80159110_at(c: &mut Cpu, pc: u32) { f_80159110_b(c, pc) }
 #[inline(always)]
 fn f_80159110_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159110;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159110, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159110, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159110 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -32109,7 +32109,7 @@ fn f_80159110_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159264; continue;
                 pc = 0x80159180;
             }
-            0x80159180 => { ins += 5;
+            0x80159180 => { ins += 44;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x8));
                 c.r[0] = divwu(c.r[0], c.r[4]);
                 c.r[0] = c.r[0].wrapping_neg();
@@ -32157,7 +32157,7 @@ fn f_80159110_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[3] * c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] - c.f[1]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[2] * c.f[0]); c.f[1] = v; c.ps1[1] = v; }
-                c.lr = 0x80159210; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159210; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159210;
             }
             0x80159210 => { ins += 7;
@@ -32180,7 +32180,7 @@ fn f_80159110_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159264; continue;
                 pc = 0x80159248;
             }
-            0x80159248 => { ins += 4;
+            0x80159248 => { ins += 43;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0xc));
                 c.r[0] = divwu(c.r[0], c.r[3]);
                 c.r[0] = c.r[0].wrapping_neg();
@@ -32196,13 +32196,13 @@ fn f_80159110_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x80159264;
             }
-            0x80159264 => { ins += 5;
+            0x80159264 => { ins += 6;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159110: bad pc {:#x}", pc),
         }
@@ -32225,12 +32225,12 @@ pub fn f_80159278_at(c: &mut Cpu, pc: u32) { f_80159278_b(c, pc) }
 #[inline(never)]
 fn f_80159278_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159278;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159278, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159278, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159278 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -32295,7 +32295,7 @@ fn f_80159278_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159300;
             }
             0x80159300 => { ins += 1;
-                c.lr = 0x80159304; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158d2c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159304; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158d2c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159304;
             }
             0x80159304 => { ins += 2;
@@ -32388,7 +32388,7 @@ fn f_80159278_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801593dc;
             }
             0x801593dc => { ins += 1;
-                c.lr = 0x801593e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158d2c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x801593e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158d2c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x801593e0;
             }
             0x801593e0 => { ins += 2;
@@ -32404,13 +32404,13 @@ fn f_80159278_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5], c.r[3]);
                 pc = 0x801593fc;
             }
-            0x801593fc => { ins += 5;
+            0x801593fc => { ins += 6;
                 c.r[3] = c.r[0] | c.r[0];
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159278: bad pc {:#x}", pc),
         }
@@ -32433,12 +32433,12 @@ pub fn f_80159410_at(c: &mut Cpu, pc: u32) { f_80159410_b(c, pc) }
 #[inline(always)]
 fn f_80159410_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159410;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159410, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159410, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159410 => { ins += 12;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -32459,7 +32459,7 @@ fn f_80159410_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[28] | c.r[28];
                 c.r[4] = c.r[29] | c.r[29];
                 c.r[5] = c.r[30] | c.r[30];
-                c.lr = 0x80159450; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159278(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159450; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159278(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159450;
             }
             0x80159450 => { ins += 2;
@@ -32486,7 +32486,7 @@ fn f_80159410_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x80159474;
             }
-            0x80159474 => { ins += 8;
+            0x80159474 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -32494,8 +32494,8 @@ fn f_80159410_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159410: bad pc {:#x}", pc),
         }
@@ -32518,14 +32518,14 @@ pub fn f_80159494_at(c: &mut Cpu, pc: u32) { f_80159494_b(c, pc) }
 #[inline(always)]
 fn f_80159494_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159494;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159494, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159494, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x80159494 => { ins += 7;
+            0x80159494 => { ins += 8;
                 c.r[3] = 0x80440000;
                 c.r[4] = 0x0;
                 c.r[5] = c.r[3].wrapping_add(0x6f10);
@@ -32578,8 +32578,8 @@ fn f_80159494_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].wrapping_add(0x6f10);
                 c.sth(c.r[3].wrapping_add(0x948), c.r[0]);
                 c.stw(c.r[3].wrapping_add(0x94c), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159494: bad pc {:#x}", pc),
         }
@@ -32602,12 +32602,12 @@ pub fn f_80159550_at(c: &mut Cpu, pc: u32) { f_80159550_b(c, pc) }
 #[inline(never)]
 fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159550;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159550, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159550, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159550 => { ins += 15;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -32627,7 +32627,7 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801595cc; continue;
                 pc = 0x8015958c;
             }
-            0x8015958c => { ins += 7;
+            0x8015958c => { ins += 9;
                 c.r[0] = c.r[9].rotate_left(0) & 0xff;
                 c.r[0] = c.r[0].wrapping_mul(0x24);
                 c.r[3] = c.r[7].wrapping_add(c.r[0]);
@@ -32669,7 +32669,7 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159628; continue;
                 pc = 0x801595ec;
             }
-            0x801595ec => { ins += 6;
+            0x801595ec => { ins += 8;
                 c.r[0] = c.r[31].rotate_left(0) & 0xff;
                 c.r[5] = c.r[0].wrapping_mul(0x24);
                 c.r[3] = c.r[4].wrapping_add(c.r[5]);
@@ -32717,7 +32717,7 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
             0x80159658 => { ins += 3;
                 c.r[3] = c.lbz_t(ins, c.r[3]);
                 c.r[4] = 0x0;
-                c.lr = 0x80159664; { c.steps = st; c.instrs = ins; c.cr = cr; f_80163db0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159664; { c.steps = st; c.cycles = ins; c.cr = cr; f_80163db0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159664;
             }
             0x80159664 => { ins += 7;
@@ -32727,15 +32727,15 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[5] = c.lwz_t(ins, c.r[5].wrapping_add(0x4));
                 c.r[4] = c.r[0] | c.r[0];
-                c.lr = 0x80159680; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162858(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159680; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162858(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159680;
             }
             0x80159680 => { ins += 2;
                 c.r[3] = c.r[30] | c.r[30];
-                c.lr = 0x80159688; { c.steps = st; c.instrs = ins; c.cr = cr; f_801628a0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159688; { c.steps = st; c.cycles = ins; c.cr = cr; f_801628a0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159688;
             }
-            0x80159688 => { ins += 7;
+            0x80159688 => { ins += 9;
                 c.r[0] = c.r[31].rotate_left(0) & 0xff;
                 c.r[4] = 0x80440000;
                 c.r[31] = c.r[0].wrapping_mul(0x24);
@@ -32753,7 +32753,7 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x801596e0; continue;
                 pc = 0x801596b8;
             }
-            0x801596b8 => { ins += 6;
+            0x801596b8 => { ins += 8;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[0] = c.r[0].wrapping_mul(0x24);
                 c.r[4] = c.r[6].wrapping_add(c.r[0]);
@@ -32790,7 +32790,7 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[4].wrapping_add(0x6f10);
                 c.r[28] = c.r[0].wrapping_add(c.r[31]);
                 { let ea = c.r[28].wrapping_add(0x1a); c.sth(ea, c.r[5]); c.r[28] = ea; }
-                c.lr = 0x80159710; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016288c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159710; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016288c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159710;
             }
             0x80159710 => { ins += 8;
@@ -32804,11 +32804,11 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80159750; continue; }
                 pc = 0x80159730;
             }
-            0x80159730 => { ins += 4;
+            0x80159730 => { ins += 5;
                 c.r[4] = c.r[4].wrapping_add(0x18);
                 c.r[3] = 0x0;
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x80159740; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x80159740; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x80159740;
             }
             0x80159740 => { ins += 4;
@@ -32822,7 +32822,7 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x80159760; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162858(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159760; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162858(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159760;
             }
             0x80159760 => { ins += 1;
@@ -32833,14 +32833,14 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[30] | c.r[30];
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x80159774; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162858(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159774; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162858(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159774;
             }
             0x80159774 => { ins += 1;
                 c.r[3] = 0xffffffff;
                 pc = 0x80159778;
             }
-            0x80159778 => { ins += 8;
+            0x80159778 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -32848,8 +32848,8 @@ fn f_80159550_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159550: bad pc {:#x}", pc),
         }
@@ -32872,12 +32872,12 @@ pub fn f_80159798_at(c: &mut Cpu, pc: u32) { f_80159798_b(c, pc) }
 #[inline(always)]
 fn f_80159798_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159798;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159798, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159798, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159798 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -32900,7 +32900,7 @@ fn f_80159798_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80159828; continue; }
                 pc = 0x801597d4;
             }
-            0x801597d4 => { ins += 6;
+            0x801597d4 => { ins += 8;
                 c.r[31] = c.r[0].wrapping_mul(0x24);
                 c.r[0] = c.r[3].rotate_left(24) & 0xffff;
                 c.r[4] = c.r[5].wrapping_add(c.r[31]);
@@ -32915,11 +32915,11 @@ fn f_80159798_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80159808; continue; }
                 pc = 0x801597f8;
             }
-            0x801597f8 => { ins += 4;
+            0x801597f8 => { ins += 5;
                 c.r[4] = c.r[4].wrapping_add(0x18);
                 c.r[3] = 0x2;
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x80159808; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x80159808; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x80159808;
             }
             0x80159808 => { ins += 8;
@@ -32933,14 +32933,14 @@ fn f_80159798_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[30].wrapping_add(c.r[0]), c.r[3]);
                 pc = 0x80159828;
             }
-            0x80159828 => { ins += 6;
+            0x80159828 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159798: bad pc {:#x}", pc),
         }
@@ -32963,12 +32963,12 @@ pub fn f_80159840_at(c: &mut Cpu, pc: u32) { f_80159840_b(c, pc) }
 #[inline(never)]
 fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159840;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159840, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159840, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159840 => { ins += 9;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -32996,7 +32996,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159a20; continue;
                 pc = 0x80159878;
             }
-            0x80159878 => { ins += 21;
+            0x80159878 => { ins += 26;
                 c.r[5] = 0x24920000;
                 c.r[0] = 0x0;
                 c.r[5] = c.r[5].wrapping_add(0x4925);
@@ -33017,7 +33017,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x20), c.r[0]);
                 c.r[12] = c.lwz_t(ins, c.r[5].wrapping_add(0x94c));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x801598cc; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x801598cc; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x801598cc;
             }
             0x801598cc => { ins += 2;
@@ -33025,7 +33025,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80159a20; continue; }
                 pc = 0x801598d4;
             }
-            0x801598d4 => { ins += 10;
+            0x801598d4 => { ins += 53;
                 c.r[4] = 0x80440000;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x4));
                 c.r[4] = c.r[4].wrapping_add(0x6f10);
@@ -33053,7 +33053,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159a20; continue;
                 pc = 0x80159914;
             }
-            0x80159914 => { ins += 22;
+            0x80159914 => { ins += 27;
                 c.r[4] = 0x24920000;
                 c.r[3] = 0x80440000;
                 c.r[4] = c.r[4].wrapping_add(0x4925);
@@ -33075,7 +33075,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x20), c.r[0]);
                 c.r[12] = c.lwz_t(ins, c.r[30].wrapping_add(0x94c));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8015996c; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8015996c; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8015996c;
             }
             0x8015996c => { ins += 2;
@@ -33083,7 +33083,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80159a20; continue; }
                 pc = 0x80159974;
             }
-            0x80159974 => { ins += 8;
+            0x80159974 => { ins += 51;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x4));
                 c.r[4] = c.lwz_t(ins, c.r[30].wrapping_add(0x4));
                 c.r[3] = c.r[0].wrapping_add(c.r[3]);
@@ -33104,7 +33104,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159a20; continue;
                 pc = 0x801599a4;
             }
-            0x801599a4 => { ins += 22;
+            0x801599a4 => { ins += 27;
                 c.r[5] = 0x24920000;
                 c.r[3] = 0x80440000;
                 c.r[5] = c.r[5].wrapping_add(0x4925);
@@ -33126,7 +33126,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[31].wrapping_add(0x10);
                 c.r[12] = c.lwz_t(ins, c.r[30].wrapping_add(0x94c));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x801599fc; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x801599fc; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x801599fc;
             }
             0x801599fc => { ins += 2;
@@ -33134,7 +33134,7 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80159a20; continue; }
                 pc = 0x80159a04;
             }
-            0x80159a04 => { ins += 7;
+            0x80159a04 => { ins += 50;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x4));
                 c.r[4] = c.lwz_t(ins, c.r[30].wrapping_add(0x4));
                 c.r[3] = c.r[0].wrapping_add(c.r[3]);
@@ -33144,14 +33144,14 @@ fn f_80159840_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x4), c.r[0]);
                 pc = 0x80159a20;
             }
-            0x80159a20 => { ins += 6;
+            0x80159a20 => { ins += 7;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x8));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159840: bad pc {:#x}", pc),
         }
@@ -33174,19 +33174,19 @@ pub fn f_80159a38_at(c: &mut Cpu, pc: u32) { f_80159a38_b(c, pc) }
 #[inline(never)]
 fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159a38;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159a38, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159a38, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159a38 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80159a4c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159a4c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159a4c;
             }
             0x80159a4c => { ins += 5;
@@ -33210,7 +33210,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159a74 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x80159a7c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162878(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159a7c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162878(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159a7c;
             }
             0x80159a7c => { ins += 2;
@@ -33218,7 +33218,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x80159c20; continue; }
                 pc = 0x80159a84;
             }
-            0x80159a84 => { ins += 8;
+            0x80159a84 => { ins += 10;
                 c.r[4] = c.lbz_t(ins, c.r[30].wrapping_add(0x908));
                 c.r[3] = 0x80440000;
                 c.r[0] = c.r[3].wrapping_add(0x6f10);
@@ -33226,7 +33226,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[4].wrapping_mul(0x24);
                 c.r[4] = c.r[0].wrapping_add(c.r[4]);
                 c.r[27] = c.r[4].wrapping_add(0x8);
-                c.lr = 0x80159aa4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162e14(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159aa4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162e14(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159aa4;
             }
             0x80159aa4 => { ins += 4;
@@ -33236,7 +33236,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x80159ad8; continue; }
                 pc = 0x80159ab4;
             }
-            0x80159ab4 => { ins += 9;
+            0x80159ab4 => { ins += 15;
                 c.r[3] = 0x24920000;
                 c.r[0] = c.r[3].wrapping_add(0x4925);
                 c.r[3] = mulhwu(c.r[0], c.r[28]);
@@ -33274,7 +33274,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
             0x80159af8 => { ins += 3;
                 c.r[3] = c.r[27] | c.r[27];
                 c.r[4] = c.r[26] | c.r[26];
-                c.lr = 0x80159b04; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159840(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159b04; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159840(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159b04;
             }
             0x80159b04 => { ins += 1;
@@ -33283,7 +33283,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159b08 => { ins += 2;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x3));
-                c.lr = 0x80159b10; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159b10; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159b10;
             }
             0x80159b10 => { ins += 5;
@@ -33297,7 +33297,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
             0x80159b24 => { ins += 3;
                 c.r[3] = c.r[27] | c.r[27];
                 c.r[4] = c.r[26] | c.r[26];
-                c.lr = 0x80159b30; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159840(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159b30; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159840(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159b30;
             }
             0x80159b30 => { ins += 3;
@@ -33323,7 +33323,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[27].wrapping_add(0x8), c.r[0]);
                 pc = 0x80159b68;
             }
-            0x80159b68 => { ins += 13;
+            0x80159b68 => { ins += 17;
                 c.stw(c.r[27].wrapping_add(0xc), c.r[28]);
                 c.r[5] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x3));
@@ -33340,7 +33340,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159b9c;
             }
             0x80159b9c => { ins += 1;
-                c.lr = 0x80159ba0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801631f4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159ba0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801631f4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159ba0;
             }
             0x80159ba0 => { ins += 2;
@@ -33356,15 +33356,15 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159bb4 => { ins += 2;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x3));
-                c.lr = 0x80159bbc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159bbc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016265c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159bbc;
             }
-            0x80159bbc => { ins += 5;
+            0x80159bbc => { ins += 7;
                 c.r[0] = c.lbz_t(ins, c.r[27].wrapping_add(0x3));
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa728));
                 c.r[0] = c.r[0].wrapping_mul(0x404);
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
-                c.lr = 0x80159bd0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80156894(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159bd0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80156894(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159bd0;
             }
             0x80159bd0 => { ins += 1;
@@ -33373,7 +33373,7 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159bd4 => { ins += 2;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x3));
-                c.lr = 0x80159bdc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159bdc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015863c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159bdc;
             }
             0x80159bdc => { ins += 9;
@@ -33408,15 +33408,15 @@ fn f_80159a38_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159c30 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x80159c38; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159c38; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159c38;
             }
-            0x80159c38 => { ins += 4;
+            0x80159c38 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159a38: bad pc {:#x}", pc),
         }
@@ -33439,18 +33439,18 @@ pub fn f_80159c48_at(c: &mut Cpu, pc: u32) { f_80159c48_b(c, pc) }
 #[inline(always)]
 fn f_80159c48_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159c48;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159c48, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159c48, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159c48 => { ins += 3;
                 c.r[0] = 0x0;
                 c.sth(c.r[13].wrapping_add(0xffffa7c8), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159c48: bad pc {:#x}", pc),
         }
@@ -33473,12 +33473,12 @@ pub fn f_80159c54_at(c: &mut Cpu, pc: u32) { f_80159c54_b(c, pc) }
 #[inline(never)]
 fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159c54;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159c54, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159c54, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159c54 => { ins += 6;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -33574,7 +33574,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159cec => { ins += 2;
                 c.r[4] = c.r[6].wrapping_add(0x8);
-                c.lr = 0x80159cf4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80151b84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159cf4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80151b84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159cf4;
             }
             0x80159cf4 => { ins += 1;
@@ -33583,7 +33583,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159cf8 => { ins += 2;
                 c.r[4] = 0x0;
-                c.lr = 0x80159d00; { c.steps = st; c.instrs = ins; c.cr = cr; f_80151b84(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159d00; { c.steps = st; c.cycles = ins; c.cr = cr; f_80151b84(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159d00;
             }
             0x80159d00 => { ins += 1;
@@ -33591,7 +33591,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159d04;
             }
             0x80159d04 => { ins += 1;
-                c.lr = 0x80159d08; { c.steps = st; c.instrs = ins; c.cr = cr; f_80151e88(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159d08; { c.steps = st; c.cycles = ins; c.cr = cr; f_80151e88(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159d08;
             }
             0x80159d08 => { ins += 1;
@@ -33655,7 +33655,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             0x80159d6c => { ins += 3;
                 c.r[3] = c.r[3] | 0x4000;
                 c.r[4] = c.r[6].wrapping_add(0x8);
-                c.lr = 0x80159d78; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150c78(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159d78; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150c78(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159d78;
             }
             0x80159d78 => { ins += 1;
@@ -33665,7 +33665,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             0x80159d7c => { ins += 3;
                 c.r[3] = c.r[3] | 0x4000;
                 c.r[4] = 0x0;
-                c.lr = 0x80159d88; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150c78(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159d88; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150c78(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159d88;
             }
             0x80159d88 => { ins += 1;
@@ -33674,7 +33674,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159d8c => { ins += 2;
                 c.r[3] = c.r[3] | 0x4000;
-                c.lr = 0x80159d94; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150e68(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159d94; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150e68(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159d94;
             }
             0x80159d94 => { ins += 1;
@@ -33740,7 +33740,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3] | 0x8000;
                 c.r[4] = c.r[6].wrapping_add(0xc);
                 c.r[5] = c.r[0].rotate_left(0) & 0xffff;
-                c.lr = 0x80159e0c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150fe4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159e0c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150fe4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159e0c;
             }
             0x80159e0c => { ins += 1;
@@ -33751,7 +33751,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3] | 0x8000;
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x80159e20; { c.steps = st; c.instrs = ins; c.cr = cr; f_80150fe4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159e20; { c.steps = st; c.cycles = ins; c.cr = cr; f_80150fe4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159e20;
             }
             0x80159e20 => { ins += 1;
@@ -33760,7 +33760,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159e24 => { ins += 2;
                 c.r[3] = c.r[3] | 0x8000;
-                c.lr = 0x80159e2c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015122c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159e2c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015122c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159e2c;
             }
             0x80159e2c => { ins += 1;
@@ -33822,7 +33822,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159e8c => { ins += 2;
                 c.r[4] = c.r[6].wrapping_add(0x8);
-                c.lr = 0x80159e94; { c.steps = st; c.instrs = ins; c.cr = cr; f_801513f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159e94; { c.steps = st; c.cycles = ins; c.cr = cr; f_801513f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159e94;
             }
             0x80159e94 => { ins += 1;
@@ -33831,7 +33831,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
             }
             0x80159e98 => { ins += 2;
                 c.r[4] = 0x0;
-                c.lr = 0x80159ea0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801513f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159ea0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801513f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159ea0;
             }
             0x80159ea0 => { ins += 1;
@@ -33839,7 +33839,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159ea4;
             }
             0x80159ea4 => { ins += 1;
-                c.lr = 0x80159ea8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801515f4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159ea8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801515f4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159ea8;
             }
             0x80159ea8 => { ins += 1;
@@ -33852,7 +33852,7 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159eb4;
             }
             0x80159eb4 => { ins += 1;
-                c.lr = 0x80159eb8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801518f8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159eb8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801518f8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159eb8;
             }
             0x80159eb8 => { ins += 1;
@@ -33860,15 +33860,15 @@ fn f_80159c54_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x80159ebc;
             }
             0x80159ebc => { ins += 1;
-                c.lr = 0x80159ec0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801519d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159ec0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801519d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159ec0;
             }
-            0x80159ec0 => { ins += 4;
+            0x80159ec0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159c54: bad pc {:#x}", pc),
         }
@@ -33891,26 +33891,26 @@ pub fn f_80159ed0_at(c: &mut Cpu, pc: u32) { f_80159ed0_b(c, pc) }
 #[inline(always)]
 fn f_80159ed0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159ed0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159ed0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159ed0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159ed0 => { ins += 4;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                c.lr = 0x80159ee0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801630e4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159ee0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801630e4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159ee0;
             }
-            0x80159ee0 => { ins += 4;
+            0x80159ee0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159ed0: bad pc {:#x}", pc),
         }
@@ -33933,19 +33933,19 @@ pub fn f_80159ef0_at(c: &mut Cpu, pc: u32) { f_80159ef0_b(c, pc) }
 #[inline(never)]
 fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x80159ef0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x80159ef0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x80159ef0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x80159ef0 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x80159f04; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159f04; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159f04;
             }
             0x80159f04 => { ins += 7;
@@ -33976,7 +33976,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015a1e8; continue; }
                 pc = 0x80159f44;
             }
-            0x80159f44 => { ins += 11;
+            0x80159f44 => { ins += 13;
                 c.r[0] = c.r[6].wrapping_mul(0xc);
                 c.r[4] = 0x80440000;
                 c.r[3] = c.r[5] | c.r[5];
@@ -33987,13 +33987,13 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[4].wrapping_add(0x4), c.r[29]);
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0xc));
                 c.r[25] = c.r[27].wrapping_add(c.r[0]);
-                c.lr = 0x80159f70; { c.steps = st; c.instrs = ins; c.cr = cr; f_80162fac(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159f70; { c.steps = st; c.cycles = ins; c.cr = cr; f_80162fac(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159f70;
             }
             0x80159f70 => { ins += 3;
                 c.r[4] = c.r[3] | c.r[3];
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x80159f7c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80151770(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159f7c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80151770(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159f7c;
             }
             0x80159f7c => { ins += 2;
@@ -34021,7 +34021,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[29] | c.r[29];
                 c.r[5] = 0x1;
                 c.r[6] = 0x0;
-                c.lr = 0x80159fac; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159fac; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159fac;
             }
             0x80159fac => { ins += 1;
@@ -34046,7 +34046,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x1;
                 c.r[6] = 0x0;
                 c.r[25] = c.r[25].wrapping_add(0x2);
-                c.lr = 0x80159fe0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x80159fe0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x80159fe0;
             }
             0x80159fe0 => { ins += 3;
@@ -34077,7 +34077,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = 0x0;
                 c.r[6] = 0x0;
-                c.lr = 0x8015a01c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a01c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a01c;
             }
             0x8015a01c => { ins += 1;
@@ -34102,7 +34102,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x0;
                 c.r[6] = 0x0;
                 c.r[26] = c.r[26].wrapping_add(0x2);
-                c.lr = 0x8015a050; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a050; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a050;
             }
             0x8015a050 => { ins += 3;
@@ -34133,7 +34133,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = 0x4;
                 c.r[6] = 0x0;
-                c.lr = 0x8015a08c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a08c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a08c;
             }
             0x8015a08c => { ins += 1;
@@ -34158,7 +34158,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x4;
                 c.r[6] = 0x0;
                 c.r[26] = c.r[26].wrapping_add(0x2);
-                c.lr = 0x8015a0c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a0c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a0c0;
             }
             0x8015a0c0 => { ins += 3;
@@ -34189,7 +34189,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = 0x2;
                 c.r[6] = 0x0;
-                c.lr = 0x8015a0fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a0fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a0fc;
             }
             0x8015a0fc => { ins += 1;
@@ -34214,7 +34214,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x2;
                 c.r[6] = 0x0;
                 c.r[26] = c.r[26].wrapping_add(0x2);
-                c.lr = 0x8015a130; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a130; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a130;
             }
             0x8015a130 => { ins += 3;
@@ -34245,7 +34245,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[30] | c.r[30];
                 c.r[5] = 0x3;
                 c.r[6] = 0x0;
-                c.lr = 0x8015a16c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a16c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a16c;
             }
             0x8015a16c => { ins += 1;
@@ -34270,7 +34270,7 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x3;
                 c.r[6] = 0x0;
                 c.r[26] = c.r[26].wrapping_add(0x2);
-                c.lr = 0x8015a1a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a1a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159c54(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a1a0;
             }
             0x8015a1a0 => { ins += 3;
@@ -34291,11 +34291,11 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[27].wrapping_add(c.r[0]);
                 c.r[5] = c.lhz_t(ins, c.r[4]);
                 c.r[4] = c.r[4].wrapping_add(0x4);
-                c.lr = 0x8015a1d0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80151a68(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a1d0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80151a68(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a1d0;
             }
             0x8015a1d0 => { ins += 1;
-                c.lr = 0x8015a1d4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80163188(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a1d4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80163188(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a1d4;
             }
             0x8015a1d4 => { ins += 5;
@@ -34324,15 +34324,15 @@ fn f_80159ef0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015a204 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8015a20c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a20c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a20c;
             }
-            0x8015a20c => { ins += 4;
+            0x8015a20c => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_80159ef0: bad pc {:#x}", pc),
         }
@@ -34355,22 +34355,22 @@ pub fn f_8015a21c_at(c: &mut Cpu, pc: u32) { f_8015a21c_b(c, pc) }
 #[inline(always)]
 fn f_8015a21c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015a21c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015a21c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015a21c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015a21c => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8015a230; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a230; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a230;
             }
-            0x8015a230 => { ins += 12;
+            0x8015a230 => { ins += 13;
                 c.r[0] = c.lha_t(ins, c.r[13].wrapping_add(0xffffa7c8));
                 c.r[9] = 0x80440000;
                 c.r[29] = c.r[5] | c.r[5];
@@ -34392,7 +34392,7 @@ fn f_8015a21c_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015a340; continue; }
                 pc = 0x8015a270;
             }
-            0x8015a270 => { ins += 7;
+            0x8015a270 => { ins += 9;
                 c.r[5] = c.r[6].wrapping_mul(0xc);
                 c.r[3] = 0x80440000;
                 c.r[3] = c.r[3].wrapping_add(0x7860);
@@ -34434,7 +34434,7 @@ fn f_8015a21c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[30] | c.r[30];
                 c.r[8] = c.r[31] | c.r[31];
                 c.r[9] = c.r[28] | c.r[28];
-                c.lr = 0x8015a2e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801463c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a2e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801463c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a2e4;
             }
             0x8015a2e4 => { ins += 2;
@@ -34443,7 +34443,7 @@ fn f_8015a21c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015a2ec;
             }
             0x8015a2ec => { ins += 1;
-                c.lr = 0x8015a2f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a2f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a2f0;
             }
             0x8015a2f0 => { ins += 8;
@@ -34454,12 +34454,12 @@ fn f_8015a21c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[30] | c.r[30];
                 c.r[8] = c.r[31] | c.r[31];
                 c.r[9] = c.r[28] | c.r[28];
-                c.lr = 0x8015a310; { c.steps = st; c.instrs = ins; c.cr = cr; f_801463c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a310; { c.steps = st; c.cycles = ins; c.cr = cr; f_801463c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a310;
             }
             0x8015a310 => { ins += 2;
                 c.r[25] = c.r[3] | c.r[3];
-                c.lr = 0x8015a318; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a318; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a318;
             }
             0x8015a318 => { ins += 2;
@@ -34499,15 +34499,15 @@ fn f_8015a21c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015a350 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8015a358; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a358; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a358;
             }
-            0x8015a358 => { ins += 4;
+            0x8015a358 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015a21c: bad pc {:#x}", pc),
         }
@@ -34530,22 +34530,22 @@ pub fn f_8015a368_at(c: &mut Cpu, pc: u32) { f_8015a368_b(c, pc) }
 #[inline(always)]
 fn f_8015a368_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015a368;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015a368, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015a368, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015a368 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x34), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8015a37c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a37c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a37c;
             }
-            0x8015a37c => { ins += 12;
+            0x8015a37c => { ins += 13;
                 c.r[0] = c.lha_t(ins, c.r[13].wrapping_add(0xffffa7c8));
                 c.r[8] = 0x80440000;
                 c.r[29] = c.r[5] | c.r[5];
@@ -34567,7 +34567,7 @@ fn f_8015a368_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015a458; continue; }
                 pc = 0x8015a3bc;
             }
-            0x8015a3bc => { ins += 7;
+            0x8015a3bc => { ins += 9;
                 c.r[5] = c.r[6].wrapping_mul(0xc);
                 c.r[3] = 0x80440000;
                 c.r[3] = c.r[3].wrapping_add(0x7860);
@@ -34596,7 +34596,7 @@ fn f_8015a368_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015a408;
             }
             0x8015a408 => { ins += 1;
-                c.lr = 0x8015a40c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a40c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a40c;
             }
             0x8015a40c => { ins += 8;
@@ -34607,12 +34607,12 @@ fn f_8015a368_b(c: &mut Cpu, mut pc: u32) {
                 c.r[7] = c.r[30] | c.r[30];
                 c.r[8] = c.r[31] | c.r[31];
                 c.r[9] = c.r[28] | c.r[28];
-                c.lr = 0x8015a42c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801463c4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a42c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801463c4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a42c;
             }
             0x8015a42c => { ins += 2;
                 c.r[28] = c.r[3] | c.r[3];
-                c.lr = 0x8015a434; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a434; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a434;
             }
             0x8015a434 => { ins += 1;
@@ -34652,15 +34652,15 @@ fn f_8015a368_b(c: &mut Cpu, mut pc: u32) {
             0x8015a468 => { ins += 3;
                 c.r[3] = c.r[28] | c.r[28];
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8015a474; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a474; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a474;
             }
-            0x8015a474 => { ins += 4;
+            0x8015a474 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015a368: bad pc {:#x}", pc),
         }
@@ -34683,12 +34683,12 @@ pub fn f_8015a484_at(c: &mut Cpu, pc: u32) { f_8015a484_b(c, pc) }
 #[inline(never)]
 fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015a484;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015a484, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015a484, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015a484 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -34701,13 +34701,13 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.r[5] | c.r[5];
                 c.stb(c.r[13].wrapping_add(0xffffa83d), c.r[3]);
                 c.stb(c.r[13].wrapping_add(0xffffa83c), c.r[4]);
-                c.lr = 0x8015a4b0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80163798(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a4b0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80163798(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a4b0;
             }
             0x8015a4b0 => { ins += 3;
                 c.stw(c.r[13].wrapping_add(0xffffa7d0), c.r[3]);
                 c.r[3] = 0x800;
-                c.lr = 0x8015a4bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a4bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a4bc;
             }
             0x8015a4bc => { ins += 3;
@@ -34718,7 +34718,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015a4c8 => { ins += 2;
                 c.r[3] = 0x280;
-                c.lr = 0x8015a4d0; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a4d0; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a4d0;
             }
             0x8015a4d0 => { ins += 3;
@@ -34730,19 +34730,19 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
             0x8015a4dc => { ins += 3;
                 c.r[4] = 0x0;
                 c.r[5] = 0x280;
-                c.lr = 0x8015a4e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a4e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a4e8;
             }
             0x8015a4e8 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7fc));
                 c.r[4] = 0x280;
-                c.lr = 0x8015a4f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b2d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a4f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b2d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a4f4;
             }
-            0x8015a4f4 => { ins += 3;
+            0x8015a4f4 => { ins += 5;
                 c.r[0] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa83d));
                 c.r[3] = c.r[0].wrapping_mul(0xf4);
-                c.lr = 0x8015a500; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a500; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a500;
             }
             0x8015a500 => { ins += 3;
@@ -34754,7 +34754,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
             0x8015a50c => { ins += 3;
                 c.r[0] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa83d));
                 c.r[3] = c.r[0].rotate_left(6) & 0xffffffc0;
-                c.lr = 0x8015a518; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a518; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a518;
             }
             0x8015a518 => { ins += 3;
@@ -34766,7 +34766,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
             0x8015a524 => { ins += 3;
                 c.r[0] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa83d));
                 c.r[4] = c.r[0].rotate_left(6) & 0xffffffc0;
-                c.lr = 0x8015a530; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b2a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a530; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b2a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a530;
             }
             0x8015a530 => { ins += 4;
@@ -34801,7 +34801,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.stb(c.r[5].wrapping_add(c.r[4]), c.r[8]);
                 c.r[4] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa804));
                 c.stb(c.r[4].wrapping_add(c.r[0]), c.r[8]);
-                c.lr = 0x8015a5a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a5a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a5a4;
             }
             0x8015a5a4 => { ins += 7;
@@ -34811,12 +34811,12 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[6].wrapping_add(c.r[31]), c.r[3]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa804));
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[31]));
-                c.lr = 0x8015a5c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a5c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a5c0;
             }
             0x8015a5c0 => { ins += 2;
                 c.r[3] = 0x80;
-                c.lr = 0x8015a5c8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a5c8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a5c8;
             }
             0x8015a5c8 => { ins += 40;
@@ -34859,7 +34859,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[3].wrapping_add(c.r[0]), c.r[5]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa804));
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[31]));
-                c.lr = 0x8015a668; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a668; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a668;
             }
             0x8015a668 => { ins += 18;
@@ -34900,7 +34900,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.r[3] = 0x36;
                 c.stb(c.r[31].wrapping_add(0x50), c.r[0]);
-                c.lr = 0x8015a6dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a6dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a6dc;
             }
             0x8015a6dc => { ins += 3;
@@ -34916,7 +34916,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015a6f0 => { ins += 2;
                 c.r[3] = 0x3c00;
-                c.lr = 0x8015a6f8; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a6f8; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a6f8;
             }
             0x8015a6f8 => { ins += 3;
@@ -34934,13 +34934,13 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lwz_t(ins, c.r[31].wrapping_add(0x28));
                 c.r[4] = 0x0;
                 c.r[5] = 0x3c00;
-                c.lr = 0x8015a71c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a71c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a71c;
             }
             0x8015a71c => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[31].wrapping_add(0x28));
                 c.r[4] = 0x3c00;
-                c.lr = 0x8015a728; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a728; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a728;
             }
             0x8015a728 => { ins += 25;
@@ -34968,7 +34968,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0x780);
                 c.stw(c.r[31].wrapping_add(0x44), c.r[0]);
                 c.r[3] = c.lwz_t(ins, c.r[31]);
-                c.lr = 0x8015a78c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a78c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a78c;
             }
             0x8015a78c => { ins += 13;
@@ -34984,7 +34984,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[31].wrapping_add(0x20), c.r[0]);
                 c.stw(c.r[31].wrapping_add(0x1c), c.r[0]);
                 c.r[3] = c.lwz_t(ins, c.r[31]);
-                c.lr = 0x8015a7c0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a7c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a7c0;
             }
             0x8015a7c0 => { ins += 2;
@@ -35004,12 +35004,12 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0] | c.r[28];
                 c.r[4] = 0x1;
                 c.r[5] = c.r[0].rotate_left(1) & 0x1;
-                c.lr = 0x8015a7ec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015a950(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a7ec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015a950(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a7ec;
             }
             0x8015a7ec => { ins += 2;
                 c.r[3] = 0x100;
-                c.lr = 0x8015a7f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a7f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_801643d8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a7f4;
             }
             0x8015a7f4 => { ins += 3;
@@ -35024,7 +35024,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015a808;
             }
             0x8015a808 => { ins += 1;
-                c.lr = 0x8015a80c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015a838(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a80c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015a838(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a80c;
             }
             0x8015a80c => { ins += 2;
@@ -35036,7 +35036,7 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0x0;
                 pc = 0x8015a818;
             }
-            0x8015a818 => { ins += 8;
+            0x8015a818 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x18));
@@ -35044,8 +35044,8 @@ fn f_8015a484_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015a484: bad pc {:#x}", pc),
         }
@@ -35068,12 +35068,12 @@ pub fn f_8015a838_at(c: &mut Cpu, pc: u32) { f_8015a838_b(c, pc) }
 #[inline(always)]
 fn f_8015a838_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015a838;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015a838, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015a838, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015a838 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -35082,21 +35082,21 @@ fn f_8015a838_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x100;
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7f8));
-                c.lr = 0x8015a854; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a854; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a854;
             }
             0x8015a854 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7f8));
                 c.r[4] = 0x100;
-                c.lr = 0x8015a860; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a860; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a860;
             }
-            0x8015a860 => { ins += 4;
+            0x8015a860 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015a838: bad pc {:#x}", pc),
         }
@@ -35119,12 +35119,12 @@ pub fn f_8015a870_at(c: &mut Cpu, pc: u32) { f_8015a870_b(c, pc) }
 #[inline(always)]
 fn f_8015a870_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015a870;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015a870, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015a870, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015a870 => { ins += 8;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -35134,7 +35134,7 @@ fn f_8015a870_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x18), c.r[30]);
                 c.stw(c.r[1].wrapping_add(0x14), c.r[29]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7f8));
-                c.lr = 0x8015a890; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a890; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a890;
             }
             0x8015a890 => { ins += 2;
@@ -35142,19 +35142,19 @@ fn f_8015a870_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015a8c0; continue;
                 pc = 0x8015a898;
             }
-            0x8015a898 => { ins += 5;
+            0x8015a898 => { ins += 7;
                 c.r[0] = c.r[29].rotate_left(0) & 0xff;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa804));
                 c.r[31] = c.r[0].wrapping_mul(0xf4);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[31]));
-                c.lr = 0x8015a8ac; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a8ac; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a8ac;
             }
             0x8015a8ac => { ins += 4;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa804));
                 c.r[0] = c.r[31].wrapping_add(0x4);
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
-                c.lr = 0x8015a8bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a8bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a8bc;
             }
             0x8015a8bc => { ins += 1;
@@ -35175,17 +35175,17 @@ fn f_8015a870_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015a900; continue;
                 pc = 0x8015a8e0;
             }
-            0x8015a8e0 => { ins += 5;
+            0x8015a8e0 => { ins += 7;
                 c.r[0] = c.r[29].rotate_left(0) & 0xff;
                 c.r[0] = c.r[0].wrapping_mul(0xbc);
                 c.r[30] = c.r[31].wrapping_add(c.r[0]);
                 c.r[3] = c.lwz_t(ins, c.r[30]);
-                c.lr = 0x8015a8f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a8f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a8f4;
             }
             0x8015a8f4 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[30].wrapping_add(0x28));
-                c.lr = 0x8015a8fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a8fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a8fc;
             }
             0x8015a8fc => { ins += 1;
@@ -35201,25 +35201,25 @@ fn f_8015a870_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015a910 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa800));
-                c.lr = 0x8015a918; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a918; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a918;
             }
             0x8015a918 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa804));
-                c.lr = 0x8015a920; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a920; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a920;
             }
             0x8015a920 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7fc));
-                c.lr = 0x8015a928; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a928; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a928;
             }
             0x8015a928 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7f0));
-                c.lr = 0x8015a930; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a930; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164400(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a930;
             }
-            0x8015a930 => { ins += 8;
+            0x8015a930 => { ins += 9;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[3] = 0x1;
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x1c));
@@ -35227,8 +35227,8 @@ fn f_8015a870_b(c: &mut Cpu, mut pc: u32) {
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015a870: bad pc {:#x}", pc),
         }
@@ -35251,14 +35251,14 @@ pub fn f_8015a950_at(c: &mut Cpu, pc: u32) { f_8015a950_b(c, pc) }
 #[inline(always)]
 fn f_8015a950_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015a950;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015a950, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015a950, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8015a950 => { ins += 18;
+            0x8015a950 => { ins += 20;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
@@ -35276,13 +35276,13 @@ fn f_8015a950_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0x10), c.r[28]);
                 c.r[28] = c.r[0].wrapping_add(c.r[31]);
                 { let ea = c.r[28].wrapping_add(0x28); c.r[3] = c.lwz_t(ins, ea); c.r[28] = ea; }
-                c.lr = 0x8015a998; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a998; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a998;
             }
             0x8015a998 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[28]);
                 c.r[4] = 0x3c00;
-                c.lr = 0x8015a9a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a9a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a9a4;
             }
             0x8015a9a4 => { ins += 6;
@@ -35291,7 +35291,7 @@ fn f_8015a950_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.r[3].wrapping_add(0x7e60);
                 c.r[5] = 0x36;
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(c.r[31]));
-                c.lr = 0x8015a9bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a9bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a9bc;
             }
             0x8015a9bc => { ins += 16;
@@ -35310,7 +35310,7 @@ fn f_8015a950_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[3].wrapping_add(0x20), c.r[5]);
                 c.stw(c.r[3].wrapping_add(0x1c), c.r[5]);
                 c.r[3] = c.lwz_t(ins, c.r[28].wrapping_add(c.r[31]));
-                c.lr = 0x8015a9fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015a9fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015a9fc;
             }
             0x8015a9fc => { ins += 7;
@@ -35320,13 +35320,13 @@ fn f_8015a950_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x780;
                 c.r[28] = c.r[0].wrapping_add(c.r[31]);
                 { let ea = c.r[28].wrapping_add(0x30); c.r[3] = c.lwz_t(ins, ea); c.r[28] = ea; }
-                c.lr = 0x8015aa18; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015aa18; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015aa18;
             }
             0x8015aa18 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[28]);
                 c.r[4] = 0x780;
-                c.lr = 0x8015aa24; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015aa24; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015aa24;
             }
             0x8015aa24 => { ins += 7;
@@ -35336,16 +35336,16 @@ fn f_8015a950_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = 0x780;
                 c.r[28] = c.r[0].wrapping_add(c.r[31]);
                 { let ea = c.r[28].wrapping_add(0x3c); c.r[3] = c.lwz_t(ins, ea); c.r[28] = ea; }
-                c.lr = 0x8015aa40; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015aa40; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015aa40;
             }
             0x8015aa40 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[28]);
                 c.r[4] = 0x780;
-                c.lr = 0x8015aa4c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015aa4c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015aa4c;
             }
-            0x8015aa4c => { ins += 21;
+            0x8015aa4c => { ins += 22;
                 c.r[3] = 0x80440000;
                 c.r[4] = 0x0;
                 c.r[3] = c.r[3].wrapping_add(0x7e60);
@@ -35366,8 +35366,8 @@ fn f_8015a950_b(c: &mut Cpu, mut pc: u32) {
                 c.r[28] = c.lwz_t(ins, c.r[1].wrapping_add(0x10));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015a950: bad pc {:#x}", pc),
         }
@@ -35390,14 +35390,14 @@ pub fn f_8015aaa0_at(c: &mut Cpu, pc: u32) { f_8015aaa0_b(c, pc) }
 #[inline(always)]
 fn f_8015aaa0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015aaa0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015aaa0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015aaa0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8015aaa0 => { ins += 8;
+            0x8015aaa0 => { ins += 10;
                 c.r[0] = c.r[3].rotate_left(0) & 0xff;
                 c.r[3] = 0x80440000;
                 c.r[0] = c.r[0].wrapping_mul(0xbc);
@@ -35405,8 +35405,8 @@ fn f_8015aaa0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[3].wrapping_add(0x7e60);
                 c.r[3] = c.r[3].wrapping_add(c.r[0]);
                 c.stb(c.r[3].wrapping_add(0x50), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015aaa0: bad pc {:#x}", pc),
         }
@@ -35429,12 +35429,12 @@ pub fn f_8015aac0_at(c: &mut Cpu, pc: u32) { f_8015aac0_b(c, pc) }
 #[inline(always)]
 fn f_8015aac0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015aac0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015aac0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015aac0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015aac0 => { ins += 4;
                 c.r[9] = c.lhz_t(ins, c.r[5]);
@@ -35479,7 +35479,7 @@ fn f_8015aac0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.lhz_t(ins, c.r[5]);
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
                 c.sth(c.r[5], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015ab30;
             }
             0x8015ab30 => { ins += 2;
@@ -35516,7 +35516,7 @@ fn f_8015aac0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lhz_t(ins, c.r[5]);
                 c.r[0] = c.r[0].wrapping_sub(c.r[6]);
                 c.sth(c.r[5], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015ab88;
             }
             0x8015ab88 => { ins += 2;
@@ -35540,8 +35540,8 @@ fn f_8015aac0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = 0x0;
                 c.r[3] = 0x0;
                 c.sth(c.r[4], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015aac0: bad pc {:#x}", pc),
         }
@@ -35564,14 +35564,14 @@ pub fn f_8015abb4_at(c: &mut Cpu, pc: u32) { f_8015abb4_b(c, pc) }
 #[inline(always)]
 fn f_8015abb4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015abb4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015abb4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015abb4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8015abb4 => { ins += 18;
+            0x8015abb4 => { ins += 24;
                 c.r[7] = c.lhz_t(ins, c.r[4]);
                 c.r[6] = 0x66660000;
                 c.r[0] = c.r[5] as u16 as i16 as i32 as u32;
@@ -35589,8 +35589,8 @@ fn f_8015abb4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].wrapping_mul(0xa0);
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
                 c.sth(c.r[4], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015abb4: bad pc {:#x}", pc),
         }
@@ -35613,17 +35613,17 @@ pub fn f_8015abfc_at(c: &mut Cpu, pc: u32) { f_8015abfc_b(c, pc) }
 #[inline(always)]
 fn f_8015abfc_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015abfc;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015abfc, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015abfc, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015abfc => { ins += 3;
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(0x8c));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x0);
-                if !cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if !cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015ac08;
             }
             0x8015ac08 => { ins += 4;
@@ -35659,7 +35659,7 @@ fn f_8015abfc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = c.r[0].wrapping_add(c.r[4]);
                 c.r[0] = c.r[4].wrapping_add(0x1);
                 c.stw(c.r[3].wrapping_add(0xd8), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015ac5c;
             }
             0x8015ac5c => { ins += 5;
@@ -35667,8 +35667,8 @@ fn f_8015abfc_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[5].rotate_left(16) & 0xffff;
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
                 c.stw(c.r[3].wrapping_add(0xd8), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015abfc: bad pc {:#x}", pc),
         }
@@ -35691,12 +35691,12 @@ pub fn f_8015ac70_at(c: &mut Cpu, pc: u32) { f_8015ac70_b(c, pc) }
 #[inline(always)]
 fn f_8015ac70_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015ac70;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015ac70, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015ac70, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015ac70 => { ins += 3;
                 c.r[0] = c.lwz_t(ins, c.r[5]);
@@ -35714,7 +35714,7 @@ fn f_8015ac70_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015acac; continue;
                 pc = 0x8015ac8c;
             }
-            0x8015ac8c => { ins += 8;
+            0x8015ac8c => { ins += 12;
                 c.r[6] = 0x66660000;
                 c.r[0] = c.r[0].wrapping_neg();
                 c.r[6] = c.r[6].wrapping_add(0x6667);
@@ -35745,7 +35745,7 @@ fn f_8015ac70_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015acec; continue;
                 pc = 0x8015accc;
             }
-            0x8015accc => { ins += 8;
+            0x8015accc => { ins += 12;
                 c.r[6] = 0x66660000;
                 c.r[0] = c.r[0].wrapping_neg();
                 c.r[6] = c.r[6].wrapping_add(0x6667);
@@ -35766,7 +35766,7 @@ fn f_8015ac70_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[4], c.r[0]);
                 pc = 0x8015acfc;
             }
-            0x8015acfc => { ins += 8;
+            0x8015acfc => { ins += 10;
                 c.r[0] = c.lwz_t(ins, c.r[5]);
                 c.stw(c.r[3], c.r[0]);
                 c.r[0] = c.lha_t(ins, c.r[4]);
@@ -35774,8 +35774,8 @@ fn f_8015ac70_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0].wrapping_mul(0xa0);
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
                 c.stw(c.r[5], c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015ac70: bad pc {:#x}", pc),
         }
@@ -35798,12 +35798,12 @@ pub fn f_8015ad1c_at(c: &mut Cpu, pc: u32) { f_8015ad1c_b(c, pc) }
 #[inline(never)]
 fn f_8015ad1c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015ad1c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015ad1c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015ad1c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015ad1c => { ins += 15;
                 c.r[0] = 0x0;
@@ -36039,7 +36039,7 @@ fn f_8015ad1c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lhz_t(ins, c.r[4].wrapping_add(0xc));
                 c.r[0] = c.r[0] & 0x12;
                 cr_rc(&mut cr, c.xer, c.r[0]);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015af10;
             }
             0x8015af10 => { ins += 10;
@@ -36112,7 +36112,7 @@ fn f_8015ad1c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lhz_t(ins, c.r[4].wrapping_add(0xc));
                 c.r[0] = c.r[0].rotate_left(0) & 0x4;
                 cr_rc(&mut cr, c.xer, c.r[0]);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015afac;
             }
             0x8015afac => { ins += 10;
@@ -36149,8 +36149,8 @@ fn f_8015ad1c_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015aff0 => { ins += 2;
                 c.stw(c.r[3].wrapping_add(0x24), c.r[4]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015ad1c: bad pc {:#x}", pc),
         }
@@ -36173,19 +36173,19 @@ pub fn f_8015aff8_at(c: &mut Cpu, pc: u32) { f_8015aff8_b(c, pc) }
 #[inline(never)]
 fn f_8015aff8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015aff8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015aff8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015aff8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015aff8 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x24), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x8015b00c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b00c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b00c;
             }
             0x8015b00c => { ins += 4;
@@ -36195,7 +36195,7 @@ fn f_8015aff8_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015b238; continue; }
                 pc = 0x8015b01c;
             }
-            0x8015b01c => { ins += 21;
+            0x8015b01c => { ins += 22;
                 c.r[3] = c.r[4].wrapping_add(c.r[27]);
                 c.r[5] = c.r[4].rotate_left(2) & 0xfffffffc;
                 c.r[0] = c.r[3].rotate_left(1) & 0x1;
@@ -36252,7 +36252,7 @@ fn f_8015aff8_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015b174; continue; }
                 pc = 0x8015b0c4;
             }
-            0x8015b0c4 => { ins += 20;
+            0x8015b0c4 => { ins += 21;
                 c.r[3] = c.r[28].wrapping_add(c.r[4]);
                 c.r[10] = c.r[4].wrapping_add(0x1);
                 c.r[7] = c.r[3].wrapping_add(0xffffffff);
@@ -36304,14 +36304,14 @@ fn f_8015aff8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[31].wrapping_add(0xffffffff);
                 c.stw(c.r[6], c.r[0]);
                 c.stw(c.r[26].wrapping_add(c.r[7]), c.r[8]);
-                c.lr = 0x8015b164; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b164; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b164;
             }
             0x8015b164 => { ins += 4;
                 c.r[3] = c.r[26] | c.r[26];
                 c.r[4] = c.r[31].wrapping_add(0x1);
                 c.r[5] = c.r[28].wrapping_add(0xffffffff);
-                c.lr = 0x8015b174; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b174; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b174;
             }
             0x8015b174 => { ins += 3;
@@ -36320,7 +36320,7 @@ fn f_8015aff8_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015b238; continue; }
                 pc = 0x8015b180;
             }
-            0x8015b180 => { ins += 21;
+            0x8015b180 => { ins += 22;
                 c.r[3] = c.r[28].wrapping_add(c.r[27]);
                 c.r[6] = c.r[26].wrapping_add(c.r[29]);
                 c.r[4] = c.r[3].wrapping_add(0x1);
@@ -36374,27 +36374,27 @@ fn f_8015aff8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[31].wrapping_add(0xffffffff);
                 c.stw(c.r[6].wrapping_add(0x4), c.r[0]);
                 c.stw(c.r[26].wrapping_add(c.r[7]), c.r[8]);
-                c.lr = 0x8015b228; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b228; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b228;
             }
             0x8015b228 => { ins += 4;
                 c.r[3] = c.r[26] | c.r[26];
                 c.r[5] = c.r[27] | c.r[27];
                 c.r[4] = c.r[31].wrapping_add(0x1);
-                c.lr = 0x8015b238; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b238; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b238;
             }
             0x8015b238 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x20);
-                c.lr = 0x8015b240; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b240; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b240;
             }
-            0x8015b240 => { ins += 4;
+            0x8015b240 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015aff8: bad pc {:#x}", pc),
         }
@@ -36417,19 +36417,19 @@ pub fn f_8015b250_at(c: &mut Cpu, pc: u32) { f_8015b250_b(c, pc) }
 #[inline(never)]
 fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015b250;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015b250, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015b250, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015b250 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffff80); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x84), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8015b264; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b264; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47a4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b264;
             }
             0x8015b264 => { ins += 10;
@@ -36450,7 +36450,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015b2c8; continue;
                 pc = 0x8015b294;
             }
-            0x8015b294 => { ins += 13;
+            0x8015b294 => { ins += 25;
                 c.r[5] = 0x80000000;
                 c.r[3] = 0x51ec0000;
                 c.r[0] = c.lwz_t(ins, c.r[5].wrapping_add(0xf8));
@@ -36488,7 +36488,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015d090; continue;
                 pc = 0x8015b2fc;
             }
-            0x8015b2fc => { ins += 7;
+            0x8015b2fc => { ins += 9;
                 c.r[0] = c.lbz_t(ins, c.r[1].wrapping_add(0x24));
                 c.r[3] = c.r[0].wrapping_mul(0xbc);
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x28));
@@ -36520,7 +36520,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015b33c => { ins += 3;
                 c.r[3] = c.r[16] | c.r[16];
                 c.r[4] = c.r[14] | c.r[14];
-                c.lr = 0x8015b348; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b348; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b348;
             }
             0x8015b348 => { ins += 4;
@@ -36533,7 +36533,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015b358 => { ins += 3;
                 c.r[3] = c.r[14] | c.r[14];
                 c.r[4] = 0x3;
-                c.lr = 0x8015b364; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b364; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b364;
             }
             0x8015b364 => { ins += 3;
@@ -36550,7 +36550,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015b37c => { ins += 2;
                 c.r[3] = c.r[14] | c.r[14];
-                c.lr = 0x8015b384; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b384; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b384;
             }
             0x8015b384 => { ins += 2;
@@ -36575,7 +36575,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015b3a0 => { ins += 3;
                 c.r[3] = c.r[16] | c.r[16];
                 c.r[4] = c.r[14] | c.r[14];
-                c.lr = 0x8015b3ac; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b3ac; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b3ac;
             }
             0x8015b3ac => { ins += 1;
@@ -36623,7 +36623,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[14]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015b430; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b430; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b430;
             }
             0x8015b430 => { ins += 1;
@@ -36703,7 +36703,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[19]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015b51c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b51c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b51c;
             }
             0x8015b51c => { ins += 1;
@@ -36727,7 +36727,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[13].wrapping_add(0xffffa7e4), c.r[0]);
                 pc = 0x8015b54c;
             }
-            0x8015b54c => { ins += 39;
+            0x8015b54c => { ins += 43;
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7e8));
                 c.r[0] = 0x1;
                 c.r[23] = c.r[23].wrapping_add(0x294d);
@@ -36801,7 +36801,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[14].wrapping_add(0xffffffff);
                 c.r[3] = c.r[3].wrapping_add(0xffff8440);
                 c.r[4] = 0x0;
-                c.lr = 0x8015b638; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b638; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aff8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b638;
             }
             0x8015b638 => { ins += 8;
@@ -36841,7 +36841,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[29].wrapping_add(0xa4);
                 c.r[4] = c.lwz_t(ins, c.r[29]);
                 c.sth(c.r[4].wrapping_add(0x66), c.r[0]);
-                c.lr = 0x8015b6a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158f98(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b6a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158f98(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b6a8;
             }
             0x8015b6a8 => { ins += 2;
@@ -36852,12 +36852,12 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015b6b0 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x0;
-                c.lr = 0x8015b6bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b6bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b6bc;
             }
             0x8015b6bc => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015b6c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b6c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b6c4;
             }
             0x8015b6c4 => { ins += 1;
@@ -36881,7 +36881,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[29] | c.r[29];
                 c.stw(c.r[29].wrapping_add(0x98), c.r[0]);
                 c.r[4] = 0x2;
-                c.lr = 0x8015b6f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b6f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b6f4;
             }
             0x8015b6f4 => { ins += 4;
@@ -36894,12 +36894,12 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015b704 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x1;
-                c.lr = 0x8015b710; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b710; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b710;
             }
             0x8015b710 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015b718; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b718; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b718;
             }
             0x8015b718 => { ins += 1;
@@ -36923,13 +36923,13 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lwz_t(ins, c.r[29].wrapping_add(0x8));
                 c.r[4] = 0x0;
                 c.r[5] = 0x40;
-                c.lr = 0x8015b750; { c.steps = st; c.instrs = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b750; { c.steps = st; c.cycles = ins; c.cr = cr; f_8000540c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b750;
             }
             0x8015b750 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[29].wrapping_add(0x8));
                 c.r[4] = 0x40;
-                c.lr = 0x8015b75c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b2d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015b75c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b2d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015b75c;
             }
             0x8015b75c => { ins += 11;
@@ -37060,7 +37060,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015ba9c; continue;
                 pc = 0x8015b8b4;
             }
-            0x8015b8b4 => { ins += 68;
+            0x8015b8b4 => { ins += 76;
                 c.r[0] = 0x0;
                 c.r[3] = 0x24920000;
                 c.sth(c.r[19].wrapping_add(0x70), c.r[0]);
@@ -37236,7 +37236,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015bb64; continue;
                 pc = 0x8015baf0;
             }
-            0x8015baf0 => { ins += 29;
+            0x8015baf0 => { ins += 41;
                 c.r[3] = c.lwz_t(ins, c.r[29].wrapping_add(0x8c));
                 c.r[4] = 0x24920000;
                 c.r[0] = c.lwz_t(ins, c.r[29].wrapping_add(0x88));
@@ -37268,7 +37268,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015bbd8; continue;
                 pc = 0x8015bb64;
             }
-            0x8015bb64 => { ins += 23;
+            0x8015bb64 => { ins += 29;
                 c.r[4] = c.lwz_t(ins, c.r[29].wrapping_add(0x8c));
                 c.r[3] = 0x24920000;
                 c.r[0] = c.lwz_t(ins, c.r[29].wrapping_add(0x88));
@@ -37346,7 +37346,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015bc98; continue; }
                 pc = 0x8015bc30;
             }
-            0x8015bc30 => { ins += 18;
+            0x8015bc30 => { ins += 24;
                 c.r[3] = 0x24920000;
                 c.r[5] = c.lwz_t(ins, c.r[29].wrapping_add(0x84));
                 c.r[3] = c.r[3].wrapping_add(0x4925);
@@ -37538,7 +37538,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015beb4; continue; }
                 pc = 0x8015be58;
             }
-            0x8015be58 => { ins += 23;
+            0x8015be58 => { ins += 29;
                 c.r[4] = c.lwz_t(ins, c.r[29].wrapping_add(0x98));
                 c.r[3] = 0x24920000;
                 c.r[7] = c.lwz_t(ins, c.r[29].wrapping_add(0x94));
@@ -37580,12 +37580,12 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015bed0 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x0;
-                c.lr = 0x8015bedc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bedc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bedc;
             }
             0x8015bedc => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015bee4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bee4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bee4;
             }
             0x8015bee4 => { ins += 1;
@@ -37601,7 +37601,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015bef4 => { ins += 2;
                 c.r[3] = c.r[29].wrapping_add(0xa4);
-                c.lr = 0x8015befc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158f98(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015befc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158f98(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015befc;
             }
             0x8015befc => { ins += 2;
@@ -37612,12 +37612,12 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015bf04 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x0;
-                c.lr = 0x8015bf10; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bf10; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bf10;
             }
             0x8015bf10 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015bf18; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bf18; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bf18;
             }
             0x8015bf18 => { ins += 1;
@@ -37635,21 +37635,21 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x4c));
                 c.r[3] = c.r[19].wrapping_add(0x14);
                 c.r[4] = c.r[29].wrapping_add(0x5e);
-                c.lr = 0x8015bf38; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bf38; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bf38;
             }
             0x8015bf38 => { ins += 4;
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x4e));
                 c.r[3] = c.r[19].wrapping_add(0x18);
                 c.r[4] = c.r[29].wrapping_add(0x60);
-                c.lr = 0x8015bf48; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bf48; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bf48;
             }
             0x8015bf48 => { ins += 4;
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x50));
                 c.r[3] = c.r[19].wrapping_add(0x30);
                 c.r[4] = c.r[29].wrapping_add(0x62);
-                c.lr = 0x8015bf58; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bf58; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bf58;
             }
             0x8015bf58 => { ins += 2;
@@ -37664,7 +37664,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x5e);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x1;
-                c.lr = 0x8015bf7c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bf7c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bf7c;
             }
             0x8015bf7c => { ins += 8;
@@ -37675,7 +37675,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x60);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x2;
-                c.lr = 0x8015bf9c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bf9c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bf9c;
             }
             0x8015bf9c => { ins += 8;
@@ -37686,7 +37686,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x62);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x4;
-                c.lr = 0x8015bfbc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bfbc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bfbc;
             }
             0x8015bfbc => { ins += 1;
@@ -37704,21 +37704,21 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x52));
                 c.r[3] = c.r[19].wrapping_add(0x1c);
                 c.r[4] = c.r[29].wrapping_add(0x64);
-                c.lr = 0x8015bfdc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bfdc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bfdc;
             }
             0x8015bfdc => { ins += 4;
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x54));
                 c.r[3] = c.r[19].wrapping_add(0x20);
                 c.r[4] = c.r[29].wrapping_add(0x66);
-                c.lr = 0x8015bfec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bfec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bfec;
             }
             0x8015bfec => { ins += 4;
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x56));
                 c.r[3] = c.r[19].wrapping_add(0x34);
                 c.r[4] = c.r[29].wrapping_add(0x68);
-                c.lr = 0x8015bffc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015bffc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015bffc;
             }
             0x8015bffc => { ins += 6;
@@ -37777,7 +37777,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x64);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x8;
-                c.lr = 0x8015c088; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c088; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c088;
             }
             0x8015c088 => { ins += 8;
@@ -37788,7 +37788,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x66);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x10;
-                c.lr = 0x8015c0a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c0a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c0a8;
             }
             0x8015c0a8 => { ins += 8;
@@ -37799,7 +37799,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x68);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x20;
-                c.lr = 0x8015c0c8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c0c8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c0c8;
             }
             0x8015c0c8 => { ins += 8;
@@ -37850,21 +37850,21 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x58));
                 c.r[3] = c.r[19].wrapping_add(0x24);
                 c.r[4] = c.r[29].wrapping_add(0x6a);
-                c.lr = 0x8015c138; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c138; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c138;
             }
             0x8015c138 => { ins += 4;
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x5a));
                 c.r[3] = c.r[19].wrapping_add(0x28);
                 c.r[4] = c.r[29].wrapping_add(0x6c);
-                c.lr = 0x8015c148; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c148; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c148;
             }
             0x8015c148 => { ins += 4;
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x5c));
                 c.r[3] = c.r[19].wrapping_add(0x2c);
                 c.r[4] = c.r[29].wrapping_add(0x6e);
-                c.lr = 0x8015c158; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c158; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c158;
             }
             0x8015c158 => { ins += 6;
@@ -37913,14 +37913,14 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x58));
                 c.r[3] = c.r[19].wrapping_add(0x24);
                 c.r[4] = c.r[29].wrapping_add(0x6a);
-                c.lr = 0x8015c1cc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c1cc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c1cc;
             }
             0x8015c1cc => { ins += 4;
                 c.r[5] = c.lhz_t(ins, c.r[29].wrapping_add(0x5a));
                 c.r[3] = c.r[19].wrapping_add(0x28);
                 c.r[4] = c.r[29].wrapping_add(0x6c);
-                c.lr = 0x8015c1dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c1dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abb4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c1dc;
             }
             0x8015c1dc => { ins += 4;
@@ -37985,7 +37985,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x6a);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x40;
-                c.lr = 0x8015c274; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c274; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c274;
             }
             0x8015c274 => { ins += 8;
@@ -37996,7 +37996,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x6c);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x80;
-                c.lr = 0x8015c294; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c294; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c294;
             }
             0x8015c294 => { ins += 8;
@@ -38007,7 +38007,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x6e);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x100;
-                c.lr = 0x8015c2b4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c2b4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c2b4;
             }
             0x8015c2b4 => { ins += 8;
@@ -38056,7 +38056,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x6a);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x40;
-                c.lr = 0x8015c328; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c328; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c328;
             }
             0x8015c328 => { ins += 8;
@@ -38067,7 +38067,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.r[29].wrapping_add(0x6c);
                 c.r[7] = c.r[1].wrapping_add(0x10);
                 c.r[8] = 0x80;
-                c.lr = 0x8015c348; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c348; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015aac0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c348;
             }
             0x8015c348 => { ins += 6;
@@ -38250,7 +38250,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015c4bc => { ins += 2;
                 c.r[3] = c.r[29].wrapping_add(0xa4);
-                c.lr = 0x8015c4c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159110(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c4c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159110(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c4c4;
             }
             0x8015c4c4 => { ins += 3;
@@ -38274,7 +38274,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[29].wrapping_add(0xa4);
                 c.r[4] = c.r[19].wrapping_add(0x64);
                 c.r[5] = c.r[19].wrapping_add(0x66);
-                c.lr = 0x8015c4fc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159278(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c4fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159278(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c4fc;
             }
             0x8015c4fc => { ins += 11;
@@ -38307,7 +38307,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015c550 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015c558; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abfc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c558; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abfc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c558;
             }
             0x8015c558 => { ins += 4;
@@ -38335,12 +38335,12 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[5] = c.lhz_t(ins, c.r[19].wrapping_add(c.r[6]));
                 c.r[0] = c.r[5].wrapping_add(0x1);
                 c.sth(c.r[19].wrapping_add(c.r[6]), c.r[0]);
-                c.lr = 0x8015c5a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c5a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c5a4;
             }
             0x8015c5a4 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015c5ac; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c5ac; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c5ac;
             }
             0x8015c5ac => { ins += 1;
@@ -38407,7 +38407,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015c638 => { ins += 3;
                 c.r[3] = c.r[29].wrapping_add(0xa4);
                 c.r[4] = 0xa;
-                c.lr = 0x8015c644; { c.steps = st; c.instrs = ins; c.cr = cr; f_80158fc0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c644; { c.steps = st; c.cycles = ins; c.cr = cr; f_80158fc0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c644;
             }
             0x8015c644 => { ins += 3;
@@ -38430,7 +38430,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015c664 => { ins += 2;
                 c.r[3] = c.r[29].wrapping_add(0xa4);
-                c.lr = 0x8015c66c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159110(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c66c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159110(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c66c;
             }
             0x8015c66c => { ins += 3;
@@ -38464,7 +38464,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[29].wrapping_add(0xa4);
                 c.r[4] = c.r[1].wrapping_add(0xe);
                 c.r[5] = c.r[1].wrapping_add(0xc);
-                c.lr = 0x8015c6cc; { c.steps = st; c.instrs = ins; c.cr = cr; f_80159278(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c6cc; { c.steps = st; c.cycles = ins; c.cr = cr; f_80159278(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c6cc;
             }
             0x8015c6cc => { ins += 5;
@@ -38512,7 +38512,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015c748 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015c750; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015abfc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c750; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015abfc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c750;
             }
             0x8015c750 => { ins += 1;
@@ -38533,18 +38533,18 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015c768 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x0;
-                c.lr = 0x8015c774; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c774; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c774;
             }
             0x8015c774 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015c77c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c77c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c77c;
             }
             0x8015c77c => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[29].wrapping_add(0x4));
                 c.r[4] = c.r[22].wrapping_sub(c.r[3]);
-                c.lr = 0x8015c788; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c788; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c788;
             }
             0x8015c788 => { ins += 10;
@@ -38569,7 +38569,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015c7e0; continue;
                 pc = 0x8015c7bc;
             }
-            0x8015c7bc => { ins += 9;
+            0x8015c7bc => { ins += 11;
                 c.r[4] = c.r[4].wrapping_mul(0x6);
                 c.r[0] = c.lhz_t(ins, c.r[19].wrapping_add(0x8));
                 c.r[3] = 0x80370000;
@@ -38591,7 +38591,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[23] = c.r[23].wrapping_add(c.r[0]);
                 pc = 0x8015c7fc;
             }
-            0x8015c7fc => { ins += 23;
+            0x8015c7fc => { ins += 27;
                 c.r[4] = 0x80000000;
                 c.r[3] = 0x51ec0000;
                 c.r[0] = c.lwz_t(ins, c.r[4].wrapping_add(0xf8));
@@ -38631,18 +38631,18 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015c86c => { ins += 3;
                 c.r[3] = c.r[16] | c.r[16];
                 c.r[4] = c.r[29] | c.r[29];
-                c.lr = 0x8015c878; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c878; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c878;
             }
             0x8015c878 => { ins += 2;
                 c.r[3] = c.r[29] | c.r[29];
-                c.lr = 0x8015c880; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c880; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c880;
             }
             0x8015c880 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x1;
-                c.lr = 0x8015c88c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c88c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c88c;
             }
             0x8015c88c => { ins += 6;
@@ -38663,18 +38663,18 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015c8b4 => { ins += 2;
                 c.r[3] = c.r[16] | c.r[16];
-                c.lr = 0x8015c8bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c8bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c8bc;
             }
             0x8015c8bc => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[14].wrapping_add(0xfffffffc));
-                c.lr = 0x8015c8c4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c8c4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c8c4;
             }
             0x8015c8c4 => { ins += 3;
                 c.r[3] = c.lwz_t(ins, c.r[14].wrapping_add(0xfffffffc));
                 c.r[4] = 0x1;
-                c.lr = 0x8015c8d0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c8d0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c8d0;
             }
             0x8015c8d0 => { ins += 2;
@@ -38696,7 +38696,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015c958; continue;
                 pc = 0x8015c8f8;
             }
-            0x8015c8f8 => { ins += 6;
+            0x8015c8f8 => { ins += 8;
                 c.r[0] = c.r[14].rotate_left(0) & 0xff;
                 c.r[0] = c.r[0].wrapping_mul(0xbc);
                 c.r[19] = c.r[17].wrapping_add(c.r[0]);
@@ -38720,18 +38720,18 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
             0x8015c928 => { ins += 3;
                 c.r[3] = c.r[19] | c.r[19];
                 c.r[4] = c.r[20] | c.r[20];
-                c.lr = 0x8015c934; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c934; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ad1c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c934;
             }
             0x8015c934 => { ins += 2;
                 c.r[3] = c.r[20] | c.r[20];
-                c.lr = 0x8015c93c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c93c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c93c;
             }
             0x8015c93c => { ins += 3;
                 c.r[3] = c.r[20] | c.r[20];
                 c.r[4] = 0x1;
-                c.lr = 0x8015c948; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c948; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d408(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c948;
             }
             0x8015c948 => { ins += 1;
@@ -38797,7 +38797,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[17]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015c9e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015c9e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015c9e4;
             }
             0x8015c9e4 => { ins += 1;
@@ -38846,7 +38846,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[4] = 0xbc;
                 c.stw(c.r[1].wrapping_add(0x1c), c.r[0]);
                 c.sth(c.r[18].wrapping_add(0x2), c.r[19]);
-                c.lr = 0x8015ca6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ca6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ca6c;
             }
             0x8015ca6c => { ins += 1;
@@ -38903,7 +38903,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[14]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015cafc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015cafc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015cafc;
             }
             0x8015cafc => { ins += 1;
@@ -38946,10 +38946,10 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[18], c.r[0]);
                 c.r[4] = 0xbc;
                 c.sth(c.r[18].wrapping_add(0x2), c.r[0]);
-                c.lr = 0x8015cb60; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015cb60; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015cb60;
             }
-            0x8015cb60 => { ins += 13;
+            0x8015cb60 => { ins += 19;
                 c.r[4] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa83e));
                 c.r[3] = 0x55550000;
                 c.r[0] = c.lwz_t(ins, c.r[16].wrapping_add(0xac));
@@ -38999,7 +38999,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[17]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015cc04; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015cc04; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015cc04;
             }
             0x8015cc04 => { ins += 1;
@@ -39100,7 +39100,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[17]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015cd2c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015cd2c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015cd2c;
             }
             0x8015cd2c => { ins += 1;
@@ -39190,7 +39190,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[14]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015ce40; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ce40; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ce40;
             }
             0x8015ce40 => { ins += 1;
@@ -39285,7 +39285,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[14]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015cf68; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015cf68; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015cf68;
             }
             0x8015cf68 => { ins += 1;
@@ -39333,69 +39333,69 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[13].wrapping_add(0xffffa7e8), c.r[0]);
                 c.r[3] = c.r[14] | c.r[14];
                 c.r[4] = c.r[14].wrapping_add(0x4);
-                c.lr = 0x8015cff8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015cff8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015cff8;
             }
             0x8015cff8 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0x6);
                 c.r[4] = c.r[14].wrapping_add(0xa);
                 c.r[5] = c.r[16].wrapping_add(0x8);
-                c.lr = 0x8015d008; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d008; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d008;
             }
             0x8015d008 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0xc);
                 c.r[4] = c.r[14].wrapping_add(0x10);
                 c.r[5] = c.r[16].wrapping_add(0xc);
-                c.lr = 0x8015d018; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d018; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d018;
             }
             0x8015d018 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0x12);
                 c.r[4] = c.r[14].wrapping_add(0x16);
                 c.r[5] = c.r[16].wrapping_add(0x10);
-                c.lr = 0x8015d028; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d028; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d028;
             }
             0x8015d028 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0x18);
                 c.r[4] = c.r[14].wrapping_add(0x1c);
                 c.r[5] = c.r[16].wrapping_add(0x14);
-                c.lr = 0x8015d038; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d038; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d038;
             }
             0x8015d038 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0x1e);
                 c.r[4] = c.r[14].wrapping_add(0x22);
                 c.r[5] = c.r[16].wrapping_add(0x18);
-                c.lr = 0x8015d048; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d048; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d048;
             }
             0x8015d048 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0x24);
                 c.r[4] = c.r[14].wrapping_add(0x28);
                 c.r[5] = c.r[16].wrapping_add(0x1c);
-                c.lr = 0x8015d058; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d058; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d058;
             }
             0x8015d058 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0x2a);
                 c.r[4] = c.r[14].wrapping_add(0x2e);
                 c.r[5] = c.r[16].wrapping_add(0x20);
-                c.lr = 0x8015d068; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d068; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d068;
             }
             0x8015d068 => { ins += 4;
                 c.r[3] = c.r[14].wrapping_add(0x30);
                 c.r[4] = c.r[14].wrapping_add(0x34);
                 c.r[5] = c.r[16].wrapping_add(0x24);
-                c.lr = 0x8015d078; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d078; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ac70(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d078;
             }
             0x8015d078 => { ins += 3;
                 c.r[3] = c.r[14] | c.r[14];
                 c.r[4] = 0x36;
-                c.lr = 0x8015d084; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d084; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d084;
             }
             0x8015d084 => { ins += 3;
@@ -39445,7 +39445,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[14]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015d110; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d110; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d110;
             }
             0x8015d110 => { ins += 1;
@@ -39489,7 +39489,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015d298; continue;
                 pc = 0x8015d184;
             }
-            0x8015d184 => { ins += 6;
+            0x8015d184 => { ins += 8;
                 c.r[0] = c.r[16].rotate_left(0) & 0xff;
                 c.r[0] = c.r[0].wrapping_mul(0xbc);
                 c.r[15] = c.r[14].wrapping_add(c.r[0]);
@@ -39538,7 +39538,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[17]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015d218; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d218; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d218;
             }
             0x8015d218 => { ins += 1;
@@ -39629,7 +39629,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[5].wrapping_add(0x6), c.r[14]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015d318; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d318; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d318;
             }
             0x8015d318 => { ins += 1;
@@ -39692,7 +39692,7 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.sth(c.r[4].wrapping_add(0x6), c.r[0]);
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7d8));
                 c.r[4] = c.lhz_t(ins, c.r[13].wrapping_add(0xffffa7dc));
-                c.lr = 0x8015d3d8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d3d8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d3d8;
             }
             0x8015d3d8 => { ins += 1;
@@ -39707,20 +39707,20 @@ fn f_8015b250_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7e0));
                 c.r[0] = c.lwz_t(ins, c.r[13].wrapping_add(0xffffa7e8));
                 c.r[4] = c.r[0].wrapping_sub(c.r[3]);
-                c.lr = 0x8015d3f0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d3f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b35c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d3f0;
             }
             0x8015d3f0 => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x80);
-                c.lr = 0x8015d3f8; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d3f8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47f0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d3f8;
             }
-            0x8015d3f8 => { ins += 4;
+            0x8015d3f8 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x84));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x80);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015b250: bad pc {:#x}", pc),
         }
@@ -39743,12 +39743,12 @@ pub fn f_8015d408_at(c: &mut Cpu, pc: u32) { f_8015d408_b(c, pc) }
 #[inline(always)]
 fn f_8015d408_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015d408;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015d408, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015d408, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015d408 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -39765,19 +39765,19 @@ fn f_8015d408_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015d43c; continue;
                 pc = 0x8015d42c;
             }
-            0x8015d42c => { ins += 4;
+            0x8015d42c => { ins += 5;
                 c.r[3] = c.r[4] | c.r[4];
                 c.r[4] = c.lwz_t(ins, c.r[5].wrapping_add(0x18));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8015d43c; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8015d43c; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8015d43c;
             }
-            0x8015d43c => { ins += 4;
+            0x8015d43c => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015d408: bad pc {:#x}", pc),
         }
@@ -39800,12 +39800,12 @@ pub fn f_8015d44c_at(c: &mut Cpu, pc: u32) { f_8015d44c_b(c, pc) }
 #[inline(always)]
 fn f_8015d44c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015d44c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015d44c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015d44c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015d44c => { ins += 10;
                 { let ea = c.r[1].wrapping_add(0xfffffff0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -39821,7 +39821,7 @@ fn f_8015d44c_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015d474;
             }
             0x8015d474 => { ins += 1;
-                c.lr = 0x8015d478; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d478; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015d4ec(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d478;
             }
             0x8015d478 => { ins += 3;
@@ -39830,7 +39830,7 @@ fn f_8015d44c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x24), c.r[0]);
                 pc = 0x8015d484;
             }
-            0x8015d484 => { ins += 11;
+            0x8015d484 => { ins += 13;
                 c.r[0] = c.r[31].rotate_left(0) & 0xff;
                 c.r[4] = 0x0;
                 c.r[0] = c.r[0].wrapping_mul(0xbc);
@@ -39849,7 +39849,7 @@ fn f_8015d44c_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[3].wrapping_add(0x10), c.r[30]);
                 pc = 0x8015d4b8;
             }
-            0x8015d4b8 => { ins += 13;
+            0x8015d4b8 => { ins += 14;
                 c.r[3] = 0x0;
                 c.r[0] = 0x1;
                 c.stw(c.r[30].wrapping_add(0x10), c.r[3]);
@@ -39862,8 +39862,8 @@ fn f_8015d44c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x10);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015d44c: bad pc {:#x}", pc),
         }
@@ -39886,17 +39886,17 @@ pub fn f_8015d4ec_at(c: &mut Cpu, pc: u32) { f_8015d4ec_b(c, pc) }
 #[inline(always)]
 fn f_8015d4ec_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015d4ec;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015d4ec, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015d4ec, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015d4ec => { ins += 3;
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0xec));
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x0);
-                if cr_bit(cr, 2) { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if cr_bit(cr, 2) { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015d4f8;
             }
             0x8015d4f8 => { ins += 3;
@@ -39911,7 +39911,7 @@ fn f_8015d4ec_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015d52c; continue;
                 pc = 0x8015d510;
             }
-            0x8015d510 => { ins += 7;
+            0x8015d510 => { ins += 9;
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0xef));
                 c.r[4] = 0x80440000;
                 c.r[4] = c.r[4].wrapping_add(0x7e60);
@@ -39935,8 +39935,8 @@ fn f_8015d4ec_b(c: &mut Cpu, mut pc: u32) {
             0x8015d540 => { ins += 3;
                 c.r[0] = 0x0;
                 c.stb(c.r[3].wrapping_add(0xec), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015d4ec: bad pc {:#x}", pc),
         }
@@ -39959,12 +39959,12 @@ pub fn f_8015d54c_at(c: &mut Cpu, pc: u32) { f_8015d54c_b(c, pc) }
 #[inline(always)]
 fn f_8015d54c_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015d54c;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015d54c, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015d54c, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015d54c => { ins += 3;
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x52));
@@ -39972,7 +39972,7 @@ fn f_8015d54c_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015d5ec; continue; }
                 pc = 0x8015d558;
             }
-            0x8015d558 => { ins += 37;
+            0x8015d558 => { ins += 47;
                 c.r[0] = c.r[0].wrapping_mul(0xc);
                 c.r[6] = c.lbz_t(ins, c.r[4].wrapping_add(0x3));
                 c.r[5] = c.r[3].wrapping_add(c.r[0]);
@@ -40009,13 +40009,13 @@ fn f_8015d54c_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[4].wrapping_add(0x1);
                 c.stb(c.r[3].wrapping_add(0x52), c.r[0]);
                 c.r[3] = 0x1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015d5ec;
             }
             0x8015d5ec => { ins += 2;
                 c.r[3] = 0x0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015d54c: bad pc {:#x}", pc),
         }
@@ -40038,14 +40038,14 @@ pub fn f_8015d5f4_at(c: &mut Cpu, pc: u32) { f_8015d5f4_b(c, pc) }
 #[inline(always)]
 fn f_8015d5f4_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015d5f4;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015d5f4, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015d5f4, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8015d5f4 => { ins += 6;
+            0x8015d5f4 => { ins += 7;
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x52));
                 c.r[6] = c.r[3] | c.r[3];
                 c.r[5] = 0x0;
@@ -40060,7 +40060,7 @@ fn f_8015d5f4_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015d664; continue; }
                 pc = 0x8015d618;
             }
-            0x8015d618 => { ins += 3;
+            0x8015d618 => { ins += 5;
                 c.r[0] = c.r[5].wrapping_mul(0xc);
                 c.r[4] = c.r[6].wrapping_add(c.r[0]);
                 pc = 0x8015d644; continue;
@@ -40088,7 +40088,7 @@ fn f_8015d5f4_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[3].wrapping_add(0xffffffff);
                 c.r[3] = 0x1;
                 c.stb(c.r[6].wrapping_add(0x52), c.r[0]);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015d664;
             }
             0x8015d664 => { ins += 3;
@@ -40099,8 +40099,8 @@ fn f_8015d5f4_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015d670 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015d5f4: bad pc {:#x}", pc),
         }
@@ -40123,12 +40123,12 @@ pub fn f_8015d678_at(c: &mut Cpu, pc: u32) { f_8015d678_b(c, pc) }
 #[inline(always)]
 fn f_8015d678_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015d678;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015d678, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015d678, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015d678 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffffd0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -40156,7 +40156,7 @@ fn f_8015d678_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015d720; continue; }
                 pc = 0x8015d6bc;
             }
-            0x8015d6bc => { ins += 22;
+            0x8015d6bc => { ins += 29;
                 c.r[4] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa83e));
                 c.r[3] = 0x55550000;
                 c.r[0] = c.r[3].wrapping_add(0x5556);
@@ -40178,13 +40178,13 @@ fn f_8015d678_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0xc), c.r[6]);
                 c.stw(c.r[1].wrapping_add(0x10), c.r[0]);
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8015d714; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8015d714; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8015d714;
             }
             0x8015d714 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x780;
-                c.lr = 0x8015d720; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d720; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d720;
             }
             0x8015d720 => { ins += 3;
@@ -40199,7 +40199,7 @@ fn f_8015d678_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015d79c; continue; }
                 pc = 0x8015d738;
             }
-            0x8015d738 => { ins += 22;
+            0x8015d738 => { ins += 29;
                 c.r[4] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa83e));
                 c.r[3] = 0x55550000;
                 c.r[0] = c.r[3].wrapping_add(0x5556);
@@ -40221,13 +40221,13 @@ fn f_8015d678_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[1].wrapping_add(0xc), c.r[6]);
                 c.stw(c.r[1].wrapping_add(0x10), c.r[0]);
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8015d790; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8015d790; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8015d790;
             }
             0x8015d790 => { ins += 3;
                 c.r[3] = c.r[29] | c.r[29];
                 c.r[4] = 0x780;
-                c.lr = 0x8015d79c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d79c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8009b330(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d79c;
             }
             0x8015d79c => { ins += 2;
@@ -40242,15 +40242,15 @@ fn f_8015d678_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 0) { pc = 0x8015d6a4; continue; }
                 pc = 0x8015d7b4;
             }
-            0x8015d7b4 => { ins += 7;
+            0x8015d7b4 => { ins += 8;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x34));
                 c.r[31] = c.lwz_t(ins, c.r[1].wrapping_add(0x2c));
                 c.r[30] = c.lwz_t(ins, c.r[1].wrapping_add(0x28));
                 c.r[29] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x30);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015d678: bad pc {:#x}", pc),
         }
@@ -40273,12 +40273,12 @@ pub fn f_8015d7d0_at(c: &mut Cpu, pc: u32) { f_8015d7d0_b(c, pc) }
 #[inline(never)]
 fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015d7d0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015d7d0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015d7d0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015d7d0 => { ins += 29;
                 { let ea = c.r[1].wrapping_add(0xfffffef0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -40309,7 +40309,7 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x50); let v = c.f[20]; c.stfd(ea, v); }
                 { let ea = c.r[1].wrapping_add(0x58); let (x, y) = (c.f[20], c.ps1[20]); c.psq_store(ea, x, y, false, 0); }
                 c.r[11] = c.r[1].wrapping_add(0x50);
-                c.lr = 0x8015d844; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47c0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d844; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47c0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d844;
             }
             0x8015d844 => { ins += 12;
@@ -40375,13 +40375,13 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
             0x8015d8f4 => { ins += 3;
                 c.f[1] = c.f[24];
                 { let ea = c.r[2].wrapping_add(0xffff9db0); c.f[2] = c.lfd(ea); }
-                c.lr = 0x8015d900; { c.steps = st; c.instrs = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d900; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d900;
             }
             0x8015d900 => { ins += 3;
                 { let v = s(c.f[1]); c.f[26] = v; c.ps1[26] = v; }
                 c.f[1] = c.f[24];
-                c.lr = 0x8015d90c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d90c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d90c;
             }
             0x8015d90c => { ins += 6;
@@ -40390,13 +40390,13 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[2].wrapping_add(0xffff9db0); c.f[2] = c.lfd(ea); }
                 { let v = s(c.f[0] - c.f[24]); c.f[23] = v; c.ps1[23] = v; }
                 c.f[1] = c.f[23];
-                c.lr = 0x8015d924; { c.steps = st; c.instrs = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d924; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d924;
             }
             0x8015d924 => { ins += 3;
                 { let v = s(c.f[1]); c.f[25] = v; c.ps1[25] = v; }
                 c.f[1] = c.f[23];
-                c.lr = 0x8015d930; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d930; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d930;
             }
             0x8015d930 => { ins += 1;
@@ -40419,26 +40419,26 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
             0x8015d950 => { ins += 3;
                 c.f[1] = c.f[24];
                 { let ea = c.r[2].wrapping_add(0xffff9db0); c.f[2] = c.lfd(ea); }
-                c.lr = 0x8015d95c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d95c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d95c;
             }
             0x8015d95c => { ins += 3;
                 { let v = s(c.f[1]); c.f[30] = v; c.ps1[30] = v; }
                 c.f[1] = c.f[24];
-                c.lr = 0x8015d968; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d968; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d968;
             }
             0x8015d968 => { ins += 4;
                 c.f[1] = c.f[20];
                 { let ea = c.r[2].wrapping_add(0xffff9db0); c.f[2] = c.lfd(ea); }
                 c.r[22] = c.r[3] | c.r[3];
-                c.lr = 0x8015d978; { c.steps = st; c.instrs = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d978; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d978;
             }
             0x8015d978 => { ins += 3;
                 { let v = s(c.f[1]); c.f[29] = v; c.ps1[29] = v; }
                 c.f[1] = c.f[20];
-                c.lr = 0x8015d984; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d984; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d984;
             }
             0x8015d984 => { ins += 7;
@@ -40448,26 +40448,26 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[0] - c.f[24]); c.f[23] = v; c.ps1[23] = v; }
                 { let v = s(c.f[0] - c.f[20]); c.f[20] = v; c.ps1[20] = v; }
                 c.f[1] = c.f[23];
-                c.lr = 0x8015d9a0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d9a0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d9a0;
             }
             0x8015d9a0 => { ins += 3;
                 { let v = s(c.f[1]); c.f[28] = v; c.ps1[28] = v; }
                 c.f[1] = c.f[23];
-                c.lr = 0x8015d9ac; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d9ac; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d9ac;
             }
             0x8015d9ac => { ins += 4;
                 c.f[1] = c.f[20];
                 { let ea = c.r[2].wrapping_add(0xffff9db0); c.f[2] = c.lfd(ea); }
                 c.r[24] = c.r[3] | c.r[3];
-                c.lr = 0x8015d9bc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d9bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce318(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d9bc;
             }
             0x8015d9bc => { ins += 3;
                 { let v = s(c.f[1]); c.f[27] = v; c.ps1[27] = v; }
                 c.f[1] = c.f[20];
-                c.lr = 0x8015d9c8; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d9c8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d9c8;
             }
             0x8015d9c8 => { ins += 3;
@@ -40480,7 +40480,7 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[2].wrapping_add(0xffff9d90); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
                 { let v = s(c.f[0] * c.f[22]); c.f[20] = v; c.ps1[20] = v; }
                 c.f[1] = c.f[20];
-                c.lr = 0x8015d9e4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015d9e4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015d9e4;
             }
             0x8015d9e4 => { ins += 59;
@@ -40542,7 +40542,7 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[3] + c.f[2]); c.f[2] = v; c.ps1[2] = v; }
                 { let v = s(c.f[0] * c.f[2]); c.f[0] = v; c.ps1[0] = v; }
                 { let ea = c.r[25]; let v = c.f[0]; c.stfs(ea, v); }
-                c.lr = 0x8015dad0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015dad0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015dad0;
             }
             0x8015dad0 => { ins += 49;
@@ -40594,7 +40594,7 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[2] + c.f[0]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[5] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
                 { let ea = c.r[25].wrapping_add(0xc); let v = c.f[0]; c.stfs(ea, v); }
-                c.lr = 0x8015db94; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015db94; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015db94;
             }
             0x8015db94 => { ins += 46;
@@ -40650,7 +40650,7 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[2].wrapping_add(0xffff9d90); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
                 { let v = s(c.f[0] * c.f[22]); c.f[20] = v; c.ps1[20] = v; }
                 c.f[1] = c.f[20];
-                c.lr = 0x8015dc5c; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015dc5c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015dc5c;
             }
             0x8015dc5c => { ins += 75;
@@ -40728,7 +40728,7 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let v = s(c.f[3] + c.f[0]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[2] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
                 { let ea = c.r[25].wrapping_add(0x18); let v = c.f[0]; c.stfs(ea, v); }
-                c.lr = 0x8015dd88; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015dd88; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015dd88;
             }
             0x8015dd88 => { ins += 48;
@@ -40808,15 +40808,15 @@ fn f_8015d7d0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x58); let (x, y) = c.psq_load(ea, false, 0); c.f[20] = x; c.ps1[20] = y; }
                 c.r[11] = c.r[1].wrapping_add(0x50);
                 { let ea = c.r[1].wrapping_add(0x50); c.f[20] = c.lfd(ea); }
-                c.lr = 0x8015deb0; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c480c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015deb0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c480c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015deb0;
             }
-            0x8015deb0 => { ins += 4;
+            0x8015deb0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x114));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x110);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015d7d0: bad pc {:#x}", pc),
         }
@@ -40839,12 +40839,12 @@ pub fn f_8015dec0_at(c: &mut Cpu, pc: u32) { f_8015dec0_b(c, pc) }
 #[inline(never)]
 fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015dec0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015dec0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015dec0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015dec0 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xffffffc0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -40853,7 +40853,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x30); let v = c.f[31]; c.stfd(ea, v); }
                 { let ea = c.r[1].wrapping_add(0x38); let (x, y) = (c.f[31], c.ps1[31]); c.psq_store(ea, x, y, false, 0); }
                 c.r[11] = c.r[1].wrapping_add(0x30);
-                c.lr = 0x8015dedc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015dedc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015dedc;
             }
             0x8015dedc => { ins += 3;
@@ -40918,7 +40918,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015df20; continue; }
                 pc = 0x8015df68;
             }
-            0x8015df68 => { ins += 8;
+            0x8015df68 => { ins += 24;
                 c.r[0] = 0x43300000;
                 c.stw(c.r[1].wrapping_add(0xc), c.r[3]);
                 { let ea = c.r[2].wrapping_add(0xffff9dd0); c.f[1] = c.lfd(ea); }
@@ -41001,7 +41001,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015dfdc; continue; }
                 pc = 0x8015e024;
             }
-            0x8015e024 => { ins += 9;
+            0x8015e024 => { ins += 25;
                 c.r[0] = 0x43300000;
                 c.stw(c.r[1].wrapping_add(0xc), c.r[29]);
                 { let ea = c.r[2].wrapping_add(0xffff9dd0); c.f[1] = c.lfd(ea); }
@@ -41044,7 +41044,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015e0d4; continue; }
                 pc = 0x8015e088;
             }
-            0x8015e088 => { ins += 5;
+            0x8015e088 => { ins += 6;
                 c.r[6] = 0x0;
                 c.r[3] = 0x1;
                 c.mtspr(9, c.r[5]);
@@ -41133,7 +41133,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015e134 => { ins += 2;
                 c.r[3] = c.lwz_t(ins, c.r[26].wrapping_add(0x3c));
-                c.lr = 0x8015e13c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c8fc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e13c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c8fc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e13c;
             }
             0x8015e13c => { ins += 4;
@@ -41158,15 +41158,15 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015e170; continue; }
                 pc = 0x8015e164;
             }
-            0x8015e164 => { ins += 3;
+            0x8015e164 => { ins += 4;
                 c.r[3] = c.lbz_t(ins, c.r[31].wrapping_add(0x1c));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8015e170; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8015e170; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8015e170;
             }
             0x8015e170 => { ins += 2;
                 c.r[3] = c.lbz_t(ins, c.r[31].wrapping_add(0x1c));
-                c.lr = 0x8015e178; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014dca8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e178; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014dca8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e178;
             }
             0x8015e178 => { ins += 6;
@@ -41206,7 +41206,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x1c));
                 c.r[4] = 0x1;
                 c.r[5] = 0x0;
-                c.lr = 0x8015e1f4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e1f4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e1f4;
             }
             0x8015e1f4 => { ins += 1;
@@ -41217,7 +41217,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x1c));
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8015e208; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e208; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e208;
             }
             0x8015e208 => { ins += 3;
@@ -41226,11 +41226,11 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015e348; continue; }
                 pc = 0x8015e214;
             }
-            0x8015e214 => { ins += 4;
+            0x8015e214 => { ins += 5;
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x1c));
                 c.r[4] = c.lwz_t(ins, c.r[30].wrapping_add(0x28));
                 c.mtspr(9, c.r[12]);
-                if true { let t = c.ctr; c.lr = 0x8015e224; { c.steps = st; c.instrs = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.instrs; cr = c.cr; }; }
+                if true { let t = c.ctr; c.lr = 0x8015e224; { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; }
                 pc = 0x8015e224;
             }
             0x8015e224 => { ins += 1;
@@ -41281,7 +41281,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x1c));
                 c.r[4] = 0x1;
                 c.r[5] = 0x0;
-                c.lr = 0x8015e2a4; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e2a4; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e2a4;
             }
             0x8015e2a4 => { ins += 1;
@@ -41292,7 +41292,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x1c));
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8015e2b8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e2b8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e2b8;
             }
             0x8015e2b8 => { ins += 3;
@@ -41339,7 +41339,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x1c));
                 c.r[4] = 0x1;
                 c.r[5] = 0x0;
-                c.lr = 0x8015e334; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e334; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e334;
             }
             0x8015e334 => { ins += 1;
@@ -41350,7 +41350,7 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lbz_t(ins, c.r[30].wrapping_add(0x1c));
                 c.r[4] = 0x0;
                 c.r[5] = 0x0;
-                c.lr = 0x8015e348; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e348; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014dc00(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e348;
             }
             0x8015e348 => { ins += 1;
@@ -41366,15 +41366,15 @@ fn f_8015dec0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x38); let (x, y) = c.psq_load(ea, false, 0); c.f[31] = x; c.ps1[31] = y; }
                 c.r[11] = c.r[1].wrapping_add(0x30);
                 { let ea = c.r[1].wrapping_add(0x30); c.f[31] = c.lfd(ea); }
-                c.lr = 0x8015e364; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e364; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4820(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e364;
             }
-            0x8015e364 => { ins += 4;
+            0x8015e364 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x44));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x40);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015dec0: bad pc {:#x}", pc),
         }
@@ -41397,12 +41397,12 @@ pub fn f_8015e374_at(c: &mut Cpu, pc: u32) { f_8015e374_b(c, pc) }
 #[inline(never)]
 fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015e374;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015e374, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015e374, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015e374 => { ins += 13;
                 { let ea = c.r[1].wrapping_add(0xffffff60); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -41417,7 +41417,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x60); let v = c.f[28]; c.stfd(ea, v); }
                 { let ea = c.r[1].wrapping_add(0x68); let (x, y) = (c.f[28], c.ps1[28]); c.psq_store(ea, x, y, false, 0); }
                 c.r[11] = c.r[1].wrapping_add(0x60);
-                c.lr = 0x8015e3a8; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e3a8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e3a8;
             }
             0x8015e3a8 => { ins += 16;
@@ -41500,7 +41500,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015e7f0; continue; }
                 pc = 0x8015e4b8;
             }
-            0x8015e4b8 => { ins += 6;
+            0x8015e4b8 => { ins += 22;
                 { let v = s(c.f[1] / c.f[0]); c.f[10] = v; c.ps1[10] = v; }
                 { let ea = c.r[24].wrapping_add(0x38); c.f[7] = c.lfs(ea); c.ps1[7] = c.f[7]; }
                 { let ea = c.r[2].wrapping_add(0xffff9dc8); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
@@ -41691,7 +41691,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015e72c; continue; }
                 pc = 0x8015e718;
             }
-            0x8015e718 => { ins += 5;
+            0x8015e718 => { ins += 21;
                 { let ea = c.r[31].wrapping_add(0x88); c.f[3] = c.lfs(ea); c.ps1[3] = c.f[3]; }
                 { let v = s(c.f[3] - c.f[2]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[3] / c.f[0]); c.f[0] = v; c.ps1[0] = v; }
@@ -41699,7 +41699,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015e73c; continue;
                 pc = 0x8015e72c;
             }
-            0x8015e72c => { ins += 4;
+            0x8015e72c => { ins += 20;
                 { let ea = c.r[31].wrapping_add(0x88); c.f[3] = c.lfs(ea); c.ps1[3] = c.f[3]; }
                 { let v = s(c.f[3] + c.f[2]); c.f[0] = v; c.ps1[0] = v; }
                 { let v = s(c.f[3] / c.f[0]); c.f[0] = v; c.ps1[0] = v; }
@@ -41716,7 +41716,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.r[31].wrapping_add(0x50);
                 c.r[4] = c.r[24].wrapping_add(0x14);
                 c.r[5] = c.r[1].wrapping_add(0x14);
-                c.lr = 0x8015e758; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015ffdc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e758; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015ffdc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e758;
             }
             0x8015e758 => { ins += 5;
@@ -41734,7 +41734,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 0) { pc = 0x8015e788; continue; }
                 pc = 0x8015e77c;
             }
-            0x8015e77c => { ins += 3;
+            0x8015e77c => { ins += 19;
                 c.f[0] = -c.f[2];
                 { let v = s(c.f[0] / c.f[1]); c.f[0] = v; c.ps1[0] = v; }
                 pc = 0x8015e78c; continue;
@@ -41755,7 +41755,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 1) { pc = 0x8015e7ac; continue; }
                 pc = 0x8015e7a0;
             }
-            0x8015e7a0 => { ins += 3;
+            0x8015e7a0 => { ins += 19;
                 c.f[0] = -c.f[2];
                 { let v = s(c.f[0] / c.f[1]); c.f[0] = v; c.ps1[0] = v; }
                 pc = 0x8015e7b0; continue;
@@ -41789,7 +41789,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015e7d8 => { ins += 2;
                 c.r[3] = c.r[1].wrapping_add(0x14);
-                c.lr = 0x8015e7e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80160088(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e7e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80160088(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e7e0;
             }
             0x8015e7e0 => { ins += 4;
@@ -41814,7 +41814,7 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 if cr_bit(cr, 2) { pc = 0x8015e858; continue; }
                 pc = 0x8015e808;
             }
-            0x8015e808 => { ins += 20;
+            0x8015e808 => { ins += 68;
                 c.r[0] = 0x43300000;
                 c.stw(c.r[1].wrapping_add(0x24), c.r[30]);
                 { let ea = c.r[2].wrapping_add(0xffff9dd0); c.f[3] = c.lfd(ea); }
@@ -41847,15 +41847,15 @@ fn f_8015e374_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x68); let (x, y) = c.psq_load(ea, false, 0); c.f[28] = x; c.ps1[28] = y; }
                 c.r[11] = c.r[1].wrapping_add(0x60);
                 { let ea = c.r[1].wrapping_add(0x60); c.f[28] = c.lfd(ea); }
-                c.lr = 0x8015e880; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4818(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e880; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4818(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e880;
             }
-            0x8015e880 => { ins += 4;
+            0x8015e880 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0xa4));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0xa0);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015e374: bad pc {:#x}", pc),
         }
@@ -41878,12 +41878,12 @@ pub fn f_8015e890_at(c: &mut Cpu, pc: u32) { f_8015e890_b(c, pc) }
 #[inline(always)]
 fn f_8015e890_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015e890;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015e890, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015e890, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015e890 => { ins += 3;
                 c.r[0] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa6f8));
@@ -41894,13 +41894,13 @@ fn f_8015e890_b(c: &mut Cpu, mut pc: u32) {
             0x8015e89c => { ins += 3;
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(0x10));
                 c.r[3] = c.r[0].rotate_left(16) & 0x1;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015e8a8;
             }
             0x8015e8a8 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015e890: bad pc {:#x}", pc),
         }
@@ -41923,12 +41923,12 @@ pub fn f_8015e8b0_at(c: &mut Cpu, pc: u32) { f_8015e8b0_b(c, pc) }
 #[inline(never)]
 fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015e8b0;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015e8b0, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015e8b0, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015e8b0 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffff60); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -41941,7 +41941,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x70); let v = c.f[29]; c.stfd(ea, v); }
                 { let ea = c.r[1].wrapping_add(0x78); let (x, y) = (c.f[29], c.ps1[29]); c.psq_store(ea, x, y, false, 0); }
                 c.r[11] = c.r[1].wrapping_add(0x70);
-                c.lr = 0x8015e8dc; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47bc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e8dc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47bc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e8dc;
             }
             0x8015e8dc => { ins += 14;
@@ -41958,7 +41958,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[27] = c.r[8] | c.r[8];
                 c.r[21] = c.r[9] | c.r[9];
                 c.r[22] = c.r[10] | c.r[10];
-                c.lr = 0x8015e914; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e914; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e914;
             }
             0x8015e914 => { ins += 2;
@@ -42030,7 +42030,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015e9dc;
             }
             0x8015e9dc => { ins += 1;
-                c.lr = 0x8015e9e0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015e9e0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015e9e0;
             }
             0x8015e9e0 => { ins += 2;
@@ -42045,7 +42045,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[6] = c.r[1].wrapping_add(0x18);
                 c.r[7] = c.r[1].wrapping_add(0x14);
                 c.r[8] = c.r[1].wrapping_add(0x10);
-                c.lr = 0x8015ea04; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015e374(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ea04; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015e374(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ea04;
             }
             0x8015ea04 => { ins += 4;
@@ -42056,7 +42056,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015ea14;
             }
             0x8015ea14 => { ins += 1;
-                c.lr = 0x8015ea18; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ea18; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ea18;
             }
             0x8015ea18 => { ins += 2;
@@ -42085,7 +42085,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = c.lhz_t(ins, c.r[30].wrapping_add(0x44));
                 c.r[5] = 0x40;
                 c.r[7] = c.r[0].rotate_left(28) & 0x1;
-                c.lr = 0x8015ea50; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c5e8(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ea50; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c5e8(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ea50;
             }
             0x8015ea50 => { ins += 5;
@@ -42097,7 +42097,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015ea64;
             }
             0x8015ea64 => { ins += 1;
-                c.lr = 0x8015ea68; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ea68; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ea68;
             }
             0x8015ea68 => { ins += 2;
@@ -42137,7 +42137,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015eac4;
             }
             0x8015eac4 => { ins += 1;
-                c.lr = 0x8015eac8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015eac8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015eac8;
             }
             0x8015eac8 => { ins += 1;
@@ -42164,7 +42164,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
             0x8015eaf8 => { ins += 3;
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[4] = 0x7;
-                c.lr = 0x8015eb04; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015eb04; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015eb04;
             }
             0x8015eb04 => { ins += 11;
@@ -42189,7 +42189,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
             0x8015eb38 => { ins += 3;
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[4] = 0xa;
-                c.lr = 0x8015eb44; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015eb44; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015eb44;
             }
             0x8015eb44 => { ins += 11;
@@ -42214,13 +42214,13 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
             0x8015eb78 => { ins += 3;
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[4] = 0x83;
-                c.lr = 0x8015eb84; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015eb84; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015eb84;
             }
             0x8015eb84 => { ins += 3;
                 { let ea = c.r[2].wrapping_add(0xffff9e00); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
                 { let v = s(c.f[0] * c.f[31]); c.f[1] = v; c.ps1[1] = v; }
-                c.lr = 0x8015eb90; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015eb90; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c46b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015eb90;
             }
             0x8015eb90 => { ins += 3;
@@ -42236,7 +42236,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
             0x8015eba0 => { ins += 3;
                 c.r[3] = c.r[31] | c.r[31];
                 c.r[4] = 0x84;
-                c.lr = 0x8015ebac; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c794(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ebac; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c794(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ebac;
             }
             0x8015ebac => { ins += 3;
@@ -42270,7 +42270,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
             0x8015ebe0 => { ins += 3;
                 c.r[5] = c.lhz_t(ins, c.r[23].wrapping_add(0x2));
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8015ebec; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c794(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ebec; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c794(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ebec;
             }
             0x8015ebec => { ins += 1;
@@ -42280,7 +42280,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
             0x8015ebf0 => { ins += 3;
                 c.r[5] = c.lbz_t(ins, c.r[23].wrapping_add(0x2));
                 c.r[3] = c.r[31] | c.r[31];
-                c.lr = 0x8015ebfc; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ebfc; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c6b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ebfc;
             }
             0x8015ebfc => { ins += 2;
@@ -42297,7 +42297,7 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015ec18;
             }
             0x8015ec18 => { ins += 1;
-                c.lr = 0x8015ec1c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ec1c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ec1c;
             }
             0x8015ec1c => { ins += 2;
@@ -42329,12 +42329,12 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 c.r[0] = c.r[0] | 0x30000;
                 c.stw(c.r[30].wrapping_add(0x10), c.r[0]);
                 c.r[3] = c.lhz_t(ins, c.r[30].wrapping_add(0x44));
-                c.lr = 0x8015ec6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_8014c5b4(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ec6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_8014c5b4(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ec6c;
             }
             0x8015ec6c => { ins += 2;
                 c.stb(c.r[30].wrapping_add(0x47), c.r[3]);
-                c.lr = 0x8015ec74; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ec74; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ec74;
             }
             0x8015ec74 => { ins += 1;
@@ -42349,15 +42349,15 @@ fn f_8015e8b0_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x78); let (x, y) = c.psq_load(ea, false, 0); c.f[29] = x; c.ps1[29] = y; }
                 c.r[11] = c.r[1].wrapping_add(0x70);
                 { let ea = c.r[1].wrapping_add(0x70); c.f[29] = c.lfd(ea); }
-                c.lr = 0x8015ec98; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4808(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ec98; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4808(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ec98;
             }
-            0x8015ec98 => { ins += 4;
+            0x8015ec98 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0xa4));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0xa0);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015e8b0: bad pc {:#x}", pc),
         }
@@ -42380,12 +42380,12 @@ pub fn f_8015eca8_at(c: &mut Cpu, pc: u32) { f_8015eca8_b(c, pc) }
 #[inline(always)]
 fn f_8015eca8_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015eca8;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015eca8, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015eca8, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015eca8 => { ins += 7;
                 { let ea = c.r[1].wrapping_add(0xffffffe0); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -42406,7 +42406,7 @@ fn f_8015eca8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[10] = c.r[12] | c.r[12];
                 c.r[8] = c.r[0] | 0x80000000;
                 c.stw(c.r[1].wrapping_add(0x10), c.r[11]);
-                c.lr = 0x8015ece8; { c.steps = st; c.instrs = ins; c.cr = cr; f_8015e8b0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ece8; { c.steps = st; c.cycles = ins; c.cr = cr; f_8015e8b0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ece8;
             }
             0x8015ece8 => { ins += 1;
@@ -42417,12 +42417,12 @@ fn f_8015eca8_b(c: &mut Cpu, mut pc: u32) {
                 c.r[3] = 0xffffffff;
                 pc = 0x8015ecf0;
             }
-            0x8015ecf0 => { ins += 4;
+            0x8015ecf0 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x24));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x20);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015eca8: bad pc {:#x}", pc),
         }
@@ -42445,19 +42445,19 @@ pub fn f_8015ed00_at(c: &mut Cpu, pc: u32) { f_8015ed00_b(c, pc) }
 #[inline(never)]
 fn f_8015ed00_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015ed00;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015ed00, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015ed00, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015ed00 => { ins += 5;
                 { let ea = c.r[1].wrapping_add(0xffffffa0); c.stw(ea, c.r[1]); c.r[1] = ea; }
                 c.r[0] = c.mfspr(8);
                 c.stw(c.r[1].wrapping_add(0x64), c.r[0]);
                 c.r[11] = c.r[1].wrapping_add(0x60);
-                c.lr = 0x8015ed14; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ed14; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ed14;
             }
             0x8015ed14 => { ins += 10;
@@ -42474,7 +42474,7 @@ fn f_8015ed00_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015ed3c;
             }
             0x8015ed3c => { ins += 1;
-                c.lr = 0x8015ed40; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ed40; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ed40;
             }
             0x8015ed40 => { ins += 28;
@@ -42505,7 +42505,7 @@ fn f_8015ed00_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[30].wrapping_add(0x48), c.r[0]);
                 c.r[0] = c.lwz_t(ins, c.r[28].wrapping_add(0x8));
                 c.stw(c.r[30].wrapping_add(0x4c), c.r[0]);
-                c.lr = 0x8015edb0; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016013c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015edb0; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016013c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015edb0;
             }
             0x8015edb0 => { ins += 30;
@@ -42538,10 +42538,10 @@ fn f_8015ed00_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x30); let v = c.f[0]; c.stfs(ea, v); }
                 { let ea = c.r[30].wrapping_add(0x18); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
                 { let ea = c.r[1].wrapping_add(0x34); let v = c.f[0]; c.stfs(ea, v); }
-                c.lr = 0x8015ee28; { c.steps = st; c.instrs = ins; c.cr = cr; f_801601a0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ee28; { c.steps = st; c.cycles = ins; c.cr = cr; f_801601a0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ee28;
             }
-            0x8015ee28 => { ins += 13;
+            0x8015ee28 => { ins += 29;
                 c.r[3] = c.r[29].rotate_left(0) & 0xff;
                 c.r[0] = 0x43300000;
                 c.stw(c.r[1].wrapping_add(0x3c), c.r[3]);
@@ -42627,7 +42627,7 @@ fn f_8015ed00_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015eedc;
             }
             0x8015eedc => { ins += 1;
-                c.lr = 0x8015eee0; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015eee0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015eee0;
             }
             0x8015eee0 => { ins += 2;
@@ -42641,15 +42641,15 @@ fn f_8015ed00_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015eeec => { ins += 2;
                 c.r[11] = c.r[1].wrapping_add(0x60);
-                c.lr = 0x8015eef4; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015eef4; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c481c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015eef4;
             }
-            0x8015eef4 => { ins += 4;
+            0x8015eef4 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x64));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x60);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015ed00: bad pc {:#x}", pc),
         }
@@ -42672,12 +42672,12 @@ pub fn f_8015ef04_at(c: &mut Cpu, pc: u32) { f_8015ef04_b(c, pc) }
 #[inline(never)]
 fn f_8015ef04_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015ef04;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015ef04, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015ef04, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
             0x8015ef04 => { ins += 11;
                 { let ea = c.r[1].wrapping_add(0xffffff70); c.stw(ea, c.r[1]); c.r[1] = ea; }
@@ -42690,7 +42690,7 @@ fn f_8015ef04_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x60); let v = c.f[29]; c.stfd(ea, v); }
                 { let ea = c.r[1].wrapping_add(0x68); let (x, y) = (c.f[29], c.ps1[29]); c.psq_store(ea, x, y, false, 0); }
                 c.r[11] = c.r[1].wrapping_add(0x60);
-                c.lr = 0x8015ef30; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c47cc(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ef30; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c47cc(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ef30;
             }
             0x8015ef30 => { ins += 14;
@@ -42711,7 +42711,7 @@ fn f_8015ef04_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015ef68;
             }
             0x8015ef68 => { ins += 1;
-                c.lr = 0x8015ef6c; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015ef6c; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164360(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015ef6c;
             }
             0x8015ef6c => { ins += 4;
@@ -42762,7 +42762,7 @@ fn f_8015ef04_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[27].wrapping_add(0x84); let v = c.f[30]; c.stfs(ea, v); }
                 { let ea = c.r[27].wrapping_add(0x88); let v = c.f[31]; c.stfs(ea, v); }
                 { let ea = c.r[27].wrapping_add(0x1c); let v = c.f[0]; c.stfs(ea, v); }
-                c.lr = 0x8015f014; { c.steps = st; c.instrs = ins; c.cr = cr; f_8016013c(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015f014; { c.steps = st; c.cycles = ins; c.cr = cr; f_8016013c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015f014;
             }
             0x8015f014 => { ins += 30;
@@ -42795,10 +42795,10 @@ fn f_8015ef04_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x30); let v = c.f[0]; c.stfs(ea, v); }
                 { let ea = c.r[27].wrapping_add(0x18); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
                 { let ea = c.r[1].wrapping_add(0x34); let v = c.f[0]; c.stfs(ea, v); }
-                c.lr = 0x8015f08c; { c.steps = st; c.instrs = ins; c.cr = cr; f_801601a0(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015f08c; { c.steps = st; c.cycles = ins; c.cr = cr; f_801601a0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015f08c;
             }
-            0x8015f08c => { ins += 14;
+            0x8015f08c => { ins += 30;
                 c.r[3] = c.r[30].rotate_left(0) & 0xff;
                 c.r[0] = 0x43300000;
                 c.stw(c.r[1].wrapping_add(0x3c), c.r[3]);
@@ -42834,7 +42834,7 @@ fn f_8015ef04_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015f0e4;
             }
             0x8015f0e4 => { ins += 1;
-                c.lr = 0x8015f0e8; { c.steps = st; c.instrs = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015f0e8; { c.steps = st; c.cycles = ins; c.cr = cr; f_80164328(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015f0e8;
             }
             0x8015f0e8 => { ins += 2;
@@ -42854,15 +42854,15 @@ fn f_8015ef04_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[1].wrapping_add(0x68); let (x, y) = c.psq_load(ea, false, 0); c.f[29] = x; c.ps1[29] = y; }
                 c.r[11] = c.r[1].wrapping_add(0x60);
                 { let ea = c.r[1].wrapping_add(0x60); c.f[29] = c.lfd(ea); }
-                c.lr = 0x8015f114; { c.steps = st; c.instrs = ins; c.cr = cr; f_800c4818(c); st = c.steps; ins = c.instrs; cr = c.cr; };
+                c.lr = 0x8015f114; { c.steps = st; c.cycles = ins; c.cr = cr; f_800c4818(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8015f114;
             }
-            0x8015f114 => { ins += 4;
+            0x8015f114 => { ins += 5;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x94));
                 c.mtspr(8, c.r[0]);
                 c.r[1] = c.r[1].wrapping_add(0x90);
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015ef04: bad pc {:#x}", pc),
         }
@@ -42885,14 +42885,14 @@ pub fn f_8015f124_at(c: &mut Cpu, pc: u32) { f_8015f124_b(c, pc) }
 #[inline(always)]
 fn f_8015f124_b(c: &mut Cpu, mut pc: u32) {
     let mut st = c.steps;
-    let mut ins = c.instrs;
+    let mut ins = c.cycles;
     let mut cr = c.cr;
     c.last_fn = 0x8015f124;
     loop {
         st += 1;
-        if st > c.step_limit { c.steps = st; c.instrs = ins; c.cr = cr; c.step_event(0x8015f124, pc); st = c.steps; ins = c.instrs; cr = c.cr; }
+        if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8015f124, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
         match pc {
-            0x8015f124 => { ins += 7;
+            0x8015f124 => { ins += 8;
                 c.r[6] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa812));
                 c.r[4] = 0x80450000;
                 c.r[5] = c.r[4].wrapping_add(0xffff8590);
@@ -42927,7 +42927,7 @@ fn f_8015f124_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015f16c => { ins += 2;
                 c.r[3] = 0x0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015f174;
             }
             0x8015f174 => { ins += 13;
@@ -42954,7 +42954,7 @@ fn f_8015f124_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8015f1b4 => { ins += 2;
                 c.r[3] = 0x0;
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8015f1bc;
             }
             0x8015f1bc => { ins += 9;
@@ -42989,7 +42989,7 @@ fn f_8015f124_b(c: &mut Cpu, mut pc: u32) {
                 if !cr_bit(cr, 2) { pc = 0x8015f1e4; continue; }
                 pc = 0x8015f200;
             }
-            0x8015f200 => { ins += 7;
+            0x8015f200 => { ins += 9;
                 c.r[5] = c.r[5].wrapping_mul(0x1c);
                 c.r[4] = 0x80450000;
                 c.r[0] = c.r[4].wrapping_add(0xffff8c90);
@@ -42999,7 +42999,7 @@ fn f_8015f124_b(c: &mut Cpu, mut pc: u32) {
                 pc = 0x8015f234; continue;
                 pc = 0x8015f21c;
             }
-            0x8015f21c => { ins += 6;
+            0x8015f21c => { ins += 8;
                 c.r[5] = c.r[5].wrapping_mul(0x1c);
                 c.r[4] = 0x80450000;
                 c.r[0] = c.r[4].wrapping_add(0xffff8c90);
@@ -43008,7 +43008,7 @@ fn f_8015f124_b(c: &mut Cpu, mut pc: u32) {
                 c.stw(c.r[7], c.r[4]);
                 pc = 0x8015f234;
             }
-            0x8015f234 => { ins += 15;
+            0x8015f234 => { ins += 17;
                 c.r[4] = c.lbz_t(ins, c.r[13].wrapping_add(0xffffa811));
                 c.r[5] = 0x80450000;
                 c.r[5] = c.r[5].wrapping_add(0xffff8c90);
@@ -43023,8 +43023,8 @@ fn f_8015f124_b(c: &mut Cpu, mut pc: u32) {
                 { let ea = c.r[4].wrapping_add(0xc); let v = c.f[3]; c.stfs(ea, v); }
                 { let ea = c.r[4].wrapping_add(0x10); let v = c.f[4]; c.stfs(ea, v); }
                 { let ea = c.r[4].wrapping_add(0x4); let v = c.f[1]; c.stfs(ea, v); }
-                if true { { c.steps = st; c.instrs = ins; c.cr = cr; return; } }
-                { c.steps = st; c.instrs = ins; c.cr = cr; return; }
+                if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
+                { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
             _ => panic!("f_8015f124: bad pc {:#x}", pc),
         }

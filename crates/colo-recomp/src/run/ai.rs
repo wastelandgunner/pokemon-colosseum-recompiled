@@ -2,40 +2,85 @@
 
 use super::*;
 
-/// The next AI DMA block's end (time base): one block (160 samples at 32 kHz) every 5 ms = 202,500 ticks; 0 = not
-/// started. Blocks end at their own times (not bunched at fields) so each `__AIDHandler` finds the DSP's last
-/// frame done, as on hardware.
-pub(super) static AI_NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
-pub(super) const TB_PER_AI: u64 = 202_500;
-/// The AI DMA block now playing: (physical address, bytes).
-pub(super) static AI_LATCH: Mutex<Option<(u32, u32)>> = Mutex::new(None);
+/// The audio DMA as Dolphin runs it (SystemTimers `AudioDMACallback`, DSP.cpp `UpdateAudioDMA`; described, not
+/// copied): every 121,392 CPU cycles (TB_PER_AI_TICK ticks; 8 stereo samples at the GameCube's "32 kHz", 108 MHz /
+/// 3372 = 32,028.5 Hz) from power-on, while AIDCR (0xCC005036) bit 15 is on, 32 bytes at the current address go to
+/// the speakers (else 32 bytes of silence); after the block's length (AIDCR bits 0-14, in 32-byte units) the DMA
+/// reloads the start address registers and interrupts (`__AIDHandler`: MusyX queues the next block). Turning the
+/// DMA on loads the registers and interrupts at once (Dolphin: 200 cycles later).
+pub(super) const TB_PER_AI_TICK: u64 = 121_392 / 12;
 
-/// AI DMA blocks whose time has come: the AI interrupt for each, while the AI DMA runs (AIDCR 0xCC005036 bit 15).
+pub(super) struct AiDma {
+    /// The next 32-byte tick (time base); 0 = not started.
+    next_tick: u64,
+    cur: u32,
+    remaining: u32,
+    /// The DMA was on at the last tick or register write.
+    on: bool,
+    /// Turned on: interrupt at the next opportunity.
+    start_irq: bool,
+}
+pub(super) static AI_DMA: Mutex<AiDma> = Mutex::new(AiDma { next_tick: 0, cur: 0, remaining: 0, on: false, start_irq: false });
+
+/// The next AI event that needs the CPU (an AI interrupt), for time skips: 0 = none.
+pub(super) static AI_NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+fn ai_src(m: &crate::mem::Mem) -> u32 { (m.u16(0xCC00_5030) as u32 & 0x3FF) << 16 | (m.u16(0xCC00_5032) as u32 & 0xFFE0) }
+
+/// The DMA's ticks up to now: samples to the speakers (`Ax::out`) and the AI interrupt at each block's end.
 pub(super) fn ai_due(c: &mut Cpu) {
     use std::sync::atomic::Ordering::Relaxed;
+    let now = time_base(c);
     loop {
-        let now = time_base(c);
-        let n = AI_NEXT.load(Relaxed);
-        if n == 0 || now > n + 8 * TB_PER_AI { AI_NEXT.store(now + TB_PER_AI, Relaxed); return; }
-        if now < n { return; }
-        AI_NEXT.store(n + TB_PER_AI, Relaxed);
-        let dcr = c.m.u16(0xCC00_5036);
-        if dcr & 0x8000 != 0 {
-            // the block that just played is what the speakers got (AX writes R, L 16-bit pairs); the DMA then
-            // latches the registers for the next block and interrupts so the game can queue another
-            let mut latch = AI_LATCH.lock().unwrap();
-            if let Some((a, len)) = *latch {
-                let b = c.m.read(0x8000_0000 | a, len).to_vec();
-                if let Some(ax) = AX.lock().unwrap().as_mut() {
-                    ax.out.extend(b.chunks_exact(2).map(|x| i16::from_be_bytes([x[0], x[1]])));
+        let mut irq = false;
+        {
+            let mut d = AI_DMA.lock().unwrap();
+            let dcr = c.m.u16(0xCC00_5036);
+            let on = dcr & 0x8000 != 0;
+            // a snapshot taken mid-stream: the DMA is already on
+            if on && !d.on { d.on = true; d.cur = ai_src(&c.m); d.remaining = (dcr & 0x7FFF) as u32; }
+            if d.next_tick == 0 { d.next_tick = (now / TB_PER_AI_TICK + 1) * TB_PER_AI_TICK; }
+            if std::mem::take(&mut d.start_irq) {
+                irq = true;
+            } else if d.next_tick <= now {
+                d.next_tick += TB_PER_AI_TICK;
+                let mut ax = AX.lock().unwrap();
+                if on {
+                    let b = c.m.read(0x8000_0000 | d.cur, 32).to_vec();
+                    if let Some(ax) = ax.as_mut() { ax.out.extend(b.chunks_exact(2).map(|x| i16::from_be_bytes([x[0], x[1]]))); }
+                    if d.remaining != 0 { d.remaining -= 1; d.cur += 32; }
+                    if d.remaining == 0 {
+                        d.cur = ai_src(&c.m);
+                        d.remaining = (dcr & 0x7FFF) as u32;
+                        irq = true;
+                    }
+                } else if let Some(ax) = ax.as_mut() {
+                    ax.out.extend([0i16; 16]);
                 }
+            } else {
+                // next interrupt: this block's last tick
+                let next = if on { d.next_tick + (d.remaining.max(1) as u64 - 1) * TB_PER_AI_TICK } else { 0 };
+                AI_NEXT.store(next, Relaxed);
+                return;
             }
-            let a = (c.m.u16(0xCC00_5030) as u32 & 0x3FF) << 16 | (c.m.u16(0xCC00_5032) as u32 & 0xFFE0);
-            *latch = Some((a, (dcr as u32 & 0x7FFF) * 32));
-            drop(latch);
-            raise(c, 0x05);
-        } else if trace() { eprintln!("run: AI DMA off (AIDCR {:#x})", c.m.u16(0xCC00_5036)); }
+        }
+        if irq { raise(c, 0x05); }
     }
+}
+
+/// AIDCR (0xCC005036) writes: turning the DMA on loads the start address and length and interrupts.
+pub(super) fn dma_control_write(m: &mut crate::mem::Mem, a: u32, n: usize) {
+    if !(covers(a, n, 0xCC00_5036) || covers(a, n, 0xCC00_5037)) { return; }
+    let dcr = m.u16(0xCC00_5036);
+    let mut d = AI_DMA.lock().unwrap();
+    let on = dcr & 0x8000 != 0;
+    if on && !d.on {
+        d.cur = ai_src(m);
+        d.remaining = (dcr & 0x7FFF) as u32;
+        d.start_irq = true;
+        AI_NEXT.store(1, std::sync::atomic::Ordering::Relaxed);
+    }
+    d.on = on;
 }
 
 /// AI sample counter start (time base when AICR PSTAT went on), u64::MAX = stopped.

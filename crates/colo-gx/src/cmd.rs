@@ -26,7 +26,10 @@ pub struct GVertex {
 pub enum TexId { Mem(u64), Efb(u32, u32) }
 
 #[derive(Clone, Copy, Default, Debug, PartialEq)]
-pub struct SamplerDesc { pub wrap_s: u32, pub wrap_t: u32, pub mag_linear: bool, pub min: u32, pub lod_bias: f32, pub min_lod: f32, pub max_lod: f32 }
+/// A map's sampler (BP TX_SETMODE0/1): `min` = mip mode (bits 0-1: 0 none, 1 nearest, 2 linear) | min filter
+/// linear (bit 2); LOD bias, min and max LOD in 1/16 steps as Dolphin's `SamplerState::Generate` (no mipmaps:
+/// all 0; min LOD never above max).
+pub struct SamplerDesc { pub wrap_s: u32, pub wrap_t: u32, pub mag_linear: bool, pub min: u32, pub diag_lod: bool, pub lod_bias: f32, pub min_lod: f32, pub max_lod: f32 }
 
 #[derive(Clone, Debug)]
 pub struct GState {
@@ -78,6 +81,8 @@ pub struct GCopy {
     pub depth: bool,
     /// Clear after copying: colour (r, g, b, a), z, and what the PE masks let through (colour, alpha, z).
     pub clear: Option<([u8; 4], u32, bool, bool, bool)>,
+    /// Copy filter, gamma, clamp lines and the XFB's vertical scale.
+    pub filter: crate::raster::CopyFilter,
 }
 
 #[derive(Clone, Debug)]
@@ -277,8 +282,12 @@ impl Builder {
         tex[map] = self.texture(s, mem, map, g);
         let r = |base: usize| s.bp[if map < 4 { base + map } else { base + 0x20 + map - 4 }];
         let (m0, m1) = (r(0x80), r(0x84));
-        samp[map] = SamplerDesc { wrap_s: m0 & 3, wrap_t: m0 >> 2 & 3, mag_linear: m0 >> 4 & 1 != 0, min: m0 >> 5 & 7,
-            lod_bias: ((m0 >> 9 & 0xFF) as i8 as f32) / 32.0, min_lod: (m1 & 0xFF) as f32 / 16.0, max_lod: (m1 >> 8 & 0xFF) as f32 / 16.0 };
+        let (min_lod, max_lod, bias) = if m0 >> 5 & 3 == 0 { (0, 0, 0) } else {
+            let max = m1 >> 8 & 0xFF;
+            ((m1 & 0xFF).min(max), max, ((m0 >> 9 & 0xFF) as i8 as i32 * 8) >> 4)
+        };
+        samp[map] = SamplerDesc { wrap_s: m0 & 3, wrap_t: m0 >> 2 & 3, mag_linear: m0 >> 4 & 1 != 0, min: m0 >> 5 & 7, diag_lod: m0 >> 8 & 1 != 0,
+            lod_bias: bias as f32, min_lod: min_lod as f32, max_lod: max_lod as f32 };
     }
 
     fn texture(&mut self, s: &State, mem: &dyn GpuMem, map: usize, g: &mut GFrame) -> Option<TexId> {
@@ -351,8 +360,12 @@ impl Builder {
         let c = GCopy {
             id, src: [src & 0x3FF, src >> 10 & 0x3FF, (sz & 0x3FF) + 1, (sz >> 10 & 0x3FF) + 1], dst, to_xfb,
             fmt: (tp >> 1) | ((tp & 1) << 3), intensity: v >> 15 & 1 != 0, half: v >> 9 & 1 != 0,
-            depth: s.bp[0x43] & 7 == 3, clear,
+            depth: s.bp[0x43] & 7 == 3, clear, filter: crate::raster::CopyFilter::new(s, v),
         };
+        if DUMP.load(std::sync::atomic::Ordering::Relaxed) {
+            eprintln!("gx copy{id} src{:?} xfb{} fmt{} half{} z{} filter{:?} gamma{} clamp{:?} ys{}", c.src, to_xfb, c.fmt, c.half, c.depth,
+                      c.filter.coef, c.filter.gamma, c.filter.clamp, c.filter.y_scale);
+        }
         if to_xfb { g.xfb = Some(id); } else { self.copies.insert(dst, id); }
         g.ops.push(GOp::Copy(c));
     }

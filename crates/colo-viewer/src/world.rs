@@ -108,6 +108,19 @@ fn model_with_anims(bytes: &[u8]) -> Res2<(Model, Vec<Animation>)> {
     Ok((model, anims))
 }
 
+/// The floor id (what `floorLink` takes) of the room archive `room_name` (e.g. "M3_out"): its FSYS group's room
+/// record in common_rel.
+pub fn floor_for_room(path: &str, room_name: &str) -> Res2<u32> {
+    let mut source = Source::open(path)?;
+    let common_fsys = source.read("common.fsys")?;
+    let cfs = Fsys::parse(&common_fsys)?;
+    let common_bytes = cfs.read(cfs.find("common_rel", FileType::Rel).ok_or("no common_rel")?)?;
+    let common = Common::parse(&common_bytes)?;
+    let room = source.read(&format!("{room_name}.fsys"))?;
+    let fs = Fsys::parse(&room)?;
+    Ok(common.rooms()?.iter().find(|r| r.group_id == fs.group_id).ok_or("no room record for this archive")?.floor_id)
+}
+
 impl Game {
     pub fn open(path: &str) -> Res2<Self> {
         let mut source = Source::open(path)?;

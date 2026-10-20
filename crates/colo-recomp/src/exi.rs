@@ -5,7 +5,8 @@
 //! TSTART and raises TCINT (an interrupt when TCINTMASK is set). Here a transfer completes as soon as it starts.
 //!
 //! Devices: channel 0 device 1 is the IPL chip: ROM, the RTC (0x20000000), SRAM (0x20000100) and the debug UART
-//! (0x20010000, where `OSReport` writes). Slot A (channel 0 device 0) can hold a memory card (memcard.rs).
+//! (0x20010000, where `OSReport` writes). Slots A and B (channels 0 and 1, device 0) can hold a memory card
+//! (memcard.rs).
 
 use crate::ppc::Cpu;
 
@@ -21,15 +22,24 @@ pub struct Exi {
     ipl: Ipl,
     /// Memory card in slot A (channel 0 device 0).
     pub card: Option<crate::memcard::Card>,
-    /// An EXI interrupt the card raised (erase / program done) for run.rs to deliver.
-    pub card_irq: bool,
+    /// Memory card in slot B (channel 1 device 0).
+    pub card_b: Option<crate::memcard::Card>,
+    /// An EXI interrupt a card raised (erase / program done) for run.rs to deliver, per slot.
+    pub card_irq: [bool; 2],
     /// `OSReport` text (the debug UART), line by line.
     pub log: Vec<String>,
+    /// The RTC (seconds since 2000) as of the current transfer (run::rtc_now: emulated time).
+    rtc: u32,
 }
 
 impl Exi {
     /// The SRAM's memory card flash ID for slot `k` (the console's ID a formatted card carries).
     pub fn flash_id(&self, k: usize) -> [u8; 12] { self.ipl.sram[0x14 + 12 * k..0x20 + 12 * k].try_into().unwrap() }
+
+    /// The memory card in slot `k` (0 A, 1 B).
+    pub fn slot(&mut self, k: usize) -> Option<&mut crate::memcard::Card> {
+        match k { 0 => self.card.as_mut(), 1 => self.card_b.as_mut(), _ => None }
+    }
 
     pub fn new() -> Exi {
         let mut e = Exi::default();
@@ -44,10 +54,10 @@ impl Exi {
         let dev = (0..3).find(|k| cs >> k & 1 != 0);
         if dev != self.sel[ch] {
             if self.sel[ch] == Some(1) && ch == 0 { self.end_ipl(); }
-            if self.sel[ch] == Some(0) && ch == 0 {
-                if let Some(cd) = self.card.as_mut() { if cd.deselect() { self.card_irq = true; } }
+            if self.sel[ch] == Some(0) && ch < 2 {
+                if let Some(cd) = self.slot(ch) { if cd.deselect() { self.card_irq[ch] = true; } }
             }
-            if dev == Some(0) && ch == 0 { if let Some(cd) = self.card.as_mut() { cd.select(); } }
+            if dev == Some(0) && ch < 2 { if let Some(cd) = self.slot(ch) { cd.select(); } }
             self.sel[ch] = dev;
             if ch == 0 && dev == Some(1) { self.ipl.cmd = None; self.ipl.pos = 0; }
         }
@@ -55,6 +65,7 @@ impl Exi {
 
     /// After `EXIImm` / `EXIDma` started a transfer: run it. Returns the TC interrupt to raise, if enabled.
     pub fn transfer(&mut self, c: &mut Cpu, ch: usize) -> Option<u32> {
+        self.rtc = crate::run::rtc_now(c);
         let b = BASE + 0x14 * ch as u32;
         let cr = c.m.u32(b + 0xC);
         if cr & 1 == 0 { return None; }
@@ -88,7 +99,7 @@ impl Exi {
     }
 
     fn write_byte(&mut self, ch: usize, dev: Option<u32>, x: u8) {
-        if ch == 0 && dev == Some(0) { if let Some(cd) = self.card.as_mut() { cd.write(x); } return; }
+        if ch < 2 && dev == Some(0) { if let Some(cd) = self.slot(ch) { cd.write(x); } return; }
         if ch == 0 && dev == Some(1) {
             let p = &mut self.ipl;
             match p.cmd {
@@ -119,7 +130,7 @@ impl Exi {
     }
 
     fn read_byte(&mut self, ch: usize, dev: Option<u32>) -> u8 {
-        if ch == 0 && dev == Some(0) { return self.card.as_mut().map_or(0xFF, |cd| cd.read()); }
+        if ch < 2 && dev == Some(0) { return self.slot(ch).map_or(0xFF, |cd| cd.read()); }
         if ch == 0 && dev == Some(1) {
             let p = &mut self.ipl;
             if let Some(cmd) = p.cmd {
@@ -128,7 +139,7 @@ impl Exi {
                 p.pos += 1;
                 if a == 0x2000_0000 {
                     // RTC: seconds since 2000-01-01, big-endian
-                    let t = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_secs()).saturating_sub(946_684_800) as u32;
+                    let t = self.rtc;
                     return t.to_be_bytes().get(o).copied().unwrap_or(0);
                 }
                 if (0x2000_0100..0x2000_0200).contains(&a) {

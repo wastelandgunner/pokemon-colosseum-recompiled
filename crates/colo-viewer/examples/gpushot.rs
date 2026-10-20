@@ -20,7 +20,10 @@ fn main() {
     let (dev, q) = futures_lite::future::block_on(ad.request_device(&wgpu::DeviceDescriptor { required_features: feats, ..Default::default() })).unwrap();
     let mut gpu = colo_gxgpu::Gpu::new(dev, q, std::env::var("COLO_SCALE").ok().and_then(|v| v.parse().ok()).unwrap_or(1));
     // NOYUV=1: show the XFB copy as the EFB's RGB (no YUYV round trip)
-    gpu.xfb_yuv = std::env::var("NOYUV").is_err();
+    if std::env::var("NOYUV").is_ok() { gpu.xfb_yuv = false; }
+    if std::env::var("NOFILTER").is_ok() { gpu.copy_filter = false; }
+    // NOFILTER=1: EFB copies ignore the copy filter (deflicker)
+    colo_gx::raster::NO_COPY_FILTER.store(std::env::var("NOFILTER").is_ok(), std::sync::atomic::Ordering::Relaxed);
     let mut b = colo_gx::cmd::Builder::new();
     // ONLYALL=a-b: draw only those ops in every frame (with COLO_GPU_TIMING: what a range of draws costs)
     if let Ok(r) = std::env::var("ONLYALL") { let (a, z) = r.split_once('-').unwrap(); gpu.only = Some(a.parse().unwrap()..z.parse().unwrap()); }

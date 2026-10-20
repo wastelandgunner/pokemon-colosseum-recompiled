@@ -95,6 +95,14 @@ graphics card (`colo-gxgpu`) at `COLO_SCALE` (default 3) times native resolution
   noticeably longer than in earlier versions, which read instantly; some game timing depends on it.
 - **Performance overlay.** `recomp --perf` shows the frame rate and where each frame's time goes (F3 toggles it);
   `recomp --perf-log[=secs]` prints the same to the terminal every `secs` seconds (default 1).
+- **Settings menu.** Escape pauses the game and opens a menu with Video (resolution scale, fullscreen, present mode,
+  frame latency, aspect, filtering, the performance overlay), Audio (volume) and Controls (rebind any key, two per
+  button; gamepad deadzone) tabs, usable by keyboard or mouse. Settings are kept in `saves/recomp.ini` beside the
+  memory card; the `COLO_SCALE`-style env variables still override it for one run.
+- **Gamepads.** Up to four, in the order they connect (the first is controller 1 alongside the keyboard); the game's
+  rumble drives the gamepad's motor.
+- **Warp.** `colo-viewer <disc> <room>[:entry]` (e.g. `M2_out`) runs the game from power-on and, at the title's
+  Continue, goes to that room instead of the save's, with the card's story save (party, bag, flags).
 
 ```sh
 cargo run -p colo-viewer --release -- "$D" recomp                       # play

@@ -26,6 +26,9 @@ bevy = { version = "0.19", default-features = false, features = [
     "bevy_input_focus", "bevy_ui", "bevy_ui_render", "bevy_ui_widgets",
 ] }
 ab_glyph = "0.2"
+# the UI text: autohinted outlines (the font has no hints of its own), rasterized by ab_glyph's rasterizer
+skrifa = "0.44"
+ab_glyph_rasterizer = "0.1"
 rfd = "0.17"
 image = { version = "0.25", default-features = false, features = ["png"] }
 

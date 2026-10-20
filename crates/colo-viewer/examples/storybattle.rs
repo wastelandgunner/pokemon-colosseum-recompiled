@@ -1,6 +1,6 @@
 //! Play a story battle snapshot headless the way the viewer does (`gamebattle.rs`), tapping A, until the game pops
 //! its battle floor: `cargo run --release -p colo-viewer --example storybattle <snapdir> [max frames]`.
-//! Prints the floor depth and `battleGetResult` at the end; SHOT=dir saves a PPM every 300 frames (SHOT_EVERY=n).
+//! Prints the floor depth and `battleGetResult` at the end, and the game's rumble commands (PADControlMotor) as they change; SHOT=dir saves a PPM every 300 frames (SHOT_EVERY=n).
 //! Timing: GPUCMDS=1 builds the viewer's draw list (game / draw-list ms every 60 frames; FTIME=ms also every frame over
 //! that; GXTIME=1 splits out GX decode and vertex work), PROFILE=a-b samples the guest call stack over those frames
 //! (PROFILE_OUT, one line of hex addresses per sample: last function entered, then return addresses).
@@ -109,6 +109,7 @@ fn main() {
     let every: u32 = std::env::var("SHOT_EVERY").ok().and_then(|v| v.parse().ok()).unwrap_or(300);
     let mut was = m.floor_depth();
     let mut builder = colo_gx::cmd::Builder::new();
+    let mut motors = [0u8; 4];
     for fr in 0..max {
         let b = if fr % 20 >= 10 && fr % 20 < 13 { 0x100 } else { 0 };
         m.set_pad(colo_recomp::run::Pad { buttons: b, ..Default::default() });
@@ -118,6 +119,11 @@ fn main() {
         if let Some((a, b)) = hostprof { hostprof::ON.store(fr >= a && fr < b, std::sync::atomic::Ordering::Relaxed); }
         m.frame();
         ON.store(false, std::sync::atomic::Ordering::Relaxed);
+        if std::env::var("PADDBG").is_ok() && fr % 10 == 0 {
+            let r = |a: u32| m.c.m.u32(a);
+            println!("frame {fr}: pad0 id {} status {} latched {:#010x} {:#010x} cur {:#010x}", r(0x8040_1C10), r(0x8040_1C1C), r(0x8040_1C28), r(0x8040_1C2C), r(0x8040_1C34));
+        }
+        if m.motors() != motors { motors = m.motors(); println!("frame {fr}: rumble {motors:?}"); }
         if std::env::var("DRAWDONE").is_ok() && fr % 50 == 0 { println!("frame {fr}: draw-done callbacks {} wait-loop yields {}", DD[0].swap(0, std::sync::atomic::Ordering::Relaxed), DD[1].swap(0, std::sync::atomic::Ordering::Relaxed)); }
         let t1 = t0.elapsed().as_secs_f64();
         if std::env::var("STEPS").is_ok() && fr % 60 == 0 { println!("frame {fr}: {} lifted blocks, {:.1} ms", m.c.steps - s0, t1 * 1e3); }
@@ -205,13 +211,13 @@ fn main() {
         }
         let d = m.floor_depth();
         if was == 1 && d == 0 {
-            println!("frame {fr}: battle floor popped, battleGetResult {} ({} blocks, {} instructions)", m.battle_result(), m.c.steps, m.c.instrs);
+            println!("frame {fr}: battle floor popped, battleGetResult {} ({} blocks, {} cycles)", m.battle_result(), m.c.steps, m.c.cycles);
             return;
         }
         was = d;
         if fr % 600 == 0 { println!("frame {fr}: floor depth {d} threads {:x?} AI callbacks {}", colo_recomp::run::threads(), SYNTH.load(std::sync::atomic::Ordering::Relaxed)); }
     }
-    println!("no pop after {max} frames (floor depth {}; {} blocks, {} instructions)", m.floor_depth(), m.c.steps, m.c.instrs);
+    println!("no pop after {max} frames (floor depth {}; {} blocks, {} cycles)", m.floor_depth(), m.c.steps, m.c.cycles);
 }
 
 /// HOSTPROF: the host program counter at each SIGPROF (process CPU time), kept while `ON`.

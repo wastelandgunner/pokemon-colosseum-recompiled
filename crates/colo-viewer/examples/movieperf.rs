@@ -1,8 +1,9 @@
 //! Per-frame cost of the recompile (CPU, draw-list build, GPU render) against the game time each frame covers,
-//! booted like `colo-viewer recomp` (no card unless CARD). PADS="from-to:hexbuttons,..." scripts the pad;
+//! booted like `colo-viewer recomp` (no card unless CARD; WARP=floor[:entry] warps there from the title, warp.rs). PADS="from-to:hexbuttons,..." scripts the pad;
 //! SHOT=frames saves XFB PNGs to OUT (MONTAGE: one labelled grid); GXDUMP=frames prints each draw's GX state. Logs a line per LOG frames (default 30).
 //! `cargo run --release -p colo-viewer --example movieperf <gcm> <n>`
 use colo_recomp::run::{Machine, Pad};
+#[path = "../src/warp.rs"] mod warp;
 use std::time::{Duration, Instant};
 unsafe extern "C" { fn prctl(option: i32, arg: u64, ...) -> i32; }
 fn main() {
@@ -14,8 +15,15 @@ fn main() {
     let mut m = Machine::from_snapshot(&std::path::Path::new(dol).join("snaps/boot")).unwrap();
     let f = std::sync::Mutex::new(std::fs::File::open(&a[1]).unwrap());
     m.set_disc(Box::new(move |off, buf| { use std::io::{Read, Seek, SeekFrom}; let mut f = f.lock().unwrap(); if f.seek(SeekFrom::Start(off)).is_err() || f.read_exact(buf).is_err() { buf.fill(0); } }));
-    if let Ok(c) = std::env::var("CARD") { m.insert_card(&[std::fs::read(c).unwrap()]); }
+    // CARD: a .gci save, or a raw card image (read only; the game's writes aren't kept)
+    if let Ok(c) = std::env::var("CARD") {
+        let b = std::fs::read(&c).unwrap();
+        if c.ends_with(".raw") { m.insert_card_image(b) } else { m.insert_card(&[b]) }
+    }
     m.boot();
+    // WARP=floor[:entry] (hex floor id): warp.rs's title-menu warp, its Start/A presses added to PADS
+    let warping = std::env::var("WARP").ok().map(|v| { let (f, e) = v.split_once(':').unwrap_or((&v, "0"));
+        warp::install(&mut m, (u32::from_str_radix(f.trim_start_matches("0x"), 16).unwrap(), e.parse().unwrap())); }).is_some();
     // FNTIME: time the THP decoder's pieces (host hooks that run the lifted body and add up its time)
     macro_rules! timed { ($i:expr, $f:path, $a:expr) => {{ fn h(c: &mut colo_recomp::ppc::Cpu) { let t = Instant::now(); $f(c, $a); FT[$i].fetch_add(t.elapsed().as_nanos() as u64, std::sync::atomic::Ordering::Relaxed); } h as fn(&mut colo_recomp::ppc::Cpu) }}; }
     static FT: [std::sync::atomic::AtomicU64; 6] = [const { std::sync::atomic::AtomicU64::new(0) }; 6];
@@ -62,6 +70,7 @@ fn main() {
     let mut texs: std::collections::HashMap<u64, (u32, u32, Vec<u8>)> = Default::default();
     for fr in 0..n {
         let bt = pads.iter().filter(|p| fr >= p.0 && fr < p.1).fold(0, |a, p| a | p.2);
+        let bt = if warping && warp::pending() { bt | warp::buttons(fr) } else { bt };
         m.set_pad(Pad { buttons: bt, ..Default::default() });
         if let Some((x, y)) = samp {
             ON.store(fr >= x && fr < y, std::sync::atomic::Ordering::Relaxed);
@@ -76,7 +85,16 @@ fn main() {
         let gxd = std::env::var("GXDUMP").is_ok_and(|v| v.split(',').any(|x| x == fr.to_string()));
         colo_gx::cmd::DUMP.store(gxd, std::sync::atomic::Ordering::Relaxed);
         if gxd { eprintln!("gx frame {fr}"); }
-        let t = Instant::now(); let g = m.gpu_cmds(&mut b); let bd = t.elapsed(); tb += bd;
+        // SOFT=1: shot frames also run the software renderer (OUT/soft<frame>.png, the reference)
+        let soft = std::env::var("SOFT").is_ok() && shots.split(',').any(|x| x == fr.to_string());
+        let t = Instant::now(); let g = if soft { m.gpu_cmds_soft(&mut b) } else if std::env::var("DEFER").is_ok() {
+            // DEFER=1: the window's path (vertex work after the frame, `GFrame::finish`)
+            let mut g = m.gpu_cmds_deferred(&mut b); g.finish(); g } else { m.gpu_cmds(&mut b) }; let bd = t.elapsed(); tb += bd;
+        if soft {
+            // the software EFB as the frame ends (its XFB copy may go to a buffer the VI shows later)
+            let e: Vec<u8> = m.gpu.color.iter().flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+            image::save_buffer(format!("{out}/soft{fr}.png"), &e, 640, 528, image::ColorType::Rgba8).unwrap();
+        }
         if gxd { eprintln!("gx frame {fr}: {} ops {} verts", g.ops.len(), g.verts.len()); }
         let t = Instant::now(); gpu.render(&g); let r = t.elapsed(); tr += r;
         worst = worst.max(c + bd + r);

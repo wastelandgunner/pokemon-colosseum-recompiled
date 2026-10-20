@@ -30,8 +30,9 @@ pub struct Cpu {
     pub dispatch: fn(&mut Cpu, u32),
     /// Basic blocks executed, a limit that panics (runaway loops waiting on hardware), and the last function entered.
     pub steps: u64,
-    /// Guest instructions executed (each lifted block adds its length on entry): the emulated clock (run.rs time base).
-    pub instrs: u64,
+    /// Guest CPU cycles executed (each lifted block adds its instructions' cycles on entry, Dolphin's per-opcode
+    /// estimates: tools/ppclift/cycles.py): the emulated clock (run.rs time base).
+    pub cycles: u64,
     pub step_limit: u64,
     pub last_fn: u32,
     /// Record function facts (`prof.rs`); lifted functions check this at entry.
@@ -125,7 +126,7 @@ impl Cpu {
     pub fn new(mut m: Mem) -> Self {
         m.map(STACK_TOP - STACK_SIZE, vec![0; STACK_SIZE as usize]);
         let mut c = Cpu { r: [0; 32], f: [0.0; 32], ps1: [0.0; 32], cr: 0, lr: 0, ctr: 0, xer: 0, fpscr: 0, gqr: [0; 8], m,
-            dispatch: no_dispatch, steps: 0, instrs: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None };
+            dispatch: no_dispatch, steps: 0, cycles: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None };
         c.r[1] = STACK_TOP - 0x100;
         c.r[2] = 0x804836A0; // _SDA2_BASE_
         c.r[13] = 0x80480820; // _SDA_BASE_
@@ -135,7 +136,7 @@ impl Cpu {
     /// A CPU over an existing address space (e.g. a RAM snapshot that already has a stack); no stack is mapped.
     pub fn bare(m: Mem) -> Self {
         Cpu { r: [0; 32], f: [0.0; 32], ps1: [0.0; 32], cr: 0, lr: 0, ctr: 0, xer: 0, fpscr: 0, gqr: [0; 8], m,
-            dispatch: no_dispatch, steps: 0, instrs: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None }
+            dispatch: no_dispatch, steps: 0, cycles: 0, step_limit: u64::MAX, last_fn: 0, prof: false, hooks: false, stubs: Default::default(), stub_zero: Default::default(), entry_set: Default::default(), stub_cb: Default::default(), hook_fn: Default::default(), mmio_read: None, trace_fns: Default::default(), tick: None }
     }
 
     /// `steps` passed `step_limit` at block `pc` of function `f`.
@@ -213,9 +214,9 @@ impl Cpu {
     /// sees the current count (the time base), then the field goes back to the body's last sync.
     #[inline(never)] #[cold] fn mmio_at(&mut self, ins: u64, a: u32, n: u32) -> Option<u32> {
         let h = self.mmio_read?;
-        let old = std::mem::replace(&mut self.instrs, ins);
+        let old = std::mem::replace(&mut self.cycles, ins);
         let v = h(self, a, n);
-        self.instrs = old;
+        self.cycles = old;
         v
     }
     #[inline(always)] fn io(a: u32) -> bool { a.wrapping_sub(0xCC00_0000) < 0x8000 }

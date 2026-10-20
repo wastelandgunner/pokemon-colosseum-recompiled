@@ -81,7 +81,7 @@ fn memcpy(c: &mut Cpu) {
         c.steps += 1;
         init.set_state(c, e, done, last);
         let before = MemcpyEntry::instrs_before(e, n);
-        c.instrs += before - counted;
+        c.cycles += before - counted;
         counted = before;
         c.step_event(MEMCPY, init.pc(e));
         // then its body
@@ -92,7 +92,7 @@ fn memcpy(c: &mut Cpu) {
         k = e + 1;
     }
     init.set_state(c, total, n, last);
-    c.instrs += 4 * n as u64 + 9 - counted;
+    c.cycles += 4 * n as u64 + 9 - counted;
 }
 
 /// `memcpy`'s registers at entry, and its block structure: 0 entry (cmplw r4, r3), 1 setup (r4/r6 one before the
@@ -186,7 +186,7 @@ fn raise_pending(c: &mut Cpu) -> bool {
 }
 
 /// Hardware register writes (mem.rs `mmio_write`): the devices whose registers have side effects.
-static MMIO_BUSY: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+pub(super) static MMIO_BUSY: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
 fn covers(a: u32, n: usize, r: u32) -> bool { a <= r && r < a + n as u32 }
 
@@ -195,9 +195,12 @@ fn mmio(m: &mut crate::mem::Mem, a: u32, n: usize) {
     dsp::control_write(m, a, n);
     ar::dma_write(m, a, n);
     if covers(a, n, 0xCC00_601F) && m.u32(0xCC00_601C) & 1 != 0 { di_execute(m); }
+    disr_write(m, a, n);
     exi::csr_write(m, a, n);
     si::comcsr_write(m, a, n);
+    si::outbuf_write(m, a, n);
     ai::control_write(m, a, n);
+    ai::dma_control_write(m, a, n);
     MMIO_BUSY.store(false, std::sync::atomic::Ordering::Relaxed);
 }
 
@@ -273,7 +276,6 @@ impl Machine {
         c.hook_fn.insert(OS_LOAD_CONTEXT, os_load_context);
         c.hook_fn.insert(GX_FLUSH, gx_flush);
         c.hook_fn.insert(GX_SET_DRAW_DONE, gx_set_draw_done);
-        c.hook_fn.insert(PAD_READ, pad_read);
         c.hook_fn.insert(DSP_SEND_MAIL, dsp_send_mail);
         c.hook_fn.insert(DSP_READ_MAIL, dsp_read_mail);
         c.hook_fn.insert(VI_SET_NEXT_FB, vi_set_next_fb);
@@ -333,6 +335,14 @@ impl Machine {
             m.c.m.set_u16(0xCC00_5036, 0x8000 | (0x280 / 32));
         }
         if let Ok(a) = std::fs::read(dir.join("l1.bin")) { m.set_l1(&a); }
+        // nor the SI's polling: SIPOLL as the SI library's copy (Si.poll 0x80313F90), the enabled controllers' poll
+        // command as PADEnable sets it (0x40, the analog mode 0x80478A14, motor off), and the poll interrupt
+        // unmasked (RDSTINTMSK)
+        let poll = m.c.m.u32(0x8031_3F90);
+        let mode = m.c.m.u32(0x8047_8A14) & 0xFF00;
+        m.c.m.set_u32(0xCC00_6430, poll);
+        for ch in 0..4 { if poll >> (7 - ch) & 1 != 0 { m.c.m.set_u32(0xCC00_6400 + 12 * ch, 0x40_0000 | mode); } }
+        m.c.m.set_u32(0xCC00_6434, 0x0800_0000);
         // nor the EFB: a battle wipe's back-buffer capture (`GSgfxBackFBDoFrame`) copies it into the fade texture at
         // the start of the next frame, before anything is drawn, so a black EFB blacks out the rest of the wipe.
         // The fade texture holds the capture of one frame earlier: start the EFB from it.
@@ -359,6 +369,7 @@ impl Machine {
         let b = load_disc(&disc)?;
         let mut m = Machine::new(b.mem1, &[0; 32]);
         m.entry = b.entry;
+        power_on(&mut m.c);
         m.set_disc(disc);
         Ok(m)
     }
@@ -412,7 +423,13 @@ impl Machine {
     pub fn set_l1(&mut self, bytes: &[u8]) { self.c.m.write(0xE000_0000, bytes); }
 
     /// Controller 1 for the next PADRead.
-    pub fn set_pad(&mut self, p: Pad) { *PAD.lock().unwrap() = p; }
+    pub fn set_pad(&mut self, p: Pad) { PADS.lock().unwrap()[0] = Some(p); }
+
+    /// All four controller ports (None = nothing plugged in).
+    pub fn set_pads(&mut self, p: [Option<Pad>; 4]) { *PADS.lock().unwrap() = p; }
+
+    /// The rumble motor command the game last sent each port (0 stop, 1 rumble, 2 stop hard).
+    pub fn motors(&self) -> [u8; 4] { *MOTORS.lock().unwrap() }
 
     /// ARAM as captured with the snapshot (story_entry_snap.py `aram.bin`).
     pub fn set_aram(&mut self, bytes: Vec<u8>) {
@@ -486,39 +503,50 @@ impl Machine {
         out
     }
 
-    /// Slot A's flash ID: the OS's copy of the SRAM (0x803FB854) once OSInit has read it, else the SRAM itself.
-    fn flash_id(&self) -> [u8; 12] {
+    /// A slot's flash ID: the OS's copy of the SRAM (0x803FB854, slot B 12 bytes on) once OSInit has read it,
+    /// else the SRAM itself.
+    fn flash_id(&self, slot: usize) -> [u8; 12] {
         let mut flash = [0u8; 12];
-        for (k, b) in flash.iter_mut().enumerate() { *b = self.c.m.u8(0x803F_B854 + k as u32); }
-        if flash == [0; 12] { flash = exi_with(|e| e.flash_id(0)); }
+        for (k, b) in flash.iter_mut().enumerate() { *b = self.c.m.u8(0x803F_B854 + 12 * slot as u32 + k as u32); }
+        if flash == [0; 12] { flash = exi_with(|e| e.flash_id(slot)); }
         flash
     }
 
     /// Insert a memory card in slot A built from GCI files (the SRAM flash ID and font encoding come from the
     /// game's RAM, so the card is this console's).
     pub fn insert_card(&mut self, gcis: &[Vec<u8>]) {
-        let flash = self.flash_id();
+        let flash = self.flash_id(0);
         let enc = self.c.m.u16(0x8047_A970) as u16;
         self.insert_card_image(crate::memcard::build(gcis, flash, 0, enc));
     }
 
     /// A blank card formatted for this console (as `insert_card` with no files), to start a card image from.
-    pub fn blank_card(&self) -> Vec<u8> {
-        let flash = self.flash_id();
-        crate::memcard::build(&[], flash, 0, self.c.m.u16(0x8047_A970) as u16)
+    pub fn blank_card(&self) -> Vec<u8> { self.blank_card_in(0) }
+
+    /// A blank card formatted for this console's slot `slot` (0 A, 1 B).
+    pub fn blank_card_in(&self, slot: usize) -> Vec<u8> {
+        crate::memcard::build(&[], self.flash_id(slot), 0, self.c.m.u16(0x8047_A970) as u16)
     }
 
     /// Insert a raw card image (Dolphin's .raw layout: 64 blocks of 8 KB) in slot A.
-    pub fn insert_card_image(&mut self, img: Vec<u8>) {
-        exi_with(|e| e.card = Some(crate::memcard::Card::new(img)));
-        CARD_A.store(true, std::sync::atomic::Ordering::Relaxed);
-        let csr = self.c.m.u32(0xCC00_6800);
-        self.c.m.set_u32(0xCC00_6800, csr | 0x1000); // EXT: a device is in slot A
+    pub fn insert_card_image(&mut self, img: Vec<u8>) { self.insert_card_image_in(0, img) }
+
+    /// Insert a raw card image in slot `slot` (0 A, 1 B).
+    pub fn insert_card_image_in(&mut self, slot: usize, img: Vec<u8>) {
+        let cd = crate::memcard::Card::new(img);
+        exi_with(|e| if slot == 0 { e.card = Some(cd) } else { e.card_b = Some(cd) });
+        CARD_IN[slot].store(true, std::sync::atomic::Ordering::Relaxed);
+        let r = 0xCC00_6800 + 0x14 * slot as u32;
+        let csr = self.c.m.u32(r);
+        self.c.m.set_u32(r, csr | 0x1000); // EXT: a device is in the slot
     }
 
     /// The slot A card's image if the game has written to it since the last call (clears the flag).
-    pub fn take_card_writes(&mut self) -> Option<Vec<u8>> {
-        exi_with(|e| e.card.as_mut().filter(|cd| cd.dirty).map(|cd| { cd.dirty = false; cd.data.clone() }))
+    pub fn take_card_writes(&mut self) -> Option<Vec<u8>> { self.take_card_writes_in(0) }
+
+    /// Slot `slot`'s card image if the game has written to it since the last call (clears the flag).
+    pub fn take_card_writes_in(&mut self, slot: usize) -> Option<Vec<u8>> {
+        exi_with(|e| e.slot(slot).filter(|cd| cd.dirty).map(|cd| { cd.dirty = false; cd.data.clone() }))
     }
 
     /// Give the DI its disc.
@@ -571,7 +599,8 @@ impl Machine {
             self.c.m.write(dst | 0x8000_0000, &b);
             self.c.m.set_u32(0xCC00_6018, 0);
             let sr = self.c.m.u32(0xCC00_6000);
-            self.c.m.set_u32(0xCC00_6000, sr | 0x10 | 0x2A);
+            self.c.m.set_u32(0xCC00_6000, sr | 0x2A);
+            disr_raise(&mut self.c.m, 0x10);
             PENDING.lock().unwrap().push(IRQ_DI);
         }
     }

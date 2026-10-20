@@ -32,6 +32,9 @@ mod audio;
 mod battle;
 mod gamebattle;
 mod recomp;
+mod recomp_menu;
+mod settings;
+mod warp;
 mod perf;
 mod fade;
 mod wipe;
@@ -135,11 +138,21 @@ fn main() {
         if let Some(p) = pick { args.push(p.to_string_lossy().into_owned()); args.push("recomp".into()); }
     }
     if args.is_empty() {
-        eprintln!("usage: colo-viewer <image.gcm | dir> [room | continue]   (e.g. M2_out; no room = continue the save)");
+        eprintln!("usage: colo-viewer <image.gcm | dir> [recomp | room[:entry] | continue]   (room, e.g. M2_out: the recompiled game warped there; COLO_RUST=1: the Rust field; no room = continue the Rust field's save)");
         std::process::exit(2);
     }
     prefetch_disc(&args[0]);
-    if args.get(1).map(String::as_str) == Some("recomp") { return recomp::run(&args[0], perf::Opts::parse(&args[2..])); }
+    if args.get(1).map(String::as_str) == Some("recomp") { return recomp::run(&args[0], perf::Opts::parse(&args[2..]), None); }
+    // a room (`M3_out`, `M3_out:2` for entry 2): the recompiled game, warped there from the title with the card's
+    // story save (recomp.rs `warp`), so the room, its menus and scripts are the game's own code. COLO_RUST=1 keeps
+    // the Rust field below (debug keys, text save, story presets).
+    if let Some(r) = args.get(1).filter(|r| r.as_str() != "continue" && std::env::var("COLO_RUST").is_err()) {
+        let (room, entry) = match r.split_once(':') { Some((n, e)) => (n, e.parse().unwrap_or(0)), None => (r.as_str(), 0) };
+        match world::floor_for_room(&args[0], room) {
+            Ok(floor) => { println!("{room}: floor {floor:#x}, entry {entry}"); return recomp::run(&args[0], perf::Opts::parse(&args[2..]), Some((floor, entry))); }
+            Err(e) => { eprintln!("error: {room}: {e}"); std::process::exit(1); }
+        }
+    }
     // story progress: the save's flags (unless COLO_NEW_GAME=1), plus COLO_FLAGS overrides
     let saved = if std::env::var("COLO_NEW_GAME").is_ok() { None } else { save::load() };
     // nothing to continue (first run): a New Game, which starts at Outskirt Stand (story_start.rs)

@@ -1,11 +1,12 @@
 //! colo-gx draw lists (`cmd::GFrame`) on the graphics card with wgpu.
 //!
 //! The EFB is a render target `scale` times the GameCube's 640x528 (so the game renders at any resolution),
-//! with a 32-bit float depth buffer holding the 24-bit Z / 2^24. Each draw: one TEV ubershader (tev.wgsl) whose
+//! with a 32-bit float depth buffer holding the 24-bit Z reversed (1 - Z / (2^24 - 1), for precision near the far end). Each draw: one TEV ubershader (tev.wgsl) whose
 //! per-draw state comes from a storage buffer, fixed-function blending / depth / cull from a pipeline cache, the
 //! scissor scaled. EFB copies stay on the card: copies to textures become textures later draws can sample (by
 //! copy id, see cmd.rs), copies to the XFB become the frame `present` shows, through the YUYV round trip the XFB
-//! in memory would make (Dolphin's XFB encoder/decoder). Z copies (PE format Z24) read the depth buffer. Fog is in
+//! in memory would make (Dolphin's XFB encoder/decoder) and its vertical scale. Every copy goes through the copy
+//! filter (deflicker / brightness) and copy gamma. Z copies (PE format Z24) read the depth buffer. Fog is in
 //! the shader; logic ops read the EFB from a copy made just before each draw that needs it (wgpu has no logic ops).
 
 use colo_gx::cmd::{GCopy, GFrame, GOp, GState, TexId};
@@ -88,10 +89,15 @@ pub struct Gpu {
     /// Z copies (depth buffer -> R/G/B bytes) and the XFB's YUYV round trip.
     zcopy_pipe: wgpu::RenderPipeline,
     zcopy_bgl: wgpu::BindGroupLayout,
-    yuv_pipe: wgpu::RenderPipeline,
-    yuv_bgl: wgpu::BindGroupLayout,
-    /// XFB copies go through YUYV and back (on by default; false shows the EFB's RGB as is).
+    copy_pipe: wgpu::RenderPipeline,
+    copy_bgl: wgpu::BindGroupLayout,
+    /// XFB copies go through YUYV and back; false shows the EFB's RGB as is. `copy_filter`: EFB copies apply the
+    /// game's vertical copy filter (deflicker); false folds its weights into the centre line (Dolphin's "Disable Copy
+    /// Filter": brightness kept, no blur). Both default to on at scale 1 only (matches Dolphin's frames with the XFB
+    /// in RAM) and off when upscaled (Dolphin's defaults there: XFB copies to texture, copy filter disabled; a
+    /// deflicker of whole GameCube lines undoes the upscale). Env COLO_XFB_YUV / COLO_COPY_FILTER = 0/1 override.
     pub xfb_yuv: bool,
+    pub copy_filter: bool,
 }
 
 const MAX_PASSES: u32 = 2048;
@@ -181,48 +187,74 @@ fn ld(x: i32, y: i32) -> vec4<u32> {
 }
 "#;
 
-/// A Z copy: the depth buffer's 24-bit Z as bytes R (bits 16-23), G, B (0-7), A 255 (Dolphin's EFB copy shaders).
-const ZCOPY_WGSL: &str = r#"
-struct P { off: vec4<i32> };
-@group(0) @binding(0) var z: texture_depth_2d;
+/// EFB copies (colour or Z) as Dolphin's EFB copy shaders (TextureConversionShader / TextureConverterShaderGen):
+/// each pixel read through the copy filter and gamma (`colo_gx::raster::CopyFilter`, same arithmetic), then for
+/// the XFB optionally the YUYV 4:2:2 round trip (Dolphin's XFB encoder: BT.601 constants on 0-1 colours, chroma
+/// from each pixel pair's average, rounded, / 256, stored as unorm bytes; and decoder: inverse BT.601 in floats).
+/// All positions are in scaled EFB pixels. `px` (prepended per source) loads one EFB pixel as 0-255 values.
+/// rect: source x, y, last EFB x, y; coef: weights of the line above / this / below, flags (1 YUV round trip,
+/// 2 bilinear); f: lines the filter may read (first, last, as pixel centres), line step, y scale; f2.x: 1 / gamma.
+const COPY_WGSL: &str = r#"
+struct P { rect: vec4<i32>, coef: vec4<u32>, f: vec4<f32>, f2: vec4<f32> };
 @group(0) @binding(1) var<uniform> p: P;
 @vertex fn vs(@builtin(vertex_index) i: u32) -> @builtin(position) vec4<f32> {
     let q = vec2<f32>(f32((i << 1u) & 2u), f32(i & 2u)) * 2.0 - 1.0;
     return vec4<f32>(q, 0.0, 1.0);
 }
-@fragment fn fs(@builtin(position) fp: vec4<f32>) -> @location(0) vec4<f32> {
-    let c = min(vec2<i32>(fp.xy) + p.off.xy, p.off.zw);
-    let v = u32(clamp(textureLoad(z, c, 0), 0.0, 1.0) * 16777215.0 + 0.5);
-    return vec4<f32>(f32(v >> 16u & 255u), f32(v >> 8u & 255u), f32(v & 255u), 255.0) / 255.0;
+fn at(xc: f32, y: f32) -> vec4<u32> {
+    let yy = clamp(y, p.f.x, p.f.y);
+    if (p.coef.w & 2u) == 0u { return vec4<u32>(px(i32(floor(xc)), i32(floor(yy)))); }
+    let fx = xc - 0.5;
+    let fy = yy - 0.5;
+    let x0 = floor(fx);
+    let y0 = floor(fy);
+    let xi = i32(x0);
+    let yi = i32(y0);
+    let t = mix(px(xi, yi), px(xi + 1, yi), fx - x0);
+    let b = mix(px(xi, yi + 1), px(xi + 1, yi + 1), fx - x0);
+    return vec4<u32>(mix(t, b, fy - y0));
 }
-"#;
-
-/// An XFB copy through YUYV 4:2:2 and back, as Dolphin's XFB encoder (TextureConversionShader WriteXFBEncoder:
-/// BT.601 constants on 0-1 colours, chroma from each pixel pair's average, rounded, / 256, stored as unorm bytes)
-/// and decoder (inverse BT.601 in floats); pairs are of EFB-scale pixels. Same arithmetic as raster::xfb_encode.
-const YUV_WGSL: &str = r#"
-struct P { off: vec4<i32> };
-@group(0) @binding(0) var src: texture_2d<f32>;
-@group(0) @binding(1) var<uniform> p: P;
-@vertex fn vs(@builtin(vertex_index) i: u32) -> @builtin(position) vec4<f32> {
-    let q = vec2<f32>(f32((i << 1u) & 2u), f32(i & 2u)) * 2.0 - 1.0;
-    return vec4<f32>(q, 0.0, 1.0);
+fn filt(xc: f32, yc: f32) -> vec4<u32> {
+    let cur = at(xc, yc);
+    var o = cur.rgb * p.coef.y;
+    if p.coef.x != 0u || p.coef.z != 0u { o = o + at(xc, yc - p.f.z).rgb * p.coef.x + at(xc, yc + p.f.z).rgb * p.coef.z; }
+    var r = vec4<u32>(o >> vec3<u32>(6u), cur.a);
+    if p.coef.x + p.coef.y + p.coef.z >= 128u { r = r & vec4<u32>(0x1FFu); }
+    r = min(r, vec4<u32>(255u));
+    if p.f2.x != 1.0 { r = vec4<u32>(vec3<u32>(round(pow(vec3<f32>(r.rgb) / 255.0, vec3<f32>(p.f2.x)) * 255.0)), r.a); }
+    return r;
 }
-fn ld(c: vec2<i32>) -> vec3<f32> { return round(textureLoad(src, min(c, p.off.zw), 0).rgb * 255.0) / 255.0; }
 fn enc(v: f32) -> f32 { return floor(clamp(round(v) / 256.0, 0.0, 1.0) * 255.0 + 0.5); }
 @fragment fn fs(@builtin(position) fp: vec4<f32>) -> @location(0) vec4<f32> {
     let o = vec2<i32>(fp.xy);
-    let x0 = (o.x & ~1) + p.off.x;
-    let c0 = ld(vec2<i32>(x0, o.y + p.off.y));
-    let c1 = ld(vec2<i32>(x0 + 1, o.y + p.off.y));
+    let yc = (f32(o.y) + 0.5 + f32(p.rect.y)) / p.f.w;
+    if (p.coef.w & 1u) == 0u { return vec4<f32>(filt(f32(o.x + p.rect.x) + 0.5, yc)) / 255.0; }
+    let x0 = f32((o.x & ~1) + p.rect.x);
+    let c0 = vec3<f32>(filt(x0 + 0.5, yc).rgb) / 255.0;
+    let c1 = vec3<f32>(filt(x0 + 1.5, yc).rgb) / 255.0;
     let av = (c0 + c1) * 0.5;
     let c = select(c0, c1, (o.x & 1) != 0);
     let y = enc(dot(c, vec3<f32>(66.0, 129.0, 25.0)) + 16.0);
     let u = enc(dot(av, vec3<f32>(-38.0, -74.0, 112.0)) + 128.0) - 128.0;
     let v = enc(dot(av, vec3<f32>(112.0, -94.0, -18.0)) + 128.0) - 128.0;
-    let yc = 1.164 * (y - 16.0);
-    let rgb = vec3<f32>(yc + 1.596 * v, yc - 0.813 * v - 0.391 * u, yc + 2.018 * u);
+    let yl = 1.164 * (y - 16.0);
+    let rgb = vec3<f32>(yl + 1.596 * v, yl - 0.813 * v - 0.391 * u, yl + 2.018 * u);
     return vec4<f32>(floor(clamp(rgb, vec3<f32>(0.0), vec3<f32>(255.0)) + 0.5) / 255.0, 1.0);
+}
+"#;
+
+/// `px` for colour copies.
+const COPY_COLOR_WGSL: &str = r#"
+@group(0) @binding(0) var src: texture_2d<f32>;
+fn px(x: i32, y: i32) -> vec4<f32> { return round(textureLoad(src, clamp(vec2<i32>(x, y), vec2<i32>(0), p.rect.zw), 0) * 255.0); }
+"#;
+
+/// `px` for Z copies: the 24-bit Z as bytes R (bits 16-23), G, B (0-7), A 255.
+const COPY_DEPTH_WGSL: &str = r#"
+@group(0) @binding(0) var src: texture_depth_2d;
+fn px(x: i32, y: i32) -> vec4<f32> {
+    let v = u32(clamp(16777215.0 - textureLoad(src, clamp(vec2<i32>(x, y), vec2<i32>(0), p.rect.zw), 0) * 16777215.0, 0.0, 16777215.0) + 0.5);
+    return vec4<f32>(f32(v >> 16u & 255u), f32(v >> 8u & 255u), f32(v & 255u), 255.0);
 }
 "#;
 
@@ -244,7 +276,8 @@ fn logic_op(st: &GState) -> Option<u32> {
 
 fn compare(f: u32) -> wgpu::CompareFunction {
     use wgpu::CompareFunction::*;
-    match f { 0 => Never, 1 => Less, 2 => Equal, 3 => LessEqual, 4 => Greater, 5 => NotEqual, 6 => GreaterEqual, _ => Always }
+    // the depth buffer holds reversed depth (tev.wgsl): GX's less is the buffer's greater
+    match f { 0 => Never, 1 => Greater, 2 => Equal, 3 => GreaterEqual, 4 => Less, 5 => NotEqual, 6 => LessEqual, _ => Always }
 }
 
 fn factor(f: u32, src: bool) -> wgpu::BlendFactor {
@@ -277,7 +310,10 @@ impl Gpu {
             mip_level_count: 1, sample_count: 1, dimension: wgpu::TextureDimension::D2, format: wgpu::TextureFormat::Rgba8Unorm,
             usage: wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::TEXTURE_BINDING, view_formats: &[],
         });
-        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("tev"), source: wgpu::ShaderSource::Wgsl(include_str!("tev.wgsl").into()) });
+        // debugging: COLO_ZJITTER=eps moves odd draws' depth by eps (a z-fighting probe: ties between draws flip)
+        let mut src = include_str!("tev.wgsl").to_string();
+        if let Ok(e) = std::env::var("COLO_ZJITTER") { src = src.replace("let sz = ((16777215.0 - vp1.y) - v.pos.z / w * vp0.z) / 16777215.0;", &format!("let sz = ((16777215.0 - vp1.y) - v.pos.z / w * vp0.z) / 16777215.0 + f32(di & 1u) * {e};")); }
+        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("tev"), source: wgpu::ShaderSource::Wgsl(src.into()) });
         let bgl0 = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor { label: Some("draws"), entries: &[wgpu::BindGroupLayoutEntry {
             binding: 0, visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
             ty: wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Storage { read_only: true }, has_dynamic_offset: false, min_binding_size: None }, count: None }] });
@@ -310,7 +346,7 @@ impl Gpu {
             fragment: Some(wgpu::FragmentState { module: &conv_module, entry_point: Some("fs"), compilation_options: Default::default(), targets: &[Some(wgpu::TextureFormat::Rgba8Unorm.into())] }),
             primitive: Default::default(), depth_stencil: None, multisample: Default::default(), multiview_mask: None, cache: None,
         });
-        // Z copies and the XFB round trip: a full-target triangle reading the EFB depth / colour
+        // EFB copies: a full-target triangle reading the EFB depth / colour
         let efb_pass = |label: &str, src: &str, sample_type: wgpu::TextureSampleType| {
             let m = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some(label), source: wgpu::ShaderSource::Wgsl(src.into()) });
             let bgl = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor { label: Some(label), entries: &[
@@ -327,10 +363,12 @@ impl Gpu {
             });
             (p, bgl)
         };
-        let (zcopy_pipe, zcopy_bgl) = efb_pass("z copy", ZCOPY_WGSL, wgpu::TextureSampleType::Depth);
-        let (yuv_pipe, yuv_bgl) = efb_pass("xfb yuv", YUV_WGSL, wgpu::TextureSampleType::Float { filterable: false });
+        let (zcopy_pipe, zcopy_bgl) = efb_pass("z copy", &format!("{COPY_WGSL}{COPY_DEPTH_WGSL}"), wgpu::TextureSampleType::Depth);
+        let (copy_pipe, copy_bgl) = efb_pass("efb copy", &format!("{COPY_WGSL}{COPY_COLOR_WGSL}"), wgpu::TextureSampleType::Float { filterable: false });
         Gpu {
-            efb_dst, dst_bg, zcopy_pipe, zcopy_bgl, yuv_pipe, yuv_bgl, xfb_yuv: true,
+            efb_dst, dst_bg, zcopy_pipe, zcopy_bgl, copy_pipe, copy_bgl,
+            xfb_yuv: std::env::var("COLO_XFB_YUV").map_or(scale == 1, |v| v != "0"),
+            copy_filter: std::env::var("COLO_COPY_FILTER").map_or(scale == 1, |v| v != "0"),
             conv: HashMap::new(), conv_pipe, conv_bgl,
             efb_view: efb.create_view(&Default::default()), depth_view: depth.create_view(&Default::default()), efb,
             device, queue, scale, layout, module, bgl0, bgl1, pipes: HashMap::new(), clear_pipes: HashMap::new(), clear_layout, clear_module, clear_bgl,
@@ -466,7 +504,7 @@ impl Gpu {
             for m in 0..8 {
                 if let Some(t) = self.tex_info(st.tex[m]) {
                     let sp = st.samp[m];
-                    samp[m] = [sp.wrap_s | sp.wrap_t << 2 | (sp.mag_linear as u32) << 4 | sp.min << 5, t.w, t.h, t.levels];
+                    samp[m] = [sp.wrap_s | sp.wrap_t << 2 | (sp.mag_linear as u32) << 4 | sp.min << 5 | (sp.diag_lod as u32) << 8, t.w, t.h, t.levels];
                     // w: present, and texels per GX texel (EFB copies are `scale` times the GameCube's size)
                     lod[m] = [sp.lod_bias, sp.min_lod, sp.max_lod, if matches!(st.tex[m], Some(TexId::Efb(..))) { self.scale as f32 } else { 1.0 }];
                 }
@@ -557,28 +595,67 @@ impl Gpu {
         }
         self.queue.submit([enc.finish()]);
         self.read_times();
+        self.debug_dump();
+    }
+
+    /// Debugging: env COLO_DUMP_XFB=dir:a-b writes the XFB of renders a..b (counted from 0) as dir/xfbN.ppm.
+    fn debug_dump(&self) {
+        static N: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+        static CFG: std::sync::OnceLock<Option<(String, u32, u32)>> = std::sync::OnceLock::new();
+        let n = N.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let Some((dir, a, b)) = CFG.get_or_init(|| {
+            let v = std::env::var("COLO_DUMP_XFB").ok()?;
+            let (d, r) = v.rsplit_once(':')?;
+            let (a, b) = r.split_once('-')?;
+            Some((d.to_string(), a.parse().ok()?, b.parse().ok()?))
+        }) else { return };
+        if n < *a || n >= *b { return; }
+        let Some((px, w, h)) = self.read_xfb() else { return };
+        let mut out = format!("P6 {w} {h} 255\n").into_bytes();
+        for p in px.chunks(4) { out.extend_from_slice(&p[..3]); }
+        std::fs::write(format!("{dir}/xfb{n}.ppm"), out).ok();
     }
 
     fn copy(&mut self, enc: &mut wgpu::CommandEncoder, c: &GCopy) {
         let s = self.scale;
         let (x, y) = (c.src[0].min(EFB_W - 1), c.src[1].min(EFB_H - 1));
         let (w, h) = (c.src[2].min(EFB_W - x).max(1), c.src[3].min(EFB_H - y).max(1));
+        let f = &c.filter;
+        // XFB copies write 1 + (h - 1) * y_scale lines (Dolphin's BPStructs)
+        let oh = if c.to_xfb { ((1.0 + (h - 1) as f32 * f.y_scale) as u32).max(1) } else { h };
         let tex = self.device.create_texture(&wgpu::TextureDescriptor {
-            label: Some("efb copy"), size: wgpu::Extent3d { width: w * s, height: h * s, depth_or_array_layers: 1 }, mip_level_count: 1, sample_count: 1,
+            label: Some("efb copy"), size: wgpu::Extent3d { width: w * s, height: oh * s, depth_or_array_layers: 1 }, mip_level_count: 1, sample_count: 1,
             dimension: wgpu::TextureDimension::D2, format: wgpu::TextureFormat::Rgba8Unorm,
             usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::COPY_SRC | wgpu::TextureUsages::RENDER_ATTACHMENT, view_formats: &[],
         });
         let view = tex.create_view(&Default::default());
-        if c.depth || (c.to_xfb && self.xfb_yuv) {
-            // the source rectangle in scaled EFB pixels: offset, last pixel
-            let u: [i32; 4] = [(x * s) as i32, (y * s) as i32, ((x + w) * s - 1) as i32, ((y + h) * s - 1) as i32];
-            let ub = self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor { label: None, contents: bytemuck::cast_slice(&u), usage: wgpu::BufferUsages::UNIFORM });
-            let (pipe, bgl, src) = if c.depth { (&self.zcopy_pipe, &self.zcopy_bgl, &self.depth_view) } else { (&self.yuv_pipe, &self.yuv_bgl, &self.efb_view) };
+        let coef = if self.copy_filter { f.coef } else { [0, f.coef.iter().sum(), 0] };
+        if !c.depth && !(c.to_xfb && self.xfb_yuv) && coef == [0, 64, 0] && f.gamma == 0 && oh == h {
+            enc.copy_texture_to_texture(
+                wgpu::TexelCopyTextureInfo { texture: &self.efb, mip_level: 0, origin: wgpu::Origin3d { x: x * s, y: y * s, z: 0 }, aspect: wgpu::TextureAspect::All },
+                wgpu::TexelCopyTextureInfo { texture: &tex, mip_level: 0, origin: wgpu::Origin3d::ZERO, aspect: wgpu::TextureAspect::All },
+                wgpu::Extent3d { width: w * s, height: h * s, depth_or_array_layers: 1 });
+        } else {
+            // filter lines one GameCube line apart (two for half-scale copies, whose 2x2 box the convert pass
+            // takes afterwards); bilinear for stretched XFB copies, as Dolphin
+            let sf = s as f32;
+            let flags = (c.to_xfb && self.xfb_yuv) as u32 | (((f.y_scale > 1.0) && !c.depth) as u32) << 1;
+            #[repr(C)]
+            #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
+            struct U { rect: [i32; 4], coef: [u32; 4], f: [f32; 4], f2: [f32; 4] }
+            let u = U {
+                rect: [(x * s) as i32, (y * s) as i32, (EFB_W * s - 1) as i32, (EFB_H * s - 1) as i32],
+                coef: [coef[0], coef[1], coef[2], flags],
+                f: [f.clamp[0] as f32 * sf + 0.5, (f.clamp[1] + 1) as f32 * sf - 0.5, sf * if c.half { 2.0 } else { 1.0 }, f.y_scale],
+                f2: [1.0 / f.gamma_value(), 0.0, 0.0, 0.0],
+            };
+            let ub = self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor { label: None, contents: bytemuck::bytes_of(&u), usage: wgpu::BufferUsages::UNIFORM });
+            let (pipe, bgl, src) = if c.depth { (&self.zcopy_pipe, &self.zcopy_bgl, &self.depth_view) } else { (&self.copy_pipe, &self.copy_bgl, &self.efb_view) };
             let bg = self.device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: bgl, entries: &[
                 wgpu::BindGroupEntry { binding: 0, resource: wgpu::BindingResource::TextureView(src) },
                 wgpu::BindGroupEntry { binding: 1, resource: ub.as_entire_binding() }] });
             let mut pass = enc.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some(if c.depth { "z copy" } else { "xfb yuv" }),
+                label: Some(if c.depth { "z copy" } else { "efb copy" }),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment { view: &view, resolve_target: None, depth_slice: None,
                     ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color::TRANSPARENT), store: wgpu::StoreOp::Store } })],
                 depth_stencil_attachment: None, timestamp_writes: self.tw("copy"), occlusion_query_set: None, multiview_mask: None,
@@ -586,15 +663,10 @@ impl Gpu {
             pass.set_pipeline(pipe);
             pass.set_bind_group(0, &bg, &[]);
             pass.draw(0..3, 0..1);
-        } else {
-            enc.copy_texture_to_texture(
-                wgpu::TexelCopyTextureInfo { texture: &self.efb, mip_level: 0, origin: wgpu::Origin3d { x: x * s, y: y * s, z: 0 }, aspect: wgpu::TextureAspect::All },
-                wgpu::TexelCopyTextureInfo { texture: &tex, mip_level: 0, origin: wgpu::Origin3d::ZERO, aspect: wgpu::TextureAspect::All },
-                wgpu::Extent3d { width: w * s, height: h * s, depth_or_array_layers: 1 });
         }
-        if c.to_xfb { self.xfb = Some((view, w * s, h * s)); self.xfb_tex = Some(tex); } else { self.copies.insert(c.id, Copy { raw: GTexture { view, w: w * s, h: h * s, levels: 1 }, fmt: c.fmt, intensity: c.intensity, half: c.half }); }
+        if c.to_xfb { self.xfb = Some((view, w * s, oh * s)); self.xfb_tex = Some(tex); } else { self.copies.insert(c.id, Copy { raw: GTexture { view, w: w * s, h: h * s, levels: 1 }, fmt: c.fmt, intensity: c.intensity, half: c.half }); }
         if let Some((col, z, cm, am, zm)) = c.clear {
-            let u: [f32; 8] = [col[0] as f32 / 255.0, col[1] as f32 / 255.0, col[2] as f32 / 255.0, col[3] as f32 / 255.0, z as f32 / 16777215.0, 0.0, 0.0, 0.0];
+            let u: [f32; 8] = [col[0] as f32 / 255.0, col[1] as f32 / 255.0, col[2] as f32 / 255.0, col[3] as f32 / 255.0, (16777215 - z.min(16777215)) as f32 / 16777215.0, 0.0, 0.0, 0.0];
             let ub = self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor { label: None, contents: bytemuck::cast_slice(&u), usage: wgpu::BufferUsages::UNIFORM });
             let bg = self.device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &self.clear_bgl, entries: &[wgpu::BindGroupEntry { binding: 0, resource: ub.as_entire_binding() }] });
             self.clear_pipeline((cm, am, zm));
@@ -730,10 +802,17 @@ impl Gpu {
 /// The XFB-to-window blit on its own, for a window thread that presents frames a render thread made (each XFB
 /// copy is its own texture, so a kept `Gpu::xfb` view stays valid after later frames).
 #[derive(Default)]
-pub struct Blit { pipe: Option<(wgpu::RenderPipeline, wgpu::BindGroupLayout, wgpu::Sampler, wgpu::TextureFormat)> }
+pub struct Blit {
+    pipe: Option<(wgpu::RenderPipeline, wgpu::BindGroupLayout, wgpu::Sampler, wgpu::TextureFormat)>,
+    nearest: Option<wgpu::Sampler>,
+    /// Fill the target instead of a centred 4:3 box.
+    pub stretch: bool,
+    /// Nearest-texel scaling instead of bilinear.
+    pub sharp: bool,
+}
 
 impl Blit {
-    /// Draw `xfb` (None: black) into `target`, letterboxed to 4:3, and submit.
+    /// Draw `xfb` (None: black) into `target`, letterboxed to 4:3 (or stretched), and submit.
     pub fn draw(&mut self, device: &wgpu::Device, queue: &wgpu::Queue, xfb: Option<&wgpu::TextureView>, target: &wgpu::TextureView,
                 format: wgpu::TextureFormat, tw: u32, th: u32) {
         if self.pipe.as_ref().is_none_or(|b| b.3 != format) {
@@ -750,6 +829,7 @@ impl Blit {
             });
             let smp = device.create_sampler(&wgpu::SamplerDescriptor { mag_filter: wgpu::FilterMode::Linear, min_filter: wgpu::FilterMode::Linear, ..Default::default() });
             self.pipe = Some((p, bgl, smp, format));
+            self.nearest = Some(device.create_sampler(&wgpu::SamplerDescriptor::default()));
         }
         let mut enc = device.create_command_encoder(&Default::default());
         {
@@ -762,9 +842,9 @@ impl Blit {
             if let (Some(xv), Some((p, bgl, smp, _))) = (xfb, &self.pipe) {
                 let bg = device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: bgl, entries: &[
                     wgpu::BindGroupEntry { binding: 0, resource: wgpu::BindingResource::TextureView(xv) },
-                    wgpu::BindGroupEntry { binding: 1, resource: wgpu::BindingResource::Sampler(smp) }] });
+                    wgpu::BindGroupEntry { binding: 1, resource: wgpu::BindingResource::Sampler(if self.sharp { self.nearest.as_ref().unwrap_or(smp) } else { smp }) }] });
                 // 4:3 box centred
-                let (w, h) = if tw * 3 > th * 4 { (th * 4 / 3, th) } else { (tw, tw * 3 / 4) };
+                let (w, h) = if self.stretch { (tw, th) } else if tw * 3 > th * 4 { (th * 4 / 3, th) } else { (tw, tw * 3 / 4) };
                 pass.set_viewport(((tw - w) / 2) as f32, ((th - h) / 2) as f32, w as f32, h as f32, 0.0, 1.0);
                 pass.set_pipeline(p);
                 pass.set_bind_group(0, &bg, &[]);

@@ -84,12 +84,15 @@ static DEVICE_RATE: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32:
 struct ExtState { playing: bool, pos: f64 }
 static EXT_STATE: std::sync::Mutex<ExtState> = std::sync::Mutex::new(ExtState { playing: false, pos: 0.0 });
 
-/// 32 kHz stereo from the queue to the device rate (linear interpolation). Playback starts once ~100 ms are
+/// The recompiled game's audio DMA rate: the GameCube's "32 kHz", 108 MHz / 3372 (colo-recomp ai.rs).
+const AI_RATE: f64 = 108_000_000.0 / 3372.0;
+
+/// The recompiled game's AI output (AI_RATE stereo) from the queue to the device rate (linear interpolation). Playback starts once ~100 ms are
 /// queued and pauses (silence) to rebuffer on an underrun, so a slow frame costs a gap only once instead of
 /// tearing every buffer.
 fn external_fill(q: &mut std::collections::VecDeque<i16>, out: &mut [i16]) {
     let rate = DEVICE_RATE.load(std::sync::atomic::Ordering::Relaxed).max(1) as f64;
-    let step = GAME_RATE as f64 / rate;
+    let step = AI_RATE / rate;
     let mut st = EXT_STATE.lock().unwrap();
     let need = ((out.len() / 2) as f64 * step) as usize + 2;
     if !st.playing && q.len() / 2 >= (GAME_RATE as usize / 10).max(need) { st.playing = true; }
@@ -109,10 +112,15 @@ fn external_fill(q: &mut std::collections::VecDeque<i16>, out: &mut [i16]) {
     for _ in 0..(2 * used).min(q.len()) { q.pop_front(); }
 }
 
+/// Volume of the external stream, 0-100.
+static VOLUME: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(100);
+pub fn set_volume(v: u32) { VOLUME.store(v.min(100), std::sync::atomic::Ordering::Relaxed); }
+
 /// Queue game audio (L, R pairs); keeps at most ~200 ms queued so latency stays bounded.
 pub fn push_external(pcm: &[i16]) {
     if let Some(q) = EXTERNAL.lock().unwrap().as_mut() {
-        q.extend(pcm.iter().copied());
+        let v = VOLUME.load(std::sync::atomic::Ordering::Relaxed) as i32;
+        if v == 100 { q.extend(pcm.iter().copied()); } else { q.extend(pcm.iter().map(|&x| (x as i32 * v / 100) as i16)); }
         let max = 32000 / 4 * 2;
         while q.len() > max { q.pop_front(); }
     }

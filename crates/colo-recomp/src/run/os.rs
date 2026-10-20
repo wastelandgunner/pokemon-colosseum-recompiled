@@ -70,7 +70,7 @@ pub(super) fn idle_advance(c: &mut Cpu) {
             fire.wrapping_sub(off) as i64
         });
         if di <= next_field && (ai == 0 || di <= ai) && alarm.is_none_or(|a| (di as i64) <= a) {
-            if di > time_base(c) { TB_BASE.store(di, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
+            if di > time_base(c) { TB_BASE.store(di, Relaxed); TB_MARK.store(c.cycles, Relaxed); }
             dev_due(c);
             raise_pending(c);
             return;
@@ -85,7 +85,7 @@ pub(super) fn idle_advance(c: &mut Cpu) {
             (fire.wrapping_sub(off) as i64) < ai as i64
         };
         if !alarm_first {
-            if ai > time_base(c) { TB_BASE.store(ai, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
+            if ai > time_base(c) { TB_BASE.store(ai, Relaxed); TB_MARK.store(c.cycles, Relaxed); }
             ai_due(c);
             // the DSP's answer (its frame for the next block) comes back before the next block, as on hardware
             raise_pending(c);
@@ -98,7 +98,7 @@ pub(super) fn idle_advance(c: &mut Cpu) {
         let off = (c.m.u32(0x8000_30D8) as u64) << 32 | c.m.u32(0x8000_30DC) as u64;
         let at = fire.wrapping_sub(off);
         if (at as i64) < next_field as i64 {
-            if (at as i64) > time_base(c) as i64 { TB_BASE.store(at, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
+            if (at as i64) > time_base(c) as i64 { TB_BASE.store(at, Relaxed); TB_MARK.store(c.cycles, Relaxed); }
             alarms(c);
             return;
         }
@@ -355,7 +355,7 @@ pub(super) fn bg_fast_forward(c: &mut Cpu) {
     let ai = AI_NEXT.load(Relaxed);
     if ai != 0 && ai < next { next = ai; }
     if let Some(di) = dev_next(c) { if di < next { next = di; } }
-    if (next as i64) > time_base(c) as i64 { TB_BASE.store(next, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
+    if (next as i64) > time_base(c) as i64 { TB_BASE.store(next, Relaxed); TB_MARK.store(c.cycles, Relaxed); }
 }
 
 pub(super) fn os_restore_interrupts(c: &mut Cpu) {
@@ -367,22 +367,50 @@ pub(super) fn os_restore_interrupts(c: &mut Cpu) {
 }
 
 /// Emulated time: the time base runs at 40.5 MHz (bus/4, one tick per 12 cycles of the 486 MHz CPU). Between video
-/// fields it advances with the instructions executed (`Cpu::instrs`) at CYCLES_PER_INSTR_X100 / 100 cycles each, as
-/// Dolphin counts by default (one cycle an instruction); a field that waits jumps it to the field's start (675675
-/// ticks per NTSC field). Until 2026-10-19 it was 0.4 ticks per lifted block (lifted blocks average 2.9 instructions:
-/// ~1.65 cycles an instruction), which made heavy battle frames (wide shots at Phenac) overrun two fields in game
-/// time and drop to 20 fps where Dolphin stays at 30.
+/// fields it advances with the CPU cycles executed (`Cpu::cycles`: Dolphin's per-opcode estimates, one for most,
+/// mulli 3, mullw 5, lmw/stmw 11, divw 40, fdiv 31 ...; tools/ppclift/cycles.py), scaled by CYCLES_PER_INSTR_X100 /
+/// 100 (100 = Dolphin's default clock); a field that waits jumps it to the field's start (675675 ticks per NTSC
+/// field). Until 2026-10-19 it was 0.4 ticks per lifted block (lifted blocks average 2.9 instructions: ~1.65 cycles
+/// an instruction), which made heavy battle frames (wide shots at Phenac) overrun two fields in game time and drop
+/// to 20 fps where Dolphin stays at 30; then one cycle an instruction.
 pub(super) const TB_HZ: u64 = 40_500_000;
 pub(super) const TB_PER_FIELD: u64 = 675_675;
 pub(super) const CYCLES_PER_INSTR_X100: u64 = 100;
 pub(super) static TB_BASE: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 pub(super) static TB_MARK: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 pub(super) static FIELD_TB: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+/// Power-on to the DOL's `__start` on Dolphin (BS2 HLE and the apploader running on its CPU), in ticks of the time
+/// base, which starts at 0 at power-on: Dolphin's `__OSStartTime` (0x8047A6D8, OSInit's `__OSGetSystemTime`, minus
+/// the boot time adjust at 0x800030D8) is 226,924, of which `__start` up to that read takes 24,021 here (both with
+/// Dolphin's per-opcode cycles).
+pub(super) const BOOT_TICKS: u64 = 226_924 - 24_021;
+
+/// The RTC's seconds since 2000-01-01 at power-on: env COLO_RTC, else the host clock.
+pub fn rtc_base() -> u64 {
+    static B: std::sync::OnceLock<u64> = std::sync::OnceLock::new();
+    *B.get_or_init(|| std::env::var("COLO_RTC").ok().and_then(|v| v.parse().ok()).unwrap_or_else(||
+        std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_secs()).saturating_sub(946_684_800)))
+}
+
+/// The RTC now: its power-on value plus the emulated time since (as Dolphin's `GetEmulatedTime`).
+pub fn rtc_now(c: &Cpu) -> u32 { (rtc_base() + time_base(c) / TB_HZ) as u32 }
+
+/// Power-on (disc boot): the time base counts from 0 at power-on and reaches the DOL's entry `BOOT_TICKS` later;
+/// the IPL leaves the RTC's time (in ticks) as the boot time adjust OS_SYSTEM_TIME (0x800030D8), which
+/// `__OSGetSystemTime` adds to the time base (Dolphin's `PresetTimeBaseTicks`).
+pub(super) fn power_on(c: &mut Cpu) {
+    use std::sync::atomic::Ordering::Relaxed;
+    TB_BASE.store(BOOT_TICKS, Relaxed);
+    TB_MARK.store(c.cycles, Relaxed);
+    let adj = rtc_base() * TB_HZ;
+    c.m.set_u32(0x8000_30D8, (adj >> 32) as u32);
+    c.m.set_u32(0x8000_30DC, adj as u32);
+}
 
 
 pub fn time_base(c: &Cpu) -> u64 {
     use std::sync::atomic::Ordering::Relaxed;
-    TB_BASE.load(Relaxed) + c.instrs.saturating_sub(TB_MARK.load(Relaxed)) * CYCLES_PER_INSTR_X100 / 1200
+    TB_BASE.load(Relaxed) + c.cycles.saturating_sub(TB_MARK.load(Relaxed)) * CYCLES_PER_INSTR_X100 / 1200
 }
 
 /// A video field begins: time is at least the field's start.
@@ -390,7 +418,7 @@ pub(super) fn tb_field(c: &Cpu) {
     use std::sync::atomic::Ordering::Relaxed;
     let f = FIELD_TB.load(Relaxed) + TB_PER_FIELD;
     FIELD_TB.store(f, Relaxed);
-    if time_base(c) < f { TB_BASE.store(f, Relaxed); TB_MARK.store(c.instrs, Relaxed); }
+    if time_base(c) < f { TB_BASE.store(f, Relaxed); TB_MARK.store(c.cycles, Relaxed); }
 }
 
 /// `OSGetTime` 0x800A2778 (r3:r4) and `OSGetTick` 0x800A2790 (r3): the time base.

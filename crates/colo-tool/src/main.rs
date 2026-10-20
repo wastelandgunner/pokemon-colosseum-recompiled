@@ -373,7 +373,7 @@ fn cmd_battle_replay(dir: &str) -> R<()> {
     if let Ok(t) = std::fs::read_to_string(&shim) { c.load_stubs(&t); outln!("{} runtime stubs from {shim}", c.stubs.len()); }
     c.step_limit = std::env::var("STEPS").ok().and_then(|s| s.parse().ok()).unwrap_or(2_000_000_000);
     lifted::dispatch(&mut c, pc);
-    outln!("{} blocks executed ({} instructions)", c.steps, c.instrs);
+    outln!("{} blocks executed ({} cycles)", c.steps, c.cycles);
     c.m.trace = false;
     if let Some(p) = prof_out { std::fs::write(&p, colo_recomp::prof::dump())?; outln!("function facts -> {p}"); }
     // compare
