@@ -280,6 +280,8 @@ impl Machine {
         c.hook_fn.insert(DSP_READ_MAIL, dsp_read_mail);
         c.hook_fn.insert(VI_SET_NEXT_FB, vi_set_next_fb);
         c.hook_fn.insert(GAPP_UPDATE, gapp_update);
+        c.hook_fn.insert(GFX_WAIT_RETRACE, gfx_wait_retrace);
+        c.hook_fn.insert(GFX_SET_FRAME_INTERVAL, gfx_set_frame_interval);
         c.hook_fn.insert(0x800A2778, os_get_time);
         c.hook_fn.insert(0x800A2790, os_get_tick);
         c.mmio_read = Some(mmio_read);
@@ -446,6 +448,11 @@ impl Machine {
         std::mem::take(self.c.m.pipe.as_mut().unwrap())
     }
 
+    /// The decoded frame so far (diagnostics): draws, state snapshots, vertices.
+    pub fn gx_stats(&self) -> (usize, usize, usize) {
+        GPU_IN.lock().unwrap().as_ref().map(|g| (g.frame.draws.len(), g.frame.states.len(), g.frame.draws.iter().map(|d| d.n).sum())).unwrap_or_default()
+    }
+
     /// The GX stream written since the last call as a draw list for a graphics-card renderer (colo-gxgpu).
     pub fn gpu_cmds(&mut self, b: &mut colo_gx::cmd::Builder) -> colo_gx::cmd::GFrame {
         gx_feed(&mut self.c.m);
@@ -468,7 +475,7 @@ impl Machine {
         let mut f = f;
         // debugging: SOFTONLY=a-b keeps only those draws
         if let Some((a, z)) = std::env::var("SOFTONLY").ok().and_then(|r| { let (a, z) = r.split_once('-')?; Some((a.parse::<usize>().ok()?, z.parse::<usize>().ok()?)) }) {
-            for (k, d) in f.draws.iter_mut().enumerate() { if k < a || k >= z { d.verts.clear(); } }
+            for (k, d) in f.draws.iter_mut().enumerate() { if k < a || k >= z { d.n = 0; d.raw.clear(); } }
         }
         self.gpu.execute(&f, &mut GpuView(&mut self.c.m));
         g
@@ -608,6 +615,15 @@ impl Machine {
     fn wait_main(&mut self) {
         let msg = self.main.as_ref().unwrap().1.recv().expect("run: main lost");
         if let MainMsg::Panic(m) = msg { panic!("game main: {m}"); }
+    }
+
+    /// Frame rate: `fps` 60 caps the game at one field a frame (60 updates a second where it asks for 30) on an
+    /// emulated CPU at `clock` percent, so its heavy frames fit in a field; 30 (or 0) is the game's own pacing at
+    /// the GameCube's clock. Takes effect at the next frame.
+    pub fn set_frame_rate(&mut self, fps: u32, clock: u64) {
+        let fast = fps >= 60;
+        set_frame_interval(if fast { 1 } else { 0 });
+        set_cpu_clock(&self.c, if fast { clock } else { 100 });
     }
 
     /// One game frame: `GSgappUpdate` (mainInit's loop body).

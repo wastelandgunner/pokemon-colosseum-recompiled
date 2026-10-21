@@ -11,6 +11,12 @@
 //! The game runs on its own thread, paced by its own time base (real time); frames go to a render thread
 //! (`GFrame::finish` + `Gpu::render`) and then to the window (winit + wgpu), which presents each one at its due time,
 //! and its AX mix to the audio output (audio.rs, buffered and resampled to the device).
+//! Frame rate (setting, `frame_rate` in recomp.ini, env COLO_FPS=30|60|uncapped): 30 is the game's own pacing (it asks
+//! for 2 fields a frame in battle and the field, 1 on the title); 60 caps it at one field a frame (colo-recomp
+//! `set_frame_rate`: `GSgfxSetFrameInterval` capped, the emulated CPU at `cpu_clock`, default 200%, so heavy frames fit)
+//! and the game, which steps by the fields its frame took, keeps its speed (where the host can't run a frame in a field,
+//! frames it is behind on keep the game's own two fields, so it holds its speed at the rate the host manages); uncapped is 60 with no frame lead and
+//! Immediate presentation (frames shown as soon as drawn; the game itself tops out at 60).
 //! Escape pauses the game and opens the settings menu (recomp_menu.rs: tabs for video, audio, controls with key
 //! rebinding, resume and quit; keyboard or mouse; saved in saves/recomp.ini, settings.rs, and applied at once).
 //! Pacing: a frame is due the frame lead (setting, default 34 ms) after the real time its game time ends at, so a
@@ -31,7 +37,7 @@
 //! `--perf-log[=secs]` prints them (perf.rs).
 //! Testing: env COLO_SNAP=<dir> runs a story snapshot (Working/dolphin/snaps/storyNN, as the `storybattle` example)
 //! instead of booting, without the card; COLO_TAP_A=1 adds storybattle's A taps (3 frames in 20) to the pad.
-//! COLO_TEST_KEYS="secs:KeyName,..." presses keys and COLO_TEST_MOUSE="secs:x:y:move|left|right|drag|up|down,..."
+//! COLO_TEST_KEYS="secs:KeyName[:down|up],..." presses keys (tap, or hold from down to up) and COLO_TEST_MOUSE="secs:x:y:move|left|right|drag|up|down,..."
 //! works the mouse at those times after start (`about_to_wait`).
 //!
 //! `colo-viewer <gcm> <room>[:entry]` boots the same way and goes straight to that room (warp.rs).
@@ -114,6 +120,7 @@ pub fn run(gcm: &str, opts: perf::Opts, warp: Option<(u32, u32)>) {
             const TB_HZ: f64 = 40_500_000.0;
             let mut t0 = (std::time::Instant::now(), colo_recomp::run::time_base(&m.c));
             let mut n = 0u32;
+            let mut cur_rate = (30, 100);
             // textures new in a dropped frame: the builder sends each texture once, so they ride on the next frame
             let mut carry: Vec<(u64, colo_gx::cmd::GTex)> = Vec::new();
             while !quit.load(Ordering::Relaxed) {
@@ -123,7 +130,8 @@ pub fn run(gcm: &str, opts: perf::Opts, warp: Option<(u32, u32)>) {
                     t0 = (Instant::now(), colo_recomp::run::time_base(&m.c));
                     continue;
                 }
-                let lead = Duration::from_millis(shared.lock().unwrap().frame_lead_ms as u64);
+                let (lead, rate) = { let s = shared.lock().unwrap(); (Duration::from_millis(s.lead_ms() as u64), (s.frame_rate.fps(), s.cpu_clock)) };
+                if rate != cur_rate { m.set_frame_rate(rate.0, rate.1 as u64); cur_rate = rate; }
                 let mut p = *pad.lock().unwrap();
                 if tap_a && n % 20 >= 10 && n % 20 < 13 { if let Some(p) = &mut p[0] { p.buttons |= 0x100; } }
                 // warp: Start, then A, until the title menu starts (the hook takes WARP)
@@ -172,6 +180,10 @@ pub fn run(gcm: &str, opts: perf::Opts, warp: Option<(u32, u32)>) {
                 let t_sent = Instant::now();
                 let now = Instant::now();
                 let mut resync = false;
+                // 60 fps where the host can't run a frame in one field (Phenac's game frames take ~20 ms): while the
+                // game is more than half a field behind its clock, its frames wait for their own two fields (it steps
+                // by the fields taken), so it keeps its speed at the rate the host manages (~50 fps there)
+                if rate.0 >= 60 { colo_recomp::run::set_frame_interval(if now > next + Duration::from_millis(8) { 0 } else { 1 }); }
                 if next > now { std::thread::sleep(next - now); }
                 else if now - next > std::time::Duration::from_millis(150) { t0 = (now, tb); resync = true; }
                 if let Some(p) = &stats {
@@ -202,7 +214,9 @@ pub fn run(gcm: &str, opts: perf::Opts, warp: Option<(u32, u32)>) {
             let mut f = e.split(':');
             Some((f.next()?.parse().ok()?, f.next()?.parse().ok()?, f.next()?.parse().ok()?, f.next().unwrap_or("move").to_string())) }).collect())),
         test_keys: std::env::var("COLO_TEST_KEYS").ok().map(|v| (Instant::now(), v.split(',').filter_map(|e| {
-            let (t, k) = e.split_once(':')?; Some((t.parse().ok()?, crate::settings::key_from_name(k)?)) }).collect())) };
+            let mut f = e.split(':');
+            let (t, k) = (f.next()?.parse().ok()?, crate::settings::key_from_name(f.next()?)?);
+            Some((t, k, match f.next() { Some("down") => 1u8, Some("up") => 2, _ => 0 })) }).collect())) };
     el.run_app(&mut app).ok();
     let render = app.render.take();
     drop(app); // unblocks the render thread's send (and so the game thread's) so the game can save the card and stop
@@ -283,6 +297,8 @@ struct Gfx {
     queue: wgpu::Queue,
     scale: u32,
     adapter: String,
+    /// The surface's present modes.
+    modes: Vec<wgpu::PresentMode>,
 }
 
 /// A rendered frame: its XFB (each copy is its own texture) and when it is due on screen.
@@ -322,7 +338,7 @@ struct App {
     test_mouse: Option<(Instant, Vec<(f64, i32, i32, String)>)>,
     dragging: bool,
     redraw: bool,
-    test_keys: Option<(Instant, std::collections::VecDeque<(f64, KeyCode)>)>,
+    test_keys: Option<(Instant, std::collections::VecDeque<(f64, KeyCode, u8)>)>,
 }
 
 impl ApplicationHandler for App {
@@ -339,7 +355,7 @@ impl ApplicationHandler for App {
         let size = window.inner_size();
         let mut config = surface.get_default_config(&adapter, size.width.max(1), size.height.max(1)).expect("surface config");
         let modes = surface.get_capabilities(&adapter).present_modes;
-        let want = self.settings.present.wgpu();
+        let want = self.settings.present_mode().wgpu();
         config.present_mode = if modes.contains(&want) { want } else { wgpu::PresentMode::Fifo };
         config.desired_maximum_frame_latency = self.settings.frame_latency;
         // the XFB holds final display values: an sRGB surface would encode them a second time (too bright)
@@ -387,7 +403,7 @@ impl ApplicationHandler for App {
         self.permit = Some(ptx);
         let mut blit = colo_gxgpu::Blit::default();
         (blit.stretch, blit.sharp) = (!self.settings.keep_aspect, !self.settings.smooth);
-        self.gfx = Some(Gfx { window, surface, config, blit, device, queue, scale, adapter });
+        self.gfx = Some(Gfx { window, surface, config, blit, device, queue, scale, adapter, modes });
         self.perf_info();
     }
 
@@ -420,12 +436,13 @@ impl ApplicationHandler for App {
     }
 
     fn about_to_wait(&mut self, el: &ActiveEventLoop) {
-        // testing: env COLO_TEST_KEYS="secs:Key,..." presses (and releases) keys at those times after start
+        // testing: env COLO_TEST_KEYS="secs:Key[:down|up],..." taps keys (or holds them down until their up) at those
+        // times after start
         if let Some((t0, keys)) = self.test_keys.as_mut() {
             let now = t0.elapsed().as_secs_f64();
-            let due: Vec<KeyCode> = keys.iter().take_while(|(t, _)| *t <= now).map(|(_, k)| *k).collect();
+            let due: Vec<(KeyCode, u8)> = keys.iter().take_while(|(t, ..)| *t <= now).map(|(_, k, m)| (*k, *m)).collect();
             keys.drain(..due.len());
-            for k in due { self.key(el, k, true, false); self.key(el, k, false, false); }
+            for (k, m) in due { if m != 2 { self.key(el, k, true, false); } if m != 1 { self.key(el, k, false, false); } }
         }
         // and COLO_TEST_MOUSE="secs:x:y:what,..." moves the pointer to window pixel x, y and then does `what`: move
         // (nothing more), left / right (click), drag (left down, held until the next entry), up / down (a wheel notch)
@@ -561,8 +578,9 @@ impl App {
             if s.fullscreen != old.fullscreen {
                 g.window.set_fullscreen(s.fullscreen.then_some(winit::window::Fullscreen::Borderless(None)));
             }
-            if s.present != old.present || s.frame_latency != old.frame_latency {
-                g.config.present_mode = s.present.wgpu();
+            if s.present_mode() != old.present_mode() || s.frame_latency != old.frame_latency {
+                let want = s.present_mode().wgpu();
+                g.config.present_mode = if g.modes.contains(&want) { want } else { wgpu::PresentMode::Fifo };
                 g.config.desired_maximum_frame_latency = s.frame_latency;
                 g.surface.configure(&g.device, &g.config);
             }

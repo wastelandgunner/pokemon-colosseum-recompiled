@@ -99,6 +99,11 @@ graphics card (`colo-gxgpu`) at `COLO_SCALE` (default 3) times native resolution
   frame latency, aspect, filtering, the performance overlay), Audio (volume) and Controls (rebind any key, two per
   button; gamepad deadzone) tabs, usable by keyboard or mouse. Settings are kept in `saves/recomp.ini` beside the
   memory card; the `COLO_SCALE`-style env variables still override it for one run.
+- **Frame rate.** Video > Frame rate: 30 fps (the game's own rate, the default), 60 fps or uncapped (60 without
+  v-sync). 60 is a real 60, not interpolation: the game steps text, characters, effects and animations by the
+  fields each frame takes, and the viewer caps that at one. Game speed stays the same. It needs a fast CPU: on a
+  Ryzen 9 5900X every town holds 60 (busiest frames ~14 ms of the 16.7 ms budget); when the host falls behind,
+  frames go back to the game's own two-field step so the game keeps full speed.
 - **Gamepads.** Up to four, in the order they connect (the first is controller 1 alongside the keyboard); the game's
   rumble drives the gamepad's motor.
 - **Warp.** `colo-viewer <disc> <room>[:entry]` (e.g. `M2_out`) runs the game from power-on and, at the title's

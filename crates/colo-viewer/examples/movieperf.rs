@@ -4,6 +4,7 @@
 //! `cargo run --release -p colo-viewer --example movieperf <gcm> <n>`
 use colo_recomp::run::{Machine, Pad};
 #[path = "../src/warp.rs"] mod warp;
+#[path = "support/hostprof.rs"] mod hostprof;
 use std::time::{Duration, Instant};
 unsafe extern "C" { fn prctl(option: i32, arg: u64, ...) -> i32; }
 fn main() {
@@ -36,6 +37,40 @@ fn main() {
         m.c.hook_fn.insert(0x801ebcc0, timed!(3, f_801ebcc0_at, 0x801ebcc0));
         m.c.hook_fn.insert(0x801ec368, timed!(4, f_801ec368_at, 0x801ec368));
         m.c.hook_fn.insert(0x801ecab0, timed!(5, f_801ecab0_at, 0x801ecab0));
+    }
+    // FPS=30|60 (CLOCK=pct, default 200): the viewer's frame rate setting (Machine::set_frame_rate)
+    if let Some(f) = std::env::var("FPS").ok().and_then(|v| v.parse().ok()) { m.set_frame_rate(f, std::env::var("CLOCK").ok().and_then(|v| v.parse().ok()).unwrap_or(200)); }
+    // HOSTPROF=a-b: sample the host pc over those frames (support/hostprof.rs; HOSTPROF_OUT)
+    let hostprof: Option<(u32, u32)> = std::env::var("HOSTPROF").ok().and_then(|v| { let (a, b) = v.split_once('-')?; Some((a.parse().ok()?, b.parse().ok()?)) });
+    if hostprof.is_some() { hostprof::start(); }
+    // PROFILE=a-b: the guest call stack every 100 us while those frames run `Machine::frame` (as storybattle):
+    // PROFILE_OUT, one line per sample (last function entered, then return addresses)
+    let prof: Option<(u32, u32)> = std::env::var("PROFILE").ok().and_then(|v| { let (a, b) = v.split_once('-')?; Some((a.parse().ok()?, b.parse().ok()?)) });
+    static GON: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+    let samples = std::sync::Arc::new(std::sync::Mutex::new(Vec::<Vec<u32>>::new()));
+    if prof.is_some() {
+        let r1 = &m.c.r[1] as *const u32 as usize;
+        let lf = &m.c.last_fn as *const u32 as usize;
+        let ram = m.c.m.regions.iter().find(|r| r.start == 0x8000_0000).map(|r| (r.bytes.as_ptr() as usize, r.bytes.len())).expect("MEM1");
+        let out = samples.clone();
+        std::thread::spawn(move || loop {
+            std::thread::sleep(std::time::Duration::from_micros(100));
+            if !GON.load(std::sync::atomic::Ordering::Relaxed) { continue; }
+            let rd = |a: u32| -> Option<u32> {
+                let o = a.wrapping_sub(0x8000_0000) as usize;
+                if o + 4 > ram.1 { return None; }
+                Some(u32::from_be(unsafe { std::ptr::read_volatile((ram.0 + o) as *const u32) }))
+            };
+            let mut st = vec![unsafe { std::ptr::read_volatile(lf as *const u32) }];
+            let mut sp = unsafe { std::ptr::read_volatile(r1 as *const u32) };
+            for _ in 0..48 {
+                let Some(next) = rd(sp) else { break };
+                if next <= sp || next == 0xFFFF_FFFF { break; }
+                if let Some(lr) = rd(next + 4) { st.push(lr); }
+                sp = next;
+            }
+            out.lock().unwrap().push(st);
+        });
     }
     let pads: Vec<(u32, u32, u16)> = std::env::var("PADS").unwrap_or_default().split(',').filter_map(|s| {
         let (r, b) = s.split_once(':')?; let (x, y) = r.split_once('-')?;
@@ -80,7 +115,22 @@ fn main() {
                 for (f, k) in v.iter().take(25) { eprintln!("  {:#010x} {:5.1}%", f, **k as f64 * 100.0 / tot as f64); }
             }
         }
+        // only the game code (`Machine::frame`) is sampled, not the draw list or the render
+        let hp = hostprof.is_some_and(|(x, y)| fr >= x && fr < y);
+        if hostprof.is_some_and(|(_, y)| fr == y) { hostprof::dump(); }
+        hostprof::ON.store(hp && std::env::var("HOSTPROF_RENDER").is_err(), std::sync::atomic::Ordering::Relaxed);
+        let gp = prof.is_some_and(|(x, y)| fr >= x && fr < y);
+        if prof.is_some_and(|(_, y)| fr == y) {
+            let s = samples.lock().unwrap();
+            let txt: String = s.iter().map(|st| st.iter().map(|a| format!("{a:x}")).collect::<Vec<_>>().join(" ") + "\n").collect();
+            std::fs::write(std::env::var("PROFILE_OUT").unwrap_or("/tmp/sb_prof.txt".into()), txt).ok();
+            eprintln!("profile: {} samples", s.len());
+        }
+        GON.store(gp, std::sync::atomic::Ordering::Relaxed);
         let t = Instant::now(); m.frame(); let c = t.elapsed(); tc += c;
+        hostprof::ON.store(false, std::sync::atomic::Ordering::Relaxed);
+        GON.store(false, std::sync::atomic::Ordering::Relaxed);
+        if std::env::var("GXSTATS").is_ok() && fr % log == 0 { let (d, s, v) = m.gx_stats(); eprintln!("f{fr}: {d} draws, {s} states, {v} vertices"); }
         colo_recomp::run::take_audio();
         let gxd = std::env::var("GXDUMP").is_ok_and(|v| v.split(',').any(|x| x == fr.to_string()));
         colo_gx::cmd::DUMP.store(gxd, std::sync::atomic::Ordering::Relaxed);
@@ -96,7 +146,11 @@ fn main() {
             image::save_buffer(format!("{out}/soft{fr}.png"), &e, 640, 528, image::ColorType::Rgba8).unwrap();
         }
         if gxd { eprintln!("gx frame {fr}: {} ops {} verts", g.ops.len(), g.verts.len()); }
+        // HOSTPROF_RENDER=1: sample the draw list's vertex work and the render instead of the game code
+        let hr = hostprof.is_some_and(|(x, y)| fr >= x && fr < y) && std::env::var("HOSTPROF_RENDER").is_ok();
+        hostprof::ON.store(hr, std::sync::atomic::Ordering::Relaxed);
         let t = Instant::now(); gpu.render(&g); let r = t.elapsed(); tr += r;
+        hostprof::ON.store(false, std::sync::atomic::Ordering::Relaxed);
         worst = worst.max(c + bd + r);
         // OPSTATE=i,j: at GXDUMP frames, print those draw ops' full GState and first vertex
         if std::env::var("OPSTATE").is_ok() { for (h, t) in &g.new_tex { texs.insert(*h, (t.w, t.h, t.levels[0].clone())); } }
@@ -140,10 +194,17 @@ fn main() {
             eprintln!("f{fr}: cpu {:.1} build {:.1} render {:.1} ms/frame, worst {:.1}; game {:.1} ms/frame; wall/game {:.2}",
                 tc.as_secs_f64() * 1e3 / k as f64, tb.as_secs_f64() * 1e3 / k as f64, tr.as_secs_f64() * 1e3 / k as f64, worst.as_secs_f64() * 1e3,
                 game.as_secs_f64() * 1e3 / k as f64, (tc + tb + tr).as_secs_f64() / game.as_secs_f64().max(1e-9));
+            // GX: the game thread's stream decode (run/gx.rs gx_feed, inside cpu)
+            let t = |a: &std::sync::atomic::AtomicU64| a.swap(0, std::sync::atomic::Ordering::Relaxed) as f64 / 1e6 / k as f64;
+            eprintln!("   gx decode {:.2} ms/frame; draw list: vertex work {:.2}, ops/textures {:.2}", t(&colo_recomp::run::FEED_NS), t(&colo_gx::cmd::TIMES[0]), t(&colo_gx::cmd::TIMES[1]));
             if std::env::var("FNTIME").is_ok() { eprintln!("   {}", FN.iter().zip(FT.iter()).map(|(n, t)| format!("{n} {:.2}", t.swap(0, std::sync::atomic::Ordering::Relaxed) as f64 / 1e6 / k as f64)).collect::<Vec<_>>().join(" ")); }
             tc = Duration::ZERO; tb = tc; tr = tc; worst = tc; tb0 = t1;
         }
     }
+    // the guest's end state, to check host-side changes leave the game's behaviour alone
+    let mut h = 0xcbf29ce484222325u64;
+    for &b in m.c.m.read(0x8000_0000, 0x0180_0000) { h = (h ^ b as u64).wrapping_mul(0x100000001b3); }
+    eprintln!("end: {} blocks, {} cycles, MEM1 fnv {h:016x}", m.c.steps, m.c.cycles);
     if !tiles.is_empty() {
         let rows = (tiles.len() as u32).div_ceil(3);
         let mut m = image::RgbaImage::new(960, 240 * rows);

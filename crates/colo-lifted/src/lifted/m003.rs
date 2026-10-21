@@ -6,13 +6,11 @@ use super::stubs_gen;
 /// _bootLoaderThread (0x8003708c, 84 bytes)
 #[inline(never)]
 pub fn f_8003708c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003708c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003708c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003708c); f_8003708c_at(c, 0x8003708c); crate::prof::exit(c, 0x8003708c); return; }
     }
     f_8003708c_b(c, 0x8003708c);
-    if p { crate::prof::exit(c, 0x8003708c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003708c_at(c: &mut Cpu, pc: u32) { f_8003708c_b(c, pc) }
@@ -64,13 +62,11 @@ fn f_8003708c_b(c: &mut Cpu, mut pc: u32) {
 /// _menuSoundReadWaveThread__FPv (0x800370e0, 120 bytes)
 #[inline(never)]
 pub fn f_800370e0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800370e0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800370e0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800370e0); f_800370e0_at(c, 0x800370e0); crate::prof::exit(c, 0x800370e0); return; }
     }
     f_800370e0_b(c, 0x800370e0);
-    if p { crate::prof::exit(c, 0x800370e0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800370e0_at(c: &mut Cpu, pc: u32) { f_800370e0_b(c, pc) }
@@ -149,13 +145,11 @@ fn f_800370e0_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80037158 (0x80037158, 4 bytes)
 #[inline(never)]
 pub fn f_80037158(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037158) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037158); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037158); f_80037158_at(c, 0x80037158); crate::prof::exit(c, 0x80037158); return; }
     }
     f_80037158_b(c, 0x80037158);
-    if p { crate::prof::exit(c, 0x80037158); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037158_at(c: &mut Cpu, pc: u32) { f_80037158_b(c, pc) }
@@ -181,13 +175,11 @@ fn f_80037158_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003715C (0x8003715c, 24 bytes)
 #[inline(never)]
 pub fn f_8003715c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003715c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003715c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003715c); f_8003715c_at(c, 0x8003715c); crate::prof::exit(c, 0x8003715c); return; }
     }
     f_8003715c_b(c, 0x8003715c);
-    if p { crate::prof::exit(c, 0x8003715c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003715c_at(c: &mut Cpu, pc: u32) { f_8003715c_b(c, pc) }
@@ -218,13 +210,11 @@ fn f_8003715c_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80037174 (0x80037174, 12 bytes)
 #[inline(never)]
 pub fn f_80037174(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037174) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037174); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037174); f_80037174_at(c, 0x80037174); crate::prof::exit(c, 0x80037174); return; }
     }
     f_80037174_b(c, 0x80037174);
-    if p { crate::prof::exit(c, 0x80037174); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037174_at(c: &mut Cpu, pc: u32) { f_80037174_b(c, pc) }
@@ -252,13 +242,11 @@ fn f_80037174_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawPurifiedCount (0x80037180, 368 bytes)
 #[inline(never)]
 pub fn f_80037180(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037180) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037180); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037180); f_80037180_at(c, 0x80037180); crate::prof::exit(c, 0x80037180); return; }
     }
     f_80037180_b(c, 0x80037180);
-    if p { crate::prof::exit(c, 0x80037180); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037180_at(c: &mut Cpu, pc: u32) { f_80037180_b(c, pc) }
@@ -465,13 +453,11 @@ fn f_80037180_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListDrawItem (0x800372f0, 4 bytes)
 #[inline(never)]
 pub fn f_800372f0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800372f0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800372f0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800372f0); f_800372f0_at(c, 0x800372f0); crate::prof::exit(c, 0x800372f0); return; }
     }
     f_800372f0_b(c, 0x800372f0);
-    if p { crate::prof::exit(c, 0x800372f0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800372f0_at(c: &mut Cpu, pc: u32) { f_800372f0_b(c, pc) }
@@ -497,13 +483,11 @@ fn f_800372f0_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListDrawItem2 (0x800372f4, 4 bytes)
 #[inline(never)]
 pub fn f_800372f4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800372f4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800372f4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800372f4); f_800372f4_at(c, 0x800372f4); crate::prof::exit(c, 0x800372f4); return; }
     }
     f_800372f4_b(c, 0x800372f4);
-    if p { crate::prof::exit(c, 0x800372f4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800372f4_at(c: &mut Cpu, pc: u32) { f_800372f4_b(c, pc) }
@@ -529,13 +513,11 @@ fn f_800372f4_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListDrawItem3 (0x800372f8, 4 bytes)
 #[inline(never)]
 pub fn f_800372f8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800372f8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800372f8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800372f8); f_800372f8_at(c, 0x800372f8); crate::prof::exit(c, 0x800372f8); return; }
     }
     f_800372f8_b(c, 0x800372f8);
-    if p { crate::prof::exit(c, 0x800372f8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800372f8_at(c: &mut Cpu, pc: u32) { f_800372f8_b(c, pc) }
@@ -561,13 +543,11 @@ fn f_800372f8_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListDrawItem4 (0x800372fc, 4 bytes)
 #[inline(never)]
 pub fn f_800372fc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800372fc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800372fc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800372fc); f_800372fc_at(c, 0x800372fc); crate::prof::exit(c, 0x800372fc); return; }
     }
     f_800372fc_b(c, 0x800372fc);
-    if p { crate::prof::exit(c, 0x800372fc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800372fc_at(c: &mut Cpu, pc: u32) { f_800372fc_b(c, pc) }
@@ -593,13 +573,11 @@ fn f_800372fc_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuTopDrawItem (0x80037300, 200 bytes)
 #[inline(never)]
 pub fn f_80037300(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037300) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037300); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037300); f_80037300_at(c, 0x80037300); crate::prof::exit(c, 0x80037300); return; }
     }
     f_80037300_b(c, 0x80037300);
-    if p { crate::prof::exit(c, 0x80037300); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037300_at(c: &mut Cpu, pc: u32) { f_80037300_b(c, pc) }
@@ -716,13 +694,11 @@ fn f_80037300_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawExit (0x800373c8, 160 bytes)
 #[inline(never)]
 pub fn f_800373c8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800373c8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800373c8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800373c8); f_800373c8_at(c, 0x800373c8); crate::prof::exit(c, 0x800373c8); return; }
     }
     f_800373c8_b(c, 0x800373c8);
-    if p { crate::prof::exit(c, 0x800373c8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800373c8_at(c: &mut Cpu, pc: u32) { f_800373c8_b(c, pc) }
@@ -802,13 +778,11 @@ fn f_800373c8_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawSave (0x80037468, 160 bytes)
 #[inline(never)]
 pub fn f_80037468(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037468) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037468); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037468); f_80037468_at(c, 0x80037468); crate::prof::exit(c, 0x80037468); return; }
     }
     f_80037468_b(c, 0x80037468);
-    if p { crate::prof::exit(c, 0x80037468); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037468_at(c: &mut Cpu, pc: u32) { f_80037468_b(c, pc) }
@@ -888,13 +862,11 @@ fn f_80037468_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawItemStorage (0x80037508, 160 bytes)
 #[inline(never)]
 pub fn f_80037508(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037508) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037508); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037508); f_80037508_at(c, 0x80037508); crate::prof::exit(c, 0x80037508); return; }
     }
     f_80037508_b(c, 0x80037508);
-    if p { crate::prof::exit(c, 0x80037508); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037508_at(c: &mut Cpu, pc: u32) { f_80037508_b(c, pc) }
@@ -974,13 +946,11 @@ fn f_80037508_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawPokemonStorage (0x800375a8, 160 bytes)
 #[inline(never)]
 pub fn f_800375a8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800375a8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800375a8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800375a8); f_800375a8_at(c, 0x800375a8); crate::prof::exit(c, 0x800375a8); return; }
     }
     f_800375a8_b(c, 0x800375a8);
-    if p { crate::prof::exit(c, 0x800375a8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800375a8_at(c: &mut Cpu, pc: u32) { f_800375a8_b(c, pc) }
@@ -1060,13 +1030,11 @@ fn f_800375a8_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListDrawText (0x80037648, 128 bytes)
 #[inline(never)]
 pub fn f_80037648(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037648) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037648); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037648); f_80037648_at(c, 0x80037648); crate::prof::exit(c, 0x80037648); return; }
     }
     f_80037648_b(c, 0x80037648);
-    if p { crate::prof::exit(c, 0x80037648); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037648_at(c: &mut Cpu, pc: u32) { f_80037648_b(c, pc) }
@@ -1162,13 +1130,11 @@ fn f_80037648_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListDrawText2 (0x800376c8, 48 bytes)
 #[inline(never)]
 pub fn f_800376c8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800376c8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800376c8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800376c8); f_800376c8_at(c, 0x800376c8); crate::prof::exit(c, 0x800376c8); return; }
     }
     f_800376c8_b(c, 0x800376c8);
-    if p { crate::prof::exit(c, 0x800376c8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800376c8_at(c: &mut Cpu, pc: u32) { f_800376c8_b(c, pc) }
@@ -1208,13 +1174,11 @@ fn f_800376c8_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawItem (0x800376f8, 188 bytes)
 #[inline(never)]
 pub fn f_800376f8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800376f8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800376f8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800376f8); f_800376f8_at(c, 0x800376f8); crate::prof::exit(c, 0x800376f8); return; }
     }
     f_800376f8_b(c, 0x800376f8);
-    if p { crate::prof::exit(c, 0x800376f8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800376f8_at(c: &mut Cpu, pc: u32) { f_800376f8_b(c, pc) }
@@ -1304,13 +1268,11 @@ fn f_800376f8_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawItem2 (0x800377b4, 188 bytes)
 #[inline(never)]
 pub fn f_800377b4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800377b4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800377b4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800377b4); f_800377b4_at(c, 0x800377b4); crate::prof::exit(c, 0x800377b4); return; }
     }
     f_800377b4_b(c, 0x800377b4);
-    if p { crate::prof::exit(c, 0x800377b4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800377b4_at(c: &mut Cpu, pc: u32) { f_800377b4_b(c, pc) }
@@ -1400,13 +1362,11 @@ fn f_800377b4_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawItem3 (0x80037870, 188 bytes)
 #[inline(never)]
 pub fn f_80037870(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037870) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037870); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037870); f_80037870_at(c, 0x80037870); crate::prof::exit(c, 0x80037870); return; }
     }
     f_80037870_b(c, 0x80037870);
-    if p { crate::prof::exit(c, 0x80037870); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037870_at(c: &mut Cpu, pc: u32) { f_80037870_b(c, pc) }
@@ -1496,13 +1456,11 @@ fn f_80037870_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawItem4 (0x8003792c, 188 bytes)
 #[inline(never)]
 pub fn f_8003792c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003792c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003792c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003792c); f_8003792c_at(c, 0x8003792c); crate::prof::exit(c, 0x8003792c); return; }
     }
     f_8003792c_b(c, 0x8003792c);
-    if p { crate::prof::exit(c, 0x8003792c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003792c_at(c: &mut Cpu, pc: u32) { f_8003792c_b(c, pc) }
@@ -1592,13 +1550,11 @@ fn f_8003792c_b(c: &mut Cpu, mut pc: u32) {
 /// menu20DrawAnim (0x800379e8, 456 bytes)
 #[inline(never)]
 pub fn f_800379e8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800379e8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800379e8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800379e8); f_800379e8_at(c, 0x800379e8); crate::prof::exit(c, 0x800379e8); return; }
     }
     f_800379e8_b(c, 0x800379e8);
-    if p { crate::prof::exit(c, 0x800379e8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800379e8_at(c: &mut Cpu, pc: u32) { f_800379e8_b(c, pc) }
@@ -1821,13 +1777,11 @@ fn f_800379e8_b(c: &mut Cpu, mut pc: u32) {
 /// menu22DrawAnim (0x80037bb0, 456 bytes)
 #[inline(never)]
 pub fn f_80037bb0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037bb0) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037bb0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037bb0); f_80037bb0_at(c, 0x80037bb0); crate::prof::exit(c, 0x80037bb0); return; }
     }
     f_80037bb0_b(c, 0x80037bb0);
-    if p { crate::prof::exit(c, 0x80037bb0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037bb0_at(c: &mut Cpu, pc: u32) { f_80037bb0_b(c, pc) }
@@ -2050,13 +2004,11 @@ fn f_80037bb0_b(c: &mut Cpu, mut pc: u32) {
 /// menu21DrawAnim (0x80037d78, 456 bytes)
 #[inline(never)]
 pub fn f_80037d78(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037d78) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037d78); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037d78); f_80037d78_at(c, 0x80037d78); crate::prof::exit(c, 0x80037d78); return; }
     }
     f_80037d78_b(c, 0x80037d78);
-    if p { crate::prof::exit(c, 0x80037d78); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037d78_at(c: &mut Cpu, pc: u32) { f_80037d78_b(c, pc) }
@@ -2279,13 +2231,11 @@ fn f_80037d78_b(c: &mut Cpu, mut pc: u32) {
 /// menu23DrawAnim (0x80037f40, 484 bytes)
 #[inline(never)]
 pub fn f_80037f40(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80037f40) { return; }
-        if c.prof { crate::prof::enter(c, 0x80037f40); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80037f40); f_80037f40_at(c, 0x80037f40); crate::prof::exit(c, 0x80037f40); return; }
     }
     f_80037f40_b(c, 0x80037f40);
-    if p { crate::prof::exit(c, 0x80037f40); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80037f40_at(c: &mut Cpu, pc: u32) { f_80037f40_b(c, pc) }
@@ -2515,13 +2465,11 @@ fn f_80037f40_b(c: &mut Cpu, mut pc: u32) {
 /// menu1FDrawItem (0x80038124, 20 bytes)
 #[inline(never)]
 pub fn f_80038124(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038124) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038124); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038124); f_80038124_at(c, 0x80038124); crate::prof::exit(c, 0x80038124); return; }
     }
     f_80038124_b(c, 0x80038124);
-    if p { crate::prof::exit(c, 0x80038124); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038124_at(c: &mut Cpu, pc: u32) { f_80038124_b(c, pc) }
@@ -2551,13 +2499,11 @@ fn f_80038124_b(c: &mut Cpu, mut pc: u32) {
 /// menu1EDrawItem (0x80038138, 56 bytes)
 #[inline(never)]
 pub fn f_80038138(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038138) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038138); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038138); f_80038138_at(c, 0x80038138); crate::prof::exit(c, 0x80038138); return; }
     }
     f_80038138_b(c, 0x80038138);
-    if p { crate::prof::exit(c, 0x80038138); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038138_at(c: &mut Cpu, pc: u32) { f_80038138_b(c, pc) }
@@ -2602,13 +2548,11 @@ fn f_80038138_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuDrawItem5 (0x80038170, 224 bytes)
 #[inline(never)]
 pub fn f_80038170(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038170) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038170); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038170); f_80038170_at(c, 0x80038170); crate::prof::exit(c, 0x80038170); return; }
     }
     f_80038170_b(c, 0x80038170);
-    if p { crate::prof::exit(c, 0x80038170); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038170_at(c: &mut Cpu, pc: u32) { f_80038170_b(c, pc) }
@@ -2725,13 +2669,11 @@ fn f_80038170_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListCtrl (0x80038250, 152 bytes)
 #[inline(never)]
 pub fn f_80038250(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038250) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038250); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038250); f_80038250_at(c, 0x80038250); crate::prof::exit(c, 0x80038250); return; }
     }
     f_80038250_b(c, 0x80038250);
-    if p { crate::prof::exit(c, 0x80038250); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038250_at(c: &mut Cpu, pc: u32) { f_80038250_b(c, pc) }
@@ -2824,13 +2766,11 @@ fn f_80038250_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuListCtrl2 (0x800382e8, 152 bytes)
 #[inline(never)]
 pub fn f_800382e8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800382e8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800382e8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800382e8); f_800382e8_at(c, 0x800382e8); crate::prof::exit(c, 0x800382e8); return; }
     }
     f_800382e8_b(c, 0x800382e8);
-    if p { crate::prof::exit(c, 0x800382e8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800382e8_at(c: &mut Cpu, pc: u32) { f_800382e8_b(c, pc) }
@@ -2923,13 +2863,11 @@ fn f_800382e8_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuCursor (0x80038380, 172 bytes)
 #[inline(never)]
 pub fn f_80038380(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038380) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038380); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038380); f_80038380_at(c, 0x80038380); crate::prof::exit(c, 0x80038380); return; }
     }
     f_80038380_b(c, 0x80038380);
-    if p { crate::prof::exit(c, 0x80038380); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038380_at(c: &mut Cpu, pc: u32) { f_80038380_b(c, pc) }
@@ -3021,13 +2959,11 @@ fn f_80038380_b(c: &mut Cpu, mut pc: u32) {
 /// std024_dialogDisplayPCBoxMenu (0x8003842c, 1176 bytes)
 #[inline(never)]
 pub fn f_8003842c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003842c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003842c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003842c); f_8003842c_at(c, 0x8003842c); crate::prof::exit(c, 0x8003842c); return; }
     }
     f_8003842c_b(c, 0x8003842c);
-    if p { crate::prof::exit(c, 0x8003842c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003842c_at(c: &mut Cpu, pc: u32) { f_8003842c_b(c, pc) }
@@ -3604,13 +3540,11 @@ fn f_8003842c_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800388C4 (0x800388c4, 204 bytes)
 #[inline(never)]
 pub fn f_800388c4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800388c4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800388c4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800388c4); f_800388c4_at(c, 0x800388c4); crate::prof::exit(c, 0x800388c4); return; }
     }
     f_800388c4_b(c, 0x800388c4);
-    if p { crate::prof::exit(c, 0x800388c4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800388c4_at(c: &mut Cpu, pc: u32) { f_800388c4_b(c, pc) }
@@ -3719,13 +3653,11 @@ fn f_800388c4_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80038990 (0x80038990, 112 bytes)
 #[inline(never)]
 pub fn f_80038990(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038990) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038990); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038990); f_80038990_at(c, 0x80038990); crate::prof::exit(c, 0x80038990); return; }
     }
     f_80038990_b(c, 0x80038990);
-    if p { crate::prof::exit(c, 0x80038990); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038990_at(c: &mut Cpu, pc: u32) { f_80038990_b(c, pc) }
@@ -3790,13 +3722,11 @@ fn f_80038990_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80038A00 (0x80038a00, 12 bytes)
 #[inline(never)]
 pub fn f_80038a00(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038a00) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038a00); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038a00); f_80038a00_at(c, 0x80038a00); crate::prof::exit(c, 0x80038a00); return; }
     }
     f_80038a00_b(c, 0x80038a00);
-    if p { crate::prof::exit(c, 0x80038a00); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038a00_at(c: &mut Cpu, pc: u32) { f_80038a00_b(c, pc) }
@@ -3824,13 +3754,11 @@ fn f_80038a00_b(c: &mut Cpu, mut pc: u32) {
 /// pcMenuSave (0x80038a0c, 1128 bytes)
 #[inline(never)]
 pub fn f_80038a0c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038a0c) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038a0c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038a0c); f_80038a0c_at(c, 0x80038a0c); crate::prof::exit(c, 0x80038a0c); return; }
     }
     f_80038a0c_b(c, 0x80038a0c);
-    if p { crate::prof::exit(c, 0x80038a0c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038a0c_at(c: &mut Cpu, pc: u32) { f_80038a0c_b(c, pc) }
@@ -4422,13 +4350,11 @@ fn f_80038a0c_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageMenuCB (0x80038e74, 400 bytes)
 #[inline(never)]
 pub fn f_80038e74(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80038e74) { return; }
-        if c.prof { crate::prof::enter(c, 0x80038e74); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80038e74); f_80038e74_at(c, 0x80038e74); crate::prof::exit(c, 0x80038e74); return; }
     }
     f_80038e74_b(c, 0x80038e74);
-    if p { crate::prof::exit(c, 0x80038e74); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80038e74_at(c: &mut Cpu, pc: u32) { f_80038e74_b(c, pc) }
@@ -4604,13 +4530,11 @@ fn f_80038e74_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageMenuDrawItem (0x80039004, 120 bytes)
 #[inline(never)]
 pub fn f_80039004(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039004) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039004); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039004); f_80039004_at(c, 0x80039004); crate::prof::exit(c, 0x80039004); return; }
     }
     f_80039004_b(c, 0x80039004);
-    if p { crate::prof::exit(c, 0x80039004); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039004_at(c: &mut Cpu, pc: u32) { f_80039004_b(c, pc) }
@@ -4674,13 +4598,11 @@ fn f_80039004_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageMenuCursor (0x8003907c, 172 bytes)
 #[inline(never)]
 pub fn f_8003907c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003907c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003907c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003907c); f_8003907c_at(c, 0x8003907c); crate::prof::exit(c, 0x8003907c); return; }
     }
     f_8003907c_b(c, 0x8003907c);
-    if p { crate::prof::exit(c, 0x8003907c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003907c_at(c: &mut Cpu, pc: u32) { f_8003907c_b(c, pc) }
@@ -4772,13 +4694,11 @@ fn f_8003907c_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageMenuCtrl (0x80039128, 880 bytes)
 #[inline(never)]
 pub fn f_80039128(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039128) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039128); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039128); f_80039128_at(c, 0x80039128); crate::prof::exit(c, 0x80039128); return; }
     }
     f_80039128_b(c, 0x80039128);
-    if p { crate::prof::exit(c, 0x80039128); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039128_at(c: &mut Cpu, pc: u32) { f_80039128_b(c, pc) }
@@ -5086,13 +5006,11 @@ fn f_80039128_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80039498 (0x80039498, 176 bytes)
 #[inline(never)]
 pub fn f_80039498(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039498) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039498); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039498); f_80039498_at(c, 0x80039498); crate::prof::exit(c, 0x80039498); return; }
     }
     f_80039498_b(c, 0x80039498);
-    if p { crate::prof::exit(c, 0x80039498); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039498_at(c: &mut Cpu, pc: u32) { f_80039498_b(c, pc) }
@@ -5185,13 +5103,11 @@ fn f_80039498_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListDrawItem (0x80039548, 36 bytes)
 #[inline(never)]
 pub fn f_80039548(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039548) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039548); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039548); f_80039548_at(c, 0x80039548); crate::prof::exit(c, 0x80039548); return; }
     }
     f_80039548_b(c, 0x80039548);
-    if p { crate::prof::exit(c, 0x80039548); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039548_at(c: &mut Cpu, pc: u32) { f_80039548_b(c, pc) }
@@ -5234,13 +5150,11 @@ fn f_80039548_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListDrawSprite (0x8003956c, 152 bytes)
 #[inline(never)]
 pub fn f_8003956c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003956c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003956c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003956c); f_8003956c_at(c, 0x8003956c); crate::prof::exit(c, 0x8003956c); return; }
     }
     f_8003956c_b(c, 0x8003956c);
-    if p { crate::prof::exit(c, 0x8003956c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003956c_at(c: &mut Cpu, pc: u32) { f_8003956c_b(c, pc) }
@@ -5339,13 +5253,11 @@ fn f_8003956c_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListDrawSprite2 (0x80039604, 64 bytes)
 #[inline(never)]
 pub fn f_80039604(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039604) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039604); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039604); f_80039604_at(c, 0x80039604); crate::prof::exit(c, 0x80039604); return; }
     }
     f_80039604_b(c, 0x80039604);
-    if p { crate::prof::exit(c, 0x80039604); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039604_at(c: &mut Cpu, pc: u32) { f_80039604_b(c, pc) }
@@ -5398,13 +5310,11 @@ fn f_80039604_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageDrawItem (0x80039644, 656 bytes)
 #[inline(never)]
 pub fn f_80039644(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039644) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039644); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039644); f_80039644_at(c, 0x80039644); crate::prof::exit(c, 0x80039644); return; }
     }
     f_80039644_b(c, 0x80039644);
-    if p { crate::prof::exit(c, 0x80039644); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039644_at(c: &mut Cpu, pc: u32) { f_80039644_b(c, pc) }
@@ -5764,13 +5674,11 @@ fn f_80039644_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageDrawList (0x800398d4, 88 bytes)
 #[inline(never)]
 pub fn f_800398d4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800398d4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800398d4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800398d4); f_800398d4_at(c, 0x800398d4); crate::prof::exit(c, 0x800398d4); return; }
     }
     f_800398d4_b(c, 0x800398d4);
-    if p { crate::prof::exit(c, 0x800398d4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800398d4_at(c: &mut Cpu, pc: u32) { f_800398d4_b(c, pc) }
@@ -5826,13 +5734,11 @@ fn f_800398d4_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListDrawItem2 (0x8003992c, 68 bytes)
 #[inline(never)]
 pub fn f_8003992c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003992c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003992c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003992c); f_8003992c_at(c, 0x8003992c); crate::prof::exit(c, 0x8003992c); return; }
     }
     f_8003992c_b(c, 0x8003992c);
-    if p { crate::prof::exit(c, 0x8003992c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003992c_at(c: &mut Cpu, pc: u32) { f_8003992c_b(c, pc) }
@@ -5880,13 +5786,11 @@ fn f_8003992c_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListDrawSprite3 (0x80039970, 224 bytes)
 #[inline(never)]
 pub fn f_80039970(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039970) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039970); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039970); f_80039970_at(c, 0x80039970); crate::prof::exit(c, 0x80039970); return; }
     }
     f_80039970_b(c, 0x80039970);
-    if p { crate::prof::exit(c, 0x80039970); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039970_at(c: &mut Cpu, pc: u32) { f_80039970_b(c, pc) }
@@ -6003,13 +5907,11 @@ fn f_80039970_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListDrawText (0x80039a50, 52 bytes)
 #[inline(never)]
 pub fn f_80039a50(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039a50) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039a50); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039a50); f_80039a50_at(c, 0x80039a50); crate::prof::exit(c, 0x80039a50); return; }
     }
     f_80039a50_b(c, 0x80039a50);
-    if p { crate::prof::exit(c, 0x80039a50); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039a50_at(c: &mut Cpu, pc: u32) { f_80039a50_b(c, pc) }
@@ -6050,13 +5952,11 @@ fn f_80039a50_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListKey (0x80039a84, 1216 bytes)
 #[inline(never)]
 pub fn f_80039a84(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039a84) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039a84); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039a84); f_80039a84_at(c, 0x80039a84); crate::prof::exit(c, 0x80039a84); return; }
     }
     f_80039a84_b(c, 0x80039a84);
-    if p { crate::prof::exit(c, 0x80039a84); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039a84_at(c: &mut Cpu, pc: u32) { f_80039a84_b(c, pc) }
@@ -6677,13 +6577,11 @@ fn f_80039a84_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListButton (0x80039f44, 44 bytes)
 #[inline(never)]
 pub fn f_80039f44(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039f44) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039f44); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039f44); f_80039f44_at(c, 0x80039f44); crate::prof::exit(c, 0x80039f44); return; }
     }
     f_80039f44_b(c, 0x80039f44);
-    if p { crate::prof::exit(c, 0x80039f44); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039f44_at(c: &mut Cpu, pc: u32) { f_80039f44_b(c, pc) }
@@ -6725,13 +6623,11 @@ fn f_80039f44_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageListSeq (0x80039f70, 412 bytes)
 #[inline(never)]
 pub fn f_80039f70(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80039f70) { return; }
-        if c.prof { crate::prof::enter(c, 0x80039f70); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80039f70); f_80039f70_at(c, 0x80039f70); crate::prof::exit(c, 0x80039f70); return; }
     }
     f_80039f70_b(c, 0x80039f70);
-    if p { crate::prof::exit(c, 0x80039f70); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80039f70_at(c: &mut Cpu, pc: u32) { f_80039f70_b(c, pc) }
@@ -6961,13 +6857,11 @@ fn f_80039f70_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageTransfer (0x8003a10c, 1044 bytes)
 #[inline(never)]
 pub fn f_8003a10c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003a10c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003a10c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003a10c); f_8003a10c_at(c, 0x8003a10c); crate::prof::exit(c, 0x8003a10c); return; }
     }
     f_8003a10c_b(c, 0x8003a10c);
-    if p { crate::prof::exit(c, 0x8003a10c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003a10c_at(c: &mut Cpu, pc: u32) { f_8003a10c_b(c, pc) }
@@ -7559,13 +7453,11 @@ fn f_8003a10c_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageRun (0x8003a520, 416 bytes)
 #[inline(never)]
 pub fn f_8003a520(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003a520) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003a520); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003a520); f_8003a520_at(c, 0x8003a520); crate::prof::exit(c, 0x8003a520); return; }
     }
     f_8003a520_b(c, 0x8003a520);
-    if p { crate::prof::exit(c, 0x8003a520); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003a520_at(c: &mut Cpu, pc: u32) { f_8003a520_b(c, pc) }
@@ -7823,13 +7715,11 @@ fn f_8003a520_b(c: &mut Cpu, mut pc: u32) {
 /// menuAmountDraw (0x8003a6c0, 304 bytes)
 #[inline(never)]
 pub fn f_8003a6c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003a6c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003a6c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003a6c0); f_8003a6c0_at(c, 0x8003a6c0); crate::prof::exit(c, 0x8003a6c0); return; }
     }
     f_8003a6c0_b(c, 0x8003a6c0);
-    if p { crate::prof::exit(c, 0x8003a6c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003a6c0_at(c: &mut Cpu, pc: u32) { f_8003a6c0_b(c, pc) }
@@ -7975,13 +7865,11 @@ fn f_8003a6c0_b(c: &mut Cpu, mut pc: u32) {
 /// menuAmountKey (0x8003a7f0, 1120 bytes)
 #[inline(never)]
 pub fn f_8003a7f0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003a7f0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003a7f0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003a7f0); f_8003a7f0_at(c, 0x8003a7f0); crate::prof::exit(c, 0x8003a7f0); return; }
     }
     f_8003a7f0_b(c, 0x8003a7f0);
-    if p { crate::prof::exit(c, 0x8003a7f0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003a7f0_at(c: &mut Cpu, pc: u32) { f_8003a7f0_b(c, pc) }
@@ -8466,13 +8354,11 @@ fn f_8003a7f0_b(c: &mut Cpu, mut pc: u32) {
 /// menuAmountCtrl (0x8003ac50, 152 bytes)
 #[inline(never)]
 pub fn f_8003ac50(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003ac50) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003ac50); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003ac50); f_8003ac50_at(c, 0x8003ac50); crate::prof::exit(c, 0x8003ac50); return; }
     }
     f_8003ac50_b(c, 0x8003ac50);
-    if p { crate::prof::exit(c, 0x8003ac50); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003ac50_at(c: &mut Cpu, pc: u32) { f_8003ac50_b(c, pc) }
@@ -8565,13 +8451,11 @@ fn f_8003ac50_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003ACE8 (0x8003ace8, 132 bytes)
 #[inline(never)]
 pub fn f_8003ace8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003ace8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003ace8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003ace8); f_8003ace8_at(c, 0x8003ace8); crate::prof::exit(c, 0x8003ace8); return; }
     }
     f_8003ace8_b(c, 0x8003ace8);
-    if p { crate::prof::exit(c, 0x8003ace8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003ace8_at(c: &mut Cpu, pc: u32) { f_8003ace8_b(c, pc) }
@@ -8650,13 +8534,11 @@ fn f_8003ace8_b(c: &mut Cpu, mut pc: u32) {
 /// itemStorageConfirmDrawSprite (0x8003ad6c, 280 bytes)
 #[inline(never)]
 pub fn f_8003ad6c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003ad6c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003ad6c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003ad6c); f_8003ad6c_at(c, 0x8003ad6c); crate::prof::exit(c, 0x8003ad6c); return; }
     }
     f_8003ad6c_b(c, 0x8003ad6c);
-    if p { crate::prof::exit(c, 0x8003ad6c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003ad6c_at(c: &mut Cpu, pc: u32) { f_8003ad6c_b(c, pc) }
@@ -8817,13 +8699,11 @@ fn f_8003ad6c_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003AE84 (0x8003ae84, 108 bytes)
 #[inline(never)]
 pub fn f_8003ae84(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003ae84) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003ae84); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003ae84); f_8003ae84_at(c, 0x8003ae84); crate::prof::exit(c, 0x8003ae84); return; }
     }
     f_8003ae84_b(c, 0x8003ae84);
-    if p { crate::prof::exit(c, 0x8003ae84); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003ae84_at(c: &mut Cpu, pc: u32) { f_8003ae84_b(c, pc) }
@@ -8899,13 +8779,11 @@ fn f_8003ae84_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawCount (0x8003aef0, 236 bytes)
 #[inline(never)]
 pub fn f_8003aef0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003aef0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003aef0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003aef0); f_8003aef0_at(c, 0x8003aef0); crate::prof::exit(c, 0x8003aef0); return; }
     }
     f_8003aef0_b(c, 0x8003aef0);
-    if p { crate::prof::exit(c, 0x8003aef0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003aef0_at(c: &mut Cpu, pc: u32) { f_8003aef0_b(c, pc) }
@@ -9016,13 +8894,11 @@ fn f_8003aef0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawModel (0x8003afdc, 764 bytes)
 #[inline(never)]
 pub fn f_8003afdc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003afdc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003afdc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003afdc); f_8003afdc_at(c, 0x8003afdc); crate::prof::exit(c, 0x8003afdc); return; }
     }
     f_8003afdc_b(c, 0x8003afdc);
-    if p { crate::prof::exit(c, 0x8003afdc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003afdc_at(c: &mut Cpu, pc: u32) { f_8003afdc_b(c, pc) }
@@ -9403,13 +9279,11 @@ fn f_8003afdc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawEntry (0x8003b2d8, 416 bytes)
 #[inline(never)]
 pub fn f_8003b2d8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003b2d8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003b2d8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003b2d8); f_8003b2d8_at(c, 0x8003b2d8); crate::prof::exit(c, 0x8003b2d8); return; }
     }
     f_8003b2d8_b(c, 0x8003b2d8);
-    if p { crate::prof::exit(c, 0x8003b2d8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003b2d8_at(c: &mut Cpu, pc: u32) { f_8003b2d8_b(c, pc) }
@@ -9631,13 +9505,11 @@ fn f_8003b2d8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListCreatePokemon (0x8003b478, 600 bytes)
 #[inline(never)]
 pub fn f_8003b478(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003b478) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003b478); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003b478); f_8003b478_at(c, 0x8003b478); crate::prof::exit(c, 0x8003b478); return; }
     }
     f_8003b478_b(c, 0x8003b478);
-    if p { crate::prof::exit(c, 0x8003b478); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003b478_at(c: &mut Cpu, pc: u32) { f_8003b478_b(c, pc) }
@@ -9971,13 +9843,11 @@ fn f_8003b478_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawCaption (0x8003b6d0, 324 bytes)
 #[inline(never)]
 pub fn f_8003b6d0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003b6d0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003b6d0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003b6d0); f_8003b6d0_at(c, 0x8003b6d0); crate::prof::exit(c, 0x8003b6d0); return; }
     }
     f_8003b6d0_b(c, 0x8003b6d0);
-    if p { crate::prof::exit(c, 0x8003b6d0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003b6d0_at(c: &mut Cpu, pc: u32) { f_8003b6d0_b(c, pc) }
@@ -10158,13 +10028,11 @@ fn f_8003b6d0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListCursor (0x8003b814, 36 bytes)
 #[inline(never)]
 pub fn f_8003b814(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003b814) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003b814); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003b814); f_8003b814_at(c, 0x8003b814); crate::prof::exit(c, 0x8003b814); return; }
     }
     f_8003b814_b(c, 0x8003b814);
-    if p { crate::prof::exit(c, 0x8003b814); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003b814_at(c: &mut Cpu, pc: u32) { f_8003b814_b(c, pc) }
@@ -10201,13 +10069,11 @@ fn f_8003b814_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListCursor2 (0x8003b838, 36 bytes)
 #[inline(never)]
 pub fn f_8003b838(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003b838) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003b838); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003b838); f_8003b838_at(c, 0x8003b838); crate::prof::exit(c, 0x8003b838); return; }
     }
     f_8003b838_b(c, 0x8003b838);
-    if p { crate::prof::exit(c, 0x8003b838); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003b838_at(c: &mut Cpu, pc: u32) { f_8003b838_b(c, pc) }
@@ -10244,13 +10110,11 @@ fn f_8003b838_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDetailKey (0x8003b85c, 1784 bytes)
 #[inline(never)]
 pub fn f_8003b85c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003b85c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003b85c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003b85c); f_8003b85c_at(c, 0x8003b85c); crate::prof::exit(c, 0x8003b85c); return; }
     }
     f_8003b85c_b(c, 0x8003b85c);
-    if p { crate::prof::exit(c, 0x8003b85c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003b85c_at(c: &mut Cpu, pc: u32) { f_8003b85c_b(c, pc) }
@@ -11054,13 +10918,11 @@ fn f_8003b85c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawItem (0x8003bf54, 232 bytes)
 #[inline(never)]
 pub fn f_8003bf54(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003bf54) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003bf54); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003bf54); f_8003bf54_at(c, 0x8003bf54); crate::prof::exit(c, 0x8003bf54); return; }
     }
     f_8003bf54_b(c, 0x8003bf54);
-    if p { crate::prof::exit(c, 0x8003bf54); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003bf54_at(c: &mut Cpu, pc: u32) { f_8003bf54_b(c, pc) }
@@ -11155,13 +11017,11 @@ fn f_8003bf54_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawAnim (0x8003c03c, 256 bytes)
 #[inline(never)]
 pub fn f_8003c03c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003c03c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003c03c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003c03c); f_8003c03c_at(c, 0x8003c03c); crate::prof::exit(c, 0x8003c03c); return; }
     }
     f_8003c03c_b(c, 0x8003c03c);
-    if p { crate::prof::exit(c, 0x8003c03c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003c03c_at(c: &mut Cpu, pc: u32) { f_8003c03c_b(c, pc) }
@@ -11271,13 +11131,11 @@ fn f_8003c03c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawAnim2 (0x8003c13c, 224 bytes)
 #[inline(never)]
 pub fn f_8003c13c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003c13c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003c13c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003c13c); f_8003c13c_at(c, 0x8003c13c); crate::prof::exit(c, 0x8003c13c); return; }
     }
     f_8003c13c_b(c, 0x8003c13c);
-    if p { crate::prof::exit(c, 0x8003c13c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003c13c_at(c: &mut Cpu, pc: u32) { f_8003c13c_b(c, pc) }
@@ -11373,13 +11231,11 @@ fn f_8003c13c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDetailDrawItem (0x8003c21c, 48 bytes)
 #[inline(never)]
 pub fn f_8003c21c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003c21c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003c21c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003c21c); f_8003c21c_at(c, 0x8003c21c); crate::prof::exit(c, 0x8003c21c); return; }
     }
     f_8003c21c_b(c, 0x8003c21c);
-    if p { crate::prof::exit(c, 0x8003c21c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003c21c_at(c: &mut Cpu, pc: u32) { f_8003c21c_b(c, pc) }
@@ -11416,13 +11272,11 @@ fn f_8003c21c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawItem2 (0x8003c24c, 108 bytes)
 #[inline(never)]
 pub fn f_8003c24c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003c24c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003c24c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003c24c); f_8003c24c_at(c, 0x8003c24c); crate::prof::exit(c, 0x8003c24c); return; }
     }
     f_8003c24c_b(c, 0x8003c24c);
-    if p { crate::prof::exit(c, 0x8003c24c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003c24c_at(c: &mut Cpu, pc: u32) { f_8003c24c_b(c, pc) }
@@ -11495,13 +11349,11 @@ fn f_8003c24c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawDetail (0x8003c2b8, 1136 bytes)
 #[inline(never)]
 pub fn f_8003c2b8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003c2b8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003c2b8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003c2b8); f_8003c2b8_at(c, 0x8003c2b8); crate::prof::exit(c, 0x8003c2b8); return; }
     }
     f_8003c2b8_b(c, 0x8003c2b8);
-    if p { crate::prof::exit(c, 0x8003c2b8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003c2b8_at(c: &mut Cpu, pc: u32) { f_8003c2b8_b(c, pc) }
@@ -12065,13 +11917,11 @@ fn f_8003c2b8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListDrawItem3 (0x8003c728, 152 bytes)
 #[inline(never)]
 pub fn f_8003c728(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003c728) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003c728); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003c728); f_8003c728_at(c, 0x8003c728); crate::prof::exit(c, 0x8003c728); return; }
     }
     f_8003c728_b(c, 0x8003c728);
-    if p { crate::prof::exit(c, 0x8003c728); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003c728_at(c: &mut Cpu, pc: u32) { f_8003c728_b(c, pc) }
@@ -12140,13 +11990,11 @@ fn f_8003c728_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListRun (0x8003c7c0, 1628 bytes)
 #[inline(never)]
 pub fn f_8003c7c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003c7c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003c7c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003c7c0); f_8003c7c0_at(c, 0x8003c7c0); crate::prof::exit(c, 0x8003c7c0); return; }
     }
     f_8003c7c0_b(c, 0x8003c7c0);
-    if p { crate::prof::exit(c, 0x8003c7c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003c7c0_at(c: &mut Cpu, pc: u32) { f_8003c7c0_b(c, pc) }
@@ -12938,13 +12786,11 @@ fn f_8003c7c0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSnagListGetTrainerName (0x8003ce1c, 284 bytes)
 #[inline(never)]
 pub fn f_8003ce1c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003ce1c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003ce1c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003ce1c); f_8003ce1c_at(c, 0x8003ce1c); crate::prof::exit(c, 0x8003ce1c); return; }
     }
     f_8003ce1c_b(c, 0x8003ce1c);
-    if p { crate::prof::exit(c, 0x8003ce1c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003ce1c_at(c: &mut Cpu, pc: u32) { f_8003ce1c_b(c, pc) }
@@ -13118,13 +12964,11 @@ fn f_8003ce1c_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003CF38 (0x8003cf38, 708 bytes)
 #[inline(never)]
 pub fn f_8003cf38(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003cf38) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003cf38); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003cf38); f_8003cf38_at(c, 0x8003cf38); crate::prof::exit(c, 0x8003cf38); return; }
     }
     f_8003cf38_b(c, 0x8003cf38);
-    if p { crate::prof::exit(c, 0x8003cf38); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003cf38_at(c: &mut Cpu, pc: u32) { f_8003cf38_b(c, pc) }
@@ -13464,13 +13308,11 @@ fn f_8003cf38_b(c: &mut Cpu, mut pc: u32) {
 /// pdaModelViewSetup (0x8003d1fc, 716 bytes)
 #[inline(never)]
 pub fn f_8003d1fc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003d1fc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003d1fc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003d1fc); f_8003d1fc_at(c, 0x8003d1fc); crate::prof::exit(c, 0x8003d1fc); return; }
     }
     f_8003d1fc_b(c, 0x8003d1fc);
-    if p { crate::prof::exit(c, 0x8003d1fc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003d1fc_at(c: &mut Cpu, pc: u32) { f_8003d1fc_b(c, pc) }
@@ -13794,13 +13636,11 @@ fn f_8003d1fc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoLoadPokemon (0x8003d4c8, 848 bytes)
 #[inline(never)]
 pub fn f_8003d4c8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003d4c8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003d4c8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003d4c8); f_8003d4c8_at(c, 0x8003d4c8); crate::prof::exit(c, 0x8003d4c8); return; }
     }
     f_8003d4c8_b(c, 0x8003d4c8);
-    if p { crate::prof::exit(c, 0x8003d4c8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003d4c8_at(c: &mut Cpu, pc: u32) { f_8003d4c8_b(c, pc) }
@@ -14205,13 +14045,11 @@ fn f_8003d4c8_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003D818 (0x8003d818, 180 bytes)
 #[inline(never)]
 pub fn f_8003d818(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003d818) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003d818); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003d818); f_8003d818_at(c, 0x8003d818); crate::prof::exit(c, 0x8003d818); return; }
     }
     f_8003d818_b(c, 0x8003d818);
-    if p { crate::prof::exit(c, 0x8003d818); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003d818_at(c: &mut Cpu, pc: u32) { f_8003d818_b(c, pc) }
@@ -14299,13 +14137,11 @@ fn f_8003d818_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003D8CC (0x8003d8cc, 904 bytes)
 #[inline(never)]
 pub fn f_8003d8cc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003d8cc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003d8cc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003d8cc); f_8003d8cc_at(c, 0x8003d8cc); crate::prof::exit(c, 0x8003d8cc); return; }
     }
     f_8003d8cc_b(c, 0x8003d8cc);
-    if p { crate::prof::exit(c, 0x8003d8cc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003d8cc_at(c: &mut Cpu, pc: u32) { f_8003d8cc_b(c, pc) }
@@ -14715,13 +14551,11 @@ fn f_8003d8cc_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003DC54 (0x8003dc54, 1856 bytes)
 #[inline(never)]
 pub fn f_8003dc54(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003dc54) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003dc54); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003dc54); f_8003dc54_at(c, 0x8003dc54); crate::prof::exit(c, 0x8003dc54); return; }
     }
     f_8003dc54_b(c, 0x8003dc54);
-    if p { crate::prof::exit(c, 0x8003dc54); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003dc54_at(c: &mut Cpu, pc: u32) { f_8003dc54_b(c, pc) }
@@ -15573,13 +15407,11 @@ fn f_8003dc54_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoDrawData (0x8003e394, 3244 bytes)
 #[inline(never)]
 pub fn f_8003e394(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003e394) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003e394); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003e394); f_8003e394_at(c, 0x8003e394); crate::prof::exit(c, 0x8003e394); return; }
     }
     f_8003e394_b(c, 0x8003e394);
-    if p { crate::prof::exit(c, 0x8003e394); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003e394_at(c: &mut Cpu, pc: u32) { f_8003e394_b(c, pc) }
@@ -17123,13 +16955,11 @@ fn f_8003e394_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003F040 (0x8003f040, 668 bytes)
 #[inline(never)]
 pub fn f_8003f040(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003f040) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003f040); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003f040); f_8003f040_at(c, 0x8003f040); crate::prof::exit(c, 0x8003f040); return; }
     }
     f_8003f040_b(c, 0x8003f040);
-    if p { crate::prof::exit(c, 0x8003f040); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003f040_at(c: &mut Cpu, pc: u32) { f_8003f040_b(c, pc) }
@@ -17495,13 +17325,11 @@ fn f_8003f040_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8003F2DC (0x8003f2dc, 392 bytes)
 #[inline(never)]
 pub fn f_8003f2dc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003f2dc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003f2dc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003f2dc); f_8003f2dc_at(c, 0x8003f2dc); crate::prof::exit(c, 0x8003f2dc); return; }
     }
     f_8003f2dc_b(c, 0x8003f2dc);
-    if p { crate::prof::exit(c, 0x8003f2dc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003f2dc_at(c: &mut Cpu, pc: u32) { f_8003f2dc_b(c, pc) }
@@ -17708,13 +17536,11 @@ fn f_8003f2dc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoMainDrawText (0x8003f464, 2996 bytes)
 #[inline(never)]
 pub fn f_8003f464(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8003f464) { return; }
-        if c.prof { crate::prof::enter(c, 0x8003f464); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8003f464); f_8003f464_at(c, 0x8003f464); crate::prof::exit(c, 0x8003f464); return; }
     }
     f_8003f464_b(c, 0x8003f464);
-    if p { crate::prof::exit(c, 0x8003f464); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8003f464_at(c: &mut Cpu, pc: u32) { f_8003f464_b(c, pc) }
@@ -17730,217 +17556,165 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
         match pc {
             0x8003f464 => { ins += 1;
                 { let ea = c.r[1].wrapping_add(0xffffffb0); c.stw(ea, c.r[1]); c.r[1] = ea; }
-                pc = 0x8003f468;
-            }
-            0x8003f468 => { ins += 1;
+                pc = 0x8003f468; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.mfspr(8);
-                pc = 0x8003f46c;
-            }
-            0x8003f46c => { ins += 1;
+                pc = 0x8003f46c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stw(c.r[1].wrapping_add(0x54), c.r[0]);
-                pc = 0x8003f470;
-            }
-            0x8003f470 => { ins += 1;
+                pc = 0x8003f470; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x40); let v = c.f[31]; c.stfd(ea, v); }
-                pc = 0x8003f474;
-            }
-            0x8003f474 => { ins += 1;
+                pc = 0x8003f474; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x48); let (x, y) = (c.f[31], c.ps1[31]); c.psq_store(ea, x, y, false, 0); }
-                pc = 0x8003f478;
-            }
-            0x8003f478 => { ins += 1;
+                pc = 0x8003f478; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x30); let v = c.f[30]; c.stfd(ea, v); }
-                pc = 0x8003f47c;
-            }
-            0x8003f47c => { ins += 1;
+                pc = 0x8003f47c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x38); let (x, y) = (c.f[30], c.ps1[30]); c.psq_store(ea, x, y, false, 0); }
-                pc = 0x8003f480;
-            }
-            0x8003f480 => { ins += 11;
+                pc = 0x8003f480; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 11;
                 { let mut ea = c.r[1].wrapping_add(0x1c); for n in 27..32 { let v = c.r[n]; c.stw(ea, v); ea = ea.wrapping_add(4); } }
-                pc = 0x8003f484;
-            }
-            0x8003f484 => { ins += 1;
+                pc = 0x8003f484; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[27] = c.r[3] | c.r[3];
-                pc = 0x8003f488;
-            }
-            0x8003f488 => { ins += 1;
+                pc = 0x8003f488; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[28] = c.r[4] | c.r[4];
-                pc = 0x8003f48c;
-            }
-            0x8003f48c => { ins += 1;
+                pc = 0x8003f48c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x803a0000;
-                pc = 0x8003f490;
-            }
-            0x8003f490 => { ins += 1;
+                pc = 0x8003f490; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x802e0000;
-                pc = 0x8003f494;
-            }
-            0x8003f494 => { ins += 1;
+                pc = 0x8003f494; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[31] = c.r[3].wrapping_add(0x6818);
-                pc = 0x8003f498;
-            }
-            0x8003f498 => { ins += 1;
+                pc = 0x8003f498; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8600); c.f[1] = c.lfs(ea); c.ps1[1] = c.f[1]; }
-                pc = 0x8003f49c;
-            }
-            0x8003f49c => { ins += 1;
+                pc = 0x8003f49c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[31].wrapping_add(0x4c); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f4a0;
-            }
-            0x8003f4a0 => { ins += 1;
+                pc = 0x8003f4a0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[30] = c.r[4].wrapping_add(0x52c8);
-                pc = 0x8003f4a4;
-            }
-            0x8003f4a4 => { ins += 1;
+                pc = 0x8003f4a4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f4a8;
-            }
-            0x8003f4a8 => { ins += 1;
+                pc = 0x8003f4a8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f4ac;
-            }
-            0x8003f4ac => { ins += 1;
+                pc = 0x8003f4ac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x8); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f4b0;
-            }
-            0x8003f4b0 => { ins += 1;
+                pc = 0x8003f4b0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
-                pc = 0x8003f4b4;
-            }
-            0x8003f4b4 => { ins += 1;
+                pc = 0x8003f4b4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[27].wrapping_add(0x8b), c.r[0]);
-                pc = 0x8003f4b8;
-            }
-            0x8003f4b8 => { ins += 1;
+                pc = 0x8003f4b8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[28].wrapping_add(0x6));
-                pc = 0x8003f4bc;
-            }
-            0x8003f4bc => { ins += 1;
+                pc = 0x8003f4bc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[5].wrapping_add(0xfffff2b9);
-                pc = 0x8003f4c0;
-            }
-            0x8003f4c0 => { ins += 1;
+                pc = 0x8003f4c0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmpu(&mut cr, c.xer, 0, c.r[0], 0x44);
-                pc = 0x8003f4c4;
-            }
-            0x8003f4c4 => { ins += 1;
+                pc = 0x8003f4c4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 1) { pc = 0x8003fff4; continue; }
-                pc = 0x8003f4c8;
-            }
-            0x8003f4c8 => { ins += 1;
+                pc = 0x8003f4c8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x802e0000;
-                pc = 0x8003f4cc;
-            }
-            0x8003f4cc => { ins += 1;
+                pc = 0x8003f4cc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003f4d0;
-            }
-            0x8003f4d0 => { ins += 1;
+                pc = 0x8003f4d0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x60c4);
-                pc = 0x8003f4d4;
-            }
-            0x8003f4d4 => { ins += 1;
+                pc = 0x8003f4d4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
-                pc = 0x8003f4d8;
-            }
-            0x8003f4d8 => { ins += 2;
+                pc = 0x8003f4d8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 2;
                 c.mtspr(9, c.r[0]);
-                pc = 0x8003f4dc;
-            }
-            0x8003f4dc => { ins += 1;
+                pc = 0x8003f4dc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if true { let t = c.ctr; if (0x8003f464..0x80040018).contains(&t) { pc = t; continue; } { c.steps = st; c.cycles = ins; c.cr = cr; (c.dispatch)(c, t); st = c.steps; ins = c.cycles; cr = c.cr; }; { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 pc = 0x8003f4e0;
             }
             0x8003f4e0 => { ins += 1;
                 c.r[3] = 0x803a0000;
-                pc = 0x8003f4e4;
-            }
-            0x8003f4e4 => { ins += 1;
+                pc = 0x8003f4e4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x802f0000;
-                pc = 0x8003f4e8;
-            }
-            0x8003f4e8 => { ins += 1;
+                pc = 0x8003f4e8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x6818);
-                pc = 0x8003f4ec;
-            }
-            0x8003f4ec => { ins += 1;
+                pc = 0x8003f4ec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[3].wrapping_add(0x1dc); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f4f0;
-            }
-            0x8003f4f0 => { ins += 3;
+                pc = 0x8003f4f0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 3;
                 c.r[3] = c.r[5].wrapping_mul(0x1c);
-                pc = 0x8003f4f4;
-            }
-            0x8003f4f4 => { ins += 1;
+                pc = 0x8003f4f4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(0xfffff0a8);
-                pc = 0x8003f4f8;
-            }
-            0x8003f4f8 => { ins += 1;
+                pc = 0x8003f4f8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f4fc;
-            }
-            0x8003f4fc => { ins += 1;
+                pc = 0x8003f4fc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0].wrapping_add(c.r[3]);
-                pc = 0x8003f500;
-            }
-            0x8003f500 => { ins += 1;
+                pc = 0x8003f500; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[3].wrapping_add(0x2));
-                pc = 0x8003f504;
-            }
-            0x8003f504 => { ins += 1;
+                pc = 0x8003f504; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x8); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f508;
-            }
-            0x8003f508 => { ins += 1;
+                pc = 0x8003f508; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
-                pc = 0x8003f50c;
-            }
-            0x8003f50c => { ins += 1;
+                pc = 0x8003f50c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
-                pc = 0x8003f510;
-            }
-            0x8003f510 => { ins += 1;
+                pc = 0x8003f510; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f514;
-            }
-            0x8003f514 => { ins += 1;
+                pc = 0x8003f514; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x50), c.r[0]);
-                pc = 0x8003f518;
-            }
-            0x8003f518 => { ins += 1;
+                pc = 0x8003f518; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[27].wrapping_add(0x84));
-                pc = 0x8003f51c;
-            }
-            0x8003f51c => { ins += 1;
+                pc = 0x8003f51c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[28].wrapping_add(0x50));
-                pc = 0x8003f520;
-            }
-            0x8003f520 => { ins += 1;
+                pc = 0x8003f520; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lha_t(ins, c.r[27].wrapping_add(0x86));
-                pc = 0x8003f524;
-            }
-            0x8003f524 => { ins += 1;
+                pc = 0x8003f524; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x52));
-                pc = 0x8003f528;
-            }
-            0x8003f528 => { ins += 1;
+                pc = 0x8003f528; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[5].wrapping_add(c.r[3]);
-                pc = 0x8003f52c;
-            }
-            0x8003f52c => { ins += 1;
+                pc = 0x8003f52c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003f530;
-            }
-            0x8003f530 => { ins += 1;
+                pc = 0x8003f530; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
-                pc = 0x8003f534;
-            }
-            0x8003f534 => { ins += 1;
+                pc = 0x8003f534; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f538;
-            }
-            0x8003f538 => { ins += 1;
+                pc = 0x8003f538; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f53c; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fe6d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f53c;
             }
@@ -17954,85 +17728,65 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f544 => { ins += 1;
                 { let ea = c.r[31].wrapping_add(0x1dc); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f548;
-            }
-            0x8003f548 => { ins += 1;
+                pc = 0x8003f548; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x802f0000;
-                pc = 0x8003f54c;
-            }
-            0x8003f54c => { ins += 3;
+                pc = 0x8003f54c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 3;
                 c.r[4] = c.r[5].wrapping_mul(0x1c);
-                pc = 0x8003f550;
-            }
-            0x8003f550 => { ins += 1;
+                pc = 0x8003f550; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f554;
-            }
-            0x8003f554 => { ins += 1;
+                pc = 0x8003f554; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(0xfffff0a8);
-                pc = 0x8003f558;
-            }
-            0x8003f558 => { ins += 1;
+                pc = 0x8003f558; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
-                pc = 0x8003f55c;
-            }
-            0x8003f55c => { ins += 1;
+                pc = 0x8003f55c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x8); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f560;
-            }
-            0x8003f560 => { ins += 1;
+                pc = 0x8003f560; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[3].wrapping_add(0x2));
-                pc = 0x8003f564;
-            }
-            0x8003f564 => { ins += 1;
+                pc = 0x8003f564; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
-                pc = 0x8003f568;
-            }
-            0x8003f568 => { ins += 1;
+                pc = 0x8003f568; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
-                pc = 0x8003f56c;
-            }
-            0x8003f56c => { ins += 1;
+                pc = 0x8003f56c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f570;
-            }
-            0x8003f570 => { ins += 1;
+                pc = 0x8003f570; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x50), c.r[0]);
-                pc = 0x8003f574;
-            }
-            0x8003f574 => { ins += 1;
+                pc = 0x8003f574; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[27].wrapping_add(0x84));
-                pc = 0x8003f578;
-            }
-            0x8003f578 => { ins += 1;
+                pc = 0x8003f578; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[28].wrapping_add(0x50));
-                pc = 0x8003f57c;
-            }
-            0x8003f57c => { ins += 1;
+                pc = 0x8003f57c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lha_t(ins, c.r[27].wrapping_add(0x86));
-                pc = 0x8003f580;
-            }
-            0x8003f580 => { ins += 1;
+                pc = 0x8003f580; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x52));
-                pc = 0x8003f584;
-            }
-            0x8003f584 => { ins += 1;
+                pc = 0x8003f584; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[5].wrapping_add(c.r[3]);
-                pc = 0x8003f588;
-            }
-            0x8003f588 => { ins += 1;
+                pc = 0x8003f588; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003f58c;
-            }
-            0x8003f58c => { ins += 1;
+                pc = 0x8003f58c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
-                pc = 0x8003f590;
-            }
-            0x8003f590 => { ins += 1;
+                pc = 0x8003f590; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f594;
-            }
-            0x8003f594 => { ins += 1;
+                pc = 0x8003f594; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f598; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fe6d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f598;
             }
@@ -18042,157 +17796,121 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f59c => { ins += 1;
                 c.r[3] = c.lbz_t(ins, c.r[31].wrapping_add(0x1c8));
-                pc = 0x8003f5a0;
-            }
-            0x8003f5a0 => { ins += 1;
+                pc = 0x8003f5a0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x802f0000;
-                pc = 0x8003f5a4;
-            }
-            0x8003f5a4 => { ins += 1;
+                pc = 0x8003f5a4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15f));
-                pc = 0x8003f5a8;
-            }
-            0x8003f5a8 => { ins += 1;
+                pc = 0x8003f5a8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[4].wrapping_add(0xfffff0a8);
-                pc = 0x8003f5ac;
-            }
-            0x8003f5ac => { ins += 1;
+                pc = 0x8003f5ac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3] as u8 as i8 as i32 as u32;
-                pc = 0x8003f5b0;
-            }
-            0x8003f5b0 => { ins += 1;
+                pc = 0x8003f5b0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f5b4;
-            }
-            0x8003f5b4 => { ins += 1;
+                pc = 0x8003f5b4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[4].wrapping_add(0x10000);
-                pc = 0x8003f5b8;
-            }
-            0x8003f5b8 => { ins += 1;
+                pc = 0x8003f5b8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].wrapping_sub(c.r[3]);
-                pc = 0x8003f5bc;
-            }
-            0x8003f5bc => { ins += 1;
+                pc = 0x8003f5bc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x1d);
-                pc = 0x8003f5c0;
-            }
-            0x8003f5c0 => { ins += 1;
+                pc = 0x8003f5c0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 0) { pc = 0x8003f5c8; continue; }
-                pc = 0x8003f5c4;
-            }
-            0x8003f5c4 => { ins += 1;
+                pc = 0x8003f5c4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0x1c;
                 pc = 0x8003f5c8;
             }
             0x8003f5c8 => { ins += 3;
                 c.r[0] = c.r[0].wrapping_mul(0x1d);
-                pc = 0x8003f5cc;
-            }
-            0x8003f5cc => { ins += 1;
+                pc = 0x8003f5cc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[4].wrapping_add(0x7b00));
-                pc = 0x8003f5d0;
-            }
-            0x8003f5d0 => { ins += 1;
+                pc = 0x8003f5d0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f5d4;
-            }
-            0x8003f5d4 => { ins += 1;
+                pc = 0x8003f5d4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
-                pc = 0x8003f5d8;
-            }
-            0x8003f5d8 => { ins += 1;
+                pc = 0x8003f5d8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f5dc;
-            }
-            0x8003f5dc => { ins += 1;
+                pc = 0x8003f5dc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x52), c.r[0]);
-                pc = 0x8003f5e0;
-            }
-            0x8003f5e0 => { ins += 1;
+                pc = 0x8003f5e0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003f5e4;
             }
             0x8003f5e4 => { ins += 1;
                 { let ea = c.r[31].wrapping_add(0x1dc); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f5e8;
-            }
-            0x8003f5e8 => { ins += 1;
+                pc = 0x8003f5e8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x802f0000;
-                pc = 0x8003f5ec;
-            }
-            0x8003f5ec => { ins += 3;
+                pc = 0x8003f5ec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 3;
                 c.r[4] = c.r[5].wrapping_mul(0x1c);
-                pc = 0x8003f5f0;
-            }
-            0x8003f5f0 => { ins += 1;
+                pc = 0x8003f5f0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f5f4;
-            }
-            0x8003f5f4 => { ins += 1;
+                pc = 0x8003f5f4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(0xfffff0a8);
-                pc = 0x8003f5f8;
-            }
-            0x8003f5f8 => { ins += 1;
+                pc = 0x8003f5f8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
-                pc = 0x8003f5fc;
-            }
-            0x8003f5fc => { ins += 1;
+                pc = 0x8003f5fc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x8); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f600;
-            }
-            0x8003f600 => { ins += 1;
+                pc = 0x8003f600; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[3].wrapping_add(0x2));
-                pc = 0x8003f604;
-            }
-            0x8003f604 => { ins += 1;
+                pc = 0x8003f604; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
-                pc = 0x8003f608;
-            }
-            0x8003f608 => { ins += 1;
+                pc = 0x8003f608; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
-                pc = 0x8003f60c;
-            }
-            0x8003f60c => { ins += 1;
+                pc = 0x8003f60c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f610;
-            }
-            0x8003f610 => { ins += 1;
+                pc = 0x8003f610; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x50), c.r[0]);
-                pc = 0x8003f614;
-            }
-            0x8003f614 => { ins += 1;
+                pc = 0x8003f614; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[27].wrapping_add(0x84));
-                pc = 0x8003f618;
-            }
-            0x8003f618 => { ins += 1;
+                pc = 0x8003f618; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[28].wrapping_add(0x50));
-                pc = 0x8003f61c;
-            }
-            0x8003f61c => { ins += 1;
+                pc = 0x8003f61c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lha_t(ins, c.r[27].wrapping_add(0x86));
-                pc = 0x8003f620;
-            }
-            0x8003f620 => { ins += 1;
+                pc = 0x8003f620; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x52));
-                pc = 0x8003f624;
-            }
-            0x8003f624 => { ins += 1;
+                pc = 0x8003f624; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[5].wrapping_add(c.r[3]);
-                pc = 0x8003f628;
-            }
-            0x8003f628 => { ins += 1;
+                pc = 0x8003f628; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003f62c;
-            }
-            0x8003f62c => { ins += 1;
+                pc = 0x8003f62c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
-                pc = 0x8003f630;
-            }
-            0x8003f630 => { ins += 1;
+                pc = 0x8003f630; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f634;
-            }
-            0x8003f634 => { ins += 1;
+                pc = 0x8003f634; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f638; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fe6d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f638;
             }
@@ -18202,253 +17920,195 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f63c => { ins += 1;
                 c.r[3] = 0x803a0000;
-                pc = 0x8003f640;
-            }
-            0x8003f640 => { ins += 1;
+                pc = 0x8003f640; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x6818);
-                pc = 0x8003f644;
-            }
-            0x8003f644 => { ins += 1;
+                pc = 0x8003f644; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[3].wrapping_add(0x1c8));
-                pc = 0x8003f648;
-            }
-            0x8003f648 => { ins += 1;
+                pc = 0x8003f648; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f64c;
-            }
-            0x8003f64c => { ins += 1;
+                pc = 0x8003f64c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x0);
-                pc = 0x8003f650;
-            }
-            0x8003f650 => { ins += 1;
+                pc = 0x8003f650; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 1) { pc = 0x8003f668; continue; }
-                pc = 0x8003f654;
-            }
-            0x8003f654 => { ins += 1;
+                pc = 0x8003f654; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003f658;
-            }
-            0x8003f658 => { ins += 1;
+                pc = 0x8003f658; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003f65c;
-            }
-            0x8003f65c => { ins += 1;
+                pc = 0x8003f65c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f660;
-            }
-            0x8003f660 => { ins += 1;
+                pc = 0x8003f660; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003f664;
-            }
-            0x8003f664 => { ins += 1;
+                pc = 0x8003f664; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003f67c; continue;
                 pc = 0x8003f668;
             }
             0x8003f668 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003f66c;
-            }
-            0x8003f66c => { ins += 1;
+                pc = 0x8003f66c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003f670;
-            }
-            0x8003f670 => { ins += 1;
+                pc = 0x8003f670; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f674;
-            }
-            0x8003f674 => { ins += 1;
+                pc = 0x8003f674; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003f678;
-            }
-            0x8003f678 => { ins += 1;
+                pc = 0x8003f678; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003f67c;
             }
             0x8003f67c => { ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8608); c.f[1] = c.lfs(ea); c.ps1[1] = c.f[1]; }
-                pc = 0x8003f680;
-            }
-            0x8003f680 => { ins += 1;
+                pc = 0x8003f680; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[3].wrapping_add(0x40); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f684;
-            }
-            0x8003f684 => { ins += 1;
+                pc = 0x8003f684; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8604); c.f[2] = c.lfs(ea); c.ps1[2] = c.f[2]; }
-                pc = 0x8003f688;
-            }
-            0x8003f688 => { ins += 1;
+                pc = 0x8003f688; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f68c;
-            }
-            0x8003f68c => { ins += 1;
+                pc = 0x8003f68c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f690;
-            }
-            0x8003f690 => { ins += 1;
+                pc = 0x8003f690; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[2].mul_add(c.f[0], c.f[2])); c.f[1] = v; c.ps1[1] = v; }
-                pc = 0x8003f694;
-            }
-            0x8003f694 => { ins += 1;
+                pc = 0x8003f694; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f698; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce148(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f698;
             }
             0x8003f698 => { ins += 1;
                 c.r[3] = 0x802f0000;
-                pc = 0x8003f69c;
-            }
-            0x8003f69c => { ins += 1;
+                pc = 0x8003f69c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0x43300000;
-                pc = 0x8003f6a0;
-            }
-            0x8003f6a0 => { ins += 1;
+                pc = 0x8003f6a0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xfffff0a8);
-                pc = 0x8003f6a4;
-            }
-            0x8003f6a4 => { ins += 1;
+                pc = 0x8003f6a4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stw(c.r[1].wrapping_add(0x8), c.r[0]);
-                pc = 0x8003f6a8;
-            }
-            0x8003f6a8 => { ins += 1;
+                pc = 0x8003f6a8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x10000);
-                pc = 0x8003f6ac;
-            }
-            0x8003f6ac => { ins += 1;
+                pc = 0x8003f6ac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8610); c.f[2] = c.lfd(ea); }
-                pc = 0x8003f6b0;
-            }
-            0x8003f6b0 => { ins += 1;
+                pc = 0x8003f6b0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[3].wrapping_add(0x7b1c));
-                pc = 0x8003f6b4;
-            }
-            0x8003f6b4 => { ins += 1;
+                pc = 0x8003f6b4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1]); c.f[3] = v; c.ps1[3] = v; }
-                pc = 0x8003f6b8;
-            }
-            0x8003f6b8 => { ins += 1;
+                pc = 0x8003f6b8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8608); c.f[1] = c.lfs(ea); c.ps1[1] = c.f[1]; }
-                pc = 0x8003f6bc;
-            }
-            0x8003f6bc => { ins += 1;
+                pc = 0x8003f6bc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] ^ 0x80000000;
-                pc = 0x8003f6c0;
-            }
-            0x8003f6c0 => { ins += 1;
+                pc = 0x8003f6c0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stw(c.r[1].wrapping_add(0xc), c.r[0]);
-                pc = 0x8003f6c4;
-            }
-            0x8003f6c4 => { ins += 1;
+                pc = 0x8003f6c4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x8); c.f[0] = c.lfd(ea); }
-                pc = 0x8003f6c8;
-            }
-            0x8003f6c8 => { ins += 1;
+                pc = 0x8003f6c8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[0] - c.f[2]); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f6cc;
-            }
-            0x8003f6cc => { ins += 1;
+                pc = 0x8003f6cc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1].mul_add(c.f[3], c.f[0])); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f6d0;
-            }
-            0x8003f6d0 => { ins += 1;
+                pc = 0x8003f6d0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f6d4;
-            }
-            0x8003f6d4 => { ins += 1;
+                pc = 0x8003f6d4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x10); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f6d8;
-            }
-            0x8003f6d8 => { ins += 1;
+                pc = 0x8003f6d8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
-                pc = 0x8003f6dc;
-            }
-            0x8003f6dc => { ins += 1;
+                pc = 0x8003f6dc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x52), c.r[0]);
-                pc = 0x8003f6e0;
-            }
-            0x8003f6e0 => { ins += 1;
+                pc = 0x8003f6e0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003f6e4;
             }
             0x8003f6e4 => { ins += 1;
                 { let ea = c.r[31].wrapping_add(0x1dc); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f6e8;
-            }
-            0x8003f6e8 => { ins += 1;
+                pc = 0x8003f6e8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x802f0000;
-                pc = 0x8003f6ec;
-            }
-            0x8003f6ec => { ins += 3;
+                pc = 0x8003f6ec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 3;
                 c.r[4] = c.r[5].wrapping_mul(0x1c);
-                pc = 0x8003f6f0;
-            }
-            0x8003f6f0 => { ins += 1;
+                pc = 0x8003f6f0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f6f4;
-            }
-            0x8003f6f4 => { ins += 1;
+                pc = 0x8003f6f4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(0xfffff0a8);
-                pc = 0x8003f6f8;
-            }
-            0x8003f6f8 => { ins += 1;
+                pc = 0x8003f6f8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
-                pc = 0x8003f6fc;
-            }
-            0x8003f6fc => { ins += 1;
+                pc = 0x8003f6fc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x10); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f700;
-            }
-            0x8003f700 => { ins += 1;
+                pc = 0x8003f700; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[3].wrapping_add(0x2));
-                pc = 0x8003f704;
-            }
-            0x8003f704 => { ins += 1;
+                pc = 0x8003f704; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
-                pc = 0x8003f708;
-            }
-            0x8003f708 => { ins += 1;
+                pc = 0x8003f708; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
-                pc = 0x8003f70c;
-            }
-            0x8003f70c => { ins += 1;
+                pc = 0x8003f70c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f710;
-            }
-            0x8003f710 => { ins += 1;
+                pc = 0x8003f710; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x50), c.r[0]);
-                pc = 0x8003f714;
-            }
-            0x8003f714 => { ins += 1;
+                pc = 0x8003f714; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[27].wrapping_add(0x84));
-                pc = 0x8003f718;
-            }
-            0x8003f718 => { ins += 1;
+                pc = 0x8003f718; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[28].wrapping_add(0x50));
-                pc = 0x8003f71c;
-            }
-            0x8003f71c => { ins += 1;
+                pc = 0x8003f71c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lha_t(ins, c.r[27].wrapping_add(0x86));
-                pc = 0x8003f720;
-            }
-            0x8003f720 => { ins += 1;
+                pc = 0x8003f720; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x52));
-                pc = 0x8003f724;
-            }
-            0x8003f724 => { ins += 1;
+                pc = 0x8003f724; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[5].wrapping_add(c.r[3]);
-                pc = 0x8003f728;
-            }
-            0x8003f728 => { ins += 1;
+                pc = 0x8003f728; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003f72c;
-            }
-            0x8003f72c => { ins += 1;
+                pc = 0x8003f72c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
-                pc = 0x8003f730;
-            }
-            0x8003f730 => { ins += 1;
+                pc = 0x8003f730; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f734;
-            }
-            0x8003f734 => { ins += 1;
+                pc = 0x8003f734; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f738; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fe6d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f738;
             }
@@ -18458,297 +18118,230 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f73c => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x1c9));
-                pc = 0x8003f740;
-            }
-            0x8003f740 => { ins += 1;
+                pc = 0x8003f740; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f744;
-            }
-            0x8003f744 => { ins += 1;
+                pc = 0x8003f744; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[3], 0xa);
-                pc = 0x8003f748;
-            }
-            0x8003f748 => { ins += 1;
+                pc = 0x8003f748; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 0) { pc = 0x8003f784; continue; }
-                pc = 0x8003f74c;
-            }
-            0x8003f74c => { ins += 1;
+                pc = 0x8003f74c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x160));
-                pc = 0x8003f750;
-            }
-            0x8003f750 => { ins += 1;
+                pc = 0x8003f750; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f754;
-            }
-            0x8003f754 => { ins += 1;
+                pc = 0x8003f754; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], c.r[3]);
-                pc = 0x8003f758;
-            }
-            0x8003f758 => { ins += 1;
+                pc = 0x8003f758; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003f770; continue; }
-                pc = 0x8003f75c;
-            }
-            0x8003f75c => { ins += 1;
+                pc = 0x8003f75c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003f760;
-            }
-            0x8003f760 => { ins += 1;
+                pc = 0x8003f760; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003f764;
-            }
-            0x8003f764 => { ins += 1;
+                pc = 0x8003f764; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f768;
-            }
-            0x8003f768 => { ins += 1;
+                pc = 0x8003f768; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003f76c;
-            }
-            0x8003f76c => { ins += 1;
+                pc = 0x8003f76c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003f798; continue;
                 pc = 0x8003f770;
             }
             0x8003f770 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003f774;
-            }
-            0x8003f774 => { ins += 1;
+                pc = 0x8003f774; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003f778;
-            }
-            0x8003f778 => { ins += 1;
+                pc = 0x8003f778; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f77c;
-            }
-            0x8003f77c => { ins += 1;
+                pc = 0x8003f77c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003f780;
-            }
-            0x8003f780 => { ins += 1;
+                pc = 0x8003f780; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003f784;
             }
             0x8003f784 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003f788;
-            }
-            0x8003f788 => { ins += 1;
+                pc = 0x8003f788; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003f78c;
-            }
-            0x8003f78c => { ins += 1;
+                pc = 0x8003f78c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f790;
-            }
-            0x8003f790 => { ins += 1;
+                pc = 0x8003f790; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003f794;
-            }
-            0x8003f794 => { ins += 1;
+                pc = 0x8003f794; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003f798;
             }
             0x8003f798 => { ins += 1;
                 c.r[3] = 0x803a0000;
-                pc = 0x8003f79c;
-            }
-            0x8003f79c => { ins += 1;
+                pc = 0x8003f79c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8608); c.f[1] = c.lfs(ea); c.ps1[1] = c.f[1]; }
-                pc = 0x8003f7a0;
-            }
-            0x8003f7a0 => { ins += 1;
+                pc = 0x8003f7a0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x6818);
-                pc = 0x8003f7a4;
-            }
-            0x8003f7a4 => { ins += 1;
+                pc = 0x8003f7a4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8604); c.f[2] = c.lfs(ea); c.ps1[2] = c.f[2]; }
-                pc = 0x8003f7a8;
-            }
-            0x8003f7a8 => { ins += 1;
+                pc = 0x8003f7a8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[3].wrapping_add(0x40); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f7ac;
-            }
-            0x8003f7ac => { ins += 1;
+                pc = 0x8003f7ac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f7b0;
-            }
-            0x8003f7b0 => { ins += 1;
+                pc = 0x8003f7b0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1] * c.f[0]); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f7b4;
-            }
-            0x8003f7b4 => { ins += 1;
+                pc = 0x8003f7b4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[2] * c.f[0]); c.f[1] = v; c.ps1[1] = v; }
-                pc = 0x8003f7b8;
-            }
-            0x8003f7b8 => { ins += 1;
+                pc = 0x8003f7b8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f7bc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800ce148(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f7bc;
             }
             0x8003f7bc => { ins += 1;
                 c.r[3] = 0x802f0000;
-                pc = 0x8003f7c0;
-            }
-            0x8003f7c0 => { ins += 1;
+                pc = 0x8003f7c0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0x43300000;
-                pc = 0x8003f7c4;
-            }
-            0x8003f7c4 => { ins += 1;
+                pc = 0x8003f7c4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0xfffff0a8);
-                pc = 0x8003f7c8;
-            }
-            0x8003f7c8 => { ins += 1;
+                pc = 0x8003f7c8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stw(c.r[1].wrapping_add(0x10), c.r[0]);
-                pc = 0x8003f7cc;
-            }
-            0x8003f7cc => { ins += 1;
+                pc = 0x8003f7cc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x10000);
-                pc = 0x8003f7d0;
-            }
-            0x8003f7d0 => { ins += 1;
+                pc = 0x8003f7d0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8610); c.f[2] = c.lfd(ea); }
-                pc = 0x8003f7d4;
-            }
-            0x8003f7d4 => { ins += 1;
+                pc = 0x8003f7d4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[3].wrapping_add(0x7b38));
-                pc = 0x8003f7d8;
-            }
-            0x8003f7d8 => { ins += 1;
+                pc = 0x8003f7d8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1]); c.f[3] = v; c.ps1[3] = v; }
-                pc = 0x8003f7dc;
-            }
-            0x8003f7dc => { ins += 1;
+                pc = 0x8003f7dc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff8608); c.f[1] = c.lfs(ea); c.ps1[1] = c.f[1]; }
-                pc = 0x8003f7e0;
-            }
-            0x8003f7e0 => { ins += 1;
+                pc = 0x8003f7e0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] ^ 0x80000000;
-                pc = 0x8003f7e4;
-            }
-            0x8003f7e4 => { ins += 1;
+                pc = 0x8003f7e4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stw(c.r[1].wrapping_add(0x14), c.r[0]);
-                pc = 0x8003f7e8;
-            }
-            0x8003f7e8 => { ins += 1;
+                pc = 0x8003f7e8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x10); c.f[0] = c.lfd(ea); }
-                pc = 0x8003f7ec;
-            }
-            0x8003f7ec => { ins += 1;
+                pc = 0x8003f7ec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[0] - c.f[2]); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f7f0;
-            }
-            0x8003f7f0 => { ins += 1;
+                pc = 0x8003f7f0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = s(c.f[1].mul_add(c.f[3], c.f[0])); c.f[0] = v; c.ps1[0] = v; }
-                pc = 0x8003f7f4;
-            }
-            0x8003f7f4 => { ins += 1;
+                pc = 0x8003f7f4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f7f8;
-            }
-            0x8003f7f8 => { ins += 1;
+                pc = 0x8003f7f8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x8); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f7fc;
-            }
-            0x8003f7fc => { ins += 1;
+                pc = 0x8003f7fc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0xc));
                 pc = 0x8003f800;
             }
             0x8003f800 => { ins += 1;
                 c.sth(c.r[28].wrapping_add(0x52), c.r[0]);
-                pc = 0x8003f804;
-            }
-            0x8003f804 => { ins += 1;
+                pc = 0x8003f804; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003f808;
             }
             0x8003f808 => { ins += 1;
                 c.r[3] = 0x803a0000;
-                pc = 0x8003f80c;
-            }
-            0x8003f80c => { ins += 1;
+                pc = 0x8003f80c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x802f0000;
-                pc = 0x8003f810;
-            }
-            0x8003f810 => { ins += 1;
+                pc = 0x8003f810; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_add(0x6818);
-                pc = 0x8003f814;
-            }
-            0x8003f814 => { ins += 1;
+                pc = 0x8003f814; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[3].wrapping_add(0x1dc); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f818;
-            }
-            0x8003f818 => { ins += 3;
+                pc = 0x8003f818; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 3;
                 c.r[3] = c.r[5].wrapping_mul(0x1c);
-                pc = 0x8003f81c;
-            }
-            0x8003f81c => { ins += 1;
+                pc = 0x8003f81c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(0xfffff0a8);
-                pc = 0x8003f820;
-            }
-            0x8003f820 => { ins += 1;
+                pc = 0x8003f820; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f824;
-            }
-            0x8003f824 => { ins += 1;
+                pc = 0x8003f824; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0].wrapping_add(c.r[3]);
-                pc = 0x8003f828;
-            }
-            0x8003f828 => { ins += 1;
+                pc = 0x8003f828; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[3].wrapping_add(0x2));
-                pc = 0x8003f82c;
-            }
-            0x8003f82c => { ins += 1;
+                pc = 0x8003f82c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x10); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f830;
-            }
-            0x8003f830 => { ins += 1;
+                pc = 0x8003f830; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
-                pc = 0x8003f834;
-            }
-            0x8003f834 => { ins += 1;
+                pc = 0x8003f834; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
-                pc = 0x8003f838;
-            }
-            0x8003f838 => { ins += 1;
+                pc = 0x8003f838; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f83c;
-            }
-            0x8003f83c => { ins += 1;
+                pc = 0x8003f83c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x50), c.r[0]);
-                pc = 0x8003f840;
-            }
-            0x8003f840 => { ins += 1;
+                pc = 0x8003f840; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[27].wrapping_add(0x84));
-                pc = 0x8003f844;
-            }
-            0x8003f844 => { ins += 1;
+                pc = 0x8003f844; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[28].wrapping_add(0x50));
-                pc = 0x8003f848;
-            }
-            0x8003f848 => { ins += 1;
+                pc = 0x8003f848; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lha_t(ins, c.r[27].wrapping_add(0x86));
-                pc = 0x8003f84c;
-            }
-            0x8003f84c => { ins += 1;
+                pc = 0x8003f84c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x52));
-                pc = 0x8003f850;
-            }
-            0x8003f850 => { ins += 1;
+                pc = 0x8003f850; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[5].wrapping_add(c.r[3]);
-                pc = 0x8003f854;
-            }
-            0x8003f854 => { ins += 1;
+                pc = 0x8003f854; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003f858;
-            }
-            0x8003f858 => { ins += 1;
+                pc = 0x8003f858; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
-                pc = 0x8003f85c;
-            }
-            0x8003f85c => { ins += 1;
+                pc = 0x8003f85c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f860;
-            }
-            0x8003f860 => { ins += 1;
+                pc = 0x8003f860; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f864; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fe6d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f864;
             }
@@ -18762,85 +18355,65 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f86c => { ins += 1;
                 { let ea = c.r[31].wrapping_add(0x1dc); c.f[0] = c.lfs(ea); c.ps1[0] = c.f[0]; }
-                pc = 0x8003f870;
-            }
-            0x8003f870 => { ins += 1;
+                pc = 0x8003f870; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x802f0000;
-                pc = 0x8003f874;
-            }
-            0x8003f874 => { ins += 3;
+                pc = 0x8003f874; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 3;
                 c.r[4] = c.r[5].wrapping_mul(0x1c);
-                pc = 0x8003f878;
-            }
-            0x8003f878 => { ins += 1;
+                pc = 0x8003f878; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[0]);
-                pc = 0x8003f87c;
-            }
-            0x8003f87c => { ins += 1;
+                pc = 0x8003f87c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(0xfffff0a8);
-                pc = 0x8003f880;
-            }
-            0x8003f880 => { ins += 1;
+                pc = 0x8003f880; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0].wrapping_add(c.r[4]);
-                pc = 0x8003f884;
-            }
-            0x8003f884 => { ins += 1;
+                pc = 0x8003f884; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x10); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f888;
-            }
-            0x8003f888 => { ins += 1;
+                pc = 0x8003f888; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[3].wrapping_add(0x2));
-                pc = 0x8003f88c;
-            }
-            0x8003f88c => { ins += 1;
+                pc = 0x8003f88c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
-                pc = 0x8003f890;
-            }
-            0x8003f890 => { ins += 1;
+                pc = 0x8003f890; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(c.r[0]);
-                pc = 0x8003f894;
-            }
-            0x8003f894 => { ins += 1;
+                pc = 0x8003f894; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f898;
-            }
-            0x8003f898 => { ins += 1;
+                pc = 0x8003f898; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.sth(c.r[28].wrapping_add(0x50), c.r[0]);
-                pc = 0x8003f89c;
-            }
-            0x8003f89c => { ins += 1;
+                pc = 0x8003f89c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[27].wrapping_add(0x84));
-                pc = 0x8003f8a0;
-            }
-            0x8003f8a0 => { ins += 1;
+                pc = 0x8003f8a0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[28].wrapping_add(0x50));
-                pc = 0x8003f8a4;
-            }
-            0x8003f8a4 => { ins += 1;
+                pc = 0x8003f8a4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lha_t(ins, c.r[27].wrapping_add(0x86));
-                pc = 0x8003f8a8;
-            }
-            0x8003f8a8 => { ins += 1;
+                pc = 0x8003f8a8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x52));
-                pc = 0x8003f8ac;
-            }
-            0x8003f8ac => { ins += 1;
+                pc = 0x8003f8ac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[5].wrapping_add(c.r[3]);
-                pc = 0x8003f8b0;
-            }
-            0x8003f8b0 => { ins += 1;
+                pc = 0x8003f8b0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003f8b4;
-            }
-            0x8003f8b4 => { ins += 1;
+                pc = 0x8003f8b4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[4].wrapping_add(c.r[0]);
-                pc = 0x8003f8b8;
-            }
-            0x8003f8b8 => { ins += 1;
+                pc = 0x8003f8b8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f8bc;
-            }
-            0x8003f8bc => { ins += 1;
+                pc = 0x8003f8bc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f8c0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fe6d0(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f8c0;
             }
@@ -18850,229 +18423,177 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f8c4 => { ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x6));
-                pc = 0x8003f8c8;
-            }
-            0x8003f8c8 => { ins += 1;
+                pc = 0x8003f8c8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x802f0000;
-                pc = 0x8003f8cc;
-            }
-            0x8003f8cc => { ins += 1;
+                pc = 0x8003f8cc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[3].wrapping_add(0xfffff0a8);
-                pc = 0x8003f8d0;
-            }
-            0x8003f8d0 => { ins += 3;
+                pc = 0x8003f8d0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 3;
                 c.r[0] = c.r[0].wrapping_mul(0x1c);
-                pc = 0x8003f8d4;
-            }
-            0x8003f8d4 => { ins += 1;
+                pc = 0x8003f8d4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[7] = c.r[4].wrapping_add(0x10000);
-                pc = 0x8003f8d8;
-            }
-            0x8003f8d8 => { ins += 1;
+                pc = 0x8003f8d8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lha_t(ins, c.r[7].wrapping_add(0x7b52));
-                pc = 0x8003f8dc;
-            }
-            0x8003f8dc => { ins += 1;
+                pc = 0x8003f8dc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[4].wrapping_add(c.r[0]);
-                pc = 0x8003f8e0;
-            }
-            0x8003f8e0 => { ins += 1;
+                pc = 0x8003f8e0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[7].wrapping_add(0x7b54));
-                pc = 0x8003f8e4;
-            }
-            0x8003f8e4 => { ins += 1;
+                pc = 0x8003f8e4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lha_t(ins, c.r[4].wrapping_add(0x2));
-                pc = 0x8003f8e8;
-            }
-            0x8003f8e8 => { ins += 1;
+                pc = 0x8003f8e8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lha_t(ins, c.r[4].wrapping_add(0x4));
-                pc = 0x8003f8ec;
-            }
-            0x8003f8ec => { ins += 1;
+                pc = 0x8003f8ec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lha_t(ins, c.r[7].wrapping_add(0x7b56));
-                pc = 0x8003f8f0;
-            }
-            0x8003f8f0 => { ins += 1;
+                pc = 0x8003f8f0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[3].wrapping_sub(c.r[6]);
-                pc = 0x8003f8f4;
-            }
-            0x8003f8f4 => { ins += 1;
+                pc = 0x8003f8f4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lha_t(ins, c.r[7].wrapping_add(0x7b58));
-                pc = 0x8003f8f8;
-            }
-            0x8003f8f8 => { ins += 1;
+                pc = 0x8003f8f8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0].wrapping_sub(c.r[4]);
-                pc = 0x8003f8fc;
-            }
-            0x8003f8fc => { ins += 1;
+                pc = 0x8003f8fc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f900; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fe38c(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f900;
             }
             0x8003f900 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003f904;
-            }
-            0x8003f904 => { ins += 1;
+                pc = 0x8003f904; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f908;
-            }
-            0x8003f908 => { ins += 1;
+                pc = 0x8003f908; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x4);
-                pc = 0x8003f90c;
-            }
-            0x8003f90c => { ins += 1;
+                pc = 0x8003f90c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003f9a8; continue; }
-                pc = 0x8003f910;
-            }
-            0x8003f910 => { ins += 1;
+                pc = 0x8003f910; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[29] = 0x0;
-                pc = 0x8003f914;
-            }
-            0x8003f914 => { ins += 1;
+                pc = 0x8003f914; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[31].wrapping_add(0x1d0); c.f[30] = c.lfs(ea); c.ps1[30] = c.f[30]; }
-                pc = 0x8003f918;
-            }
-            0x8003f918 => { ins += 1;
+                pc = 0x8003f918; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[28] = c.r[29] | c.r[29];
-                pc = 0x8003f91c;
-            }
-            0x8003f91c => { ins += 1;
+                pc = 0x8003f91c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[2].wrapping_add(0xffff860c); c.f[31] = c.lfs(ea); c.ps1[31] = c.f[31]; }
-                pc = 0x8003f920;
-            }
-            0x8003f920 => { ins += 1;
+                pc = 0x8003f920; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003f994; continue;
                 pc = 0x8003f924;
             }
             0x8003f924 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x1c8));
-                pc = 0x8003f928;
-            }
-            0x8003f928 => { ins += 1;
+                pc = 0x8003f928; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[29] as u8 as i8 as i32 as u32;
-                pc = 0x8003f92c;
-            }
-            0x8003f92c => { ins += 1;
+                pc = 0x8003f92c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f930;
-            }
-            0x8003f930 => { ins += 1;
+                pc = 0x8003f930; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(0xffffffff);
-                pc = 0x8003f934;
-            }
-            0x8003f934 => { ins += 1;
+                pc = 0x8003f934; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[4], c.r[0]);
-                pc = 0x8003f938;
-            }
-            0x8003f938 => { ins += 1;
+                pc = 0x8003f938; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 0) { pc = 0x8003f988; continue; }
-                pc = 0x8003f93c;
-            }
-            0x8003f93c => { ins += 1;
+                pc = 0x8003f93c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x1c9));
-                pc = 0x8003f940;
-            }
-            0x8003f940 => { ins += 1;
+                pc = 0x8003f940; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f944;
-            }
-            0x8003f944 => { ins += 1;
+                pc = 0x8003f944; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[3].wrapping_add(0x1);
-                pc = 0x8003f948;
-            }
-            0x8003f948 => { ins += 1;
+                pc = 0x8003f948; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[4], c.r[0]);
-                pc = 0x8003f94c;
-            }
-            0x8003f94c => { ins += 1;
+                pc = 0x8003f94c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 1) { pc = 0x8003f988; continue; }
-                pc = 0x8003f950;
-            }
-            0x8003f950 => { ins += 1;
+                pc = 0x8003f950; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003f954;
-            }
-            0x8003f954 => { ins += 1;
+                pc = 0x8003f954; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.f[0] = fctiwz(c.f[30]);
-                pc = 0x8003f958;
-            }
-            0x8003f958 => { ins += 1;
+                pc = 0x8003f958; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[30].wrapping_add(0x24c);
-                pc = 0x8003f95c;
-            }
-            0x8003f95c => { ins += 1;
+                pc = 0x8003f95c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003f960;
-            }
-            0x8003f960 => { ins += 1;
+                pc = 0x8003f960; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f964;
-            }
-            0x8003f964 => { ins += 1;
+                pc = 0x8003f964; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0xffffff00;
-                pc = 0x8003f968;
-            }
-            0x8003f968 => { ins += 1;
+                pc = 0x8003f968; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003f96c;
-            }
-            0x8003f96c => { ins += 1;
+                pc = 0x8003f96c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x10); let v = c.f[0]; c.stfd(ea, v); }
-                pc = 0x8003f970;
-            }
-            0x8003f970 => { ins += 1;
+                pc = 0x8003f970; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[5] | c.r[4];
-                pc = 0x8003f974;
-            }
-            0x8003f974 => { ins += 1;
+                pc = 0x8003f974; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
-                pc = 0x8003f978;
-            }
-            0x8003f978 => { ins += 1;
+                pc = 0x8003f978; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003f97c;
-            }
-            0x8003f97c => { ins += 1;
+                pc = 0x8003f97c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lwz_t(ins, c.r[1].wrapping_add(0x14));
-                pc = 0x8003f980;
-            }
-            0x8003f980 => { ins += 1;
+                pc = 0x8003f980; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[6].wrapping_add(c.r[28]));
-                pc = 0x8003f984;
-            }
-            0x8003f984 => { ins += 1;
+                pc = 0x8003f984; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f988; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f988;
             }
             0x8003f988 => { ins += 1;
                 { let v = s(c.f[30] + c.f[31]); c.f[30] = v; c.ps1[30] = v; }
-                pc = 0x8003f98c;
-            }
-            0x8003f98c => { ins += 1;
+                pc = 0x8003f98c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[28] = c.r[28].wrapping_add(0x4);
-                pc = 0x8003f990;
-            }
-            0x8003f990 => { ins += 1;
+                pc = 0x8003f990; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[29] = c.r[29].wrapping_add(0x1);
                 pc = 0x8003f994;
             }
             0x8003f994 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x160));
-                pc = 0x8003f998;
-            }
-            0x8003f998 => { ins += 1;
+                pc = 0x8003f998; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[29] as u8 as i8 as i32 as u32;
-                pc = 0x8003f99c;
-            }
-            0x8003f99c => { ins += 1;
+                pc = 0x8003f99c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003f9a0;
-            }
-            0x8003f9a0 => { ins += 1;
+                pc = 0x8003f9a0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[3], c.r[0]);
-                pc = 0x8003f9a4;
-            }
-            0x8003f9a4 => { ins += 1;
+                pc = 0x8003f9a4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 0) { pc = 0x8003f924; continue; }
                 pc = 0x8003f9a8;
             }
@@ -19086,65 +18607,51 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f9b0 => { ins += 1;
                 c.r[3] = 0x36ed;
-                pc = 0x8003f9b4;
-            }
-            0x8003f9b4 => { ins += 1;
+                pc = 0x8003f9b4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f9b8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fa444(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f9b8;
             }
             0x8003f9b8 => { ins += 1;
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
-                pc = 0x8003f9bc;
-            }
-            0x8003f9bc => { ins += 1;
+                pc = 0x8003f9bc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x54));
-                pc = 0x8003f9c0;
-            }
-            0x8003f9c0 => { ins += 1;
+                pc = 0x8003f9c0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003f9c4;
-            }
-            0x8003f9c4 => { ins += 1;
+                pc = 0x8003f9c4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003f9c8;
-            }
-            0x8003f9c8 => { ins += 1;
+                pc = 0x8003f9c8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[0].wrapping_sub(c.r[4]);
-                pc = 0x8003f9cc;
-            }
-            0x8003f9cc => { ins += 1;
+                pc = 0x8003f9cc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003f9d0;
-            }
-            0x8003f9d0 => { ins += 1;
+                pc = 0x8003f9d0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[6].rotate_left(1) & 0x1;
-                pc = 0x8003f9d4;
-            }
-            0x8003f9d4 => { ins += 1;
+                pc = 0x8003f9d4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0xfffffffe;
-                pc = 0x8003f9d8;
-            }
-            0x8003f9d8 => { ins += 1;
+                pc = 0x8003f9d8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[5].wrapping_add(c.r[6]);
-                pc = 0x8003f9dc;
-            }
-            0x8003f9dc => { ins += 1;
+                pc = 0x8003f9dc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[3] | c.r[0];
-                pc = 0x8003f9e0;
-            }
-            0x8003f9e0 => { ins += 1;
+                pc = 0x8003f9e0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = c.r[6] as i32; c.set_ca(v < 0 && (v as u32) << 31 != 0); c.r[0] = (v >> 1) as u32; }
-                pc = 0x8003f9e4;
-            }
-            0x8003f9e4 => { ins += 1;
+                pc = 0x8003f9e4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0x36ed;
-                pc = 0x8003f9e8;
-            }
-            0x8003f9e8 => { ins += 1;
+                pc = 0x8003f9e8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003f9ec;
-            }
-            0x8003f9ec => { ins += 1;
+                pc = 0x8003f9ec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f9f0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f9f0;
             }
@@ -19154,65 +18661,51 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003f9f4 => { ins += 1;
                 c.r[3] = 0x36ec;
-                pc = 0x8003f9f8;
-            }
-            0x8003f9f8 => { ins += 1;
+                pc = 0x8003f9f8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003f9fc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fa444(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003f9fc;
             }
             0x8003f9fc => { ins += 1;
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
-                pc = 0x8003fa00;
-            }
-            0x8003fa00 => { ins += 1;
+                pc = 0x8003fa00; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x54));
-                pc = 0x8003fa04;
-            }
-            0x8003fa04 => { ins += 1;
+                pc = 0x8003fa04; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003fa08;
-            }
-            0x8003fa08 => { ins += 1;
+                pc = 0x8003fa08; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fa0c;
-            }
-            0x8003fa0c => { ins += 1;
+                pc = 0x8003fa0c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[0].wrapping_sub(c.r[4]);
-                pc = 0x8003fa10;
-            }
-            0x8003fa10 => { ins += 1;
+                pc = 0x8003fa10; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003fa14;
-            }
-            0x8003fa14 => { ins += 1;
+                pc = 0x8003fa14; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[6].rotate_left(1) & 0x1;
-                pc = 0x8003fa18;
-            }
-            0x8003fa18 => { ins += 1;
+                pc = 0x8003fa18; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0xfffffffe;
-                pc = 0x8003fa1c;
-            }
-            0x8003fa1c => { ins += 1;
+                pc = 0x8003fa1c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[5].wrapping_add(c.r[6]);
-                pc = 0x8003fa20;
-            }
-            0x8003fa20 => { ins += 1;
+                pc = 0x8003fa20; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[3] | c.r[0];
-                pc = 0x8003fa24;
-            }
-            0x8003fa24 => { ins += 1;
+                pc = 0x8003fa24; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = c.r[6] as i32; c.set_ca(v < 0 && (v as u32) << 31 != 0); c.r[0] = (v >> 1) as u32; }
-                pc = 0x8003fa28;
-            }
-            0x8003fa28 => { ins += 1;
+                pc = 0x8003fa28; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0x36ec;
-                pc = 0x8003fa2c;
-            }
-            0x8003fa2c => { ins += 1;
+                pc = 0x8003fa2c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003fa30;
-            }
-            0x8003fa30 => { ins += 1;
+                pc = 0x8003fa30; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fa34; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fa34;
             }
@@ -19222,65 +18715,51 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fa38 => { ins += 1;
                 c.r[3] = 0x36eb;
-                pc = 0x8003fa3c;
-            }
-            0x8003fa3c => { ins += 1;
+                pc = 0x8003fa3c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fa40; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fa444(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fa40;
             }
             0x8003fa40 => { ins += 1;
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
-                pc = 0x8003fa44;
-            }
-            0x8003fa44 => { ins += 1;
+                pc = 0x8003fa44; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x54));
-                pc = 0x8003fa48;
-            }
-            0x8003fa48 => { ins += 1;
+                pc = 0x8003fa48; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003fa4c;
-            }
-            0x8003fa4c => { ins += 1;
+                pc = 0x8003fa4c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fa50;
-            }
-            0x8003fa50 => { ins += 1;
+                pc = 0x8003fa50; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[0].wrapping_sub(c.r[4]);
-                pc = 0x8003fa54;
-            }
-            0x8003fa54 => { ins += 1;
+                pc = 0x8003fa54; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003fa58;
-            }
-            0x8003fa58 => { ins += 1;
+                pc = 0x8003fa58; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[6].rotate_left(1) & 0x1;
-                pc = 0x8003fa5c;
-            }
-            0x8003fa5c => { ins += 1;
+                pc = 0x8003fa5c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0xfffffffe;
-                pc = 0x8003fa60;
-            }
-            0x8003fa60 => { ins += 1;
+                pc = 0x8003fa60; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[5].wrapping_add(c.r[6]);
-                pc = 0x8003fa64;
-            }
-            0x8003fa64 => { ins += 1;
+                pc = 0x8003fa64; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[3] | c.r[0];
-                pc = 0x8003fa68;
-            }
-            0x8003fa68 => { ins += 1;
+                pc = 0x8003fa68; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = c.r[6] as i32; c.set_ca(v < 0 && (v as u32) << 31 != 0); c.r[0] = (v >> 1) as u32; }
-                pc = 0x8003fa6c;
-            }
-            0x8003fa6c => { ins += 1;
+                pc = 0x8003fa6c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0x36eb;
-                pc = 0x8003fa70;
-            }
-            0x8003fa70 => { ins += 1;
+                pc = 0x8003fa70; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003fa74;
-            }
-            0x8003fa74 => { ins += 1;
+                pc = 0x8003fa74; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fa78; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fa78;
             }
@@ -19290,65 +18769,51 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fa7c => { ins += 1;
                 c.r[3] = 0x36ea;
-                pc = 0x8003fa80;
-            }
-            0x8003fa80 => { ins += 1;
+                pc = 0x8003fa80; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fa84; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fa444(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fa84;
             }
             0x8003fa84 => { ins += 1;
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
-                pc = 0x8003fa88;
-            }
-            0x8003fa88 => { ins += 1;
+                pc = 0x8003fa88; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x54));
-                pc = 0x8003fa8c;
-            }
-            0x8003fa8c => { ins += 1;
+                pc = 0x8003fa8c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003fa90;
-            }
-            0x8003fa90 => { ins += 1;
+                pc = 0x8003fa90; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fa94;
-            }
-            0x8003fa94 => { ins += 1;
+                pc = 0x8003fa94; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[0].wrapping_sub(c.r[4]);
-                pc = 0x8003fa98;
-            }
-            0x8003fa98 => { ins += 1;
+                pc = 0x8003fa98; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003fa9c;
-            }
-            0x8003fa9c => { ins += 1;
+                pc = 0x8003fa9c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[6].rotate_left(1) & 0x1;
-                pc = 0x8003faa0;
-            }
-            0x8003faa0 => { ins += 1;
+                pc = 0x8003faa0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0xfffffffe;
-                pc = 0x8003faa4;
-            }
-            0x8003faa4 => { ins += 1;
+                pc = 0x8003faa4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[5].wrapping_add(c.r[6]);
-                pc = 0x8003faa8;
-            }
-            0x8003faa8 => { ins += 1;
+                pc = 0x8003faa8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[3] | c.r[0];
-                pc = 0x8003faac;
-            }
-            0x8003faac => { ins += 1;
+                pc = 0x8003faac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = c.r[6] as i32; c.set_ca(v < 0 && (v as u32) << 31 != 0); c.r[0] = (v >> 1) as u32; }
-                pc = 0x8003fab0;
-            }
-            0x8003fab0 => { ins += 1;
+                pc = 0x8003fab0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0x36ea;
-                pc = 0x8003fab4;
-            }
-            0x8003fab4 => { ins += 1;
+                pc = 0x8003fab4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003fab8;
-            }
-            0x8003fab8 => { ins += 1;
+                pc = 0x8003fab8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fabc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fabc;
             }
@@ -19358,65 +18823,51 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fac0 => { ins += 1;
                 c.r[3] = 0x36e9;
-                pc = 0x8003fac4;
-            }
-            0x8003fac4 => { ins += 1;
+                pc = 0x8003fac4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fac8; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fa444(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fac8;
             }
             0x8003fac8 => { ins += 1;
                 c.r[3] = c.r[3].rotate_left(16) & 0xffff;
-                pc = 0x8003facc;
-            }
-            0x8003facc => { ins += 1;
+                pc = 0x8003facc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lha_t(ins, c.r[28].wrapping_add(0x54));
-                pc = 0x8003fad0;
-            }
-            0x8003fad0 => { ins += 1;
+                pc = 0x8003fad0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[3] as u16 as i16 as i32 as u32;
-                pc = 0x8003fad4;
-            }
-            0x8003fad4 => { ins += 1;
+                pc = 0x8003fad4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fad8;
-            }
-            0x8003fad8 => { ins += 1;
+                pc = 0x8003fad8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[0].wrapping_sub(c.r[4]);
-                pc = 0x8003fadc;
-            }
-            0x8003fadc => { ins += 1;
+                pc = 0x8003fadc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003fae0;
-            }
-            0x8003fae0 => { ins += 1;
+                pc = 0x8003fae0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[6].rotate_left(1) & 0x1;
-                pc = 0x8003fae4;
-            }
-            0x8003fae4 => { ins += 1;
+                pc = 0x8003fae4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0xfffffffe;
-                pc = 0x8003fae8;
-            }
-            0x8003fae8 => { ins += 1;
+                pc = 0x8003fae8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.r[5].wrapping_add(c.r[6]);
-                pc = 0x8003faec;
-            }
-            0x8003faec => { ins += 1;
+                pc = 0x8003faec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[3] | c.r[0];
-                pc = 0x8003faf0;
-            }
-            0x8003faf0 => { ins += 1;
+                pc = 0x8003faf0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let v = c.r[6] as i32; c.set_ca(v < 0 && (v as u32) << 31 != 0); c.r[0] = (v >> 1) as u32; }
-                pc = 0x8003faf4;
-            }
-            0x8003faf4 => { ins += 1;
+                pc = 0x8003faf4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0x36e9;
-                pc = 0x8003faf8;
-            }
-            0x8003faf8 => { ins += 1;
+                pc = 0x8003faf8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[0] as u16 as i16 as i32 as u32;
-                pc = 0x8003fafc;
-            }
-            0x8003fafc => { ins += 1;
+                pc = 0x8003fafc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fb00; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fb00;
             }
@@ -19426,49 +18877,38 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fb04 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15c));
-                pc = 0x8003fb08;
-            }
-            0x8003fb08 => { ins += 1;
+                pc = 0x8003fb08; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[30].wrapping_add(0x24c);
-                pc = 0x8003fb0c;
-            }
-            0x8003fb0c => { ins += 1;
+                pc = 0x8003fb0c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0xc));
-                pc = 0x8003fb10;
-            }
-            0x8003fb10 => { ins += 1;
+                pc = 0x8003fb10; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = 0xffffff00;
-                pc = 0x8003fb14;
-            }
-            0x8003fb14 => { ins += 1;
+                pc = 0x8003fb14; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fb18;
-            }
-            0x8003fb18 => { ins += 1;
+                pc = 0x8003fb18; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[7] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fb1c;
-            }
-            0x8003fb1c => { ins += 1;
+                pc = 0x8003fb1c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fb20;
-            }
-            0x8003fb20 => { ins += 1;
+                pc = 0x8003fb20; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003fb24;
-            }
-            0x8003fb24 => { ins += 1;
+                pc = 0x8003fb24; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[4].wrapping_add(c.r[0]));
-                pc = 0x8003fb28;
-            }
-            0x8003fb28 => { ins += 1;
+                pc = 0x8003fb28; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[7] | c.r[5];
-                pc = 0x8003fb2c;
-            }
-            0x8003fb2c => { ins += 1;
+                pc = 0x8003fb2c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x0;
-                pc = 0x8003fb30;
-            }
-            0x8003fb30 => { ins += 1;
+                pc = 0x8003fb30; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fb34; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fb34;
             }
@@ -19478,73 +18918,58 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fb38 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15b));
-                pc = 0x8003fb3c;
-            }
-            0x8003fb3c => { ins += 1;
+                pc = 0x8003fb3c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[30].wrapping_add(0x24c);
-                pc = 0x8003fb40;
-            }
-            0x8003fb40 => { ins += 1;
+                pc = 0x8003fb40; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x8));
-                pc = 0x8003fb44;
-            }
-            0x8003fb44 => { ins += 1;
+                pc = 0x8003fb44; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fb48;
-            }
-            0x8003fb48 => { ins += 1;
+                pc = 0x8003fb48; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fb4c;
-            }
-            0x8003fb4c => { ins += 1;
+                pc = 0x8003fb4c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
-                pc = 0x8003fb50;
-            }
-            0x8003fb50 => { ins += 1;
+                pc = 0x8003fb50; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fb54; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fa280(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fb54;
             }
             0x8003fb54 => { ins += 1;
                 c.r[0] = c.r[3] | c.r[3];
-                pc = 0x8003fb58;
-            }
-            0x8003fb58 => { ins += 1;
+                pc = 0x8003fb58; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x37;
-                pc = 0x8003fb5c;
-            }
-            0x8003fb5c => { ins += 1;
+                pc = 0x8003fb5c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] | c.r[0];
-                pc = 0x8003fb60;
-            }
-            0x8003fb60 => { ins += 1;
+                pc = 0x8003fb60; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fb64; { c.steps = st; c.cycles = ins; c.cr = cr; f_80132a38(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fb64;
             }
             0x8003fb64 => { ins += 1;
                 c.r[5] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fb68;
-            }
-            0x8003fb68 => { ins += 1;
+                pc = 0x8003fb68; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003fb6c;
-            }
-            0x8003fb6c => { ins += 1;
+                pc = 0x8003fb6c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003fb70;
-            }
-            0x8003fb70 => { ins += 1;
+                pc = 0x8003fb70; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x0;
-                pc = 0x8003fb74;
-            }
-            0x8003fb74 => { ins += 1;
+                pc = 0x8003fb74; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[5] | c.r[0];
-                pc = 0x8003fb78;
-            }
-            0x8003fb78 => { ins += 1;
+                pc = 0x8003fb78; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0xe7;
-                pc = 0x8003fb7c;
-            }
-            0x8003fb7c => { ins += 1;
+                pc = 0x8003fb7c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fb80; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fb80;
             }
@@ -19554,73 +18979,58 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fb84 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15a));
-                pc = 0x8003fb88;
-            }
-            0x8003fb88 => { ins += 1;
+                pc = 0x8003fb88; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[30].wrapping_add(0x24c);
-                pc = 0x8003fb8c;
-            }
-            0x8003fb8c => { ins += 1;
+                pc = 0x8003fb8c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(0x8));
-                pc = 0x8003fb90;
-            }
-            0x8003fb90 => { ins += 1;
+                pc = 0x8003fb90; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fb94;
-            }
-            0x8003fb94 => { ins += 1;
+                pc = 0x8003fb94; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fb98;
-            }
-            0x8003fb98 => { ins += 1;
+                pc = 0x8003fb98; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
-                pc = 0x8003fb9c;
-            }
-            0x8003fb9c => { ins += 1;
+                pc = 0x8003fb9c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fba0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fa280(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fba0;
             }
             0x8003fba0 => { ins += 1;
                 c.r[0] = c.r[3] | c.r[3];
-                pc = 0x8003fba4;
-            }
-            0x8003fba4 => { ins += 1;
+                pc = 0x8003fba4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x37;
-                pc = 0x8003fba8;
-            }
-            0x8003fba8 => { ins += 1;
+                pc = 0x8003fba8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[0] | c.r[0];
-                pc = 0x8003fbac;
-            }
-            0x8003fbac => { ins += 1;
+                pc = 0x8003fbac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fbb0; { c.steps = st; c.cycles = ins; c.cr = cr; f_80132a38(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fbb0;
             }
             0x8003fbb0 => { ins += 1;
                 c.r[5] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fbb4;
-            }
-            0x8003fbb4 => { ins += 1;
+                pc = 0x8003fbb4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003fbb8;
-            }
-            0x8003fbb8 => { ins += 1;
+                pc = 0x8003fbb8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003fbbc;
-            }
-            0x8003fbbc => { ins += 1;
+                pc = 0x8003fbbc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x0;
-                pc = 0x8003fbc0;
-            }
-            0x8003fbc0 => { ins += 1;
+                pc = 0x8003fbc0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[5] | c.r[0];
-                pc = 0x8003fbc4;
-            }
-            0x8003fbc4 => { ins += 1;
+                pc = 0x8003fbc4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0xe7;
-                pc = 0x8003fbc8;
-            }
-            0x8003fbc8 => { ins += 1;
+                pc = 0x8003fbc8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fbcc; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fbcc;
             }
@@ -19630,49 +19040,38 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fbd0 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x159));
-                pc = 0x8003fbd4;
-            }
-            0x8003fbd4 => { ins += 1;
+                pc = 0x8003fbd4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[30].wrapping_add(0x24c);
-                pc = 0x8003fbd8;
-            }
-            0x8003fbd8 => { ins += 1;
+                pc = 0x8003fbd8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lwz_t(ins, c.r[3].wrapping_add(0x4));
-                pc = 0x8003fbdc;
-            }
-            0x8003fbdc => { ins += 1;
+                pc = 0x8003fbdc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = 0xffffff00;
-                pc = 0x8003fbe0;
-            }
-            0x8003fbe0 => { ins += 1;
+                pc = 0x8003fbe0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fbe4;
-            }
-            0x8003fbe4 => { ins += 1;
+                pc = 0x8003fbe4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[7] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fbe8;
-            }
-            0x8003fbe8 => { ins += 1;
+                pc = 0x8003fbe8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fbec;
-            }
-            0x8003fbec => { ins += 1;
+                pc = 0x8003fbec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003fbf0;
-            }
-            0x8003fbf0 => { ins += 1;
+                pc = 0x8003fbf0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[4].wrapping_add(c.r[0]));
-                pc = 0x8003fbf4;
-            }
-            0x8003fbf4 => { ins += 1;
+                pc = 0x8003fbf4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[7] | c.r[5];
-                pc = 0x8003fbf8;
-            }
-            0x8003fbf8 => { ins += 1;
+                pc = 0x8003fbf8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x0;
-                pc = 0x8003fbfc;
-            }
-            0x8003fbfc => { ins += 1;
+                pc = 0x8003fbfc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fc00; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fc00;
             }
@@ -19682,45 +19081,35 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fc04 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x158));
-                pc = 0x8003fc08;
-            }
-            0x8003fc08 => { ins += 1;
+                pc = 0x8003fc08; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = 0xffffff00;
-                pc = 0x8003fc0c;
-            }
-            0x8003fc0c => { ins += 1;
+                pc = 0x8003fc0c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fc10;
-            }
-            0x8003fc10 => { ins += 1;
+                pc = 0x8003fc10; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003fc14;
-            }
-            0x8003fc14 => { ins += 1;
+                pc = 0x8003fc14; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fc18;
-            }
-            0x8003fc18 => { ins += 1;
+                pc = 0x8003fc18; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lwz_t(ins, c.r[30].wrapping_add(0x24c));
-                pc = 0x8003fc1c;
-            }
-            0x8003fc1c => { ins += 1;
+                pc = 0x8003fc1c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fc20;
-            }
-            0x8003fc20 => { ins += 1;
+                pc = 0x8003fc20; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[6] | c.r[5];
-                pc = 0x8003fc24;
-            }
-            0x8003fc24 => { ins += 1;
+                pc = 0x8003fc24; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[4].wrapping_add(c.r[0]));
-                pc = 0x8003fc28;
-            }
-            0x8003fc28 => { ins += 1;
+                pc = 0x8003fc28; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x0;
-                pc = 0x8003fc2c;
-            }
-            0x8003fc2c => { ins += 1;
+                pc = 0x8003fc2c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fc30; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fc30;
             }
@@ -19730,413 +19119,326 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fc34 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fc38;
-            }
-            0x8003fc38 => { ins += 1;
+                pc = 0x8003fc38; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fc3c;
-            }
-            0x8003fc3c => { ins += 1;
+                pc = 0x8003fc3c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x0);
-                pc = 0x8003fc40;
-            }
-            0x8003fc40 => { ins += 1;
+                pc = 0x8003fc40; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fc58; continue; }
-                pc = 0x8003fc44;
-            }
-            0x8003fc44 => { ins += 1;
+                pc = 0x8003fc44; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fc48;
-            }
-            0x8003fc48 => { ins += 1;
+                pc = 0x8003fc48; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fc4c;
-            }
-            0x8003fc4c => { ins += 1;
+                pc = 0x8003fc4c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fc50;
-            }
-            0x8003fc50 => { ins += 1;
+                pc = 0x8003fc50; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fc54;
-            }
-            0x8003fc54 => { ins += 1;
+                pc = 0x8003fc54; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fc58;
             }
             0x8003fc58 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fc5c;
-            }
-            0x8003fc5c => { ins += 1;
+                pc = 0x8003fc5c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fc60;
-            }
-            0x8003fc60 => { ins += 1;
+                pc = 0x8003fc60; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fc64;
-            }
-            0x8003fc64 => { ins += 1;
+                pc = 0x8003fc64; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fc68;
-            }
-            0x8003fc68 => { ins += 1;
+                pc = 0x8003fc68; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fc6c;
             }
             0x8003fc6c => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fc70;
-            }
-            0x8003fc70 => { ins += 1;
+                pc = 0x8003fc70; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fc74;
-            }
-            0x8003fc74 => { ins += 1;
+                pc = 0x8003fc74; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x1);
-                pc = 0x8003fc78;
-            }
-            0x8003fc78 => { ins += 1;
+                pc = 0x8003fc78; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fc90; continue; }
-                pc = 0x8003fc7c;
-            }
-            0x8003fc7c => { ins += 1;
+                pc = 0x8003fc7c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fc80;
-            }
-            0x8003fc80 => { ins += 1;
+                pc = 0x8003fc80; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fc84;
-            }
-            0x8003fc84 => { ins += 1;
+                pc = 0x8003fc84; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fc88;
-            }
-            0x8003fc88 => { ins += 1;
+                pc = 0x8003fc88; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fc8c;
-            }
-            0x8003fc8c => { ins += 1;
+                pc = 0x8003fc8c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fc90;
             }
             0x8003fc90 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fc94;
-            }
-            0x8003fc94 => { ins += 1;
+                pc = 0x8003fc94; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fc98;
-            }
-            0x8003fc98 => { ins += 1;
+                pc = 0x8003fc98; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fc9c;
-            }
-            0x8003fc9c => { ins += 1;
+                pc = 0x8003fc9c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fca0;
-            }
-            0x8003fca0 => { ins += 1;
+                pc = 0x8003fca0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fca4;
             }
             0x8003fca4 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fca8;
-            }
-            0x8003fca8 => { ins += 1;
+                pc = 0x8003fca8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fcac;
-            }
-            0x8003fcac => { ins += 1;
+                pc = 0x8003fcac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x2);
-                pc = 0x8003fcb0;
-            }
-            0x8003fcb0 => { ins += 1;
+                pc = 0x8003fcb0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fcc8; continue; }
-                pc = 0x8003fcb4;
-            }
-            0x8003fcb4 => { ins += 1;
+                pc = 0x8003fcb4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fcb8;
-            }
-            0x8003fcb8 => { ins += 1;
+                pc = 0x8003fcb8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fcbc;
-            }
-            0x8003fcbc => { ins += 1;
+                pc = 0x8003fcbc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fcc0;
-            }
-            0x8003fcc0 => { ins += 1;
+                pc = 0x8003fcc0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fcc4;
-            }
-            0x8003fcc4 => { ins += 1;
+                pc = 0x8003fcc4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fcc8;
             }
             0x8003fcc8 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fccc;
-            }
-            0x8003fccc => { ins += 1;
+                pc = 0x8003fccc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fcd0;
-            }
-            0x8003fcd0 => { ins += 1;
+                pc = 0x8003fcd0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fcd4;
-            }
-            0x8003fcd4 => { ins += 1;
+                pc = 0x8003fcd4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fcd8;
-            }
-            0x8003fcd8 => { ins += 1;
+                pc = 0x8003fcd8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fcdc;
             }
             0x8003fcdc => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fce0;
-            }
-            0x8003fce0 => { ins += 1;
+                pc = 0x8003fce0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fce4;
-            }
-            0x8003fce4 => { ins += 1;
+                pc = 0x8003fce4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x3);
-                pc = 0x8003fce8;
-            }
-            0x8003fce8 => { ins += 1;
+                pc = 0x8003fce8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fd00; continue; }
-                pc = 0x8003fcec;
-            }
-            0x8003fcec => { ins += 1;
+                pc = 0x8003fcec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fcf0;
-            }
-            0x8003fcf0 => { ins += 1;
+                pc = 0x8003fcf0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fcf4;
-            }
-            0x8003fcf4 => { ins += 1;
+                pc = 0x8003fcf4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fcf8;
-            }
-            0x8003fcf8 => { ins += 1;
+                pc = 0x8003fcf8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fcfc;
-            }
-            0x8003fcfc => { ins += 1;
+                pc = 0x8003fcfc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fd00;
             }
             0x8003fd00 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fd04;
-            }
-            0x8003fd04 => { ins += 1;
+                pc = 0x8003fd04; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fd08;
-            }
-            0x8003fd08 => { ins += 1;
+                pc = 0x8003fd08; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fd0c;
-            }
-            0x8003fd0c => { ins += 1;
+                pc = 0x8003fd0c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fd10;
-            }
-            0x8003fd10 => { ins += 1;
+                pc = 0x8003fd10; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fd14;
             }
             0x8003fd14 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fd18;
-            }
-            0x8003fd18 => { ins += 1;
+                pc = 0x8003fd18; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fd1c;
-            }
-            0x8003fd1c => { ins += 1;
+                pc = 0x8003fd1c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x4);
-                pc = 0x8003fd20;
-            }
-            0x8003fd20 => { ins += 1;
+                pc = 0x8003fd20; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fd38; continue; }
-                pc = 0x8003fd24;
-            }
-            0x8003fd24 => { ins += 1;
+                pc = 0x8003fd24; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fd28;
-            }
-            0x8003fd28 => { ins += 1;
+                pc = 0x8003fd28; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fd2c;
-            }
-            0x8003fd2c => { ins += 1;
+                pc = 0x8003fd2c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fd30;
-            }
-            0x8003fd30 => { ins += 1;
+                pc = 0x8003fd30; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fd34;
-            }
-            0x8003fd34 => { ins += 1;
+                pc = 0x8003fd34; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fd38;
             }
             0x8003fd38 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fd3c;
-            }
-            0x8003fd3c => { ins += 1;
+                pc = 0x8003fd3c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fd40;
-            }
-            0x8003fd40 => { ins += 1;
+                pc = 0x8003fd40; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fd44;
-            }
-            0x8003fd44 => { ins += 1;
+                pc = 0x8003fd44; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fd48;
-            }
-            0x8003fd48 => { ins += 1;
+                pc = 0x8003fd48; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fd4c;
             }
             0x8003fd4c => { ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[31].wrapping_add(0x154));
-                pc = 0x8003fd50;
-            }
-            0x8003fd50 => { ins += 1;
+                pc = 0x8003fd50; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x1);
-                pc = 0x8003fd54;
-            }
-            0x8003fd54 => { ins += 1;
+                pc = 0x8003fd54; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003fdd4; continue; }
-                pc = 0x8003fd58;
-            }
-            0x8003fd58 => { ins += 1;
+                pc = 0x8003fd58; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 0) { pc = 0x8003fff4; continue; }
-                pc = 0x8003fd5c;
-            }
-            0x8003fd5c => { ins += 1;
+                pc = 0x8003fd5c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x0);
-                pc = 0x8003fd60;
-            }
-            0x8003fd60 => { ins += 1;
+                pc = 0x8003fd60; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 0) { pc = 0x8003fd68; continue; }
-                pc = 0x8003fd64;
-            }
-            0x8003fd64 => { ins += 1;
+                pc = 0x8003fd64; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fd68;
             }
             0x8003fd68 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fd6c;
-            }
-            0x8003fd6c => { ins += 1;
+                pc = 0x8003fd6c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fd70;
-            }
-            0x8003fd70 => { ins += 1;
+                pc = 0x8003fd70; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x4);
-                pc = 0x8003fd74;
-            }
-            0x8003fd74 => { ins += 1;
+                pc = 0x8003fd74; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fdac; continue; }
-                pc = 0x8003fd78;
-            }
-            0x8003fd78 => { ins += 1;
+                pc = 0x8003fd78; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.lwz_t(ins, c.r[31].wrapping_add(0x1e4));
-                pc = 0x8003fd7c;
-            }
-            0x8003fd7c => { ins += 1;
+                pc = 0x8003fd7c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[4], 0x0);
-                pc = 0x8003fd80;
-            }
-            0x8003fd80 => { ins += 1;
+                pc = 0x8003fd80; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fd90; continue; }
-                pc = 0x8003fd84;
-            }
-            0x8003fd84 => { ins += 1;
+                pc = 0x8003fd84; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fd88;
-            }
-            0x8003fd88 => { ins += 1;
+                pc = 0x8003fd88; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[30].wrapping_add(0x270);
-                pc = 0x8003fd8c;
-            }
-            0x8003fd8c => { ins += 1;
+                pc = 0x8003fd8c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 pc = 0x8003fd90;
             }
             0x8003fd90 => { ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[4], 0x2);
-                pc = 0x8003fd94;
-            }
-            0x8003fd94 => { ins += 1;
+                pc = 0x8003fd94; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fd9c; continue; }
-                pc = 0x8003fd98;
-            }
-            0x8003fd98 => { ins += 1;
+                pc = 0x8003fd98; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0x3712;
                 pc = 0x8003fd9c;
             }
             0x8003fd9c => { ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[4], 0x1);
-                pc = 0x8003fda0;
-            }
-            0x8003fda0 => { ins += 1;
+                pc = 0x8003fda0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fdb8; continue; }
-                pc = 0x8003fda4;
-            }
-            0x8003fda4 => { ins += 1;
+                pc = 0x8003fda4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = 0x3714;
-                pc = 0x8003fda8;
-            }
-            0x8003fda8 => { ins += 1;
+                pc = 0x8003fda8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fdb8; continue;
                 pc = 0x8003fdac;
             }
             0x8003fdac => { ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fdb0;
-            }
-            0x8003fdb0 => { ins += 1;
+                pc = 0x8003fdb0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = c.r[30].wrapping_add(0x270);
-                pc = 0x8003fdb4;
-            }
-            0x8003fdb4 => { ins += 1;
+                pc = 0x8003fdb4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[3].wrapping_add(c.r[0]));
                 pc = 0x8003fdb8;
             }
             0x8003fdb8 => { ins += 1;
                 c.r[4] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fdbc;
-            }
-            0x8003fdbc => { ins += 1;
+                pc = 0x8003fdbc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = 0xffffff00;
-                pc = 0x8003fdc0;
-            }
-            0x8003fdc0 => { ins += 1;
+                pc = 0x8003fdc0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003fdc4;
-            }
-            0x8003fdc4 => { ins += 1;
+                pc = 0x8003fdc4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[4] | c.r[0];
-                pc = 0x8003fdc8;
-            }
-            0x8003fdc8 => { ins += 1;
+                pc = 0x8003fdc8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x0;
-                pc = 0x8003fdcc;
-            }
-            0x8003fdcc => { ins += 1;
+                pc = 0x8003fdcc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fdd0; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fdd0;
             }
@@ -20146,61 +19448,47 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fdd4 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fdd8;
-            }
-            0x8003fdd8 => { ins += 1;
+                pc = 0x8003fdd8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fddc;
-            }
-            0x8003fddc => { ins += 1;
+                pc = 0x8003fddc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x3);
-                pc = 0x8003fde0;
-            }
-            0x8003fde0 => { ins += 1;
+                pc = 0x8003fde0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fff4; continue; }
-                pc = 0x8003fde4;
-            }
-            0x8003fde4 => { ins += 1;
+                pc = 0x8003fde4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15f));
-                pc = 0x8003fde8;
-            }
-            0x8003fde8 => { ins += 1;
+                pc = 0x8003fde8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = c.r[30].wrapping_add(0x25c);
-                pc = 0x8003fdec;
-            }
-            0x8003fdec => { ins += 1;
+                pc = 0x8003fdec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lbz_t(ins, c.r[27].wrapping_add(0x8b));
-                pc = 0x8003fdf0;
-            }
-            0x8003fdf0 => { ins += 1;
+                pc = 0x8003fdf0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = 0xffffff00;
-                pc = 0x8003fdf4;
-            }
-            0x8003fdf4 => { ins += 1;
+                pc = 0x8003fdf4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fdf8;
-            }
-            0x8003fdf8 => { ins += 1;
+                pc = 0x8003fdf8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[3] = 0x0;
-                pc = 0x8003fdfc;
-            }
-            0x8003fdfc => { ins += 1;
+                pc = 0x8003fdfc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(2) & 0xfffffffc;
-                pc = 0x8003fe00;
-            }
-            0x8003fe00 => { ins += 1;
+                pc = 0x8003fe00; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[5] = c.r[6] | c.r[5];
-                pc = 0x8003fe04;
-            }
-            0x8003fe04 => { ins += 1;
+                pc = 0x8003fe04; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[6] = c.lwz_t(ins, c.r[4].wrapping_add(c.r[0]));
-                pc = 0x8003fe08;
-            }
-            0x8003fe08 => { ins += 1;
+                pc = 0x8003fe08; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[4] = 0x0;
-                pc = 0x8003fe0c;
-            }
-            0x8003fe0c => { ins += 1;
+                pc = 0x8003fe0c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.lr = 0x8003fe10; { c.steps = st; c.cycles = ins; c.cr = cr; f_800fb680(c); st = c.steps; ins = c.cycles; cr = c.cr; };
                 pc = 0x8003fe10;
             }
@@ -20210,517 +19498,406 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
             }
             0x8003fe14 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fe18;
-            }
-            0x8003fe18 => { ins += 1;
+                pc = 0x8003fe18; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fe1c;
-            }
-            0x8003fe1c => { ins += 1;
+                pc = 0x8003fe1c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x2);
-                pc = 0x8003fe20;
-            }
-            0x8003fe20 => { ins += 1;
+                pc = 0x8003fe20; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003fe54; continue; }
-                pc = 0x8003fe24;
-            }
-            0x8003fe24 => { ins += 1;
+                pc = 0x8003fe24; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x0);
-                pc = 0x8003fe28;
-            }
-            0x8003fe28 => { ins += 1;
+                pc = 0x8003fe28; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fe40; continue; }
-                pc = 0x8003fe2c;
-            }
-            0x8003fe2c => { ins += 1;
+                pc = 0x8003fe2c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fe30;
-            }
-            0x8003fe30 => { ins += 1;
+                pc = 0x8003fe30; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fe34;
-            }
-            0x8003fe34 => { ins += 1;
+                pc = 0x8003fe34; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fe38;
-            }
-            0x8003fe38 => { ins += 1;
+                pc = 0x8003fe38; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fe3c;
-            }
-            0x8003fe3c => { ins += 1;
+                pc = 0x8003fe3c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fe40;
             }
             0x8003fe40 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fe44;
-            }
-            0x8003fe44 => { ins += 1;
+                pc = 0x8003fe44; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fe48;
-            }
-            0x8003fe48 => { ins += 1;
+                pc = 0x8003fe48; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fe4c;
-            }
-            0x8003fe4c => { ins += 1;
+                pc = 0x8003fe4c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fe50;
-            }
-            0x8003fe50 => { ins += 1;
+                pc = 0x8003fe50; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fe54;
             }
             0x8003fe54 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fe58;
-            }
-            0x8003fe58 => { ins += 1;
+                pc = 0x8003fe58; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fe5c;
-            }
-            0x8003fe5c => { ins += 1;
+                pc = 0x8003fe5c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fe60;
-            }
-            0x8003fe60 => { ins += 1;
+                pc = 0x8003fe60; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fe64;
-            }
-            0x8003fe64 => { ins += 1;
+                pc = 0x8003fe64; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fe68;
             }
             0x8003fe68 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fe6c;
-            }
-            0x8003fe6c => { ins += 1;
+                pc = 0x8003fe6c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fe70;
-            }
-            0x8003fe70 => { ins += 1;
+                pc = 0x8003fe70; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x2);
-                pc = 0x8003fe74;
-            }
-            0x8003fe74 => { ins += 1;
+                pc = 0x8003fe74; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003fea8; continue; }
-                pc = 0x8003fe78;
-            }
-            0x8003fe78 => { ins += 1;
+                pc = 0x8003fe78; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x1);
-                pc = 0x8003fe7c;
-            }
-            0x8003fe7c => { ins += 1;
+                pc = 0x8003fe7c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fe94; continue; }
-                pc = 0x8003fe80;
-            }
-            0x8003fe80 => { ins += 1;
+                pc = 0x8003fe80; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fe84;
-            }
-            0x8003fe84 => { ins += 1;
+                pc = 0x8003fe84; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fe88;
-            }
-            0x8003fe88 => { ins += 1;
+                pc = 0x8003fe88; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fe8c;
-            }
-            0x8003fe8c => { ins += 1;
+                pc = 0x8003fe8c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fe90;
-            }
-            0x8003fe90 => { ins += 1;
+                pc = 0x8003fe90; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fe94;
             }
             0x8003fe94 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fe98;
-            }
-            0x8003fe98 => { ins += 1;
+                pc = 0x8003fe98; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003fe9c;
-            }
-            0x8003fe9c => { ins += 1;
+                pc = 0x8003fe9c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fea0;
-            }
-            0x8003fea0 => { ins += 1;
+                pc = 0x8003fea0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fea4;
-            }
-            0x8003fea4 => { ins += 1;
+                pc = 0x8003fea4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fea8;
             }
             0x8003fea8 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003feac;
-            }
-            0x8003feac => { ins += 1;
+                pc = 0x8003feac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003feb0;
-            }
-            0x8003feb0 => { ins += 1;
+                pc = 0x8003feb0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003feb4;
-            }
-            0x8003feb4 => { ins += 1;
+                pc = 0x8003feb4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003feb8;
-            }
-            0x8003feb8 => { ins += 1;
+                pc = 0x8003feb8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003febc;
             }
             0x8003febc => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003fec0;
-            }
-            0x8003fec0 => { ins += 1;
+                pc = 0x8003fec0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fec4;
-            }
-            0x8003fec4 => { ins += 1;
+                pc = 0x8003fec4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x2);
-                pc = 0x8003fec8;
-            }
-            0x8003fec8 => { ins += 1;
+                pc = 0x8003fec8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003fef8; continue; }
-                pc = 0x8003fecc;
-            }
-            0x8003fecc => { ins += 1;
+                pc = 0x8003fecc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003fee4; continue; }
-                pc = 0x8003fed0;
-            }
-            0x8003fed0 => { ins += 1;
+                pc = 0x8003fed0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fed4;
-            }
-            0x8003fed4 => { ins += 1;
+                pc = 0x8003fed4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003fed8;
-            }
-            0x8003fed8 => { ins += 1;
+                pc = 0x8003fed8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fedc;
-            }
-            0x8003fedc => { ins += 1;
+                pc = 0x8003fedc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fee0;
-            }
-            0x8003fee0 => { ins += 1;
+                pc = 0x8003fee0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fee4;
             }
             0x8003fee4 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003fee8;
-            }
-            0x8003fee8 => { ins += 1;
+                pc = 0x8003fee8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003feec;
-            }
-            0x8003feec => { ins += 1;
+                pc = 0x8003feec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fef0;
-            }
-            0x8003fef0 => { ins += 1;
+                pc = 0x8003fef0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003fef4;
-            }
-            0x8003fef4 => { ins += 1;
+                pc = 0x8003fef4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003fef8;
             }
             0x8003fef8 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15e));
-                pc = 0x8003fefc;
-            }
-            0x8003fefc => { ins += 1;
+                pc = 0x8003fefc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff00;
-            }
-            0x8003ff00 => { ins += 1;
+                pc = 0x8003ff00; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x0);
-                pc = 0x8003ff04;
-            }
-            0x8003ff04 => { ins += 1;
+                pc = 0x8003ff04; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003ff1c; continue; }
-                pc = 0x8003ff08;
-            }
-            0x8003ff08 => { ins += 1;
+                pc = 0x8003ff08; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ff0c;
-            }
-            0x8003ff0c => { ins += 1;
+                pc = 0x8003ff0c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003ff10;
-            }
-            0x8003ff10 => { ins += 1;
+                pc = 0x8003ff10; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff14;
-            }
-            0x8003ff14 => { ins += 1;
+                pc = 0x8003ff14; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ff18;
-            }
-            0x8003ff18 => { ins += 1;
+                pc = 0x8003ff18; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ff1c;
             }
             0x8003ff1c => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ff20;
-            }
-            0x8003ff20 => { ins += 1;
+                pc = 0x8003ff20; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003ff24;
-            }
-            0x8003ff24 => { ins += 1;
+                pc = 0x8003ff24; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff28;
-            }
-            0x8003ff28 => { ins += 1;
+                pc = 0x8003ff28; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ff2c;
-            }
-            0x8003ff2c => { ins += 1;
+                pc = 0x8003ff2c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ff30;
             }
             0x8003ff30 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003ff34;
-            }
-            0x8003ff34 => { ins += 1;
+                pc = 0x8003ff34; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff38;
-            }
-            0x8003ff38 => { ins += 1;
+                pc = 0x8003ff38; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x2);
-                pc = 0x8003ff3c;
-            }
-            0x8003ff3c => { ins += 1;
+                pc = 0x8003ff3c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003ff6c; continue; }
-                pc = 0x8003ff40;
-            }
-            0x8003ff40 => { ins += 1;
+                pc = 0x8003ff40; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003ff58; continue; }
-                pc = 0x8003ff44;
-            }
-            0x8003ff44 => { ins += 1;
+                pc = 0x8003ff44; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ff48;
-            }
-            0x8003ff48 => { ins += 1;
+                pc = 0x8003ff48; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003ff4c;
-            }
-            0x8003ff4c => { ins += 1;
+                pc = 0x8003ff4c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff50;
-            }
-            0x8003ff50 => { ins += 1;
+                pc = 0x8003ff50; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ff54;
-            }
-            0x8003ff54 => { ins += 1;
+                pc = 0x8003ff54; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ff58;
             }
             0x8003ff58 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ff5c;
-            }
-            0x8003ff5c => { ins += 1;
+                pc = 0x8003ff5c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003ff60;
-            }
-            0x8003ff60 => { ins += 1;
+                pc = 0x8003ff60; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff64;
-            }
-            0x8003ff64 => { ins += 1;
+                pc = 0x8003ff64; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ff68;
-            }
-            0x8003ff68 => { ins += 1;
+                pc = 0x8003ff68; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ff6c;
             }
             0x8003ff6c => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15e));
-                pc = 0x8003ff70;
-            }
-            0x8003ff70 => { ins += 1;
+                pc = 0x8003ff70; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff74;
-            }
-            0x8003ff74 => { ins += 1;
+                pc = 0x8003ff74; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x1);
-                pc = 0x8003ff78;
-            }
-            0x8003ff78 => { ins += 1;
+                pc = 0x8003ff78; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003ff90; continue; }
-                pc = 0x8003ff7c;
-            }
-            0x8003ff7c => { ins += 1;
+                pc = 0x8003ff7c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ff80;
-            }
-            0x8003ff80 => { ins += 1;
+                pc = 0x8003ff80; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003ff84;
-            }
-            0x8003ff84 => { ins += 1;
+                pc = 0x8003ff84; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff88;
-            }
-            0x8003ff88 => { ins += 1;
+                pc = 0x8003ff88; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ff8c;
-            }
-            0x8003ff8c => { ins += 1;
+                pc = 0x8003ff8c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ff90;
             }
             0x8003ff90 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ff94;
-            }
-            0x8003ff94 => { ins += 1;
+                pc = 0x8003ff94; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003ff98;
-            }
-            0x8003ff98 => { ins += 1;
+                pc = 0x8003ff98; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ff9c;
-            }
-            0x8003ff9c => { ins += 1;
+                pc = 0x8003ff9c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ffa0;
-            }
-            0x8003ffa0 => { ins += 1;
+                pc = 0x8003ffa0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ffa4;
             }
             0x8003ffa4 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[31].wrapping_add(0x15d));
-                pc = 0x8003ffa8;
-            }
-            0x8003ffa8 => { ins += 1;
+                pc = 0x8003ffa8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ffac;
-            }
-            0x8003ffac => { ins += 1;
+                pc = 0x8003ffac; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x2);
-                pc = 0x8003ffb0;
-            }
-            0x8003ffb0 => { ins += 1;
+                pc = 0x8003ffb0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if cr_bit(cr, 2) { pc = 0x8003ffe4; continue; }
-                pc = 0x8003ffb4;
-            }
-            0x8003ffb4 => { ins += 1;
+                pc = 0x8003ffb4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 cr_cmps(&mut cr, c.xer, 0, c.r[0], 0x3);
-                pc = 0x8003ffb8;
-            }
-            0x8003ffb8 => { ins += 1;
+                pc = 0x8003ffb8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if !cr_bit(cr, 2) { pc = 0x8003ffd0; continue; }
-                pc = 0x8003ffbc;
-            }
-            0x8003ffbc => { ins += 1;
+                pc = 0x8003ffbc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ffc0;
-            }
-            0x8003ffc0 => { ins += 1;
+                pc = 0x8003ffc0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] | 0x2;
-                pc = 0x8003ffc4;
-            }
-            0x8003ffc4 => { ins += 1;
+                pc = 0x8003ffc4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ffc8;
-            }
-            0x8003ffc8 => { ins += 1;
+                pc = 0x8003ffc8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ffcc;
-            }
-            0x8003ffcc => { ins += 1;
+                pc = 0x8003ffcc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ffd0;
             }
             0x8003ffd0 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ffd4;
-            }
-            0x8003ffd4 => { ins += 1;
+                pc = 0x8003ffd4; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003ffd8;
-            }
-            0x8003ffd8 => { ins += 1;
+                pc = 0x8003ffd8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003ffdc;
-            }
-            0x8003ffdc => { ins += 1;
+                pc = 0x8003ffdc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
-                pc = 0x8003ffe0;
-            }
-            0x8003ffe0 => { ins += 1;
+                pc = 0x8003ffe0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 pc = 0x8003fff4; continue;
                 pc = 0x8003ffe4;
             }
             0x8003ffe4 => { ins += 1;
                 c.r[0] = c.lbz_t(ins, c.r[28].wrapping_add(0x4));
-                pc = 0x8003ffe8;
-            }
-            0x8003ffe8 => { ins += 1;
+                pc = 0x8003ffe8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0].rotate_left(0) & 0xfffffffd;
-                pc = 0x8003ffec;
-            }
-            0x8003ffec => { ins += 1;
+                pc = 0x8003ffec; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.r[0] as u8 as i8 as i32 as u32;
-                pc = 0x8003fff0;
-            }
-            0x8003fff0 => { ins += 1;
+                pc = 0x8003fff0; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.stb(c.r[28].wrapping_add(0x4), c.r[0]);
                 pc = 0x8003fff4;
             }
             0x8003fff4 => { ins += 1;
                 { let ea = c.r[1].wrapping_add(0x48); let (x, y) = c.psq_load(ea, false, 0); c.f[31] = x; c.ps1[31] = y; }
-                pc = 0x8003fff8;
-            }
-            0x8003fff8 => { ins += 1;
+                pc = 0x8003fff8; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x40); c.f[31] = c.lfd(ea); }
-                pc = 0x8003fffc;
-            }
-            0x8003fffc => { ins += 1;
+                pc = 0x8003fffc; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x38); let (x, y) = c.psq_load(ea, false, 0); c.f[30] = x; c.ps1[30] = y; }
-                pc = 0x80040000;
-            }
-            0x80040000 => { ins += 1;
+                pc = 0x80040000; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 { let ea = c.r[1].wrapping_add(0x30); c.f[30] = c.lfd(ea); }
-                pc = 0x80040004;
-            }
-            0x80040004 => { ins += 11;
+                pc = 0x80040004; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 11;
                 { let mut ea = c.r[1].wrapping_add(0x1c); for n in 27..32 { c.r[n] = c.lwz_t(ins, ea); ea = ea.wrapping_add(4); } }
-                pc = 0x80040008;
-            }
-            0x80040008 => { ins += 1;
+                pc = 0x80040008; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[0] = c.lwz_t(ins, c.r[1].wrapping_add(0x54));
-                pc = 0x8004000c;
-            }
-            0x8004000c => { ins += 2;
+                pc = 0x8004000c; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 2;
                 c.mtspr(8, c.r[0]);
-                pc = 0x80040010;
-            }
-            0x80040010 => { ins += 1;
+                pc = 0x80040010; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 c.r[1] = c.r[1].wrapping_add(0x50);
-                pc = 0x80040014;
-            }
-            0x80040014 => { ins += 1;
+                pc = 0x80040014; st += 1; if st > c.step_limit { c.steps = st; c.cycles = ins; c.cr = cr; c.step_event(0x8003f464, pc); st = c.steps; ins = c.cycles; cr = c.cr; }
+                ins += 1;
                 if true { { c.steps = st; c.cycles = ins; c.cr = cr; return; } }
                 { c.steps = st; c.cycles = ins; c.cr = cr; return; }
             }
@@ -20732,13 +19909,11 @@ fn f_8003f464_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoListKey (0x80040018, 752 bytes)
 #[inline(never)]
 pub fn f_80040018(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80040018) { return; }
-        if c.prof { crate::prof::enter(c, 0x80040018); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80040018); f_80040018_at(c, 0x80040018); crate::prof::exit(c, 0x80040018); return; }
     }
     f_80040018_b(c, 0x80040018);
-    if p { crate::prof::exit(c, 0x80040018); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80040018_at(c: &mut Cpu, pc: u32) { f_80040018_b(c, pc) }
@@ -21098,13 +20273,11 @@ fn f_80040018_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoMainKey (0x80040308, 3596 bytes)
 #[inline(never)]
 pub fn f_80040308(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80040308) { return; }
-        if c.prof { crate::prof::enter(c, 0x80040308); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80040308); f_80040308_at(c, 0x80040308); crate::prof::exit(c, 0x80040308); return; }
     }
     f_80040308_b(c, 0x80040308);
-    if p { crate::prof::exit(c, 0x80040308); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80040308_at(c: &mut Cpu, pc: u32) { f_80040308_b(c, pc) }
@@ -22775,13 +21948,11 @@ fn f_80040308_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSceneEnter0 (0x80041114, 72 bytes)
 #[inline(never)]
 pub fn f_80041114(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80041114) { return; }
-        if c.prof { crate::prof::enter(c, 0x80041114); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80041114); f_80041114_at(c, 0x80041114); crate::prof::exit(c, 0x80041114); return; }
     }
     f_80041114_b(c, 0x80041114);
-    if p { crate::prof::exit(c, 0x80041114); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80041114_at(c: &mut Cpu, pc: u32) { f_80041114_b(c, pc) }
@@ -22833,13 +22004,11 @@ fn f_80041114_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSceneEnter1 (0x8004115c, 72 bytes)
 #[inline(never)]
 pub fn f_8004115c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004115c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004115c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004115c); f_8004115c_at(c, 0x8004115c); crate::prof::exit(c, 0x8004115c); return; }
     }
     f_8004115c_b(c, 0x8004115c);
-    if p { crate::prof::exit(c, 0x8004115c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004115c_at(c: &mut Cpu, pc: u32) { f_8004115c_b(c, pc) }
@@ -22891,13 +22060,11 @@ fn f_8004115c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSceneEnter2 (0x800411a4, 72 bytes)
 #[inline(never)]
 pub fn f_800411a4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800411a4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800411a4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800411a4); f_800411a4_at(c, 0x800411a4); crate::prof::exit(c, 0x800411a4); return; }
     }
     f_800411a4_b(c, 0x800411a4);
-    if p { crate::prof::exit(c, 0x800411a4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800411a4_at(c: &mut Cpu, pc: u32) { f_800411a4_b(c, pc) }
@@ -22949,13 +22116,11 @@ fn f_800411a4_b(c: &mut Cpu, mut pc: u32) {
 /// pdaSceneGetWork (0x800411ec, 16 bytes)
 #[inline(never)]
 pub fn f_800411ec(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800411ec) { return; }
-        if c.prof { crate::prof::enter(c, 0x800411ec); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800411ec); f_800411ec_at(c, 0x800411ec); crate::prof::exit(c, 0x800411ec); return; }
     }
     f_800411ec_b(c, 0x800411ec);
-    if p { crate::prof::exit(c, 0x800411ec); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800411ec_at(c: &mut Cpu, pc: u32) { f_800411ec_b(c, pc) }
@@ -22984,13 +22149,11 @@ fn f_800411ec_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800411FC (0x800411fc, 2400 bytes)
 #[inline(never)]
 pub fn f_800411fc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800411fc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800411fc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800411fc); f_800411fc_at(c, 0x800411fc); crate::prof::exit(c, 0x800411fc); return; }
     }
     f_800411fc_b(c, 0x800411fc);
-    if p { crate::prof::exit(c, 0x800411fc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800411fc_at(c: &mut Cpu, pc: u32) { f_800411fc_b(c, pc) }
@@ -24119,13 +23282,11 @@ fn f_800411fc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaPeopleUpdateAlpha (0x80041b5c, 116 bytes)
 #[inline(never)]
 pub fn f_80041b5c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80041b5c) { return; }
-        if c.prof { crate::prof::enter(c, 0x80041b5c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80041b5c); f_80041b5c_at(c, 0x80041b5c); crate::prof::exit(c, 0x80041b5c); return; }
     }
     f_80041b5c_b(c, 0x80041b5c);
-    if p { crate::prof::exit(c, 0x80041b5c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80041b5c_at(c: &mut Cpu, pc: u32) { f_80041b5c_b(c, pc) }
@@ -24203,13 +23364,11 @@ fn f_80041b5c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaPeopleDrawTypeIcons (0x80041bd0, 632 bytes)
 #[inline(never)]
 pub fn f_80041bd0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80041bd0) { return; }
-        if c.prof { crate::prof::enter(c, 0x80041bd0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80041bd0); f_80041bd0_at(c, 0x80041bd0); crate::prof::exit(c, 0x80041bd0); return; }
     }
     f_80041bd0_b(c, 0x80041bd0);
-    if p { crate::prof::exit(c, 0x80041bd0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80041bd0_at(c: &mut Cpu, pc: u32) { f_80041bd0_b(c, pc) }
@@ -24467,13 +23626,11 @@ fn f_80041bd0_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80041E48 (0x80041e48, 2064 bytes)
 #[inline(never)]
 pub fn f_80041e48(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80041e48) { return; }
-        if c.prof { crate::prof::enter(c, 0x80041e48); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80041e48); f_80041e48_at(c, 0x80041e48); crate::prof::exit(c, 0x80041e48); return; }
     }
     f_80041e48_b(c, 0x80041e48);
-    if p { crate::prof::exit(c, 0x80041e48); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80041e48_at(c: &mut Cpu, pc: u32) { f_80041e48_b(c, pc) }
@@ -25386,13 +24543,11 @@ fn f_80041e48_b(c: &mut Cpu, mut pc: u32) {
 /// pdaModelViewerControl (0x80042658, 4304 bytes)
 #[inline(never)]
 pub fn f_80042658(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80042658) { return; }
-        if c.prof { crate::prof::enter(c, 0x80042658); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80042658); f_80042658_at(c, 0x80042658); crate::prof::exit(c, 0x80042658); return; }
     }
     f_80042658_b(c, 0x80042658);
-    if p { crate::prof::exit(c, 0x80042658); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80042658_at(c: &mut Cpu, pc: u32) { f_80042658_b(c, pc) }
@@ -27330,13 +26485,11 @@ fn f_80042658_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80043728 (0x80043728, 660 bytes)
 #[inline(never)]
 pub fn f_80043728(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80043728) { return; }
-        if c.prof { crate::prof::enter(c, 0x80043728); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80043728); f_80043728_at(c, 0x80043728); crate::prof::exit(c, 0x80043728); return; }
     }
     f_80043728_b(c, 0x80043728);
-    if p { crate::prof::exit(c, 0x80043728); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80043728_at(c: &mut Cpu, pc: u32) { f_80043728_b(c, pc) }
@@ -27610,13 +26763,11 @@ fn f_80043728_b(c: &mut Cpu, mut pc: u32) {
 /// pdaReadStickAngle (0x800439bc, 796 bytes)
 #[inline(never)]
 pub fn f_800439bc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800439bc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800439bc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800439bc); f_800439bc_at(c, 0x800439bc); crate::prof::exit(c, 0x800439bc); return; }
     }
     f_800439bc_b(c, 0x800439bc);
-    if p { crate::prof::exit(c, 0x800439bc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800439bc_at(c: &mut Cpu, pc: u32) { f_800439bc_b(c, pc) }
@@ -28029,13 +27180,11 @@ fn f_800439bc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoDrawItem (0x80043cd8, 232 bytes)
 #[inline(never)]
 pub fn f_80043cd8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80043cd8) { return; }
-        if c.prof { crate::prof::enter(c, 0x80043cd8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80043cd8); f_80043cd8_at(c, 0x80043cd8); crate::prof::exit(c, 0x80043cd8); return; }
     }
     f_80043cd8_b(c, 0x80043cd8);
-    if p { crate::prof::exit(c, 0x80043cd8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80043cd8_at(c: &mut Cpu, pc: u32) { f_80043cd8_b(c, pc) }
@@ -28130,13 +27279,11 @@ fn f_80043cd8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoDrawAnim (0x80043dc0, 264 bytes)
 #[inline(never)]
 pub fn f_80043dc0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80043dc0) { return; }
-        if c.prof { crate::prof::enter(c, 0x80043dc0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80043dc0); f_80043dc0_at(c, 0x80043dc0); crate::prof::exit(c, 0x80043dc0); return; }
     }
     f_80043dc0_b(c, 0x80043dc0);
-    if p { crate::prof::exit(c, 0x80043dc0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80043dc0_at(c: &mut Cpu, pc: u32) { f_80043dc0_b(c, pc) }
@@ -28248,13 +27395,11 @@ fn f_80043dc0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoDrawAnim2 (0x80043ec8, 224 bytes)
 #[inline(never)]
 pub fn f_80043ec8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80043ec8) { return; }
-        if c.prof { crate::prof::enter(c, 0x80043ec8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80043ec8); f_80043ec8_at(c, 0x80043ec8); crate::prof::exit(c, 0x80043ec8); return; }
     }
     f_80043ec8_b(c, 0x80043ec8);
-    if p { crate::prof::exit(c, 0x80043ec8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80043ec8_at(c: &mut Cpu, pc: u32) { f_80043ec8_b(c, pc) }
@@ -28350,13 +27495,11 @@ fn f_80043ec8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaModelViewDrawText (0x80043fa8, 976 bytes)
 #[inline(never)]
 pub fn f_80043fa8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80043fa8) { return; }
-        if c.prof { crate::prof::enter(c, 0x80043fa8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80043fa8); f_80043fa8_at(c, 0x80043fa8); crate::prof::exit(c, 0x80043fa8); return; }
     }
     f_80043fa8_b(c, 0x80043fa8);
-    if p { crate::prof::exit(c, 0x80043fa8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80043fa8_at(c: &mut Cpu, pc: u32) { f_80043fa8_b(c, pc) }
@@ -28790,13 +27933,11 @@ fn f_80043fa8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMemoDrawSpeciesColumn (0x80044378, 696 bytes)
 #[inline(never)]
 pub fn f_80044378(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80044378) { return; }
-        if c.prof { crate::prof::enter(c, 0x80044378); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80044378); f_80044378_at(c, 0x80044378); crate::prof::exit(c, 0x80044378); return; }
     }
     f_80044378_b(c, 0x80044378);
-    if p { crate::prof::exit(c, 0x80044378); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80044378_at(c: &mut Cpu, pc: u32) { f_80044378_b(c, pc) }
@@ -29160,13 +28301,11 @@ fn f_80044378_b(c: &mut Cpu, mut pc: u32) {
 /// pdaStrategyMemoRun (0x80044630, 6968 bytes)
 #[inline(never)]
 pub fn f_80044630(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80044630) { return; }
-        if c.prof { crate::prof::enter(c, 0x80044630); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80044630); f_80044630_at(c, 0x80044630); crate::prof::exit(c, 0x80044630); return; }
     }
     f_80044630_b(c, 0x80044630);
-    if p { crate::prof::exit(c, 0x80044630); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80044630_at(c: &mut Cpu, pc: u32) { f_80044630_b(c, pc) }
@@ -32436,13 +31575,11 @@ fn f_80044630_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80046168 (0x80046168, 4452 bytes)
 #[inline(never)]
 pub fn f_80046168(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80046168) { return; }
-        if c.prof { crate::prof::enter(c, 0x80046168); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80046168); f_80046168_at(c, 0x80046168); crate::prof::exit(c, 0x80046168); return; }
     }
     f_80046168_b(c, 0x80046168);
-    if p { crate::prof::exit(c, 0x80046168); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80046168_at(c: &mut Cpu, pc: u32) { f_80046168_b(c, pc) }
@@ -34204,13 +33341,11 @@ fn f_80046168_b(c: &mut Cpu, mut pc: u32) {
 /// menu9FDrawItem (0x800472cc, 276 bytes)
 #[inline(never)]
 pub fn f_800472cc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800472cc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800472cc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800472cc); f_800472cc_at(c, 0x800472cc); crate::prof::exit(c, 0x800472cc); return; }
     }
     f_800472cc_b(c, 0x800472cc);
-    if p { crate::prof::exit(c, 0x800472cc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800472cc_at(c: &mut Cpu, pc: u32) { f_800472cc_b(c, pc) }
@@ -34337,13 +33472,11 @@ fn f_800472cc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaDrawSpline (0x800473e0, 1236 bytes)
 #[inline(never)]
 pub fn f_800473e0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800473e0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800473e0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800473e0); f_800473e0_at(c, 0x800473e0); crate::prof::exit(c, 0x800473e0); return; }
     }
     f_800473e0_b(c, 0x800473e0);
-    if p { crate::prof::exit(c, 0x800473e0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800473e0_at(c: &mut Cpu, pc: u32) { f_800473e0_b(c, pc) }
@@ -34824,13 +33957,11 @@ fn f_800473e0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaModelFrameCamera (0x800478b4, 1036 bytes)
 #[inline(never)]
 pub fn f_800478b4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800478b4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800478b4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800478b4); f_800478b4_at(c, 0x800478b4); crate::prof::exit(c, 0x800478b4); return; }
     }
     f_800478b4_b(c, 0x800478b4);
-    if p { crate::prof::exit(c, 0x800478b4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800478b4_at(c: &mut Cpu, pc: u32) { f_800478b4_b(c, pc) }
@@ -35291,13 +34422,11 @@ fn f_800478b4_b(c: &mut Cpu, mut pc: u32) {
 /// pdaModelFrameSingle (0x80047cc0, 2020 bytes)
 #[inline(never)]
 pub fn f_80047cc0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80047cc0) { return; }
-        if c.prof { crate::prof::enter(c, 0x80047cc0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80047cc0); f_80047cc0_at(c, 0x80047cc0); crate::prof::exit(c, 0x80047cc0); return; }
     }
     f_80047cc0_b(c, 0x80047cc0);
-    if p { crate::prof::exit(c, 0x80047cc0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80047cc0_at(c: &mut Cpu, pc: u32) { f_80047cc0_b(c, pc) }
@@ -36214,13 +35343,11 @@ fn f_80047cc0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaModelOrbitCamera (0x800484a4, 1140 bytes)
 #[inline(never)]
 pub fn f_800484a4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800484a4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800484a4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800484a4); f_800484a4_at(c, 0x800484a4); crate::prof::exit(c, 0x800484a4); return; }
     }
     f_800484a4_b(c, 0x800484a4);
-    if p { crate::prof::exit(c, 0x800484a4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800484a4_at(c: &mut Cpu, pc: u32) { f_800484a4_b(c, pc) }
@@ -36749,13 +35876,11 @@ fn f_800484a4_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80048918 (0x80048918, 2484 bytes)
 #[inline(never)]
 pub fn f_80048918(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80048918) { return; }
-        if c.prof { crate::prof::enter(c, 0x80048918); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80048918); f_80048918_at(c, 0x80048918); crate::prof::exit(c, 0x80048918); return; }
     }
     f_80048918_b(c, 0x80048918);
-    if p { crate::prof::exit(c, 0x80048918); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80048918_at(c: &mut Cpu, pc: u32) { f_80048918_b(c, pc) }
@@ -37821,13 +36946,11 @@ fn f_80048918_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800492CC (0x800492cc, 764 bytes)
 #[inline(never)]
 pub fn f_800492cc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800492cc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800492cc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800492cc); f_800492cc_at(c, 0x800492cc); crate::prof::exit(c, 0x800492cc); return; }
     }
     f_800492cc_b(c, 0x800492cc);
-    if p { crate::prof::exit(c, 0x800492cc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800492cc_at(c: &mut Cpu, pc: u32) { f_800492cc_b(c, pc) }
@@ -38193,13 +37316,11 @@ fn f_800492cc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaTopMenuDrawItem (0x800495c8, 1012 bytes)
 #[inline(never)]
 pub fn f_800495c8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800495c8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800495c8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800495c8); f_800495c8_at(c, 0x800495c8); crate::prof::exit(c, 0x800495c8); return; }
     }
     f_800495c8_b(c, 0x800495c8);
-    if p { crate::prof::exit(c, 0x800495c8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800495c8_at(c: &mut Cpu, pc: u32) { f_800495c8_b(c, pc) }
@@ -38663,13 +37784,11 @@ fn f_800495c8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaTrainerDataDraw (0x800499bc, 2752 bytes)
 #[inline(never)]
 pub fn f_800499bc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800499bc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800499bc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800499bc); f_800499bc_at(c, 0x800499bc); crate::prof::exit(c, 0x800499bc); return; }
     }
     f_800499bc_b(c, 0x800499bc);
-    if p { crate::prof::exit(c, 0x800499bc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800499bc_at(c: &mut Cpu, pc: u32) { f_800499bc_b(c, pc) }
@@ -39880,13 +38999,11 @@ fn f_800499bc_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8004A47C (0x8004a47c, 812 bytes)
 #[inline(never)]
 pub fn f_8004a47c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004a47c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004a47c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004a47c); f_8004a47c_at(c, 0x8004a47c); crate::prof::exit(c, 0x8004a47c); return; }
     }
     f_8004a47c_b(c, 0x8004a47c);
-    if p { crate::prof::exit(c, 0x8004a47c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004a47c_at(c: &mut Cpu, pc: u32) { f_8004a47c_b(c, pc) }
@@ -40150,13 +39267,11 @@ fn f_8004a47c_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8004A7A8 (0x8004a7a8, 2768 bytes)
 #[inline(never)]
 pub fn f_8004a7a8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004a7a8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004a7a8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004a7a8); f_8004a7a8_at(c, 0x8004a7a8); crate::prof::exit(c, 0x8004a7a8); return; }
     }
     f_8004a7a8_b(c, 0x8004a7a8);
-    if p { crate::prof::exit(c, 0x8004a7a8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004a7a8_at(c: &mut Cpu, pc: u32) { f_8004a7a8_b(c, pc) }
@@ -41299,13 +40414,11 @@ fn f_8004a7a8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaTopMenuCtrl (0x8004b278, 800 bytes)
 #[inline(never)]
 pub fn f_8004b278(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004b278) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004b278); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004b278); f_8004b278_at(c, 0x8004b278); crate::prof::exit(c, 0x8004b278); return; }
     }
     f_8004b278_b(c, 0x8004b278);
-    if p { crate::prof::exit(c, 0x8004b278); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004b278_at(c: &mut Cpu, pc: u32) { f_8004b278_b(c, pc) }
@@ -41695,13 +40808,11 @@ fn f_8004b278_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8004B598 (0x8004b598, 596 bytes)
 #[inline(never)]
 pub fn f_8004b598(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004b598) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004b598); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004b598); f_8004b598_at(c, 0x8004b598); crate::prof::exit(c, 0x8004b598); return; }
     }
     f_8004b598_b(c, 0x8004b598);
-    if p { crate::prof::exit(c, 0x8004b598); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004b598_at(c: &mut Cpu, pc: u32) { f_8004b598_b(c, pc) }
@@ -41995,13 +41106,11 @@ fn f_8004b598_b(c: &mut Cpu, mut pc: u32) {
 /// std027_unkMenuSequence27 (0x8004b7ec, 1484 bytes)
 #[inline(never)]
 pub fn f_8004b7ec(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004b7ec) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004b7ec); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004b7ec); f_8004b7ec_at(c, 0x8004b7ec); crate::prof::exit(c, 0x8004b7ec); return; }
     }
     f_8004b7ec_b(c, 0x8004b7ec);
-    if p { crate::prof::exit(c, 0x8004b7ec); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004b7ec_at(c: &mut Cpu, pc: u32) { f_8004b7ec_b(c, pc) }
@@ -42772,13 +41881,11 @@ fn f_8004b7ec_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8004BDB8 (0x8004bdb8, 52 bytes)
 #[inline(never)]
 pub fn f_8004bdb8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004bdb8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004bdb8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004bdb8); f_8004bdb8_at(c, 0x8004bdb8); crate::prof::exit(c, 0x8004bdb8); return; }
     }
     f_8004bdb8_b(c, 0x8004bdb8);
-    if p { crate::prof::exit(c, 0x8004bdb8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004bdb8_at(c: &mut Cpu, pc: u32) { f_8004bdb8_b(c, pc) }
@@ -42825,13 +41932,11 @@ fn f_8004bdb8_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8004BDEC (0x8004bdec, 16 bytes)
 #[inline(never)]
 pub fn f_8004bdec(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004bdec) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004bdec); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004bdec); f_8004bdec_at(c, 0x8004bdec); crate::prof::exit(c, 0x8004bdec); return; }
     }
     f_8004bdec_b(c, 0x8004bdec);
-    if p { crate::prof::exit(c, 0x8004bdec); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004bdec_at(c: &mut Cpu, pc: u32) { f_8004bdec_b(c, pc) }
@@ -42860,13 +41965,11 @@ fn f_8004bdec_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8004BDFC (0x8004bdfc, 16 bytes)
 #[inline(never)]
 pub fn f_8004bdfc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004bdfc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004bdfc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004bdfc); f_8004bdfc_at(c, 0x8004bdfc); crate::prof::exit(c, 0x8004bdfc); return; }
     }
     f_8004bdfc_b(c, 0x8004bdfc);
-    if p { crate::prof::exit(c, 0x8004bdfc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004bdfc_at(c: &mut Cpu, pc: u32) { f_8004bdfc_b(c, pc) }
@@ -42895,13 +41998,11 @@ fn f_8004bdfc_b(c: &mut Cpu, mut pc: u32) {
 /// menuPdaOpen (0x8004be0c, 52 bytes)
 #[inline(never)]
 pub fn f_8004be0c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004be0c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004be0c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004be0c); f_8004be0c_at(c, 0x8004be0c); crate::prof::exit(c, 0x8004be0c); return; }
     }
     f_8004be0c_b(c, 0x8004be0c);
-    if p { crate::prof::exit(c, 0x8004be0c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004be0c_at(c: &mut Cpu, pc: u32) { f_8004be0c_b(c, pc) }
@@ -42948,13 +42049,11 @@ fn f_8004be0c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailGetMailID (0x8004be40, 80 bytes)
 #[inline(never)]
 pub fn f_8004be40(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004be40) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004be40); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004be40); f_8004be40_at(c, 0x8004be40); crate::prof::exit(c, 0x8004be40); return; }
     }
     f_8004be40_b(c, 0x8004be40);
-    if p { crate::prof::exit(c, 0x8004be40); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004be40_at(c: &mut Cpu, pc: u32) { f_8004be40_b(c, pc) }
@@ -43014,13 +42113,11 @@ fn f_8004be40_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailCompareSubject (0x8004be90, 144 bytes)
 #[inline(never)]
 pub fn f_8004be90(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004be90) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004be90); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004be90); f_8004be90_at(c, 0x8004be90); crate::prof::exit(c, 0x8004be90); return; }
     }
     f_8004be90_b(c, 0x8004be90);
-    if p { crate::prof::exit(c, 0x8004be90); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004be90_at(c: &mut Cpu, pc: u32) { f_8004be90_b(c, pc) }
@@ -43111,13 +42208,11 @@ fn f_8004be90_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailCompareSender (0x8004bf20, 144 bytes)
 #[inline(never)]
 pub fn f_8004bf20(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004bf20) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004bf20); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004bf20); f_8004bf20_at(c, 0x8004bf20); crate::prof::exit(c, 0x8004bf20); return; }
     }
     f_8004bf20_b(c, 0x8004bf20);
-    if p { crate::prof::exit(c, 0x8004bf20); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004bf20_at(c: &mut Cpu, pc: u32) { f_8004bf20_b(c, pc) }
@@ -43208,13 +42303,11 @@ fn f_8004bf20_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailSortRefresh (0x8004bfb0, 368 bytes)
 #[inline(never)]
 pub fn f_8004bfb0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004bfb0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004bfb0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004bfb0); f_8004bfb0_at(c, 0x8004bfb0); crate::prof::exit(c, 0x8004bfb0); return; }
     }
     f_8004bfb0_b(c, 0x8004bfb0);
-    if p { crate::prof::exit(c, 0x8004bfb0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004bfb0_at(c: &mut Cpu, pc: u32) { f_8004bfb0_b(c, pc) }
@@ -43430,13 +42523,11 @@ fn f_8004bfb0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailSortInit (0x8004c120, 440 bytes)
 #[inline(never)]
 pub fn f_8004c120(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c120) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c120); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c120); f_8004c120_at(c, 0x8004c120); crate::prof::exit(c, 0x8004c120); return; }
     }
     f_8004c120_b(c, 0x8004c120);
-    if p { crate::prof::exit(c, 0x8004c120); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c120_at(c: &mut Cpu, pc: u32) { f_8004c120_b(c, pc) }
@@ -43709,13 +42800,11 @@ fn f_8004c120_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawCount (0x8004c2d8, 148 bytes)
 #[inline(never)]
 pub fn f_8004c2d8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c2d8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c2d8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c2d8); f_8004c2d8_at(c, 0x8004c2d8); crate::prof::exit(c, 0x8004c2d8); return; }
     }
     f_8004c2d8_b(c, 0x8004c2d8);
-    if p { crate::prof::exit(c, 0x8004c2d8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c2d8_at(c: &mut Cpu, pc: u32) { f_8004c2d8_b(c, pc) }
@@ -43795,13 +42884,11 @@ fn f_8004c2d8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailListDrawText (0x8004c36c, 120 bytes)
 #[inline(never)]
 pub fn f_8004c36c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c36c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c36c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c36c); f_8004c36c_at(c, 0x8004c36c); crate::prof::exit(c, 0x8004c36c); return; }
     }
     f_8004c36c_b(c, 0x8004c36c);
-    if p { crate::prof::exit(c, 0x8004c36c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c36c_at(c: &mut Cpu, pc: u32) { f_8004c36c_b(c, pc) }
@@ -43865,13 +42952,11 @@ fn f_8004c36c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawSortMode (0x8004c3e4, 192 bytes)
 #[inline(never)]
 pub fn f_8004c3e4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c3e4) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c3e4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c3e4); f_8004c3e4_at(c, 0x8004c3e4); crate::prof::exit(c, 0x8004c3e4); return; }
     }
     f_8004c3e4_b(c, 0x8004c3e4);
-    if p { crate::prof::exit(c, 0x8004c3e4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c3e4_at(c: &mut Cpu, pc: u32) { f_8004c3e4_b(c, pc) }
@@ -43968,13 +43053,11 @@ fn f_8004c3e4_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawPageArrows (0x8004c4a4, 268 bytes)
 #[inline(never)]
 pub fn f_8004c4a4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c4a4) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c4a4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c4a4); f_8004c4a4_at(c, 0x8004c4a4); crate::prof::exit(c, 0x8004c4a4); return; }
     }
     f_8004c4a4_b(c, 0x8004c4a4);
-    if p { crate::prof::exit(c, 0x8004c4a4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c4a4_at(c: &mut Cpu, pc: u32) { f_8004c4a4_b(c, pc) }
@@ -44090,13 +43173,11 @@ fn f_8004c4a4_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawCursor (0x8004c5b0, 272 bytes)
 #[inline(never)]
 pub fn f_8004c5b0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c5b0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c5b0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c5b0); f_8004c5b0_at(c, 0x8004c5b0); crate::prof::exit(c, 0x8004c5b0); return; }
     }
     f_8004c5b0_b(c, 0x8004c5b0);
-    if p { crate::prof::exit(c, 0x8004c5b0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c5b0_at(c: &mut Cpu, pc: u32) { f_8004c5b0_b(c, pc) }
@@ -44237,13 +43318,11 @@ fn f_8004c5b0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawRowSender (0x8004c6c0, 492 bytes)
 #[inline(never)]
 pub fn f_8004c6c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c6c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c6c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c6c0); f_8004c6c0_at(c, 0x8004c6c0); crate::prof::exit(c, 0x8004c6c0); return; }
     }
     f_8004c6c0_b(c, 0x8004c6c0);
-    if p { crate::prof::exit(c, 0x8004c6c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c6c0_at(c: &mut Cpu, pc: u32) { f_8004c6c0_b(c, pc) }
@@ -44475,13 +43554,11 @@ fn f_8004c6c0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawRowSubject (0x8004c8ac, 492 bytes)
 #[inline(never)]
 pub fn f_8004c8ac(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004c8ac) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004c8ac); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004c8ac); f_8004c8ac_at(c, 0x8004c8ac); crate::prof::exit(c, 0x8004c8ac); return; }
     }
     f_8004c8ac_b(c, 0x8004c8ac);
-    if p { crate::prof::exit(c, 0x8004c8ac); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004c8ac_at(c: &mut Cpu, pc: u32) { f_8004c8ac_b(c, pc) }
@@ -44713,13 +43790,11 @@ fn f_8004c8ac_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawRowAttach (0x8004ca98, 416 bytes)
 #[inline(never)]
 pub fn f_8004ca98(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004ca98) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004ca98); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004ca98); f_8004ca98_at(c, 0x8004ca98); crate::prof::exit(c, 0x8004ca98); return; }
     }
     f_8004ca98_b(c, 0x8004ca98);
-    if p { crate::prof::exit(c, 0x8004ca98); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004ca98_at(c: &mut Cpu, pc: u32) { f_8004ca98_b(c, pc) }
@@ -44917,13 +43992,11 @@ fn f_8004ca98_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawRowFlagA (0x8004cc38, 416 bytes)
 #[inline(never)]
 pub fn f_8004cc38(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004cc38) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004cc38); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004cc38); f_8004cc38_at(c, 0x8004cc38); crate::prof::exit(c, 0x8004cc38); return; }
     }
     f_8004cc38_b(c, 0x8004cc38);
-    if p { crate::prof::exit(c, 0x8004cc38); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004cc38_at(c: &mut Cpu, pc: u32) { f_8004cc38_b(c, pc) }
@@ -45121,13 +44194,11 @@ fn f_8004cc38_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawRowFlagB (0x8004cdd8, 416 bytes)
 #[inline(never)]
 pub fn f_8004cdd8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004cdd8) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004cdd8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004cdd8); f_8004cdd8_at(c, 0x8004cdd8); crate::prof::exit(c, 0x8004cdd8); return; }
     }
     f_8004cdd8_b(c, 0x8004cdd8);
-    if p { crate::prof::exit(c, 0x8004cdd8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004cdd8_at(c: &mut Cpu, pc: u32) { f_8004cdd8_b(c, pc) }
@@ -45325,13 +44396,11 @@ fn f_8004cdd8_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailListKey (0x8004cf78, 756 bytes)
 #[inline(never)]
 pub fn f_8004cf78(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004cf78) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004cf78); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004cf78); f_8004cf78_at(c, 0x8004cf78); crate::prof::exit(c, 0x8004cf78); return; }
     }
     f_8004cf78_b(c, 0x8004cf78);
-    if p { crate::prof::exit(c, 0x8004cf78); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004cf78_at(c: &mut Cpu, pc: u32) { f_8004cf78_b(c, pc) }
@@ -45704,13 +44773,11 @@ fn f_8004cf78_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailListCtrl (0x8004d26c, 224 bytes)
 #[inline(never)]
 pub fn f_8004d26c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d26c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d26c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d26c); f_8004d26c_at(c, 0x8004d26c); crate::prof::exit(c, 0x8004d26c); return; }
     }
     f_8004d26c_b(c, 0x8004d26c);
-    if p { crate::prof::exit(c, 0x8004d26c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d26c_at(c: &mut Cpu, pc: u32) { f_8004d26c_b(c, pc) }
@@ -45833,13 +44900,11 @@ fn f_8004d26c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailListRun (0x8004d34c, 580 bytes)
 #[inline(never)]
 pub fn f_8004d34c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d34c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d34c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d34c); f_8004d34c_at(c, 0x8004d34c); crate::prof::exit(c, 0x8004d34c); return; }
     }
     f_8004d34c_b(c, 0x8004d34c);
-    if p { crate::prof::exit(c, 0x8004d34c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d34c_at(c: &mut Cpu, pc: u32) { f_8004d34c_b(c, pc) }
@@ -46141,13 +45206,11 @@ fn f_8004d34c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawPicture (0x8004d590, 92 bytes)
 #[inline(never)]
 pub fn f_8004d590(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d590) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d590); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d590); f_8004d590_at(c, 0x8004d590); crate::prof::exit(c, 0x8004d590); return; }
     }
     f_8004d590_b(c, 0x8004d590);
-    if p { crate::prof::exit(c, 0x8004d590); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d590_at(c: &mut Cpu, pc: u32) { f_8004d590_b(c, pc) }
@@ -46210,13 +45273,11 @@ fn f_8004d590_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawAttachIconA (0x8004d5ec, 96 bytes)
 #[inline(never)]
 pub fn f_8004d5ec(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d5ec) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d5ec); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d5ec); f_8004d5ec_at(c, 0x8004d5ec); crate::prof::exit(c, 0x8004d5ec); return; }
     }
     f_8004d5ec_b(c, 0x8004d5ec);
-    if p { crate::prof::exit(c, 0x8004d5ec); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d5ec_at(c: &mut Cpu, pc: u32) { f_8004d5ec_b(c, pc) }
@@ -46283,13 +45344,11 @@ fn f_8004d5ec_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawAttachIconB (0x8004d64c, 96 bytes)
 #[inline(never)]
 pub fn f_8004d64c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d64c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d64c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d64c); f_8004d64c_at(c, 0x8004d64c); crate::prof::exit(c, 0x8004d64c); return; }
     }
     f_8004d64c_b(c, 0x8004d64c);
-    if p { crate::prof::exit(c, 0x8004d64c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d64c_at(c: &mut Cpu, pc: u32) { f_8004d64c_b(c, pc) }
@@ -46356,13 +45415,11 @@ fn f_8004d64c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawContents (0x8004d6ac, 68 bytes)
 #[inline(never)]
 pub fn f_8004d6ac(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d6ac) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d6ac); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d6ac); f_8004d6ac_at(c, 0x8004d6ac); crate::prof::exit(c, 0x8004d6ac); return; }
     }
     f_8004d6ac_b(c, 0x8004d6ac);
-    if p { crate::prof::exit(c, 0x8004d6ac); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d6ac_at(c: &mut Cpu, pc: u32) { f_8004d6ac_b(c, pc) }
@@ -46410,13 +45467,11 @@ fn f_8004d6ac_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawSender (0x8004d6f0, 112 bytes)
 #[inline(never)]
 pub fn f_8004d6f0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d6f0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d6f0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d6f0); f_8004d6f0_at(c, 0x8004d6f0); crate::prof::exit(c, 0x8004d6f0); return; }
     }
     f_8004d6f0_b(c, 0x8004d6f0);
-    if p { crate::prof::exit(c, 0x8004d6f0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d6f0_at(c: &mut Cpu, pc: u32) { f_8004d6f0_b(c, pc) }
@@ -46490,13 +45545,11 @@ fn f_8004d6f0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawSubject (0x8004d760, 112 bytes)
 #[inline(never)]
 pub fn f_8004d760(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d760) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d760); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d760); f_8004d760_at(c, 0x8004d760); crate::prof::exit(c, 0x8004d760); return; }
     }
     f_8004d760_b(c, 0x8004d760);
-    if p { crate::prof::exit(c, 0x8004d760); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d760_at(c: &mut Cpu, pc: u32) { f_8004d760_b(c, pc) }
@@ -46570,13 +45623,11 @@ fn f_8004d760_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailViewKey (0x8004d7d0, 236 bytes)
 #[inline(never)]
 pub fn f_8004d7d0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d7d0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d7d0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d7d0); f_8004d7d0_at(c, 0x8004d7d0); crate::prof::exit(c, 0x8004d7d0); return; }
     }
     f_8004d7d0_b(c, 0x8004d7d0);
-    if p { crate::prof::exit(c, 0x8004d7d0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d7d0_at(c: &mut Cpu, pc: u32) { f_8004d7d0_b(c, pc) }
@@ -46711,13 +45762,11 @@ fn f_8004d7d0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailViewAttachKey (0x8004d8bc, 108 bytes)
 #[inline(never)]
 pub fn f_8004d8bc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d8bc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d8bc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d8bc); f_8004d8bc_at(c, 0x8004d8bc); crate::prof::exit(c, 0x8004d8bc); return; }
     }
     f_8004d8bc_b(c, 0x8004d8bc);
-    if p { crate::prof::exit(c, 0x8004d8bc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d8bc_at(c: &mut Cpu, pc: u32) { f_8004d8bc_b(c, pc) }
@@ -46787,13 +45836,11 @@ fn f_8004d8bc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailViewCtrl (0x8004d928, 152 bytes)
 #[inline(never)]
 pub fn f_8004d928(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d928) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d928); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d928); f_8004d928_at(c, 0x8004d928); crate::prof::exit(c, 0x8004d928); return; }
     }
     f_8004d928_b(c, 0x8004d928);
-    if p { crate::prof::exit(c, 0x8004d928); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d928_at(c: &mut Cpu, pc: u32) { f_8004d928_b(c, pc) }
@@ -46886,13 +45933,11 @@ fn f_8004d928_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailViewRun (0x8004d9c0, 164 bytes)
 #[inline(never)]
 pub fn f_8004d9c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004d9c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004d9c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004d9c0); f_8004d9c0_at(c, 0x8004d9c0); crate::prof::exit(c, 0x8004d9c0); return; }
     }
     f_8004d9c0_b(c, 0x8004d9c0);
-    if p { crate::prof::exit(c, 0x8004d9c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004d9c0_at(c: &mut Cpu, pc: u32) { f_8004d9c0_b(c, pc) }
@@ -46991,13 +46036,11 @@ fn f_8004d9c0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailDrawHighlight (0x8004da64, 208 bytes)
 #[inline(never)]
 pub fn f_8004da64(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004da64) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004da64); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004da64); f_8004da64_at(c, 0x8004da64); crate::prof::exit(c, 0x8004da64); return; }
     }
     f_8004da64_b(c, 0x8004da64);
-    if p { crate::prof::exit(c, 0x8004da64); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004da64_at(c: &mut Cpu, pc: u32) { f_8004da64_b(c, pc) }
@@ -47119,13 +46162,11 @@ fn f_8004da64_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailSortMenuDraw (0x8004db34, 76 bytes)
 #[inline(never)]
 pub fn f_8004db34(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004db34) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004db34); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004db34); f_8004db34_at(c, 0x8004db34); crate::prof::exit(c, 0x8004db34); return; }
     }
     f_8004db34_b(c, 0x8004db34);
-    if p { crate::prof::exit(c, 0x8004db34); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004db34_at(c: &mut Cpu, pc: u32) { f_8004db34_b(c, pc) }
@@ -47181,13 +46222,11 @@ fn f_8004db34_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailSortCtrl (0x8004db80, 152 bytes)
 #[inline(never)]
 pub fn f_8004db80(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004db80) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004db80); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004db80); f_8004db80_at(c, 0x8004db80); crate::prof::exit(c, 0x8004db80); return; }
     }
     f_8004db80_b(c, 0x8004db80);
-    if p { crate::prof::exit(c, 0x8004db80); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004db80_at(c: &mut Cpu, pc: u32) { f_8004db80_b(c, pc) }
@@ -47280,13 +46319,11 @@ fn f_8004db80_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailSortMenuRun (0x8004dc18, 168 bytes)
 #[inline(never)]
 pub fn f_8004dc18(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004dc18) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004dc18); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004dc18); f_8004dc18_at(c, 0x8004dc18); crate::prof::exit(c, 0x8004dc18); return; }
     }
     f_8004dc18_b(c, 0x8004dc18);
-    if p { crate::prof::exit(c, 0x8004dc18); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004dc18_at(c: &mut Cpu, pc: u32) { f_8004dc18_b(c, pc) }
@@ -47386,13 +46423,11 @@ fn f_8004dc18_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailPickerDrawMail (0x8004dcc0, 256 bytes)
 #[inline(never)]
 pub fn f_8004dcc0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004dcc0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004dcc0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004dcc0); f_8004dcc0_at(c, 0x8004dcc0); crate::prof::exit(c, 0x8004dcc0); return; }
     }
     f_8004dcc0_b(c, 0x8004dcc0);
-    if p { crate::prof::exit(c, 0x8004dcc0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004dcc0_at(c: &mut Cpu, pc: u32) { f_8004dcc0_b(c, pc) }
@@ -47511,13 +46546,11 @@ fn f_8004dcc0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailPickerKey (0x8004ddc0, 372 bytes)
 #[inline(never)]
 pub fn f_8004ddc0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004ddc0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004ddc0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004ddc0); f_8004ddc0_at(c, 0x8004ddc0); crate::prof::exit(c, 0x8004ddc0); return; }
     }
     f_8004ddc0_b(c, 0x8004ddc0);
-    if p { crate::prof::exit(c, 0x8004ddc0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004ddc0_at(c: &mut Cpu, pc: u32) { f_8004ddc0_b(c, pc) }
@@ -47716,13 +46749,11 @@ fn f_8004ddc0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailPickerCtrl (0x8004df34, 152 bytes)
 #[inline(never)]
 pub fn f_8004df34(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004df34) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004df34); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004df34); f_8004df34_at(c, 0x8004df34); crate::prof::exit(c, 0x8004df34); return; }
     }
     f_8004df34_b(c, 0x8004df34);
-    if p { crate::prof::exit(c, 0x8004df34); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004df34_at(c: &mut Cpu, pc: u32) { f_8004df34_b(c, pc) }
@@ -47815,13 +46846,11 @@ fn f_8004df34_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailPickerRun (0x8004dfcc, 376 bytes)
 #[inline(never)]
 pub fn f_8004dfcc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004dfcc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004dfcc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004dfcc); f_8004dfcc_at(c, 0x8004dfcc); crate::prof::exit(c, 0x8004dfcc); return; }
     }
     f_8004dfcc_b(c, 0x8004dfcc);
-    if p { crate::prof::exit(c, 0x8004dfcc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004dfcc_at(c: &mut Cpu, pc: u32) { f_8004dfcc_b(c, pc) }
@@ -48027,13 +47056,11 @@ fn f_8004dfcc_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachDrawItem (0x8004e144, 60 bytes)
 #[inline(never)]
 pub fn f_8004e144(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e144) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e144); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e144); f_8004e144_at(c, 0x8004e144); crate::prof::exit(c, 0x8004e144); return; }
     }
     f_8004e144_b(c, 0x8004e144);
-    if p { crate::prof::exit(c, 0x8004e144); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e144_at(c: &mut Cpu, pc: u32) { f_8004e144_b(c, pc) }
@@ -48079,13 +47106,11 @@ fn f_8004e144_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachDrawTitle (0x8004e180, 352 bytes)
 #[inline(never)]
 pub fn f_8004e180(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e180) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e180); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e180); f_8004e180_at(c, 0x8004e180); crate::prof::exit(c, 0x8004e180); return; }
     }
     f_8004e180_b(c, 0x8004e180);
-    if p { crate::prof::exit(c, 0x8004e180); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e180_at(c: &mut Cpu, pc: u32) { f_8004e180_b(c, pc) }
@@ -48285,13 +47310,11 @@ fn f_8004e180_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachDrawFrame (0x8004e2e0, 352 bytes)
 #[inline(never)]
 pub fn f_8004e2e0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e2e0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e2e0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e2e0); f_8004e2e0_at(c, 0x8004e2e0); crate::prof::exit(c, 0x8004e2e0); return; }
     }
     f_8004e2e0_b(c, 0x8004e2e0);
-    if p { crate::prof::exit(c, 0x8004e2e0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e2e0_at(c: &mut Cpu, pc: u32) { f_8004e2e0_b(c, pc) }
@@ -48473,13 +47496,11 @@ fn f_8004e2e0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachDrawLoading (0x8004e440, 208 bytes)
 #[inline(never)]
 pub fn f_8004e440(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e440) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e440); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e440); f_8004e440_at(c, 0x8004e440); crate::prof::exit(c, 0x8004e440); return; }
     }
     f_8004e440_b(c, 0x8004e440);
-    if p { crate::prof::exit(c, 0x8004e440); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e440_at(c: &mut Cpu, pc: u32) { f_8004e440_b(c, pc) }
@@ -48616,13 +47637,11 @@ fn f_8004e440_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachDrawPicture (0x8004e510, 640 bytes)
 #[inline(never)]
 pub fn f_8004e510(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e510) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e510); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e510); f_8004e510_at(c, 0x8004e510); crate::prof::exit(c, 0x8004e510); return; }
     }
     f_8004e510_b(c, 0x8004e510);
-    if p { crate::prof::exit(c, 0x8004e510); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e510_at(c: &mut Cpu, pc: u32) { f_8004e510_b(c, pc) }
@@ -49014,13 +48033,11 @@ fn f_8004e510_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachKey (0x8004e790, 268 bytes)
 #[inline(never)]
 pub fn f_8004e790(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e790) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e790); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e790); f_8004e790_at(c, 0x8004e790); crate::prof::exit(c, 0x8004e790); return; }
     }
     f_8004e790_b(c, 0x8004e790);
-    if p { crate::prof::exit(c, 0x8004e790); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e790_at(c: &mut Cpu, pc: u32) { f_8004e790_b(c, pc) }
@@ -49190,13 +48207,11 @@ fn f_8004e790_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachButton (0x8004e89c, 68 bytes)
 #[inline(never)]
 pub fn f_8004e89c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e89c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e89c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e89c); f_8004e89c_at(c, 0x8004e89c); crate::prof::exit(c, 0x8004e89c); return; }
     }
     f_8004e89c_b(c, 0x8004e89c);
-    if p { crate::prof::exit(c, 0x8004e89c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e89c_at(c: &mut Cpu, pc: u32) { f_8004e89c_b(c, pc) }
@@ -49247,13 +48262,11 @@ fn f_8004e89c_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachCtrl (0x8004e8e0, 224 bytes)
 #[inline(never)]
 pub fn f_8004e8e0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e8e0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e8e0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e8e0); f_8004e8e0_at(c, 0x8004e8e0); crate::prof::exit(c, 0x8004e8e0); return; }
     }
     f_8004e8e0_b(c, 0x8004e8e0);
-    if p { crate::prof::exit(c, 0x8004e8e0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e8e0_at(c: &mut Cpu, pc: u32) { f_8004e8e0_b(c, pc) }
@@ -49376,13 +48389,11 @@ fn f_8004e8e0_b(c: &mut Cpu, mut pc: u32) {
 /// pdaMailAttachRun (0x8004e9c0, 284 bytes)
 #[inline(never)]
 pub fn f_8004e9c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004e9c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004e9c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004e9c0); f_8004e9c0_at(c, 0x8004e9c0); crate::prof::exit(c, 0x8004e9c0); return; }
     }
     f_8004e9c0_b(c, 0x8004e9c0);
-    if p { crate::prof::exit(c, 0x8004e9c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004e9c0_at(c: &mut Cpu, pc: u32) { f_8004e9c0_b(c, pc) }
@@ -49523,13 +48534,11 @@ fn f_8004e9c0_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerAiInitA (0x8004eadc, 376 bytes)
 #[inline(never)]
 pub fn f_8004eadc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004eadc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004eadc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004eadc); f_8004eadc_at(c, 0x8004eadc); crate::prof::exit(c, 0x8004eadc); return; }
     }
     f_8004eadc_b(c, 0x8004eadc);
-    if p { crate::prof::exit(c, 0x8004eadc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004eadc_at(c: &mut Cpu, pc: u32) { f_8004eadc_b(c, pc) }
@@ -49708,13 +48717,11 @@ fn f_8004eadc_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerAiInitB (0x8004ec54, 376 bytes)
 #[inline(never)]
 pub fn f_8004ec54(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004ec54) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004ec54); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004ec54); f_8004ec54_at(c, 0x8004ec54); crate::prof::exit(c, 0x8004ec54); return; }
     }
     f_8004ec54_b(c, 0x8004ec54);
-    if p { crate::prof::exit(c, 0x8004ec54); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004ec54_at(c: &mut Cpu, pc: u32) { f_8004ec54_b(c, pc) }
@@ -49893,13 +48900,11 @@ fn f_8004ec54_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerAiEditA (0x8004edcc, 2708 bytes)
 #[inline(never)]
 pub fn f_8004edcc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004edcc) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004edcc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004edcc); f_8004edcc_at(c, 0x8004edcc); crate::prof::exit(c, 0x8004edcc); return; }
     }
     f_8004edcc_b(c, 0x8004edcc);
-    if p { crate::prof::exit(c, 0x8004edcc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004edcc_at(c: &mut Cpu, pc: u32) { f_8004edcc_b(c, pc) }
@@ -51249,13 +50254,11 @@ fn f_8004edcc_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerAiWazaDefEdit (0x8004f860, 1500 bytes)
 #[inline(never)]
 pub fn f_8004f860(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004f860) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004f860); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004f860); f_8004f860_at(c, 0x8004f860); crate::prof::exit(c, 0x8004f860); return; }
     }
     f_8004f860_b(c, 0x8004f860);
-    if p { crate::prof::exit(c, 0x8004f860); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004f860_at(c: &mut Cpu, pc: u32) { f_8004f860_b(c, pc) }
@@ -52006,13 +51009,11 @@ fn f_8004f860_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerAiIrekaeEdit (0x8004fe3c, 2568 bytes)
 #[inline(never)]
 pub fn f_8004fe3c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8004fe3c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8004fe3c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8004fe3c); f_8004fe3c_at(c, 0x8004fe3c); crate::prof::exit(c, 0x8004fe3c); return; }
     }
     f_8004fe3c_b(c, 0x8004fe3c);
-    if p { crate::prof::exit(c, 0x8004fe3c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8004fe3c_at(c: &mut Cpu, pc: u32) { f_8004fe3c_b(c, pc) }
@@ -53291,13 +52292,11 @@ fn f_8004fe3c_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerAiEditB (0x80050844, 3788 bytes)
 #[inline(never)]
 pub fn f_80050844(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80050844) { return; }
-        if c.prof { crate::prof::enter(c, 0x80050844); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80050844); f_80050844_at(c, 0x80050844); crate::prof::exit(c, 0x80050844); return; }
     }
     f_80050844_b(c, 0x80050844);
-    if p { crate::prof::exit(c, 0x80050844); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80050844_at(c: &mut Cpu, pc: u32) { f_80050844_b(c, pc) }
@@ -55190,13 +54189,11 @@ fn f_80050844_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerPokemonPartEdit (0x80051710, 1832 bytes)
 #[inline(never)]
 pub fn f_80051710(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80051710) { return; }
-        if c.prof { crate::prof::enter(c, 0x80051710); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80051710); f_80051710_at(c, 0x80051710); crate::prof::exit(c, 0x80051710); return; }
     }
     f_80051710_b(c, 0x80051710);
-    if p { crate::prof::exit(c, 0x80051710); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80051710_at(c: &mut Cpu, pc: u32) { f_80051710_b(c, pc) }
@@ -56111,13 +55108,11 @@ fn f_80051710_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuTrainerAiDataEdit (0x80051e38, 4652 bytes)
 #[inline(never)]
 pub fn f_80051e38(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80051e38) { return; }
-        if c.prof { crate::prof::enter(c, 0x80051e38); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80051e38); f_80051e38_at(c, 0x80051e38); crate::prof::exit(c, 0x80051e38); return; }
     }
     f_80051e38_b(c, 0x80051e38);
-    if p { crate::prof::exit(c, 0x80051e38); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80051e38_at(c: &mut Cpu, pc: u32) { f_80051e38_b(c, pc) }
@@ -58358,13 +57353,11 @@ fn f_80051e38_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuFightTrainerDataStatusInputDigit (0x80053064, 172 bytes)
 #[inline(never)]
 pub fn f_80053064(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053064) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053064); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053064); f_80053064_at(c, 0x80053064); crate::prof::exit(c, 0x80053064); return; }
     }
     f_80053064_b(c, 0x80053064);
-    if p { crate::prof::exit(c, 0x80053064); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053064_at(c: &mut Cpu, pc: u32) { f_80053064_b(c, pc) }
@@ -58459,13 +57452,11 @@ fn f_80053064_b(c: &mut Cpu, mut pc: u32) {
 /// dbgMenuFightWazaEditSub (0x80053110, 828 bytes)
 #[inline(never)]
 pub fn f_80053110(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053110) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053110); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053110); f_80053110_at(c, 0x80053110); crate::prof::exit(c, 0x80053110); return; }
     }
     f_80053110_b(c, 0x80053110);
-    if p { crate::prof::exit(c, 0x80053110); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053110_at(c: &mut Cpu, pc: u32) { f_80053110_b(c, pc) }
@@ -58847,13 +57838,11 @@ fn f_80053110_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDetailDrawSprite (0x8005344c, 208 bytes)
 #[inline(never)]
 pub fn f_8005344c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8005344c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8005344c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8005344c); f_8005344c_at(c, 0x8005344c); crate::prof::exit(c, 0x8005344c); return; }
     }
     f_8005344c_b(c, 0x8005344c);
-    if p { crate::prof::exit(c, 0x8005344c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8005344c_at(c: &mut Cpu, pc: u32) { f_8005344c_b(c, pc) }
@@ -58957,13 +57946,11 @@ fn f_8005344c_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDetailDrawSprite2 (0x8005351c, 524 bytes)
 #[inline(never)]
 pub fn f_8005351c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8005351c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8005351c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8005351c); f_8005351c_at(c, 0x8005351c); crate::prof::exit(c, 0x8005351c); return; }
     }
     f_8005351c_b(c, 0x8005351c);
-    if p { crate::prof::exit(c, 0x8005351c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8005351c_at(c: &mut Cpu, pc: u32) { f_8005351c_b(c, pc) }
@@ -59140,13 +58127,11 @@ fn f_8005351c_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDetailDrawSprite3 (0x80053728, 80 bytes)
 #[inline(never)]
 pub fn f_80053728(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053728) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053728); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053728); f_80053728_at(c, 0x80053728); crate::prof::exit(c, 0x80053728); return; }
     }
     f_80053728_b(c, 0x80053728);
-    if p { crate::prof::exit(c, 0x80053728); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053728_at(c: &mut Cpu, pc: u32) { f_80053728_b(c, pc) }
@@ -59206,13 +58191,11 @@ fn f_80053728_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawModel (0x80053778, 744 bytes)
 #[inline(never)]
 pub fn f_80053778(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053778) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053778); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053778); f_80053778_at(c, 0x80053778); crate::prof::exit(c, 0x80053778); return; }
     }
     f_80053778_b(c, 0x80053778);
-    if p { crate::prof::exit(c, 0x80053778); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053778_at(c: &mut Cpu, pc: u32) { f_80053778_b(c, pc) }
@@ -59567,13 +58550,11 @@ fn f_80053778_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawMark1 (0x80053a60, 104 bytes)
 #[inline(never)]
 pub fn f_80053a60(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053a60) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053a60); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053a60); f_80053a60_at(c, 0x80053a60); crate::prof::exit(c, 0x80053a60); return; }
     }
     f_80053a60_b(c, 0x80053a60);
-    if p { crate::prof::exit(c, 0x80053a60); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053a60_at(c: &mut Cpu, pc: u32) { f_80053a60_b(c, pc) }
@@ -59642,13 +58623,11 @@ fn f_80053a60_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawMark2 (0x80053ac8, 104 bytes)
 #[inline(never)]
 pub fn f_80053ac8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053ac8) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053ac8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053ac8); f_80053ac8_at(c, 0x80053ac8); crate::prof::exit(c, 0x80053ac8); return; }
     }
     f_80053ac8_b(c, 0x80053ac8);
-    if p { crate::prof::exit(c, 0x80053ac8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053ac8_at(c: &mut Cpu, pc: u32) { f_80053ac8_b(c, pc) }
@@ -59717,13 +58696,11 @@ fn f_80053ac8_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawMark3 (0x80053b30, 104 bytes)
 #[inline(never)]
 pub fn f_80053b30(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053b30) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053b30); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053b30); f_80053b30_at(c, 0x80053b30); crate::prof::exit(c, 0x80053b30); return; }
     }
     f_80053b30_b(c, 0x80053b30);
-    if p { crate::prof::exit(c, 0x80053b30); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053b30_at(c: &mut Cpu, pc: u32) { f_80053b30_b(c, pc) }
@@ -59792,13 +58769,11 @@ fn f_80053b30_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawMark4 (0x80053b98, 104 bytes)
 #[inline(never)]
 pub fn f_80053b98(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053b98) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053b98); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053b98); f_80053b98_at(c, 0x80053b98); crate::prof::exit(c, 0x80053b98); return; }
     }
     f_80053b98_b(c, 0x80053b98);
-    if p { crate::prof::exit(c, 0x80053b98); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053b98_at(c: &mut Cpu, pc: u32) { f_80053b98_b(c, pc) }
@@ -59867,13 +58842,11 @@ fn f_80053b98_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawItemName (0x80053c00, 132 bytes)
 #[inline(never)]
 pub fn f_80053c00(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053c00) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053c00); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053c00); f_80053c00_at(c, 0x80053c00); crate::prof::exit(c, 0x80053c00); return; }
     }
     f_80053c00_b(c, 0x80053c00);
-    if p { crate::prof::exit(c, 0x80053c00); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053c00_at(c: &mut Cpu, pc: u32) { f_80053c00_b(c, pc) }
@@ -59961,13 +58934,11 @@ fn f_80053c00_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawItemIcon (0x80053c84, 100 bytes)
 #[inline(never)]
 pub fn f_80053c84(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053c84) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053c84); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053c84); f_80053c84_at(c, 0x80053c84); crate::prof::exit(c, 0x80053c84); return; }
     }
     f_80053c84_b(c, 0x80053c84);
-    if p { crate::prof::exit(c, 0x80053c84); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053c84_at(c: &mut Cpu, pc: u32) { f_80053c84_b(c, pc) }
@@ -60035,13 +59006,11 @@ fn f_80053c84_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawGender (0x80053ce8, 124 bytes)
 #[inline(never)]
 pub fn f_80053ce8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053ce8) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053ce8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053ce8); f_80053ce8_at(c, 0x80053ce8); crate::prof::exit(c, 0x80053ce8); return; }
     }
     f_80053ce8_b(c, 0x80053ce8);
-    if p { crate::prof::exit(c, 0x80053ce8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053ce8_at(c: &mut Cpu, pc: u32) { f_80053ce8_b(c, pc) }
@@ -60127,13 +59096,11 @@ fn f_80053ce8_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawSpecies (0x80053d64, 112 bytes)
 #[inline(never)]
 pub fn f_80053d64(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053d64) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053d64); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053d64); f_80053d64_at(c, 0x80053d64); crate::prof::exit(c, 0x80053d64); return; }
     }
     f_80053d64_b(c, 0x80053d64);
-    if p { crate::prof::exit(c, 0x80053d64); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053d64_at(c: &mut Cpu, pc: u32) { f_80053d64_b(c, pc) }
@@ -60210,13 +59177,11 @@ fn f_80053d64_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawLevel (0x80053dd4, 168 bytes)
 #[inline(never)]
 pub fn f_80053dd4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053dd4) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053dd4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053dd4); f_80053dd4_at(c, 0x80053dd4); crate::prof::exit(c, 0x80053dd4); return; }
     }
     f_80053dd4_b(c, 0x80053dd4);
-    if p { crate::prof::exit(c, 0x80053dd4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053dd4_at(c: &mut Cpu, pc: u32) { f_80053dd4_b(c, pc) }
@@ -60313,13 +59278,11 @@ fn f_80053dd4_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawNickname (0x80053e7c, 92 bytes)
 #[inline(never)]
 pub fn f_80053e7c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053e7c) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053e7c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053e7c); f_80053e7c_at(c, 0x80053e7c); crate::prof::exit(c, 0x80053e7c); return; }
     }
     f_80053e7c_b(c, 0x80053e7c);
-    if p { crate::prof::exit(c, 0x80053e7c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053e7c_at(c: &mut Cpu, pc: u32) { f_80053e7c_b(c, pc) }
@@ -60388,13 +59351,11 @@ fn f_80053e7c_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDrawPartyIcons (0x80053ed8, 1352 bytes)
 #[inline(never)]
 pub fn f_80053ed8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80053ed8) { return; }
-        if c.prof { crate::prof::enter(c, 0x80053ed8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80053ed8); f_80053ed8_at(c, 0x80053ed8); crate::prof::exit(c, 0x80053ed8); return; }
     }
     f_80053ed8_b(c, 0x80053ed8);
-    if p { crate::prof::exit(c, 0x80053ed8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80053ed8_at(c: &mut Cpu, pc: u32) { f_80053ed8_b(c, pc) }
@@ -60946,13 +59907,11 @@ fn f_80053ed8_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxMenuDrawExit (0x80054420, 136 bytes)
 #[inline(never)]
 pub fn f_80054420(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80054420) { return; }
-        if c.prof { crate::prof::enter(c, 0x80054420); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80054420); f_80054420_at(c, 0x80054420); crate::prof::exit(c, 0x80054420); return; }
     }
     f_80054420_b(c, 0x80054420);
-    if p { crate::prof::exit(c, 0x80054420); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80054420_at(c: &mut Cpu, pc: u32) { f_80054420_b(c, pc) }
@@ -61029,13 +59988,11 @@ fn f_80054420_b(c: &mut Cpu, mut pc: u32) {
 /// pcBoxDetailCtrl (0x800544a8, 420 bytes)
 #[inline(never)]
 pub fn f_800544a8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800544a8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800544a8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800544a8); f_800544a8_at(c, 0x800544a8); crate::prof::exit(c, 0x800544a8); return; }
     }
     f_800544a8_b(c, 0x800544a8);
-    if p { crate::prof::exit(c, 0x800544a8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800544a8_at(c: &mut Cpu, pc: u32) { f_800544a8_b(c, pc) }
@@ -61243,13 +60200,11 @@ fn f_800544a8_b(c: &mut Cpu, mut pc: u32) {
 /// fn_8005464C (0x8005464c, 36 bytes)
 #[inline(never)]
 pub fn f_8005464c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8005464c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8005464c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8005464c); f_8005464c_at(c, 0x8005464c); crate::prof::exit(c, 0x8005464c); return; }
     }
     f_8005464c_b(c, 0x8005464c);
-    if p { crate::prof::exit(c, 0x8005464c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8005464c_at(c: &mut Cpu, pc: u32) { f_8005464c_b(c, pc) }
@@ -61283,13 +60238,11 @@ fn f_8005464c_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80054670 (0x80054670, 16 bytes)
 #[inline(never)]
 pub fn f_80054670(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80054670) { return; }
-        if c.prof { crate::prof::enter(c, 0x80054670); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80054670); f_80054670_at(c, 0x80054670); crate::prof::exit(c, 0x80054670); return; }
     }
     f_80054670_b(c, 0x80054670);
-    if p { crate::prof::exit(c, 0x80054670); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80054670_at(c: &mut Cpu, pc: u32) { f_80054670_b(c, pc) }
@@ -61318,13 +60271,11 @@ fn f_80054670_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80054680 (0x80054680, 64 bytes)
 #[inline(never)]
 pub fn f_80054680(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80054680) { return; }
-        if c.prof { crate::prof::enter(c, 0x80054680); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80054680); f_80054680_at(c, 0x80054680); crate::prof::exit(c, 0x80054680); return; }
     }
     f_80054680_b(c, 0x80054680);
-    if p { crate::prof::exit(c, 0x80054680); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80054680_at(c: &mut Cpu, pc: u32) { f_80054680_b(c, pc) }

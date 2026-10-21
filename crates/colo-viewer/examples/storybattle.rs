@@ -4,6 +4,8 @@
 //! Timing: GPUCMDS=1 builds the viewer's draw list (game / draw-list ms every 60 frames; FTIME=ms also every frame over
 //! that; GXTIME=1 splits out GX decode and vertex work), PROFILE=a-b samples the guest call stack over those frames
 //! (PROFILE_OUT, one line of hex addresses per sample: last function entered, then return addresses).
+//! FPS=30|60 (CLOCK=pct, default 200) sets the viewer's frame rate and taps A by game time (fields) instead of frames, and
+//! prints the game time at the pop, to compare the frame rates.
 //! HOSTPROF=a-b samples the host program counter (SIGPROF every 100 us of CPU time) over those frames into
 //! HOSTPROF_OUT (default /tmp/sb_hostprof.txt): one hex offset into the executable per line (`addr2line -fe`).
 /// MusyX `salCallback` (0x80163EE0) calls: one per 5 ms AI DMA block, 6.7 per 30 Hz battle frame.
@@ -110,8 +112,21 @@ fn main() {
     let mut was = m.floor_depth();
     let mut builder = colo_gx::cmd::Builder::new();
     let mut motors = [0u8; 4];
+    // SNDLOG=1: every soundStartRaw (0x80166AB8: sound effects and songs) with its game time, to line up two runs
+    if std::env::var("SNDLOG").is_ok() {
+        fn snd(c: &mut colo_recomp::ppc::Cpu) {
+            println!("  snd {:#x} at {:.3} s", c.r[3], colo_recomp::run::time_base(c) as f64 / 40_500_000.0);
+            c.hook_fn.remove(&0x80166AB8); colo_recomp::lifted::dispatch(c, 0x80166AB8); c.hook_fn.insert(0x80166AB8, snd);
+        }
+        m.c.hook_fn.insert(0x80166AB8, snd);
+    }
+    let fps: Option<u32> = std::env::var("FPS").ok().and_then(|v| v.parse().ok());
+    if let Some(f) = fps { m.set_frame_rate(f, std::env::var("CLOCK").ok().and_then(|v| v.parse().ok()).unwrap_or(200)); }
+    let tb0 = colo_recomp::run::time_base(&m.c);
     for fr in 0..max {
-        let b = if fr % 20 >= 10 && fr % 20 < 13 { 0x100 } else { 0 };
+        // by frames, or with FPS by 30 Hz periods of game time
+        let k = if fps.is_some() { ((colo_recomp::run::time_base(&m.c) - tb0) / 1_351_350) as u32 } else { fr };
+        let b = if k % 20 >= 10 && k % 20 < 13 { 0x100 } else { 0 };
         m.set_pad(colo_recomp::run::Pad { buttons: b, ..Default::default() });
         let s0 = m.c.steps;
         let t0 = std::time::Instant::now();
@@ -211,7 +226,8 @@ fn main() {
         }
         let d = m.floor_depth();
         if was == 1 && d == 0 {
-            println!("frame {fr}: battle floor popped, battleGetResult {} ({} blocks, {} cycles)", m.battle_result(), m.c.steps, m.c.cycles);
+            println!("frame {fr}: battle floor popped, battleGetResult {} ({} blocks, {} cycles, {:.2} s game time)", m.battle_result(), m.c.steps, m.c.cycles,
+                (colo_recomp::run::time_base(&m.c) - tb0) as f64 / 40_500_000.0);
             return;
         }
         was = d;
@@ -220,55 +236,4 @@ fn main() {
     println!("no pop after {max} frames (floor depth {}; {} blocks, {} cycles)", m.floor_depth(), m.c.steps, m.c.cycles);
 }
 
-/// HOSTPROF: the host program counter at each SIGPROF (process CPU time), kept while `ON`.
-#[cfg(target_os = "linux")]
-mod hostprof {
-    use std::sync::atomic::{AtomicBool, AtomicUsize, AtomicU64, Ordering::Relaxed};
-    pub static ON: AtomicBool = AtomicBool::new(false);
-    const N: usize = 1 << 20;
-    static PCS: [AtomicU64; N] = [const { AtomicU64::new(0) }; N];
-    static LEN: AtomicUsize = AtomicUsize::new(0);
-
-    extern "C" fn on_prof(_: libc::c_int, _: *mut libc::siginfo_t, ctx: *mut libc::c_void) {
-        if !ON.load(Relaxed) { return; }
-        let pc = unsafe { (*(ctx as *const libc::ucontext_t)).uc_mcontext.gregs[libc::REG_RIP as usize] } as u64;
-        let i = LEN.fetch_add(1, Relaxed);
-        if i < N { PCS[i].store(pc, Relaxed); }
-    }
-
-    pub fn start() {
-        unsafe {
-            let mut sa: libc::sigaction = std::mem::zeroed();
-            sa.sa_sigaction = on_prof as usize;
-            sa.sa_flags = libc::SA_SIGINFO | libc::SA_RESTART;
-            libc::sigaction(libc::SIGPROF, &sa, std::ptr::null_mut());
-            let t = libc::timeval { tv_sec: 0, tv_usec: 100 };
-            let it = libc::itimerval { it_interval: t, it_value: t };
-            libc::setitimer(libc::ITIMER_PROF, &it, std::ptr::null_mut());
-        }
-    }
-
-    /// Write the samples as offsets into the executable (its mapping from /proc/self/maps).
-    pub fn dump() {
-        let exe = std::fs::read_link("/proc/self/exe").unwrap_or_default();
-        let maps = std::fs::read_to_string("/proc/self/maps").unwrap_or_default();
-        let segs: Vec<(u64, u64, u64)> = maps.lines().filter(|l| l.ends_with(exe.to_str().unwrap_or("?"))).filter_map(|l| {
-            let f: Vec<&str> = l.split_whitespace().collect();
-            let (a, b) = f[0].split_once('-')?;
-            Some((u64::from_str_radix(a, 16).ok()?, u64::from_str_radix(b, 16).ok()?, u64::from_str_radix(f[2], 16).ok()?))
-        }).collect();
-        let n = LEN.load(Relaxed).min(N);
-        let mut out = String::new();
-        for p in PCS[..n].iter().map(|p| p.load(Relaxed)) {
-            match segs.iter().find(|s| p >= s.0 && p < s.1) { Some(s) => out += &format!("{:x}\n", p - s.0 + s.2), None => out += "?\n" }
-        }
-        std::fs::write(std::env::var("HOSTPROF_OUT").unwrap_or("/tmp/sb_hostprof.txt".into()), out).ok();
-        eprintln!("hostprof: {n} samples");
-    }
-}
-#[cfg(not(target_os = "linux"))]
-mod hostprof {
-    pub static ON: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
-    pub fn start() {}
-    pub fn dump() {}
-}
+#[path = "support/hostprof.rs"] mod hostprof;

@@ -11,7 +11,7 @@
 //! rectangles answer the mouse.
 
 use crate::perf::{text_w, Panel};
-use crate::settings::{Action, Present, Settings};
+use crate::settings::{Action, FrameRate, Present, Settings};
 use winit::keyboard::KeyCode;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -25,7 +25,7 @@ const PAGES: [Page; 3] = [Page::Video, Page::Audio, Page::Controls];
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Row {
-    Scale, Fullscreen, Present, Latency, Lead, Aspect, Smooth, XfbYuv, CopyFilter, Overlay, ResetVideo,
+    Scale, Fullscreen, FrameRate, Present, Latency, Lead, Aspect, Smooth, XfbYuv, CopyFilter, Overlay, ResetVideo,
     Volume,
     Bind(Action), Deadzone, ResetKeys,
 }
@@ -67,7 +67,7 @@ pub struct Menu {
 
 fn rows(p: Page) -> Vec<Row> {
     match p {
-        Page::Video => vec![Row::Scale, Row::Fullscreen, Row::Present, Row::Latency, Row::Lead, Row::Aspect, Row::Smooth,
+        Page::Video => vec![Row::Scale, Row::Fullscreen, Row::FrameRate, Row::Present, Row::Latency, Row::Lead, Row::Aspect, Row::Smooth,
                             Row::XfbYuv, Row::CopyFilter, Row::Overlay, Row::ResetVideo],
         Page::Audio => vec![Row::Volume],
         Page::Controls => LEFT.iter().chain(&RIGHT).map(|a| Row::Bind(*a)).chain([Row::Deadzone, Row::ResetKeys]).collect(),
@@ -98,6 +98,7 @@ fn label(r: Row) -> &'static str {
     match r {
         Row::Scale => "Internal resolution",
         Row::Fullscreen => "Display",
+        Row::FrameRate => "Frame rate",
         Row::Present => "Presentation",
         Row::Latency => "Queued frames (GPU)",
         Row::Lead => "Frame lead",
@@ -118,7 +119,8 @@ fn value(r: Row, s: &Settings) -> String {
     match r {
         Row::Scale => format!("{}x  ({} x {})", s.scale, 640 * s.scale, 528 * s.scale),
         Row::Fullscreen => if s.fullscreen { "Fullscreen" } else { "Window" }.into(),
-        Row::Present => s.present.name().into(),
+        Row::FrameRate => s.frame_rate.name().into(),
+        Row::Present => if s.frame_rate == FrameRate::Uncapped { "Immediate (uncapped)".into() } else { s.present.name().into() },
         Row::Latency => s.frame_latency.to_string(),
         Row::Lead => format!("{} ms", s.frame_lead_ms),
         Row::Aspect => if s.keep_aspect { "4:3" } else { "Stretch to window" }.into(),
@@ -137,6 +139,7 @@ fn widest(r: Row) -> &'static str {
     match r {
         Row::Scale => "8x  (5120 x 4224)",
         Row::Present => "Immediate (tearing)",
+        Row::FrameRate => "30 fps (native)",
         Row::Aspect => "Stretch to window",
         Row::Fullscreen => "Fullscreen",
         _ => "Smooth",
@@ -146,6 +149,7 @@ fn widest(r: Row) -> &'static str {
 fn hint(r: Row) -> &'static str {
     match r {
         Row::Scale => "The game's render size; 1x is the console's own.",
+        Row::FrameRate => "30 is the game's own; 60 updates twice as often; uncapped skips v-sync.",
         Row::Present => "V-sync waits for the screen; Mailbox and Immediate don't (Immediate can tear).",
         Row::Latency => "Frames the GPU may queue: more is smoother, fewer has less lag.",
         Row::Lead => "Slack for slow frames; adds input lag.",
@@ -170,6 +174,7 @@ fn change(row: Row, d: i32, s: &mut Settings) -> bool {
     let step = |v: u32, lo: u32, hi: u32, by: u32| (v as i32 + d * by as i32).clamp(lo as i32, hi as i32) as u32;
     match row {
         Row::Scale => s.scale = step(s.scale, 1, 8, 1),
+        Row::FrameRate => s.frame_rate = s.frame_rate.next(d),
         Row::Fullscreen => s.fullscreen = !s.fullscreen,
         Row::Present => {
             let v = [Present::Fifo, Present::Mailbox, Present::Immediate];
@@ -306,8 +311,8 @@ impl Menu {
             Row::ResetKeys => { let d = Settings::default(); s.keys = d.keys; s.deadzone = d.deadzone; Outcome::Changed }
             Row::ResetVideo => {
                 let d = Settings::default();
-                (s.scale, s.fullscreen, s.present, s.frame_latency, s.frame_lead_ms, s.keep_aspect, s.smooth, s.xfb_yuv, s.copy_filter, s.perf_overlay) =
-                    (d.scale, d.fullscreen, d.present, d.frame_latency, d.frame_lead_ms, d.keep_aspect, d.smooth, d.xfb_yuv, d.copy_filter, d.perf_overlay);
+                (s.scale, s.fullscreen, s.frame_rate, s.present, s.frame_latency, s.frame_lead_ms, s.keep_aspect, s.smooth, s.xfb_yuv, s.copy_filter, s.perf_overlay) =
+                    (d.scale, d.fullscreen, d.frame_rate, d.present, d.frame_latency, d.frame_lead_ms, d.keep_aspect, d.smooth, d.xfb_yuv, d.copy_filter, d.perf_overlay);
                 Outcome::Changed
             }
             _ => if change(row, 1, s) { Outcome::Changed } else { Outcome::Nothing },

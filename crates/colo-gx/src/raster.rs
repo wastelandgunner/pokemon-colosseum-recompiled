@@ -730,7 +730,8 @@ pub(crate) fn transform(d: &Draw, s: &State) -> Vec<V> {
     let nchan = (xr[0x09] & 3) as usize;
     let ntex = (xr[0x3F] & 0xF) as usize;
     let dual = xr[0x12] & 1 != 0;
-    d.verts.iter().map(|v| {
+    d.verts(&s.cp).map(|v| {
+        let v = &v;
         let m = v.pnmtx as usize * 4;
         let row = |r: usize, p: [f32; 4]| f(xm[m + 4 * r]) * p[0] + f(xm[m + 4 * r + 1]) * p[1] + f(xm[m + 4 * r + 2]) * p[2] + f(xm[m + 4 * r + 3]) * p[3];
         let p = [v.pos[0], v.pos[1], v.pos[2], 1.0];

@@ -410,7 +410,21 @@ pub(super) fn power_on(c: &mut Cpu) {
 
 pub fn time_base(c: &Cpu) -> u64 {
     use std::sync::atomic::Ordering::Relaxed;
-    TB_BASE.load(Relaxed) + c.cycles.saturating_sub(TB_MARK.load(Relaxed)) * CYCLES_PER_INSTR_X100 / 1200
+    TB_BASE.load(Relaxed) + c.cycles.saturating_sub(TB_MARK.load(Relaxed)) * CYCLES_PER_INSTR_X100 / (12 * CPU_CLOCK.load(Relaxed))
+}
+
+/// The emulated CPU's clock, percent of the GameCube's 486 MHz (as Dolphin's clock override): above 100 a frame's
+/// work takes less game time, so heavy frames fit in one field (the viewer's 60 fps setting).
+pub(super) static CPU_CLOCK: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(100);
+
+/// Set the emulated CPU clock (percent, 100 = the GameCube's); time so far is kept.
+pub(super) fn set_cpu_clock(c: &Cpu, pct: u64) {
+    use std::sync::atomic::Ordering::Relaxed;
+    let pct = pct.clamp(25, 1000);
+    if CPU_CLOCK.load(Relaxed) == pct { return; }
+    TB_BASE.store(time_base(c), Relaxed);
+    TB_MARK.store(c.cycles, Relaxed);
+    CPU_CLOCK.store(pct, Relaxed);
 }
 
 /// A video field begins: time is at least the field's start.

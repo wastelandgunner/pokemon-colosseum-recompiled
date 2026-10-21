@@ -111,10 +111,7 @@ impl GFrame {
     pub fn finish(&mut self) {
         let Some((fr, draws)) = self.pending.take() else { return };
         let t0 = std::time::Instant::now();
-        for i in draws {
-            let d = &fr.draws[i as usize];
-            emit(d, &fr.states[d.state], &mut self.verts);
-        }
+        emit_all(&fr, &draws, &mut self.verts);
         tadd(0, t0);
     }
 }
@@ -152,9 +149,19 @@ pub static TIMES: [std::sync::atomic::AtomicU64; 2] = [const { std::sync::atomic
 fn tadd(k: usize, t: std::time::Instant) { TIMES[k].fetch_add(t.elapsed().as_nanos() as u64, std::sync::atomic::Ordering::Relaxed); }
 
 fn fnv(h: &mut u64, b: &[u8]) { for &x in b { *h ^= x as u64; *h = h.wrapping_mul(0x100_0000_01B3); } }
-/// FNV-1a over 8-byte words (texture data: hashed every frame for the decode cache; ~8x faster than per byte).
+/// FNV-1a over 8-byte words (texture data: hashed every frame for the decode cache; ~8x faster than per byte), in
+/// four interleaved lanes folded together at the end (one multiply chain was the limit: ~3x faster again).
 fn fnv_words(h: &mut u64, b: &[u8]) {
-    let mut it = b.chunks_exact(8);
+    let mut l = [*h, *h ^ 1, *h ^ 2, *h ^ 3];
+    let mut it = b.chunks_exact(32);
+    for c in &mut it {
+        for k in 0..4 {
+            let w = u64::from_le_bytes(c[8 * k..8 * k + 8].try_into().unwrap());
+            l[k] = (l[k] ^ w).wrapping_mul(0x100_0000_01B3);
+        }
+    }
+    for x in l { *h ^= x; *h = h.wrapping_mul(0x100_0000_01B3); }
+    let mut it = it.remainder().chunks_exact(8);
     for w in &mut it { *h ^= u64::from_le_bytes([w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7]]); *h = h.wrapping_mul(0x100_0000_01B3); }
     fnv(h, it.remainder());
 }
@@ -166,7 +173,7 @@ impl Builder {
         let mut g = GFrame::default();
         let draws = self.build_ops(fr, mem, &mut g);
         let t0 = std::time::Instant::now();
-        for i in draws { let d = &fr.draws[i as usize]; emit(d, &fr.states[d.state], &mut g.verts); }
+        emit_all(fr, &draws, &mut g.verts);
         tadd(0, t0);
         g
     }
@@ -206,7 +213,7 @@ impl Builder {
             }
             if let Some(d) = fr.draws.get(i) {
                 if DUMP.load(std::sync::atomic::Ordering::Relaxed) { dump(d, &fr.states[d.state], g.ops.len()); }
-                let count = vert_count(d.prim, d.verts.len()) as u32;
+                let count = vert_count(d.prim, d.n) as u32;
                 if count == 0 { continue; }
                 let st = self.state(&fr.states[d.state], mem, g);
                 g.states.push(st);
@@ -310,14 +317,16 @@ impl Builder {
             self.tmem[off..(off + 2 * n).min(self.tmem.len())].to_vec()
         } else { Vec::new() };
         let maxlod = ((mode1 >> 8) & 0xFF) as usize / 16;
-        let mut raw = Vec::new();
+        // each level's bytes in place when memory has them as one slice (hashed every frame: no copy), else copied
+        let mut raw: Vec<std::borrow::Cow<[u8]>> = Vec::new();
         let mut sizes = Vec::new();
         let (mut lw, mut lh, mut la) = (w as usize, h as usize, addr);
         for _ in 0..=maxlod.min(10) {
             let Some(n) = colo_formats::gx::data_size(fmt, lw, lh) else { self.frame_tex.insert(key, None); return None };
-            let mut b = vec![0u8; n];
-            mem.read(la, &mut b);
-            raw.push(b);
+            raw.push(match mem.slice(la, n) {
+                Some(b) => std::borrow::Cow::Borrowed(b),
+                None => { let mut b = vec![0u8; n]; mem.read(la, &mut b); std::borrow::Cow::Owned(b) }
+            });
             sizes.push((lw, lh));
             la += n as u32;
             if lw == 1 && lh == 1 { break; }
@@ -372,6 +381,37 @@ impl Builder {
 }
 
 /// A draw's vertices through the XF, as triangles (`vert_count` of them), appended to `verts`.
+/// `emit` of `draws` in order into `verts`, split over threads by vertex count when there is enough work (wide
+/// shots: ~100K vertices, 12+ ms on one core). Draws are independent, so the result is the same as in one pass.
+fn emit_all(fr: &Frame, draws: &[u32], verts: &mut Vec<GVertex>) {
+    let count = |i: &u32| { let d = &fr.draws[*i as usize]; vert_count(d.prim, d.n) };
+    let total: usize = draws.iter().map(count).sum();
+    let threads = std::thread::available_parallelism().map_or(1, |n| n.get()).min(8);
+    if threads < 2 || total < 20_000 {
+        verts.reserve(total);
+        for i in draws { let d = &fr.draws[*i as usize]; emit(d, &fr.states[d.state], verts); }
+        return;
+    }
+    // contiguous runs of draws with about the same number of output vertices each
+    let mut parts: Vec<&[u32]> = Vec::with_capacity(threads);
+    let (mut start, mut acc) = (0, 0);
+    for (k, i) in draws.iter().enumerate() {
+        acc += count(i);
+        if acc * threads >= total * (parts.len() + 1) && parts.len() + 1 < threads { parts.push(&draws[start..=k]); start = k + 1; }
+    }
+    parts.push(&draws[start..]);
+    let outs: Vec<Vec<GVertex>> = std::thread::scope(|sc| {
+        let hs: Vec<_> = parts.iter().map(|p| sc.spawn(move || {
+            let mut v = Vec::with_capacity(p.iter().map(count).sum());
+            for i in p.iter() { let d = &fr.draws[*i as usize]; emit(d, &fr.states[d.state], &mut v); }
+            v
+        })).collect();
+        hs.into_iter().map(|h| h.join().expect("vertex work thread")).collect()
+    });
+    verts.reserve(total);
+    for v in outs { verts.extend(v); }
+}
+
 fn emit(d: &crate::Draw, s: &State, verts: &mut Vec<GVertex>) {
     let vs = transform(d, s);
     let n = vs.len();
@@ -433,8 +473,9 @@ fn dump(d: &crate::Draw, s: &State, op: usize) {
         Some(format!("s{st}:m{map}c{}f{}({}x{})", order >> 3 & 7, img0 >> 20 & 0xF, (img0 & 0x3FF) + 1, (img0 >> 10 & 0x3FF) + 1))
     }).collect();
     let ind: Vec<String> = (0..nst).filter(|&st| s.bp[0x10 + st] != 0).map(|st| format!("{st}:{:x}", s.bp[0x10 + st])).collect();
-    let v = d.verts.first();
+    let v = (d.n > 0).then(|| d.vert(0, &s.cp));
+    let v = v.as_ref();
     eprintln!("gx op{op} {:?} n{} dual{} nchan{} cc[{:x} {:x} {:x} {:x}] tg[{}] st{nst} ntex{} tex[{}] ind[{}] fog{:x} nrm{} nbt{}",
-        d.prim, d.verts.len(), xr[0x12] & 1, xr[0x09] & 3, xr[0x0E], xr[0x0F], xr[0x10], xr[0x11], tg.join(" "), gm & 0xF, tex.join(" "), ind.join(" "),
+        d.prim, d.n, xr[0x12] & 1, xr[0x09] & 3, xr[0x0E], xr[0x0F], xr[0x10], xr[0x11], tg.join(" "), gm & 0xF, tex.join(" "), ind.join(" "),
         s.bp[0xF1] >> 21 & 7, v.is_some_and(|v| v.nrm.is_some()), v.is_some_and(|v| v.nbt.is_some()));
 }

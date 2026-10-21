@@ -2048,7 +2048,7 @@ dependencies = [
 
 [[package]]
 name = "colo-battle"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "colo-formats",
  "colo-recomp",
@@ -2056,25 +2056,25 @@ dependencies = [
 
 [[package]]
 name = "colo-export"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "colo-formats",
 ]
 
 [[package]]
 name = "colo-formats"
-version = "0.5.0"
+version = "0.6.0"
 
 [[package]]
 name = "colo-gx"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "colo-formats",
 ]
 
 [[package]]
 name = "colo-gxgpu"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "bytemuck",
  "colo-gx",
@@ -2083,11 +2083,11 @@ dependencies = [
 
 [[package]]
 name = "colo-lifted"
-version = "0.5.0"
+version = "0.6.0"
 
 [[package]]
 name = "colo-recomp"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "colo-gx",
  "colo-lifted",
@@ -2095,14 +2095,14 @@ dependencies = [
 
 [[package]]
 name = "colo-script"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "colo-formats",
 ]
 
 [[package]]
 name = "colo-tool"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "colo-audio",
  "colo-battle",
@@ -2114,7 +2114,7 @@ dependencies = [
 
 [[package]]
 name = "colo-viewer"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ab_glyph",
  "ab_glyph_rasterizer",

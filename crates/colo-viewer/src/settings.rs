@@ -1,6 +1,6 @@
 //! The recompiled game's settings (`colo-viewer <gcm> recomp`): video, audio and the keyboard / gamepad mapping,
 //! kept in `saves/recomp.ini` under the working folder (key = value lines) and changed in game from the Escape menu
-//! (recomp.rs). Env COLO_SCALE, COLO_PRESENT, COLO_FRAME_LATENCY, COLO_FRAME_LEAD_MS, COLO_XFB_YUV and COLO_COPY_FILTER
+//! (recomp.rs). Env COLO_SCALE, COLO_FPS, COLO_CPU_CLOCK, COLO_PRESENT, COLO_FRAME_LATENCY, COLO_FRAME_LEAD_MS, COLO_XFB_YUV and COLO_COPY_FILTER
 //! still override the file for one run.
 
 use winit::keyboard::KeyCode;
@@ -118,11 +118,33 @@ impl Present {
     fn key(self) -> &'static str { match self { Present::Fifo => "fifo", Present::Mailbox => "mailbox", Present::Immediate => "immediate" } }
 }
 
+/// How often the game updates and shows a frame.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum FrameRate {
+    /// The game's own pacing: 30 updates a second in battle and the field, 60 on the title.
+    Native,
+    /// One field a frame everywhere (60 updates a second), on a faster emulated CPU so heavy frames fit.
+    Sixty,
+    /// As Sixty, each frame shown as soon as it is drawn (no frame lead, no v-sync).
+    Uncapped,
+}
+
+impl FrameRate {
+    pub fn name(self) -> &'static str { match self { FrameRate::Native => "30 fps (native)", FrameRate::Sixty => "60 fps", FrameRate::Uncapped => "Uncapped" } }
+    pub fn next(self, d: i32) -> FrameRate { let v = [FrameRate::Native, FrameRate::Sixty, FrameRate::Uncapped]; v[((self as i32 + d).rem_euclid(3)) as usize] }
+    /// The game's update rate cap: 30 (its own) or 60.
+    pub fn fps(self) -> u32 { if self == FrameRate::Native { 30 } else { 60 } }
+    fn key(self) -> &'static str { match self { FrameRate::Native => "30", FrameRate::Sixty => "60", FrameRate::Uncapped => "uncapped" } }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Settings {
     /// EFB resolution: this many times the GameCube's 640x528.
     pub scale: u32,
     pub fullscreen: bool,
+    pub frame_rate: FrameRate,
+    /// Emulated CPU clock at 60 fps / uncapped, percent of the GameCube's.
+    pub cpu_clock: u32,
     pub present: Present,
     /// Swapchain frames the GPU may queue (1-3).
     pub frame_latency: u32,
@@ -145,7 +167,7 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Settings {
-        Settings { scale: 3, fullscreen: false, present: Present::Fifo, frame_latency: 2, frame_lead_ms: 34, keep_aspect: true, smooth: true,
+        Settings { scale: 3, fullscreen: false, frame_rate: FrameRate::Native, cpu_clock: 200, present: Present::Fifo, frame_latency: 2, frame_lead_ms: 34, keep_aspect: true, smooth: true,
             xfb_yuv: Tri::Auto, copy_filter: Tri::Auto, perf_overlay: false, volume: 100, deadzone: 15,
             keys: ACTIONS.iter().map(|a| a.default_keys()).collect() }
     }
@@ -164,7 +186,7 @@ impl Settings {
             }
         }
         for (env, key) in [("COLO_SCALE", "scale"), ("COLO_PRESENT", "present"), ("COLO_FRAME_LATENCY", "frame_latency"),
-                           ("COLO_FRAME_LEAD_MS", "frame_lead_ms"), ("COLO_XFB_YUV", "xfb_yuv"), ("COLO_COPY_FILTER", "copy_filter")] {
+                           ("COLO_FRAME_LEAD_MS", "frame_lead_ms"), ("COLO_FPS", "frame_rate"), ("COLO_CPU_CLOCK", "cpu_clock"), ("COLO_XFB_YUV", "xfb_yuv"), ("COLO_COPY_FILTER", "copy_filter")] {
             if let Ok(v) = std::env::var(env) { s.set(key, &v); }
         }
         s
@@ -176,6 +198,8 @@ impl Settings {
         match k {
             "scale" => if let Some(n) = num(1, 8) { self.scale = n },
             "fullscreen" => if let Some(b) = flag() { self.fullscreen = b },
+            "frame_rate" => self.frame_rate = match v { "60" => FrameRate::Sixty, "uncapped" | "0" => FrameRate::Uncapped, _ => FrameRate::Native },
+            "cpu_clock" => if let Some(n) = num(100, 400) { self.cpu_clock = n },
             "present" => self.present = match v { "mailbox" => Present::Mailbox, "immediate" => Present::Immediate, _ => Present::Fifo },
             "frame_latency" => if let Some(n) = num(1, 3) { self.frame_latency = n },
             "frame_lead_ms" => if let Some(n) = num(0, 100) { self.frame_lead_ms = n },
@@ -197,6 +221,7 @@ impl Settings {
         let onoff = |b: bool| if b { "on" } else { "off" };
         let tri = |t: Tri| match t { Tri::Auto => "auto", Tri::On => "on", Tri::Off => "off" };
         let mut t = String::from("# colo-viewer recomp settings (the Escape menu writes this file)\n");
+        t += &format!("frame_rate = {}\ncpu_clock = {}\n", self.frame_rate.key(), self.cpu_clock);
         t += &format!("scale = {}\nfullscreen = {}\npresent = {}\nframe_latency = {}\nframe_lead_ms = {}\nkeep_aspect = {}\nsmooth = {}\n",
             self.scale, onoff(self.fullscreen), self.present.key(), self.frame_latency, self.frame_lead_ms, onoff(self.keep_aspect), onoff(self.smooth));
         t += &format!("xfb_yuv = {}\ncopy_filter = {}\nperf_overlay = {}\nvolume = {}\ndeadzone = {}\n",
@@ -209,6 +234,11 @@ impl Settings {
         if let Some(d) = p.parent() { std::fs::create_dir_all(d).ok(); }
         if let Err(e) = std::fs::write(&p, t) { eprintln!("recomp: saving {}: {e}", p.display()); }
     }
+
+    /// The presentation in use: uncapped shows frames at once, without v-sync.
+    pub fn present_mode(&self) -> Present { if self.frame_rate == FrameRate::Uncapped { Present::Immediate } else { self.present } }
+    /// The frame lead in use (uncapped: none).
+    pub fn lead_ms(&self) -> u32 { if self.frame_rate == FrameRate::Uncapped { 0 } else { self.frame_lead_ms } }
 
     /// The actions a key is bound to.
     pub fn actions_of(&self, k: KeyCode) -> impl Iterator<Item = Action> + '_ {
@@ -230,5 +260,10 @@ mod tests {
         assert_eq!(s.keys_of(Action::A), [Some(KeyCode::KeyM), Some(KeyCode::Numpad0)]);
         s.set("scale", "9");
         assert_eq!(s.scale, 8);
+        assert_eq!(s.frame_rate, FrameRate::Native);
+        s.set("frame_rate", "60");
+        assert_eq!((s.frame_rate, s.frame_rate.fps(), s.present_mode()), (FrameRate::Sixty, 60, Present::Fifo));
+        s.set("frame_rate", "uncapped");
+        assert_eq!((s.present_mode(), s.lead_ms()), (Present::Immediate, 0));
     }
 }

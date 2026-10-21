@@ -27,10 +27,12 @@ pub(super) fn gx_feed(m: &mut crate::mem::Mem) {
     let _t = Defer(t0);
     struct Defer(std::time::Instant);
     impl Drop for Defer { fn drop(&mut self) { FEED_NS.fetch_add(self.0.elapsed().as_nanos() as u64, std::sync::atomic::Ordering::Relaxed); } }
-    let data = std::mem::take(m.pipe.as_mut().unwrap());
     let mut g = GPU_IN.lock().unwrap();
-    let Some(g) = g.as_mut() else { return };
-    g.buf.extend_from_slice(&data);
+    let pipe = m.pipe.as_mut().unwrap();
+    let Some(g) = g.as_mut() else { pipe.clear(); return };
+    // the pipe's bytes move to the stream buffer (swapped when nothing is left over: no copy, and both keep
+    // their capacity)
+    if g.buf.is_empty() { std::mem::swap(&mut g.buf, pipe); } else { g.buf.extend_from_slice(pipe); pipe.clear(); }
     let before = g.frame.pe_done;
     let v = GpuView(m);
     let n = g.gx.run(&g.buf, &v, &mut g.frame, 0);
@@ -49,6 +51,10 @@ impl colo_gx::GpuMem for GpuView<'_> {
         let a = (a & 0x01FF_FFFF) | 0x8000_0000;
         let n = out.len() as u32;
         if a.checked_add(n).is_some_and(|e| e <= 0x8180_0000) { out.copy_from_slice(self.0.read(a, n)); } else { out.fill(0); }
+    }
+    fn slice(&self, a: u32, n: usize) -> Option<&[u8]> {
+        let a = (a & 0x01FF_FFFF) | 0x8000_0000;
+        a.checked_add(n as u32).is_some_and(|e| e <= 0x8180_0000).then(|| self.0.read(a, n as u32))
     }
 }
 impl colo_gx::raster::GpuMemMut for GpuView<'_> {

@@ -162,6 +162,7 @@ impl Mem {
         self.write_slow(a, d)
     }
     #[inline(never)]
+    #[cold]
     fn write_slow(&mut self, a: u32, d: &[u8]) {
         let w = WATCH.load(std::sync::atomic::Ordering::Relaxed);
         if w != 0 && a <= w && w < a + d.len() as u32 {
@@ -178,11 +179,34 @@ impl Mem {
         }
     }
 
+    /// A doubleword (lfd/stfd): one 8-byte access when it lies in a fast region, else the two words in turn
+    /// (as two u32 accesses: the slow path, tracing and hardware registers see what they always did).
+    #[inline(always)]
+    pub fn u64(&self, a: u32) -> u64 {
+        if !self.trace { if let Some(p) = self.fast_ptr(a, 8) { return u64::from_be(unsafe { (p as *const u64).read_unaligned() }); } }
+        (self.u32(a) as u64) << 32 | self.u32(a + 4) as u64
+    }
+    #[inline(always)]
+    pub fn set_u64(&mut self, a: u32, v: u64) {
+        if !self.trace && WATCH.load(std::sync::atomic::Ordering::Relaxed) == 0 {
+            if let Some(p) = self.fast_ptr(a, 8) { unsafe { *(p as *mut [u8; 8]) = v.to_be_bytes() }; return; }
+        }
+        self.set_u32(a, (v >> 32) as u32);
+        self.set_u32(a + 4, v as u32);
+    }
+
     #[inline(always)] pub fn u8(&self, a: u32) -> u8 { self.read(a, 1)[0] }
     #[inline(always)] pub fn i8(&self, a: u32) -> i8 { self.u8(a) as i8 }
-    #[inline(always)] pub fn u16(&self, a: u32) -> u16 { let b = self.read(a, 2); u16::from_be_bytes([b[0], b[1]]) }
+    #[inline(always)] pub fn u16(&self, a: u32) -> u16 {
+        if !self.trace { if let Some(p) = self.fast_ptr(a, 2) { return u16::from_be(unsafe { (p as *const u16).read_unaligned() }); } }
+        let b = self.read_slow(a, 2); u16::from_be_bytes([b[0], b[1]])
+    }
     #[inline(always)] pub fn i16(&self, a: u32) -> i16 { self.u16(a) as i16 }
-    #[inline(always)] pub fn u32(&self, a: u32) -> u32 { let b = self.read(a, 4); u32::from_be_bytes([b[0], b[1], b[2], b[3]]) }
+    /// One unaligned load in the fast regions (the byte-slice form compiled to two or three loads and shifts).
+    #[inline(always)] pub fn u32(&self, a: u32) -> u32 {
+        if !self.trace { if let Some(p) = self.fast_ptr(a, 4) { return u32::from_be(unsafe { (p as *const u32).read_unaligned() }); } }
+        let b = self.read_slow(a, 4); u32::from_be_bytes([b[0], b[1], b[2], b[3]])
+    }
     #[inline(always)] pub fn i32(&self, a: u32) -> i32 { self.u32(a) as i32 }
     #[inline(always)] pub fn f32(&self, a: u32) -> f32 { f32::from_bits(self.u32(a)) }
 

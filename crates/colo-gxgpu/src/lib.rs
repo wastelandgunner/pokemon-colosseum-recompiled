@@ -10,7 +10,21 @@
 //! the shader; logic ops read the EFB from a copy made just before each draw that needs it (wgpu has no logic ops).
 
 use colo_gx::cmd::{GCopy, GFrame, GOp, GState, TexId};
-use std::collections::HashMap;
+/// The maps here are keyed by small ints / ids looked up per draw: a multiply-rotate hash (FxHash, as rustc)
+/// instead of SipHash, which was ~9% of the frame's encode time.
+type HashMap<K, V> = std::collections::HashMap<K, V, std::hash::BuildHasherDefault<Fx>>;
+#[derive(Default)]
+struct Fx(u64);
+impl Fx { #[inline] fn add(&mut self, w: u64) { self.0 = (self.0.rotate_left(5) ^ w).wrapping_mul(0x51_7c_c1_b7_27_22_0a_95); } }
+impl std::hash::Hasher for Fx {
+    fn finish(&self) -> u64 { self.0 }
+    fn write(&mut self, b: &[u8]) { for c in b.chunks(8) { let mut w = [0u8; 8]; w[..c.len()].copy_from_slice(c); self.add(u64::from_le_bytes(w)); } }
+    fn write_u8(&mut self, v: u8) { self.add(v as u64) }
+    fn write_u16(&mut self, v: u16) { self.add(v as u64) }
+    fn write_u32(&mut self, v: u32) { self.add(v as u64) }
+    fn write_u64(&mut self, v: u64) { self.add(v) }
+    fn write_usize(&mut self, v: usize) { self.add(v as u64) }
+}
 use wgpu::util::DeviceExt;
 
 pub const EFB_W: u32 = 640;
@@ -55,6 +69,10 @@ pub struct Gpu {
     bgl0: wgpu::BindGroupLayout,
     bgl1: wgpu::BindGroupLayout,
     pipes: HashMap<PipeKey, wgpu::RenderPipeline>,
+    /// Vertex and per-draw uniform buffers kept between frames (grown when a frame needs more), filled with
+    /// `Queue::write_buffer_with`; the bind group of the uniforms (group 0) with them.
+    vbuf: Option<wgpu::Buffer>,
+    ubuf: Option<(wgpu::Buffer, wgpu::BindGroup)>,
     clear_pipes: HashMap<(bool, bool, bool), wgpu::RenderPipeline>,
     clear_layout: wgpu::PipelineLayout,
     clear_module: wgpu::ShaderModule,
@@ -369,12 +387,12 @@ impl Gpu {
             efb_dst, dst_bg, zcopy_pipe, zcopy_bgl, copy_pipe, copy_bgl,
             xfb_yuv: std::env::var("COLO_XFB_YUV").map_or(scale == 1, |v| v != "0"),
             copy_filter: std::env::var("COLO_COPY_FILTER").map_or(scale == 1, |v| v != "0"),
-            conv: HashMap::new(), conv_pipe, conv_bgl,
+            conv: HashMap::default(), conv_pipe, conv_bgl,
             efb_view: efb.create_view(&Default::default()), depth_view: depth.create_view(&Default::default()), efb,
-            device, queue, scale, layout, module, bgl0, bgl1, pipes: HashMap::new(), clear_pipes: HashMap::new(), clear_layout, clear_module, clear_bgl,
-            textures: HashMap::new(), copies: HashMap::new(), copy_at: HashMap::new(), dummy, xfb: None, xfb_tex: None, only: None, blit: None,
+            device, queue, scale, layout, module, bgl0, bgl1, pipes: HashMap::default(), vbuf: None, ubuf: None, clear_pipes: HashMap::default(), clear_layout, clear_module, clear_bgl,
+            textures: HashMap::default(), copies: HashMap::default(), copy_at: HashMap::default(), dummy, xfb: None, xfb_tex: None, only: None, blit: None,
             timing,
-            pass_kinds: Default::default(), gpu_times: HashMap::new(), op_times: Vec::new(), pass_ops: Default::default(),
+            pass_kinds: Default::default(), gpu_times: HashMap::default(), op_times: Vec::new(), pass_ops: Default::default(),
         }
     }
 
@@ -477,7 +495,7 @@ impl Gpu {
         let s = self.scale as f32;
         // EFB copies sampled as some texture format: converted textures, made after their copy (or now, for older copies)
         let made: HashMap<u32, &GCopy> = f.ops.iter().filter_map(|o| if let GOp::Copy(c) = o { (!c.to_xfb).then_some((c.id, c)) } else { None }).collect();
-        let mut pending: HashMap<u32, Vec<u32>> = HashMap::new();
+        let mut pending: HashMap<u32, Vec<u32>> = HashMap::default();
         for st in &f.states {
             for t in st.tex.iter().flatten() {
                 let TexId::Efb(c, tf) = *t else { continue };
@@ -526,11 +544,22 @@ impl Gpu {
                 ind: [0, 4, 8, 12].map(|k| [st.ind[k], st.ind[k + 1], st.ind[k + 2], st.ind[k + 3]]), ind_misc: st.ind_misc, ind_mtx: st.ind_mtx, su: st.su, fog, fogf, fogk,
             }
         }).collect();
-        let ubuf = self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor { label: Some("draws"), contents: bytemuck::cast_slice(&us), usage: wgpu::BufferUsages::STORAGE });
-        let vbuf = self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor { label: Some("verts"), contents: bytemuck_verts(&f.verts), usage: wgpu::BufferUsages::VERTEX });
-        let bg0 = self.device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &self.bgl0, entries: &[wgpu::BindGroupEntry { binding: 0, resource: ubuf.as_entire_binding() }] });
+        let ub: &[u8] = bytemuck::cast_slice(&us);
+        if self.ubuf.as_ref().is_none_or(|(b, _)| b.size() < ub.len() as u64) {
+            let b = self.device.create_buffer(&wgpu::BufferDescriptor { label: Some("draws"), size: grow(ub.len()), usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false });
+            let bg = self.device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &self.bgl0, entries: &[wgpu::BindGroupEntry { binding: 0, resource: b.as_entire_binding() }] });
+            self.ubuf = Some((b, bg));
+        }
+        let vb = bytemuck_verts(&f.verts);
+        if self.vbuf.as_ref().is_none_or(|b| b.size() < vb.len() as u64) {
+            self.vbuf = Some(self.device.create_buffer(&wgpu::BufferDescriptor { label: Some("verts"), size: grow(vb.len()), usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST, mapped_at_creation: false }));
+        }
+        let (ubuf, bg0) = self.ubuf.clone().unwrap();
+        let vbuf = self.vbuf.clone().unwrap();
+        write_par(&self.queue, &ubuf, ub);
+        write_par(&self.queue, &vbuf, vb);
         // texture bind groups, one per distinct set of textures
-        let mut tex_bgs: HashMap<[Option<TexId>; 8], wgpu::BindGroup> = HashMap::new();
+        let mut tex_bgs: HashMap<[Option<TexId>; 8], wgpu::BindGroup> = HashMap::default();
         for st in &f.states {
             if tex_bgs.contains_key(&st.tex) { continue; }
             let views: Vec<&wgpu::TextureView> = (0..8).map(|m| self.tex_info(st.tex[m]).map_or(&self.dummy, |t| &t.view)).collect();
@@ -575,6 +604,8 @@ impl Gpu {
                 pass.set_vertex_buffer(0, vbuf.slice(..));
                 pass.set_bind_group(0, &bg0, &[]);
                 pass.set_bind_group(2, &self.dst_bg, &[]);
+                // pass state set only when it changes (thousands of draws a frame)
+                let (mut sc, mut ba, mut pk, mut tx) = (None, None, None, None);
                 for (oi, op) in f.ops[i..j].iter().enumerate() {
                     let GOp::Draw { first, count, state } = op else { continue };
                     if self.only.as_ref().is_some_and(|r| !r.contains(&(i + oi))) { continue; }
@@ -583,11 +614,13 @@ impl Gpu {
                     let (x0, y0) = (st.scissor[0].max(0) as u32, st.scissor[1].max(0) as u32);
                     let (x1, y1) = ((st.scissor[2] + 1).clamp(0, EFB_W as i32) as u32, (st.scissor[3] + 1).clamp(0, EFB_H as i32) as u32);
                     if x1 <= x0 || y1 <= y0 { continue; }
-                    pass.set_scissor_rect(x0 * self.scale, y0 * self.scale, (x1 - x0) * self.scale, (y1 - y0) * self.scale);
+                    let r = (x0 * self.scale, y0 * self.scale, (x1 - x0) * self.scale, (y1 - y0) * self.scale);
+                    if sc != Some(r) { pass.set_scissor_rect(r.0, r.1, r.2, r.3); sc = Some(r); }
                     let a = if st.dstalpha >> 8 & 1 != 0 { (st.dstalpha & 0xFF) as f64 / 255.0 } else { 1.0 };
-                    pass.set_blend_constant(wgpu::Color { r: 0.0, g: 0.0, b: 0.0, a });
-                    pass.set_pipeline(&self.pipes[&keys[*state as usize]]);
-                    pass.set_bind_group(1, &tex_bgs[&st.tex], &[]);
+                    if ba != Some(a.to_bits()) { pass.set_blend_constant(wgpu::Color { r: 0.0, g: 0.0, b: 0.0, a }); ba = Some(a.to_bits()); }
+                    let k = keys[*state as usize];
+                    if pk != Some(k) { pass.set_pipeline(&self.pipes[&k]); pk = Some(k); }
+                    if tx != Some(st.tex) { pass.set_bind_group(1, &tex_bgs[&st.tex], &[]); tx = Some(st.tex); }
                     pass.draw(*first..*first + *count, *state..*state + 1);
                 }
             }
@@ -853,6 +886,31 @@ impl Blit {
         }
         queue.submit([enc.finish()]);
     }
+}
+
+/// A buffer size for `n` bytes with room to grow (fewer reallocations as scenes get busier).
+fn grow(n: usize) -> u64 { ((n.max(4096) as u64 * 3 / 2) + 255) & !255 }
+
+/// `queue.write_buffer(b, 0, d)`, the copy into the staging memory split over threads when it is large (wide
+/// shots: ~20 MB of vertices a frame).
+fn write_par(queue: &wgpu::Queue, b: &wgpu::Buffer, d: &[u8]) {
+    let Some(size) = wgpu::BufferSize::new(d.len() as u64) else { return };
+    let Some(mut view) = queue.write_buffer_with(b, 0, size) else { return };
+    let mut dst = view.slice(..);
+    const PART: usize = 2 << 20;
+    if d.len() < 2 * PART { dst.copy_from_slice(d); return; }
+    let n = d.len().div_ceil(PART).min(8);
+    let step = d.len().div_ceil(n).next_multiple_of(64);
+    // the staging view as a raw pointer (`WriteOnly<[u8]>` isn't Send); each thread writes its own byte range
+    struct Dst(*mut u8);
+    unsafe impl Send for Dst {}
+    let base = dst.as_raw_element_ptr().as_ptr();
+    std::thread::scope(|sc| {
+        for (k, src) in d.chunks(step).enumerate() {
+            let p = Dst(unsafe { base.add(k * step) });
+            sc.spawn(move || { let p = p; unsafe { std::ptr::copy_nonoverlapping(src.as_ptr(), p.0, src.len()) } });
+        }
+    });
 }
 
 fn bytemuck_verts(v: &[colo_gx::cmd::GVertex]) -> &[u8] {

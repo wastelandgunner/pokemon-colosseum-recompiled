@@ -232,17 +232,9 @@ impl Cpu {
     #[inline(always)] pub fn sth(&mut self, a: u32, v: u32) { self.m.set_u16(a, v) }
     #[inline(always)] pub fn stw(&mut self, a: u32, v: u32) { self.m.set_u32(a, v) }
     #[inline(always)] pub fn lfs(&self, a: u32) -> f64 { f32::from_bits(self.m.u32(a)) as f64 }
-    #[inline(always)] pub fn lfd(&self, a: u32) -> f64 {
-        let hi = self.m.u32(a) as u64;
-        let lo = self.m.u32(a + 4) as u64;
-        f64::from_bits(hi << 32 | lo)
-    }
+    #[inline(always)] pub fn lfd(&self, a: u32) -> f64 { f64::from_bits(self.m.u64(a)) }
     #[inline(always)] pub fn stfs(&mut self, a: u32, v: f64) { self.m.set_u32(a, (v as f32).to_bits()) }
-    #[inline(always)] pub fn stfd(&mut self, a: u32, v: f64) {
-        let b = v.to_bits();
-        self.m.set_u32(a, (b >> 32) as u32);
-        self.m.set_u32(a + 4, b as u32);
-    }
+    #[inline(always)] pub fn stfd(&mut self, a: u32, v: f64) { self.m.set_u64(a, v.to_bits()) }
 
     // --- condition register ---------------------------------------------------------------------
     #[inline] pub fn set_crf(&mut self, n: u32, nib: u32) { cr_set_crf(&mut self.cr, n, nib) }
@@ -276,11 +268,19 @@ impl Cpu {
             _ => 0,
         }
     }
+    /// mtlr / mtctr / mtxer inline (lifted code's common case), the rest out of line.
+    #[inline(always)]
     pub fn mtspr(&mut self, spr: u32, v: u32) {
         match spr {
             1 => self.xer = v,
             8 => self.lr = v,
             9 => self.ctr = v,
+            _ => self.mtspr_other(spr, v),
+        }
+    }
+    #[inline(never)]
+    fn mtspr_other(&mut self, spr: u32, v: u32) {
+        match spr {
             912..=919 => self.gqr[(spr - 912) as usize] = v,
             920 | 922 => LC_SPR[(spr - 920) as usize].store(v, std::sync::atomic::Ordering::Relaxed),
             923 => {
@@ -312,7 +312,16 @@ impl Cpu {
             _ => (f32::from_bits(self.m.u32(a)) as f64, 4),
         }
     }
+    /// Inline: the float types (0-3: two f32s); the quantized ones (4-7) out of line, so the many psq sites in
+    /// the matrix and particle code stay small.
     #[inline(always)] pub fn psq_load(&self, a: u32, w: bool, gqr: u32) -> (f64, f64) {
+        if self.gqr[gqr as usize] >> 16 & 4 == 0 {
+            let x = f32::from_bits(self.m.u32(a)) as f64;
+            return (x, if w { 1.0 } else { f32::from_bits(self.m.u32(a + 4)) as f64 });
+        }
+        self.psq_load_q(a, w, gqr)
+    }
+    #[inline(never)] fn psq_load_q(&self, a: u32, w: bool, gqr: u32) -> (f64, f64) {
         let g = self.gqr[gqr as usize];
         let (ty, sc) = ((g >> 16) & 7, (g >> 24) & 0x3F);
         let (x, n) = self.psq_load_one(a, ty, sc);
@@ -329,7 +338,16 @@ impl Cpu {
             _ => { self.m.set_u32(a, (v as f32).to_bits()); 4 }
         }
     }
+    /// As `psq_load`: the float types inline, the quantized ones out of line.
     #[inline(always)] pub fn psq_store(&mut self, a: u32, x: f64, y: f64, w: bool, gqr: u32) {
+        if self.gqr[gqr as usize] & 4 == 0 {
+            self.m.set_u32(a, (x as f32).to_bits());
+            if !w { self.m.set_u32(a + 4, (y as f32).to_bits()); }
+            return;
+        }
+        self.psq_store_q(a, x, y, w, gqr)
+    }
+    #[inline(never)] fn psq_store_q(&mut self, a: u32, x: f64, y: f64, w: bool, gqr: u32) {
         let g = self.gqr[gqr as usize];
         let (ty, sc) = (g & 7, (g >> 8) & 0x3F);
         let n = self.psq_store_one(a, x, ty, sc);

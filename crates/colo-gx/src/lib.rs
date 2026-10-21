@@ -12,6 +12,8 @@ pub mod cmd;
 /// Memory the GPU reads by physical address (display lists, vertex arrays, indexed XF data).
 pub trait GpuMem {
     fn read(&self, phys: u32, out: &mut [u8]);
+    /// `phys..phys+n` in place, when the memory has it as one slice (what `read` would copy); None = use `read`.
+    fn slice(&self, _phys: u32, _n: usize) -> Option<&[u8]> { None }
     fn u8(&self, a: u32) -> u8 { let mut b = [0u8; 1]; self.read(a, &mut b); b[0] }
     fn u16(&self, a: u32) -> u16 { let mut b = [0u8; 2]; self.read(a, &mut b); u16::from_be_bytes(b) }
     fn u32(&self, a: u32) -> u32 { let mut b = [0u8; 4]; self.read(a, &mut b); u32::from_be_bytes(b) }
@@ -34,9 +36,28 @@ impl Prim {
 pub struct Draw {
     pub prim: Prim,
     pub vat: u8,
-    pub verts: Vec<vtx::Vertex>,
+    /// The vertices' bytes with indexed attributes already fetched (`vtx::Format::capture`), in `fmt` (all
+    /// direct); `verts` decodes them. Decoding waits for the consumer (off the game thread).
+    pub raw: Vec<u8>,
+    pub fmt: vtx::Format,
+    /// Vertex count.
+    pub n: usize,
     /// Index of the state snapshot in `Frame::states` this draw uses.
     pub state: usize,
+}
+
+/// A `GpuMem` with nothing in it (decoding a draw's captured, all-direct vertices reads no memory).
+struct NoMem;
+impl GpuMem for NoMem { fn read(&self, _: u32, out: &mut [u8]) { out.fill(0) } }
+
+impl Draw {
+    /// Vertex `k`, decoded with the draw's state's CP registers (`State::cp`: the matrix indices not in the stream).
+    pub fn vert(&self, k: usize, cp: &[u32; 256]) -> vtx::Vertex {
+        let sz = self.raw.len() / self.n.max(1);
+        self.fmt.decode(&self.raw[k * sz..(k + 1) * sz], cp, &NoMem)
+    }
+    /// All the vertices, decoded.
+    pub fn verts<'a>(&'a self, cp: &'a [u32; 256]) -> impl Iterator<Item = vtx::Vertex> + 'a { (0..self.n).map(move |k| self.vert(k, cp)) }
 }
 
 /// Everything the GPU state holds that affects a draw.
@@ -44,7 +65,7 @@ pub struct Draw {
 pub struct State {
     pub cp: [u32; 256],
     /// XF memory (0x0000..0x0800: position/texture matrices, normal matrices 0x400, post matrices 0x500, lights 0x600) and registers (0x1000..0x1058), as u32 words.
-    pub xf_mem: Vec<u32>,
+    pub xf_mem: XfMem,
     pub xf_reg: [u32; 0x58],
     pub bp: [u32; 256],
     /// BP 0xE0..0xE7 hold two register files at one address each (bit 23: 0 TEV colour registers PREV, REG0-2;
@@ -53,8 +74,30 @@ pub struct State {
     pub kreg: [[u32; 2]; 4],
 }
 
+/// XF memory (0x800 words) as 16 shared blocks of 128 words: a state snapshot (one per draw whose state changed)
+/// shares every block until a later write copies that one, instead of copying all 8 KB.
+#[derive(Clone)]
+pub struct XfMem([std::sync::Arc<[u32; XF_BLOCK]>; 0x800 / XF_BLOCK]);
+const XF_BLOCK: usize = 128;
+
+impl XfMem {
+    pub fn new() -> XfMem { let z = std::sync::Arc::new([0; XF_BLOCK]); XfMem(std::array::from_fn(|_| z.clone())) }
+    #[inline]
+    pub fn set(&mut self, a: usize, v: u32) {
+        let b = &mut self.0[a / XF_BLOCK];
+        if b[a % XF_BLOCK] != v { std::sync::Arc::make_mut(b)[a % XF_BLOCK] = v; }
+    }
+    pub fn len(&self) -> usize { 0x800 }
+}
+
+impl std::ops::Index<usize> for XfMem {
+    type Output = u32;
+    #[inline]
+    fn index(&self, a: usize) -> &u32 { &self.0[a / XF_BLOCK][a % XF_BLOCK] }
+}
+
 impl Default for State {
-    fn default() -> Self { State { cp: [0; 256], xf_mem: vec![0; 0x800], xf_reg: [0; 0x58], bp: [0; 256], tevreg: [[0; 2]; 4], kreg: [[0; 2]; 4] } }
+    fn default() -> Self { State { cp: [0; 256], xf_mem: XfMem::new(), xf_reg: [0; 0x58], bp: [0; 256], tevreg: [[0; 2]; 4], kreg: [[0; 2]; 4] } }
 }
 
 /// What one frame's stream produced.
@@ -79,10 +122,29 @@ impl Default for Frame {
 pub struct Gx {
     pub s: State,
     dirty: bool,
+    /// Per VAT: the vertex format worked out from the CP words it depends on (`fmt_key`), until they change.
+    fmts: [Option<([u32; 5], VtxFmt)>; 8],
 }
 
+/// A vertex format and what a primitive in it needs: stream bytes per vertex, the all-direct form, whether any
+/// attribute is indexed.
+#[derive(Clone)]
+struct VtxFmt { fmt: vtx::Format, size: usize, direct: vtx::Format, dsize: usize, indexed: bool }
+
 impl Gx {
-    pub fn new() -> Gx { Gx { s: State::default(), dirty: true } }
+    pub fn new() -> Gx { Gx { s: State::default(), dirty: true, fmts: Default::default() } }
+
+    fn vtx_fmt(&mut self, vat: usize) -> &VtxFmt {
+        let cp = &self.s.cp;
+        let key = [cp[0x50], cp[0x60], cp[0x70 + vat], cp[0x80 + vat], cp[0x90 + vat]];
+        if !self.fmts[vat].as_ref().is_some_and(|(k, _)| *k == key) {
+            let fmt = vtx::Format::new(cp, vat);
+            let direct = fmt.direct();
+            let v = VtxFmt { size: fmt.size(), dsize: direct.size(), indexed: fmt.indexed(), fmt, direct };
+            self.fmts[vat] = Some((key, v));
+        }
+        &self.fmts[vat].as_ref().unwrap().1
+    }
 
     fn snap(&mut self, f: &mut Frame) -> usize {
         if self.dirty || f.states.is_empty() {
@@ -136,9 +198,12 @@ impl Gx {
                 0x40 => {
                     let (Some(a), Some(n)) = (rd32(&mut i), rd32(&mut i)) else { return start };
                     if depth < 4 {
-                        let mut dl = vec![0u8; n as usize];
-                        mem.read(a & 0x3FF_FFFF, &mut dl);
-                        self.run(&dl, mem, f, depth + 1);
+                        // the display list in place when memory has it as one slice (no copy per call)
+                        if let Some(dl) = mem.slice(a & 0x3FF_FFFF, n as usize) { self.run(dl, mem, f, depth + 1); } else {
+                            let mut dl = vec![0u8; n as usize];
+                            mem.read(a & 0x3FF_FFFF, &mut dl);
+                            self.run(&dl, mem, f, depth + 1);
+                        }
                     }
                 }
                 0x44 | 0x48 => {}
@@ -149,16 +214,19 @@ impl Gx {
                 c if c & 0x80 != 0 => {
                     let Some(n) = rd16(&mut i) else { return start };
                     let vat = c & 7;
-                    let fmt = vtx::Format::new(&self.s.cp, vat as usize);
-                    let size = fmt.size();
+                    let size = self.vtx_fmt(vat as usize).size;
                     if i + size * n as usize > data.len() { return start; }
                     let st = self.snap(f);
-                    let mut verts = Vec::with_capacity(n as usize);
-                    for _ in 0..n {
-                        verts.push(fmt.decode(&data[i..i + size], &self.s.cp, mem));
-                        i += size;
-                    }
-                    f.draws.push(Draw { prim: Prim::from_cmd(c), vat, verts, state: st });
+                    let n = n as usize;
+                    let v = &self.fmts[vat as usize].as_ref().unwrap().1;
+                    let raw = if v.indexed {
+                        let mut raw = Vec::with_capacity(n * v.dsize);
+                        v.fmt.capture_n(&data[i..i + size * n], n, &self.s.cp, mem, &mut raw);
+                        raw
+                    } else { data[i..i + size * n].to_vec() };
+                    let direct = v.direct.clone();
+                    i += size * n;
+                    f.draws.push(Draw { prim: Prim::from_cmd(c), vat, raw, fmt: direct, n, state: st });
                 }
                 _ => {
                     // unknown opcode: the stream is out of sync
@@ -227,7 +295,7 @@ impl Gx {
     }
 
     fn xf_write(&mut self, a: u32, v: u32) {
-        if a < 0x800 { self.s.xf_mem[a as usize] = v; } else if (0x1000..0x1058).contains(&a) { self.s.xf_reg[(a - 0x1000) as usize] = v; }
+        if a < 0x800 { self.s.xf_mem.set(a as usize, v); } else if (0x1000..0x1058).contains(&a) { self.s.xf_reg[(a - 0x1000) as usize] = v; }
     }
 
     fn bp_write(&mut self, v: u32, f: &mut Frame) {

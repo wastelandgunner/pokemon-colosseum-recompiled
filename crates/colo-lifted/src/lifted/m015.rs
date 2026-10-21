@@ -6,13 +6,11 @@ use super::stubs_gen;
 /// GSthreadTerminate (0x800f05a0, 180 bytes)
 #[inline(never)]
 pub fn f_800f05a0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f05a0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f05a0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f05a0); f_800f05a0_at(c, 0x800f05a0); crate::prof::exit(c, 0x800f05a0); return; }
     }
     f_800f05a0_b(c, 0x800f05a0);
-    if p { crate::prof::exit(c, 0x800f05a0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f05a0_at(c: &mut Cpu, pc: u32) { f_800f05a0_b(c, pc) }
@@ -118,13 +116,11 @@ fn f_800f05a0_b(c: &mut Cpu, mut pc: u32) {
 /// GSthreadSetArgs (0x800f0654, 340 bytes)
 #[inline(never)]
 pub fn f_800f0654(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f0654) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f0654); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f0654); f_800f0654_at(c, 0x800f0654); crate::prof::exit(c, 0x800f0654); return; }
     }
     f_800f0654_b(c, 0x800f0654);
-    if p { crate::prof::exit(c, 0x800f0654); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f0654_at(c: &mut Cpu, pc: u32) { f_800f0654_b(c, pc) }
@@ -288,13 +284,11 @@ fn f_800f0654_b(c: &mut Cpu, mut pc: u32) {
 /// GSthreadCreate (0x800f07a8, 560 bytes)
 #[inline(never)]
 pub fn f_800f07a8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f07a8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f07a8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f07a8); f_800f07a8_at(c, 0x800f07a8); crate::prof::exit(c, 0x800f07a8); return; }
     }
     f_800f07a8_b(c, 0x800f07a8);
-    if p { crate::prof::exit(c, 0x800f07a8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f07a8_at(c: &mut Cpu, pc: u32) { f_800f07a8_b(c, pc) }
@@ -578,13 +572,11 @@ fn f_800f07a8_b(c: &mut Cpu, mut pc: u32) {
 /// GSthread (0x800f09d8, 156 bytes)
 #[inline(never)]
 pub fn f_800f09d8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f09d8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f09d8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f09d8); f_800f09d8_at(c, 0x800f09d8); crate::prof::exit(c, 0x800f09d8); return; }
     }
     f_800f09d8_b(c, 0x800f09d8);
-    if p { crate::prof::exit(c, 0x800f09d8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f09d8_at(c: &mut Cpu, pc: u32) { f_800f09d8_b(c, pc) }
@@ -676,13 +668,11 @@ fn f_800f09d8_b(c: &mut Cpu, mut pc: u32) {
 /// _GSthreadDispatch (0x800f0a74, 1240 bytes)
 #[inline(never)]
 pub fn f_800f0a74(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f0a74) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f0a74); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f0a74); f_800f0a74_at(c, 0x800f0a74); crate::prof::exit(c, 0x800f0a74); return; }
     }
     f_800f0a74_b(c, 0x800f0a74);
-    if p { crate::prof::exit(c, 0x800f0a74); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f0a74_at(c: &mut Cpu, pc: u32) { f_800f0a74_b(c, pc) }
@@ -1371,13 +1361,11 @@ fn f_800f0a74_b(c: &mut Cpu, mut pc: u32) {
 /// _GSthreadExitTrampoline (0x800f0f4c, 288 bytes)
 #[inline(never)]
 pub fn f_800f0f4c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f0f4c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f0f4c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f0f4c); f_800f0f4c_at(c, 0x800f0f4c); crate::prof::exit(c, 0x800f0f4c); return; }
     }
     f_800f0f4c_b(c, 0x800f0f4c);
-    if p { crate::prof::exit(c, 0x800f0f4c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f0f4c_at(c: &mut Cpu, pc: u32) { f_800f0f4c_b(c, pc) }
@@ -1540,13 +1528,11 @@ fn f_800f0f4c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_CallStdTrampoline (0x800f106c, 124 bytes)
 #[inline(never)]
 pub fn f_800f106c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f106c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f106c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f106c); f_800f106c_at(c, 0x800f106c); crate::prof::exit(c, 0x800f106c); return; }
     }
     f_800f106c_b(c, 0x800f106c);
-    if p { crate::prof::exit(c, 0x800f106c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f106c_at(c: &mut Cpu, pc: u32) { f_800f106c_b(c, pc) }
@@ -1605,13 +1591,11 @@ fn f_800f106c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op37_callStandard (0x800f10e8, 744 bytes)
 #[inline(never)]
 pub fn f_800f10e8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f10e8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f10e8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f10e8); f_800f10e8_at(c, 0x800f10e8); crate::prof::exit(c, 0x800f10e8); return; }
     }
     f_800f10e8_b(c, 0x800f10e8);
-    if p { crate::prof::exit(c, 0x800f10e8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f10e8_at(c: &mut Cpu, pc: u32) { f_800f10e8_b(c, pc) }
@@ -1930,13 +1914,11 @@ fn f_800f10e8_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op36_yield (0x800f13d0, 752 bytes)
 #[inline(never)]
 pub fn f_800f13d0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f13d0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f13d0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f13d0); f_800f13d0_at(c, 0x800f13d0); crate::prof::exit(c, 0x800f13d0); return; }
     }
     f_800f13d0_b(c, 0x800f13d0);
-    if p { crate::prof::exit(c, 0x800f13d0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f13d0_at(c: &mut Cpu, pc: u32) { f_800f13d0_b(c, pc) }
@@ -2293,13 +2275,11 @@ fn f_800f13d0_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op35_printf (0x800f16c0, 844 bytes)
 #[inline(never)]
 pub fn f_800f16c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f16c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f16c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f16c0); f_800f16c0_at(c, 0x800f16c0); crate::prof::exit(c, 0x800f16c0); return; }
     }
     f_800f16c0_b(c, 0x800f16c0);
-    if p { crate::prof::exit(c, 0x800f16c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f16c0_at(c: &mut Cpu, pc: u32) { f_800f16c0_b(c, pc) }
@@ -2687,13 +2667,11 @@ fn f_800f16c0_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op34_orl (0x800f1a0c, 1068 bytes)
 #[inline(never)]
 pub fn f_800f1a0c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f1a0c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f1a0c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f1a0c); f_800f1a0c_at(c, 0x800f1a0c); crate::prof::exit(c, 0x800f1a0c); return; }
     }
     f_800f1a0c_b(c, 0x800f1a0c);
-    if p { crate::prof::exit(c, 0x800f1a0c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f1a0c_at(c: &mut Cpu, pc: u32) { f_800f1a0c_b(c, pc) }
@@ -3208,13 +3186,11 @@ fn f_800f1a0c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op33_andl (0x800f1e38, 1068 bytes)
 #[inline(never)]
 pub fn f_800f1e38(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f1e38) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f1e38); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f1e38); f_800f1e38_at(c, 0x800f1e38); crate::prof::exit(c, 0x800f1e38); return; }
     }
     f_800f1e38_b(c, 0x800f1e38);
-    if p { crate::prof::exit(c, 0x800f1e38); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f1e38_at(c: &mut Cpu, pc: u32) { f_800f1e38_b(c, pc) }
@@ -3729,13 +3705,11 @@ fn f_800f1e38_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op32_copyStruct (0x800f2264, 656 bytes)
 #[inline(never)]
 pub fn f_800f2264(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f2264) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f2264); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f2264); f_800f2264_at(c, 0x800f2264); crate::prof::exit(c, 0x800f2264); return; }
     }
     f_800f2264_b(c, 0x800f2264);
-    if p { crate::prof::exit(c, 0x800f2264); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f2264_at(c: &mut Cpu, pc: u32) { f_800f2264_b(c, pc) }
@@ -4027,13 +4001,11 @@ fn f_800f2264_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op31_setVar (0x800f24f4, 736 bytes)
 #[inline(never)]
 pub fn f_800f24f4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f24f4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f24f4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f24f4); f_800f24f4_at(c, 0x800f24f4); crate::prof::exit(c, 0x800f24f4); return; }
     }
     f_800f24f4_b(c, 0x800f24f4);
-    if p { crate::prof::exit(c, 0x800f24f4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f24f4_at(c: &mut Cpu, pc: u32) { f_800f24f4_b(c, pc) }
@@ -4384,13 +4356,11 @@ fn f_800f24f4_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op30_notEqual (0x800f27d4, 1044 bytes)
 #[inline(never)]
 pub fn f_800f27d4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f27d4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f27d4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f27d4); f_800f27d4_at(c, 0x800f27d4); crate::prof::exit(c, 0x800f27d4); return; }
     }
     f_800f27d4_b(c, 0x800f27d4);
-    if p { crate::prof::exit(c, 0x800f27d4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f27d4_at(c: &mut Cpu, pc: u32) { f_800f27d4_b(c, pc) }
@@ -4890,13 +4860,11 @@ fn f_800f27d4_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op29_equal (0x800f2be8, 1040 bytes)
 #[inline(never)]
 pub fn f_800f2be8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f2be8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f2be8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f2be8); f_800f2be8_at(c, 0x800f2be8); crate::prof::exit(c, 0x800f2be8); return; }
     }
     f_800f2be8_b(c, 0x800f2be8);
-    if p { crate::prof::exit(c, 0x800f2be8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f2be8_at(c: &mut Cpu, pc: u32) { f_800f2be8_b(c, pc) }
@@ -5395,13 +5363,11 @@ fn f_800f2be8_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op28_greaterThanEqual (0x800f2ff8, 1056 bytes)
 #[inline(never)]
 pub fn f_800f2ff8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f2ff8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f2ff8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f2ff8); f_800f2ff8_at(c, 0x800f2ff8); crate::prof::exit(c, 0x800f2ff8); return; }
     }
     f_800f2ff8_b(c, 0x800f2ff8);
-    if p { crate::prof::exit(c, 0x800f2ff8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f2ff8_at(c: &mut Cpu, pc: u32) { f_800f2ff8_b(c, pc) }
@@ -5904,13 +5870,11 @@ fn f_800f2ff8_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op27_greaterThan (0x800f3418, 1048 bytes)
 #[inline(never)]
 pub fn f_800f3418(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f3418) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f3418); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f3418); f_800f3418_at(c, 0x800f3418); crate::prof::exit(c, 0x800f3418); return; }
     }
     f_800f3418_b(c, 0x800f3418);
-    if p { crate::prof::exit(c, 0x800f3418); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f3418_at(c: &mut Cpu, pc: u32) { f_800f3418_b(c, pc) }
@@ -6411,13 +6375,11 @@ fn f_800f3418_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op26_lessThanEqual (0x800f3830, 1056 bytes)
 #[inline(never)]
 pub fn f_800f3830(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f3830) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f3830); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f3830); f_800f3830_at(c, 0x800f3830); crate::prof::exit(c, 0x800f3830); return; }
     }
     f_800f3830_b(c, 0x800f3830);
-    if p { crate::prof::exit(c, 0x800f3830); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f3830_at(c: &mut Cpu, pc: u32) { f_800f3830_b(c, pc) }
@@ -6920,13 +6882,11 @@ fn f_800f3830_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op25_lessThan (0x800f3c50, 1048 bytes)
 #[inline(never)]
 pub fn f_800f3c50(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f3c50) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f3c50); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f3c50); f_800f3c50_at(c, 0x800f3c50); crate::prof::exit(c, 0x800f3c50); return; }
     }
     f_800f3c50_b(c, 0x800f3c50);
-    if p { crate::prof::exit(c, 0x800f3c50); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f3c50_at(c: &mut Cpu, pc: u32) { f_800f3c50_b(c, pc) }
@@ -7427,13 +7387,11 @@ fn f_800f3c50_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op24_subtract (0x800f4068, 984 bytes)
 #[inline(never)]
 pub fn f_800f4068(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f4068) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f4068); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f4068); f_800f4068_at(c, 0x800f4068); crate::prof::exit(c, 0x800f4068); return; }
     }
     f_800f4068_b(c, 0x800f4068);
-    if p { crate::prof::exit(c, 0x800f4068); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f4068_at(c: &mut Cpu, pc: u32) { f_800f4068_b(c, pc) }
@@ -7891,13 +7849,11 @@ fn f_800f4068_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op23_add (0x800f4440, 984 bytes)
 #[inline(never)]
 pub fn f_800f4440(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f4440) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f4440); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f4440); f_800f4440_at(c, 0x800f4440); crate::prof::exit(c, 0x800f4440); return; }
     }
     f_800f4440_b(c, 0x800f4440);
-    if p { crate::prof::exit(c, 0x800f4440); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f4440_at(c: &mut Cpu, pc: u32) { f_800f4440_b(c, pc) }
@@ -8355,13 +8311,11 @@ fn f_800f4440_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op22_mod (0x800f4818, 1056 bytes)
 #[inline(never)]
 pub fn f_800f4818(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f4818) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f4818); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f4818); f_800f4818_at(c, 0x800f4818); crate::prof::exit(c, 0x800f4818); return; }
     }
     f_800f4818_b(c, 0x800f4818);
-    if p { crate::prof::exit(c, 0x800f4818); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f4818_at(c: &mut Cpu, pc: u32) { f_800f4818_b(c, pc) }
@@ -8855,13 +8809,11 @@ fn f_800f4818_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op21_divide (0x800f4c38, 1012 bytes)
 #[inline(never)]
 pub fn f_800f4c38(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f4c38) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f4c38); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f4c38); f_800f4c38_at(c, 0x800f4c38); crate::prof::exit(c, 0x800f4c38); return; }
     }
     f_800f4c38_b(c, 0x800f4c38);
-    if p { crate::prof::exit(c, 0x800f4c38); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f4c38_at(c: &mut Cpu, pc: u32) { f_800f4c38_b(c, pc) }
@@ -9335,13 +9287,11 @@ fn f_800f4c38_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op20_multiply (0x800f502c, 984 bytes)
 #[inline(never)]
 pub fn f_800f502c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f502c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f502c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f502c); f_800f502c_at(c, 0x800f502c); crate::prof::exit(c, 0x800f502c); return; }
     }
     f_800f502c_b(c, 0x800f502c);
-    if p { crate::prof::exit(c, 0x800f502c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f502c_at(c: &mut Cpu, pc: u32) { f_800f502c_b(c, pc) }
@@ -9799,13 +9749,11 @@ fn f_800f502c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op19_pushVar2 (0x800f5404, 472 bytes)
 #[inline(never)]
 pub fn f_800f5404(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f5404) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f5404); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f5404); f_800f5404_at(c, 0x800f5404); crate::prof::exit(c, 0x800f5404); return; }
     }
     f_800f5404_b(c, 0x800f5404);
-    if p { crate::prof::exit(c, 0x800f5404); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f5404_at(c: &mut Cpu, pc: u32) { f_800f5404_b(c, pc) }
@@ -10037,13 +9985,11 @@ fn f_800f5404_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op18_negate (0x800f55dc, 532 bytes)
 #[inline(never)]
 pub fn f_800f55dc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f55dc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f55dc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f55dc); f_800f55dc_at(c, 0x800f55dc); crate::prof::exit(c, 0x800f55dc); return; }
     }
     f_800f55dc_b(c, 0x800f55dc);
-    if p { crate::prof::exit(c, 0x800f55dc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f55dc_at(c: &mut Cpu, pc: u32) { f_800f55dc_b(c, pc) }
@@ -10302,13 +10248,11 @@ fn f_800f55dc_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op17_not (0x800f57f0, 588 bytes)
 #[inline(never)]
 pub fn f_800f57f0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f57f0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f57f0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f57f0); f_800f57f0_at(c, 0x800f57f0); crate::prof::exit(c, 0x800f57f0); return; }
     }
     f_800f57f0_b(c, 0x800f57f0);
-    if p { crate::prof::exit(c, 0x800f57f0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f57f0_at(c: &mut Cpu, pc: u32) { f_800f57f0_b(c, pc) }
@@ -10581,13 +10525,11 @@ fn f_800f57f0_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op16_pushMultiVar (0x800f5a3c, 612 bytes)
 #[inline(never)]
 pub fn f_800f5a3c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f5a3c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f5a3c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f5a3c); f_800f5a3c_at(c, 0x800f5a3c); crate::prof::exit(c, 0x800f5a3c); return; }
     }
     f_800f5a3c_b(c, 0x800f5a3c);
-    if p { crate::prof::exit(c, 0x800f5a3c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f5a3c_at(c: &mut Cpu, pc: u32) { f_800f5a3c_b(c, pc) }
@@ -10887,13 +10829,11 @@ fn f_800f5a3c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op15_pushVarRef (0x800f5ca0, 588 bytes)
 #[inline(never)]
 pub fn f_800f5ca0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f5ca0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f5ca0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f5ca0); f_800f5ca0_at(c, 0x800f5ca0); crate::prof::exit(c, 0x800f5ca0); return; }
     }
     f_800f5ca0_b(c, 0x800f5ca0);
-    if p { crate::prof::exit(c, 0x800f5ca0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f5ca0_at(c: &mut Cpu, pc: u32) { f_800f5ca0_b(c, pc) }
@@ -11179,13 +11119,11 @@ fn f_800f5ca0_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op14_or (0x800f5eec, 976 bytes)
 #[inline(never)]
 pub fn f_800f5eec(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f5eec) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f5eec); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f5eec); f_800f5eec_at(c, 0x800f5eec); crate::prof::exit(c, 0x800f5eec); return; }
     }
     f_800f5eec_b(c, 0x800f5eec);
-    if p { crate::prof::exit(c, 0x800f5eec); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f5eec_at(c: &mut Cpu, pc: u32) { f_800f5eec_b(c, pc) }
@@ -11641,13 +11579,11 @@ fn f_800f5eec_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op13_and (0x800f62bc, 976 bytes)
 #[inline(never)]
 pub fn f_800f62bc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f62bc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f62bc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f62bc); f_800f62bc_at(c, 0x800f62bc); crate::prof::exit(c, 0x800f62bc); return; }
     }
     f_800f62bc_b(c, 0x800f62bc);
-    if p { crate::prof::exit(c, 0x800f62bc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f62bc_at(c: &mut Cpu, pc: u32) { f_800f62bc_b(c, pc) }
@@ -12103,13 +12039,11 @@ fn f_800f62bc_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op08_pushImmediate (0x800f668c, 128 bytes)
 #[inline(never)]
 pub fn f_800f668c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f668c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f668c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f668c); f_800f668c_at(c, 0x800f668c); crate::prof::exit(c, 0x800f668c); return; }
     }
     f_800f668c_b(c, 0x800f668c);
-    if p { crate::prof::exit(c, 0x800f668c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f668c_at(c: &mut Cpu, pc: u32) { f_800f668c_b(c, pc) }
@@ -12178,13 +12112,11 @@ fn f_800f668c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op07_jumpFalse (0x800f670c, 160 bytes)
 #[inline(never)]
 pub fn f_800f670c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f670c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f670c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f670c); f_800f670c_at(c, 0x800f670c); crate::prof::exit(c, 0x800f670c); return; }
     }
     f_800f670c_b(c, 0x800f670c);
-    if p { crate::prof::exit(c, 0x800f670c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f670c_at(c: &mut Cpu, pc: u32) { f_800f670c_b(c, pc) }
@@ -12270,13 +12202,11 @@ fn f_800f670c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op06_jump (0x800f67ac, 28 bytes)
 #[inline(never)]
 pub fn f_800f67ac(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f67ac) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f67ac); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f67ac); f_800f67ac_at(c, 0x800f67ac); crate::prof::exit(c, 0x800f67ac); return; }
     }
     f_800f67ac_b(c, 0x800f67ac);
-    if p { crate::prof::exit(c, 0x800f67ac); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f67ac_at(c: &mut Cpu, pc: u32) { f_800f67ac_b(c, pc) }
@@ -12308,13 +12238,11 @@ fn f_800f67ac_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op05_return (0x800f67c8, 388 bytes)
 #[inline(never)]
 pub fn f_800f67c8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f67c8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f67c8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f67c8); f_800f67c8_at(c, 0x800f67c8); crate::prof::exit(c, 0x800f67c8); return; }
     }
     f_800f67c8_b(c, 0x800f67c8);
-    if p { crate::prof::exit(c, 0x800f67c8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f67c8_at(c: &mut Cpu, pc: u32) { f_800f67c8_b(c, pc) }
@@ -12502,13 +12430,11 @@ fn f_800f67c8_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op04_call (0x800f694c, 360 bytes)
 #[inline(never)]
 pub fn f_800f694c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f694c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f694c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f694c); f_800f694c_at(c, 0x800f694c); crate::prof::exit(c, 0x800f694c); return; }
     }
     f_800f694c_b(c, 0x800f694c);
-    if p { crate::prof::exit(c, 0x800f694c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f694c_at(c: &mut Cpu, pc: u32) { f_800f694c_b(c, pc) }
@@ -12671,13 +12597,11 @@ fn f_800f694c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op03_pop (0x800f6ab4, 160 bytes)
 #[inline(never)]
 pub fn f_800f6ab4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f6ab4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f6ab4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f6ab4); f_800f6ab4_at(c, 0x800f6ab4); crate::prof::exit(c, 0x800f6ab4); return; }
     }
     f_800f6ab4_b(c, 0x800f6ab4);
-    if p { crate::prof::exit(c, 0x800f6ab4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f6ab4_at(c: &mut Cpu, pc: u32) { f_800f6ab4_b(c, pc) }
@@ -12763,13 +12687,11 @@ fn f_800f6ab4_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op02_pushMinus1 (0x800f6b54, 88 bytes)
 #[inline(never)]
 pub fn f_800f6b54(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f6b54) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f6b54); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f6b54); f_800f6b54_at(c, 0x800f6b54); crate::prof::exit(c, 0x800f6b54); return; }
     }
     f_800f6b54_b(c, 0x800f6b54);
-    if p { crate::prof::exit(c, 0x800f6b54); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f6b54_at(c: &mut Cpu, pc: u32) { f_800f6b54_b(c, pc) }
@@ -12828,13 +12750,11 @@ fn f_800f6b54_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op01_exit (0x800f6bac, 16 bytes)
 #[inline(never)]
 pub fn f_800f6bac(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f6bac) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f6bac); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f6bac); f_800f6bac_at(c, 0x800f6bac); crate::prof::exit(c, 0x800f6bac); return; }
     }
     f_800f6bac_b(c, 0x800f6bac);
-    if p { crate::prof::exit(c, 0x800f6bac); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f6bac_at(c: &mut Cpu, pc: u32) { f_800f6bac_b(c, pc) }
@@ -12863,13 +12783,11 @@ fn f_800f6bac_b(c: &mut Cpu, mut pc: u32) {
 /// cms_op00_nop (0x800f6bbc, 8 bytes)
 #[inline(never)]
 pub fn f_800f6bbc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f6bbc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f6bbc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f6bbc); f_800f6bbc_at(c, 0x800f6bbc); crate::prof::exit(c, 0x800f6bbc); return; }
     }
     f_800f6bbc_b(c, 0x800f6bbc);
-    if p { crate::prof::exit(c, 0x800f6bbc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f6bbc_at(c: &mut Cpu, pc: u32) { f_800f6bbc_b(c, pc) }
@@ -12896,13 +12814,11 @@ fn f_800f6bbc_b(c: &mut Cpu, mut pc: u32) {
 /// cms_ScriptExecute (0x800f6bc4, 340 bytes)
 #[inline(never)]
 pub fn f_800f6bc4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f6bc4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f6bc4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f6bc4); f_800f6bc4_at(c, 0x800f6bc4); crate::prof::exit(c, 0x800f6bc4); return; }
     }
     f_800f6bc4_b(c, 0x800f6bc4);
-    if p { crate::prof::exit(c, 0x800f6bc4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f6bc4_at(c: &mut Cpu, pc: u32) { f_800f6bc4_b(c, pc) }
@@ -13082,13 +12998,11 @@ fn f_800f6bc4_b(c: &mut Cpu, mut pc: u32) {
 /// cms_ScriptCreateThread (0x800f6d18, 848 bytes)
 #[inline(never)]
 pub fn f_800f6d18(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f6d18) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f6d18); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f6d18); f_800f6d18_at(c, 0x800f6d18); crate::prof::exit(c, 0x800f6d18); return; }
     }
     f_800f6d18_b(c, 0x800f6d18);
-    if p { crate::prof::exit(c, 0x800f6d18); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f6d18_at(c: &mut Cpu, pc: u32) { f_800f6d18_b(c, pc) }
@@ -13514,13 +13428,11 @@ fn f_800f6d18_b(c: &mut Cpu, mut pc: u32) {
 /// GSvmIsRunning (0x800f7068, 160 bytes)
 #[inline(never)]
 pub fn f_800f7068(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7068) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7068); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7068); f_800f7068_at(c, 0x800f7068); crate::prof::exit(c, 0x800f7068); return; }
     }
     f_800f7068_b(c, 0x800f7068);
-    if p { crate::prof::exit(c, 0x800f7068); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7068_at(c: &mut Cpu, pc: u32) { f_800f7068_b(c, pc) }
@@ -13624,13 +13536,11 @@ fn f_800f7068_b(c: &mut Cpu, mut pc: u32) {
 /// GSvmGetThreadByKey (0x800f7108, 100 bytes)
 #[inline(never)]
 pub fn f_800f7108(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7108) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7108); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7108); f_800f7108_at(c, 0x800f7108); crate::prof::exit(c, 0x800f7108); return; }
     }
     f_800f7108_b(c, 0x800f7108);
-    if p { crate::prof::exit(c, 0x800f7108); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7108_at(c: &mut Cpu, pc: u32) { f_800f7108_b(c, pc) }
@@ -13704,13 +13614,11 @@ fn f_800f7108_b(c: &mut Cpu, mut pc: u32) {
 /// GSvmStopGroup (0x800f716c, 264 bytes)
 #[inline(never)]
 pub fn f_800f716c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f716c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f716c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f716c); f_800f716c_at(c, 0x800f716c); crate::prof::exit(c, 0x800f716c); return; }
     }
     f_800f716c_b(c, 0x800f716c);
-    if p { crate::prof::exit(c, 0x800f716c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f716c_at(c: &mut Cpu, pc: u32) { f_800f716c_b(c, pc) }
@@ -13852,13 +13760,11 @@ fn f_800f716c_b(c: &mut Cpu, mut pc: u32) {
 /// floorTerminateScriptThreads (0x800f7274, 164 bytes)
 #[inline(never)]
 pub fn f_800f7274(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7274) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7274); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7274); f_800f7274_at(c, 0x800f7274); crate::prof::exit(c, 0x800f7274); return; }
     }
     f_800f7274_b(c, 0x800f7274);
-    if p { crate::prof::exit(c, 0x800f7274); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7274_at(c: &mut Cpu, pc: u32) { f_800f7274_b(c, pc) }
@@ -13960,13 +13866,11 @@ fn f_800f7274_b(c: &mut Cpu, mut pc: u32) {
 /// _vmThreadCreate (0x800f7318, 284 bytes)
 #[inline(never)]
 pub fn f_800f7318(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7318) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7318); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7318); f_800f7318_at(c, 0x800f7318); crate::prof::exit(c, 0x800f7318); return; }
     }
     f_800f7318_b(c, 0x800f7318);
-    if p { crate::prof::exit(c, 0x800f7318); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7318_at(c: &mut Cpu, pc: u32) { f_800f7318_b(c, pc) }
@@ -14098,13 +14002,11 @@ fn f_800f7318_b(c: &mut Cpu, mut pc: u32) {
 /// cmsRunSync (0x800f7434, 456 bytes)
 #[inline(never)]
 pub fn f_800f7434(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7434) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7434); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7434); f_800f7434_at(c, 0x800f7434); crate::prof::exit(c, 0x800f7434); return; }
     }
     f_800f7434_b(c, 0x800f7434);
-    if p { crate::prof::exit(c, 0x800f7434); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7434_at(c: &mut Cpu, pc: u32) { f_800f7434_b(c, pc) }
@@ -14329,13 +14231,11 @@ fn f_800f7434_b(c: &mut Cpu, mut pc: u32) {
 /// cms_PoolSetParam (0x800f75fc, 16 bytes)
 #[inline(never)]
 pub fn f_800f75fc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f75fc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f75fc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f75fc); f_800f75fc_at(c, 0x800f75fc); crate::prof::exit(c, 0x800f75fc); return; }
     }
     f_800f75fc_b(c, 0x800f75fc);
-    if p { crate::prof::exit(c, 0x800f75fc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f75fc_at(c: &mut Cpu, pc: u32) { f_800f75fc_b(c, pc) }
@@ -14364,13 +14264,11 @@ fn f_800f75fc_b(c: &mut Cpu, mut pc: u32) {
 /// cms_UnregisterScript (0x800f760c, 216 bytes)
 #[inline(never)]
 pub fn f_800f760c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f760c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f760c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f760c); f_800f760c_at(c, 0x800f760c); crate::prof::exit(c, 0x800f760c); return; }
     }
     f_800f760c_b(c, 0x800f760c);
-    if p { crate::prof::exit(c, 0x800f760c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f760c_at(c: &mut Cpu, pc: u32) { f_800f760c_b(c, pc) }
@@ -14500,13 +14398,11 @@ fn f_800f760c_b(c: &mut Cpu, mut pc: u32) {
 /// cms_RegisterScript (0x800f76e4, 116 bytes)
 #[inline(never)]
 pub fn f_800f76e4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f76e4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f76e4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f76e4); f_800f76e4_at(c, 0x800f76e4); crate::prof::exit(c, 0x800f76e4); return; }
     }
     f_800f76e4_b(c, 0x800f76e4);
-    if p { crate::prof::exit(c, 0x800f76e4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f76e4_at(c: &mut Cpu, pc: u32) { f_800f76e4_b(c, pc) }
@@ -14581,13 +14477,11 @@ fn f_800f76e4_b(c: &mut Cpu, mut pc: u32) {
 /// cms_InitThreadPool (0x800f7758, 332 bytes)
 #[inline(never)]
 pub fn f_800f7758(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7758) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7758); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7758); f_800f7758_at(c, 0x800f7758); crate::prof::exit(c, 0x800f7758); return; }
     }
     f_800f7758_b(c, 0x800f7758);
-    if p { crate::prof::exit(c, 0x800f7758); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7758_at(c: &mut Cpu, pc: u32) { f_800f7758_b(c, pc) }
@@ -14737,13 +14631,11 @@ fn f_800f7758_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputMotorStart (0x800f78a4, 124 bytes)
 #[inline(never)]
 pub fn f_800f78a4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f78a4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f78a4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f78a4); f_800f78a4_at(c, 0x800f78a4); crate::prof::exit(c, 0x800f78a4); return; }
     }
     f_800f78a4_b(c, 0x800f78a4);
-    if p { crate::prof::exit(c, 0x800f78a4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f78a4_at(c: &mut Cpu, pc: u32) { f_800f78a4_b(c, pc) }
@@ -14833,13 +14725,11 @@ fn f_800f78a4_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputGetRightStickYData (0x800f7920, 116 bytes)
 #[inline(never)]
 pub fn f_800f7920(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7920) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7920); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7920); f_800f7920_at(c, 0x800f7920); crate::prof::exit(c, 0x800f7920); return; }
     }
     f_800f7920_b(c, 0x800f7920);
-    if p { crate::prof::exit(c, 0x800f7920); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7920_at(c: &mut Cpu, pc: u32) { f_800f7920_b(c, pc) }
@@ -14932,13 +14822,11 @@ fn f_800f7920_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputGetRightStickXData (0x800f7994, 116 bytes)
 #[inline(never)]
 pub fn f_800f7994(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7994) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7994); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7994); f_800f7994_at(c, 0x800f7994); crate::prof::exit(c, 0x800f7994); return; }
     }
     f_800f7994_b(c, 0x800f7994);
-    if p { crate::prof::exit(c, 0x800f7994); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7994_at(c: &mut Cpu, pc: u32) { f_800f7994_b(c, pc) }
@@ -15031,13 +14919,11 @@ fn f_800f7994_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputGetLeftStickYData (0x800f7a08, 116 bytes)
 #[inline(never)]
 pub fn f_800f7a08(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7a08) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7a08); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7a08); f_800f7a08_at(c, 0x800f7a08); crate::prof::exit(c, 0x800f7a08); return; }
     }
     f_800f7a08_b(c, 0x800f7a08);
-    if p { crate::prof::exit(c, 0x800f7a08); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7a08_at(c: &mut Cpu, pc: u32) { f_800f7a08_b(c, pc) }
@@ -15130,13 +15016,11 @@ fn f_800f7a08_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputGetLeftStickXData (0x800f7a7c, 116 bytes)
 #[inline(never)]
 pub fn f_800f7a7c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7a7c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7a7c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7a7c); f_800f7a7c_at(c, 0x800f7a7c); crate::prof::exit(c, 0x800f7a7c); return; }
     }
     f_800f7a7c_b(c, 0x800f7a7c);
-    if p { crate::prof::exit(c, 0x800f7a7c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7a7c_at(c: &mut Cpu, pc: u32) { f_800f7a7c_b(c, pc) }
@@ -15229,13 +15113,11 @@ fn f_800f7a7c_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputButtonsChanged (0x800f7af0, 108 bytes)
 #[inline(never)]
 pub fn f_800f7af0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7af0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7af0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7af0); f_800f7af0_at(c, 0x800f7af0); crate::prof::exit(c, 0x800f7af0); return; }
     }
     f_800f7af0_b(c, 0x800f7af0);
-    if p { crate::prof::exit(c, 0x800f7af0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7af0_at(c: &mut Cpu, pc: u32) { f_800f7af0_b(c, pc) }
@@ -15320,13 +15202,11 @@ fn f_800f7af0_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputGetButtonsUp (0x800f7b5c, 104 bytes)
 #[inline(never)]
 pub fn f_800f7b5c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7b5c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7b5c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7b5c); f_800f7b5c_at(c, 0x800f7b5c); crate::prof::exit(c, 0x800f7b5c); return; }
     }
     f_800f7b5c_b(c, 0x800f7b5c);
-    if p { crate::prof::exit(c, 0x800f7b5c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7b5c_at(c: &mut Cpu, pc: u32) { f_800f7b5c_b(c, pc) }
@@ -15410,13 +15290,11 @@ fn f_800f7b5c_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputGetButtons (0x800f7bc4, 100 bytes)
 #[inline(never)]
 pub fn f_800f7bc4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7bc4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7bc4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7bc4); f_800f7bc4_at(c, 0x800f7bc4); crate::prof::exit(c, 0x800f7bc4); return; }
     }
     f_800f7bc4_b(c, 0x800f7bc4);
-    if p { crate::prof::exit(c, 0x800f7bc4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7bc4_at(c: &mut Cpu, pc: u32) { f_800f7bc4_b(c, pc) }
@@ -15499,13 +15377,11 @@ fn f_800f7bc4_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputGetSubType (0x800f7c28, 100 bytes)
 #[inline(never)]
 pub fn f_800f7c28(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7c28) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7c28); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7c28); f_800f7c28_at(c, 0x800f7c28); crate::prof::exit(c, 0x800f7c28); return; }
     }
     f_800f7c28_b(c, 0x800f7c28);
-    if p { crate::prof::exit(c, 0x800f7c28); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7c28_at(c: &mut Cpu, pc: u32) { f_800f7c28_b(c, pc) }
@@ -15588,13 +15464,11 @@ fn f_800f7c28_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputResetRightSmoothing (0x800f7c8c, 172 bytes)
 #[inline(never)]
 pub fn f_800f7c8c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7c8c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7c8c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7c8c); f_800f7c8c_at(c, 0x800f7c8c); crate::prof::exit(c, 0x800f7c8c); return; }
     }
     f_800f7c8c_b(c, 0x800f7c8c);
-    if p { crate::prof::exit(c, 0x800f7c8c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7c8c_at(c: &mut Cpu, pc: u32) { f_800f7c8c_b(c, pc) }
@@ -15695,13 +15569,11 @@ fn f_800f7c8c_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputResetLeftSmoothing (0x800f7d38, 172 bytes)
 #[inline(never)]
 pub fn f_800f7d38(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7d38) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7d38); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7d38); f_800f7d38_at(c, 0x800f7d38); crate::prof::exit(c, 0x800f7d38); return; }
     }
     f_800f7d38_b(c, 0x800f7d38);
-    if p { crate::prof::exit(c, 0x800f7d38); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7d38_at(c: &mut Cpu, pc: u32) { f_800f7d38_b(c, pc) }
@@ -15802,13 +15674,11 @@ fn f_800f7d38_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputSetSmoothingFunc (0x800f7de4, 92 bytes)
 #[inline(never)]
 pub fn f_800f7de4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7de4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7de4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7de4); f_800f7de4_at(c, 0x800f7de4); crate::prof::exit(c, 0x800f7de4); return; }
     }
     f_800f7de4_b(c, 0x800f7de4);
-    if p { crate::prof::exit(c, 0x800f7de4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7de4_at(c: &mut Cpu, pc: u32) { f_800f7de4_b(c, pc) }
@@ -15886,13 +15756,11 @@ fn f_800f7de4_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputSetSmoothingRate (0x800f7e40, 92 bytes)
 #[inline(never)]
 pub fn f_800f7e40(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7e40) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7e40); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7e40); f_800f7e40_at(c, 0x800f7e40); crate::prof::exit(c, 0x800f7e40); return; }
     }
     f_800f7e40_b(c, 0x800f7e40);
-    if p { crate::prof::exit(c, 0x800f7e40); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7e40_at(c: &mut Cpu, pc: u32) { f_800f7e40_b(c, pc) }
@@ -15970,13 +15838,11 @@ fn f_800f7e40_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputSetClamping (0x800f7e9c, 92 bytes)
 #[inline(never)]
 pub fn f_800f7e9c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7e9c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7e9c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7e9c); f_800f7e9c_at(c, 0x800f7e9c); crate::prof::exit(c, 0x800f7e9c); return; }
     }
     f_800f7e9c_b(c, 0x800f7e9c);
-    if p { crate::prof::exit(c, 0x800f7e9c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7e9c_at(c: &mut Cpu, pc: u32) { f_800f7e9c_b(c, pc) }
@@ -16054,13 +15920,11 @@ fn f_800f7e9c_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputIsConnected (0x800f7ef8, 108 bytes)
 #[inline(never)]
 pub fn f_800f7ef8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7ef8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7ef8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7ef8); f_800f7ef8_at(c, 0x800f7ef8); crate::prof::exit(c, 0x800f7ef8); return; }
     }
     f_800f7ef8_b(c, 0x800f7ef8);
-    if p { crate::prof::exit(c, 0x800f7ef8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7ef8_at(c: &mut Cpu, pc: u32) { f_800f7ef8_b(c, pc) }
@@ -16145,13 +16009,11 @@ fn f_800f7ef8_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputRead (0x800f7f64, 332 bytes)
 #[inline(never)]
 pub fn f_800f7f64(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f7f64) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f7f64); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f7f64); f_800f7f64_at(c, 0x800f7f64); crate::prof::exit(c, 0x800f7f64); return; }
     }
     f_800f7f64_b(c, 0x800f7f64);
-    if p { crate::prof::exit(c, 0x800f7f64); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f7f64_at(c: &mut Cpu, pc: u32) { f_800f7f64_b(c, pc) }
@@ -16328,13 +16190,11 @@ fn f_800f7f64_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputOpen (0x800f80b0, 136 bytes)
 #[inline(never)]
 pub fn f_800f80b0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f80b0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f80b0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f80b0); f_800f80b0_at(c, 0x800f80b0); crate::prof::exit(c, 0x800f80b0); return; }
     }
     f_800f80b0_b(c, 0x800f80b0);
-    if p { crate::prof::exit(c, 0x800f80b0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f80b0_at(c: &mut Cpu, pc: u32) { f_800f80b0_b(c, pc) }
@@ -16441,13 +16301,11 @@ fn f_800f80b0_b(c: &mut Cpu, mut pc: u32) {
 /// GSinputInit (0x800f8138, 304 bytes)
 #[inline(never)]
 pub fn f_800f8138(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f8138) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f8138); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f8138); f_800f8138_at(c, 0x800f8138); crate::prof::exit(c, 0x800f8138); return; }
     }
     f_800f8138_b(c, 0x800f8138);
-    if p { crate::prof::exit(c, 0x800f8138); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f8138_at(c: &mut Cpu, pc: u32) { f_800f8138_b(c, pc) }
@@ -16578,13 +16436,11 @@ fn f_800f8138_b(c: &mut Cpu, mut pc: u32) {
 /// inputPadCallback (0x800f8268, 448 bytes)
 #[inline(never)]
 pub fn f_800f8268(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f8268) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f8268); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f8268); f_800f8268_at(c, 0x800f8268); crate::prof::exit(c, 0x800f8268); return; }
     }
     f_800f8268_b(c, 0x800f8268);
-    if p { crate::prof::exit(c, 0x800f8268); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f8268_at(c: &mut Cpu, pc: u32) { f_800f8268_b(c, pc) }
@@ -16823,13 +16679,11 @@ fn f_800f8268_b(c: &mut Cpu, mut pc: u32) {
 /// inputUpdateMotors (0x800f8428, 556 bytes)
 #[inline(never)]
 pub fn f_800f8428(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f8428) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f8428); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f8428); f_800f8428_at(c, 0x800f8428); crate::prof::exit(c, 0x800f8428); return; }
     }
     f_800f8428_b(c, 0x800f8428);
-    if p { crate::prof::exit(c, 0x800f8428); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f8428_at(c: &mut Cpu, pc: u32) { f_800f8428_b(c, pc) }
@@ -17124,13 +16978,11 @@ fn f_800f8428_b(c: &mut Cpu, mut pc: u32) {
 /// inputSmoothStick (0x800f8654, 1024 bytes)
 #[inline(never)]
 pub fn f_800f8654(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f8654) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f8654); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f8654); f_800f8654_at(c, 0x800f8654); crate::prof::exit(c, 0x800f8654); return; }
     }
     f_800f8654_b(c, 0x800f8654);
-    if p { crate::prof::exit(c, 0x800f8654); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f8654_at(c: &mut Cpu, pc: u32) { f_800f8654_b(c, pc) }
@@ -17522,13 +17374,11 @@ fn f_800f8654_b(c: &mut Cpu, mut pc: u32) {
 /// inputClampSticks (0x800f8a54, 1800 bytes)
 #[inline(never)]
 pub fn f_800f8a54(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f8a54) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f8a54); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f8a54); f_800f8a54_at(c, 0x800f8a54); crate::prof::exit(c, 0x800f8a54); return; }
     }
     f_800f8a54_b(c, 0x800f8a54);
-    if p { crate::prof::exit(c, 0x800f8a54); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f8a54_at(c: &mut Cpu, pc: u32) { f_800f8a54_b(c, pc) }
@@ -18407,13 +18257,11 @@ fn f_800f8a54_b(c: &mut Cpu, mut pc: u32) {
 /// GSresReleaseOwner (0x800f915c, 180 bytes)
 #[inline(never)]
 pub fn f_800f915c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f915c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f915c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f915c); f_800f915c_at(c, 0x800f915c); crate::prof::exit(c, 0x800f915c); return; }
     }
     f_800f915c_b(c, 0x800f915c);
-    if p { crate::prof::exit(c, 0x800f915c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f915c_at(c: &mut Cpu, pc: u32) { f_800f915c_b(c, pc) }
@@ -18523,13 +18371,11 @@ fn f_800f915c_b(c: &mut Cpu, mut pc: u32) {
 /// GSresReleaseOwnerItem (0x800f9210, 196 bytes)
 #[inline(never)]
 pub fn f_800f9210(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9210) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9210); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9210); f_800f9210_at(c, 0x800f9210); crate::prof::exit(c, 0x800f9210); return; }
     }
     f_800f9210_b(c, 0x800f9210);
-    if p { crate::prof::exit(c, 0x800f9210); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9210_at(c: &mut Cpu, pc: u32) { f_800f9210_b(c, pc) }
@@ -18652,13 +18498,11 @@ fn f_800f9210_b(c: &mut Cpu, mut pc: u32) {
 /// GSresFindById (0x800f92d4, 68 bytes)
 #[inline(never)]
 pub fn f_800f92d4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f92d4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f92d4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f92d4); f_800f92d4_at(c, 0x800f92d4); crate::prof::exit(c, 0x800f92d4); return; }
     }
     f_800f92d4_b(c, 0x800f92d4);
-    if p { crate::prof::exit(c, 0x800f92d4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f92d4_at(c: &mut Cpu, pc: u32) { f_800f92d4_b(c, pc) }
@@ -18715,13 +18559,11 @@ fn f_800f92d4_b(c: &mut Cpu, mut pc: u32) {
 /// GSresGetResource (0x800f9318, 96 bytes)
 #[inline(never)]
 pub fn f_800f9318(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9318) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9318); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9318); f_800f9318_at(c, 0x800f9318); crate::prof::exit(c, 0x800f9318); return; }
     }
     f_800f9318_b(c, 0x800f9318);
-    if p { crate::prof::exit(c, 0x800f9318); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9318_at(c: &mut Cpu, pc: u32) { f_800f9318_b(c, pc) }
@@ -18797,13 +18639,11 @@ fn f_800f9318_b(c: &mut Cpu, mut pc: u32) {
 /// GSresRegisterResource (0x800f9378, 160 bytes)
 #[inline(never)]
 pub fn f_800f9378(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9378) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9378); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9378); f_800f9378_at(c, 0x800f9378); crate::prof::exit(c, 0x800f9378); return; }
     }
     f_800f9378_b(c, 0x800f9378);
-    if p { crate::prof::exit(c, 0x800f9378); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9378_at(c: &mut Cpu, pc: u32) { f_800f9378_b(c, pc) }
@@ -18910,13 +18750,11 @@ fn f_800f9378_b(c: &mut Cpu, mut pc: u32) {
 /// GSresAllocResourceAlign (0x800f9418, 300 bytes)
 #[inline(never)]
 pub fn f_800f9418(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9418) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9418); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9418); f_800f9418_at(c, 0x800f9418); crate::prof::exit(c, 0x800f9418); return; }
     }
     f_800f9418_b(c, 0x800f9418);
-    if p { crate::prof::exit(c, 0x800f9418); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9418_at(c: &mut Cpu, pc: u32) { f_800f9418_b(c, pc) }
@@ -19088,13 +18926,11 @@ fn f_800f9418_b(c: &mut Cpu, mut pc: u32) {
 /// GSresAllocResource (0x800f9544, 300 bytes)
 #[inline(never)]
 pub fn f_800f9544(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9544) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9544); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9544); f_800f9544_at(c, 0x800f9544); crate::prof::exit(c, 0x800f9544); return; }
     }
     f_800f9544_b(c, 0x800f9544);
-    if p { crate::prof::exit(c, 0x800f9544); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9544_at(c: &mut Cpu, pc: u32) { f_800f9544_b(c, pc) }
@@ -19266,13 +19102,11 @@ fn f_800f9544_b(c: &mut Cpu, mut pc: u32) {
 /// GSresInit (0x800f9670, 116 bytes)
 #[inline(never)]
 pub fn f_800f9670(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9670) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9670); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9670); f_800f9670_at(c, 0x800f9670); crate::prof::exit(c, 0x800f9670); return; }
     }
     f_800f9670_b(c, 0x800f9670);
-    if p { crate::prof::exit(c, 0x800f9670); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9670_at(c: &mut Cpu, pc: u32) { f_800f9670_b(c, pc) }
@@ -19345,13 +19179,11 @@ fn f_800f9670_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgGetText (0x800f96e4, 1032 bytes)
 #[inline(never)]
 pub fn f_800f96e4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f96e4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f96e4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f96e4); f_800f96e4_at(c, 0x800f96e4); crate::prof::exit(c, 0x800f96e4); return; }
     }
     f_800f96e4_b(c, 0x800f96e4);
-    if p { crate::prof::exit(c, 0x800f96e4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f96e4_at(c: &mut Cpu, pc: u32) { f_800f96e4_b(c, pc) }
@@ -19871,13 +19703,11 @@ fn f_800f96e4_b(c: &mut Cpu, mut pc: u32) {
 /// GScharToGBA (0x800f9aec, 280 bytes)
 #[inline(never)]
 pub fn f_800f9aec(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9aec) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9aec); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9aec); f_800f9aec_at(c, 0x800f9aec); crate::prof::exit(c, 0x800f9aec); return; }
     }
     f_800f9aec_b(c, 0x800f9aec);
-    if p { crate::prof::exit(c, 0x800f9aec); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9aec_at(c: &mut Cpu, pc: u32) { f_800f9aec_b(c, pc) }
@@ -20056,13 +19886,11 @@ fn f_800f9aec_b(c: &mut Cpu, mut pc: u32) {
 /// GScharFromGBA (0x800f9c04, 256 bytes)
 #[inline(never)]
 pub fn f_800f9c04(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9c04) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9c04); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9c04); f_800f9c04_at(c, 0x800f9c04); crate::prof::exit(c, 0x800f9c04); return; }
     }
     f_800f9c04_b(c, 0x800f9c04);
-    if p { crate::prof::exit(c, 0x800f9c04); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9c04_at(c: &mut Cpu, pc: u32) { f_800f9c04_b(c, pc) }
@@ -20229,13 +20057,11 @@ fn f_800f9c04_b(c: &mut Cpu, mut pc: u32) {
 /// GScharMakeFromSJIS (0x800f9d04, 32 bytes)
 #[inline(never)]
 pub fn f_800f9d04(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9d04) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9d04); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9d04); f_800f9d04_at(c, 0x800f9d04); crate::prof::exit(c, 0x800f9d04); return; }
     }
     f_800f9d04_b(c, 0x800f9d04);
-    if p { crate::prof::exit(c, 0x800f9d04); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9d04_at(c: &mut Cpu, pc: u32) { f_800f9d04_b(c, pc) }
@@ -20271,13 +20097,11 @@ fn f_800f9d04_b(c: &mut Cpu, mut pc: u32) {
 /// GScharLenCpy (0x800f9d24, 332 bytes)
 #[inline(never)]
 pub fn f_800f9d24(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9d24) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9d24); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9d24); f_800f9d24_at(c, 0x800f9d24); crate::prof::exit(c, 0x800f9d24); return; }
     }
     f_800f9d24_b(c, 0x800f9d24);
-    if p { crate::prof::exit(c, 0x800f9d24); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9d24_at(c: &mut Cpu, pc: u32) { f_800f9d24_b(c, pc) }
@@ -20425,13 +20249,11 @@ fn f_800f9d24_b(c: &mut Cpu, mut pc: u32) {
 /// GScharCpy (0x800f9e70, 116 bytes)
 #[inline(never)]
 pub fn f_800f9e70(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9e70) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9e70); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9e70); f_800f9e70_at(c, 0x800f9e70); crate::prof::exit(c, 0x800f9e70); return; }
     }
     f_800f9e70_b(c, 0x800f9e70);
-    if p { crate::prof::exit(c, 0x800f9e70); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9e70_at(c: &mut Cpu, pc: u32) { f_800f9e70_b(c, pc) }
@@ -20506,13 +20328,11 @@ fn f_800f9e70_b(c: &mut Cpu, mut pc: u32) {
 /// GScharCmp (0x800f9ee4, 384 bytes)
 #[inline(never)]
 pub fn f_800f9ee4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800f9ee4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800f9ee4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800f9ee4); f_800f9ee4_at(c, 0x800f9ee4); crate::prof::exit(c, 0x800f9ee4); return; }
     }
     f_800f9ee4_b(c, 0x800f9ee4);
-    if p { crate::prof::exit(c, 0x800f9ee4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800f9ee4_at(c: &mut Cpu, pc: u32) { f_800f9ee4_b(c, pc) }
@@ -20708,13 +20528,11 @@ fn f_800f9ee4_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgAdjustAlign (0x800fa064, 252 bytes)
 #[inline(never)]
 pub fn f_800fa064(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fa064) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fa064); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fa064); f_800fa064_at(c, 0x800fa064); crate::prof::exit(c, 0x800fa064); return; }
     }
     f_800fa064_b(c, 0x800fa064);
-    if p { crate::prof::exit(c, 0x800fa064); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fa064_at(c: &mut Cpu, pc: u32) { f_800fa064_b(c, pc) }
@@ -20835,13 +20653,11 @@ fn f_800fa064_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgSetColor (0x800fa160, 92 bytes)
 #[inline(never)]
 pub fn f_800fa160(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fa160) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fa160); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fa160); f_800fa160_at(c, 0x800fa160); crate::prof::exit(c, 0x800fa160); return; }
     }
     f_800fa160_b(c, 0x800fa160);
-    if p { crate::prof::exit(c, 0x800fa160); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fa160_at(c: &mut Cpu, pc: u32) { f_800fa160_b(c, pc) }
@@ -20892,13 +20708,11 @@ fn f_800fa160_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgSetFontInfo (0x800fa1bc, 196 bytes)
 #[inline(never)]
 pub fn f_800fa1bc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fa1bc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fa1bc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fa1bc); f_800fa1bc_at(c, 0x800fa1bc); crate::prof::exit(c, 0x800fa1bc); return; }
     }
     f_800fa1bc_b(c, 0x800fa1bc);
-    if p { crate::prof::exit(c, 0x800fa1bc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fa1bc_at(c: &mut Cpu, pc: u32) { f_800fa1bc_b(c, pc) }
@@ -20999,13 +20813,11 @@ fn f_800fa1bc_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgGetGSchar (0x800fa280, 148 bytes)
 #[inline(never)]
 pub fn f_800fa280(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fa280) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fa280); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fa280); f_800fa280_at(c, 0x800fa280); crate::prof::exit(c, 0x800fa280); return; }
     }
     f_800fa280_b(c, 0x800fa280);
-    if p { crate::prof::exit(c, 0x800fa280); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fa280_at(c: &mut Cpu, pc: u32) { f_800fa280_b(c, pc) }
@@ -21106,13 +20918,11 @@ fn f_800fa280_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgGetLength (0x800fa314, 188 bytes)
 #[inline(never)]
 pub fn f_800fa314(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fa314) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fa314); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fa314); f_800fa314_at(c, 0x800fa314); crate::prof::exit(c, 0x800fa314); return; }
     }
     f_800fa314_b(c, 0x800fa314);
-    if p { crate::prof::exit(c, 0x800fa314); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fa314_at(c: &mut Cpu, pc: u32) { f_800fa314_b(c, pc) }
@@ -21235,13 +21045,11 @@ fn f_800fa314_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgIsCheck (0x800fa3d0, 116 bytes)
 #[inline(never)]
 pub fn f_800fa3d0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fa3d0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fa3d0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fa3d0); f_800fa3d0_at(c, 0x800fa3d0); crate::prof::exit(c, 0x800fa3d0); return; }
     }
     f_800fa3d0_b(c, 0x800fa3d0);
-    if p { crate::prof::exit(c, 0x800fa3d0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fa3d0_at(c: &mut Cpu, pc: u32) { f_800fa3d0_b(c, pc) }
@@ -21322,13 +21130,11 @@ fn f_800fa3d0_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgGetRect (0x800fa444, 1620 bytes)
 #[inline(never)]
 pub fn f_800fa444(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fa444) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fa444); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fa444); f_800fa444_at(c, 0x800fa444); crate::prof::exit(c, 0x800fa444); return; }
     }
     f_800fa444_b(c, 0x800fa444);
-    if p { crate::prof::exit(c, 0x800fa444); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fa444_at(c: &mut Cpu, pc: u32) { f_800fa444_b(c, pc) }
@@ -22037,13 +21843,11 @@ fn f_800fa444_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgInitRuby (0x800faa98, 1120 bytes)
 #[inline(never)]
 pub fn f_800faa98(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800faa98) { return; }
-        if c.prof { crate::prof::enter(c, 0x800faa98); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800faa98); f_800faa98_at(c, 0x800faa98); crate::prof::exit(c, 0x800faa98); return; }
     }
     f_800faa98_b(c, 0x800faa98);
-    if p { crate::prof::exit(c, 0x800faa98); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800faa98_at(c: &mut Cpu, pc: u32) { f_800faa98_b(c, pc) }
@@ -22510,13 +22314,11 @@ fn f_800faa98_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgPrintf (0x800faef8, 1348 bytes)
 #[inline(never)]
 pub fn f_800faef8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800faef8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800faef8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800faef8); f_800faef8_at(c, 0x800faef8); crate::prof::exit(c, 0x800faef8); return; }
     }
     f_800faef8_b(c, 0x800faef8);
-    if p { crate::prof::exit(c, 0x800faef8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800faef8_at(c: &mut Cpu, pc: u32) { f_800faef8_b(c, pc) }
@@ -23031,13 +22833,11 @@ fn f_800faef8_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgPrint (0x800fb43c, 580 bytes)
 #[inline(never)]
 pub fn f_800fb43c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fb43c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fb43c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fb43c); f_800fb43c_at(c, 0x800fb43c); crate::prof::exit(c, 0x800fb43c); return; }
     }
     f_800fb43c_b(c, 0x800fb43c);
-    if p { crate::prof::exit(c, 0x800fb43c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fb43c_at(c: &mut Cpu, pc: u32) { f_800fb43c_b(c, pc) }
@@ -23294,13 +23094,11 @@ fn f_800fb43c_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgPrintColor (0x800fb680, 584 bytes)
 #[inline(never)]
 pub fn f_800fb680(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fb680) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fb680); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fb680); f_800fb680_at(c, 0x800fb680); crate::prof::exit(c, 0x800fb680); return; }
     }
     f_800fb680_b(c, 0x800fb680);
-    if p { crate::prof::exit(c, 0x800fb680); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fb680_at(c: &mut Cpu, pc: u32) { f_800fb680_b(c, pc) }
@@ -23558,13 +23356,11 @@ fn f_800fb680_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgPrintRight (0x800fb8c8, 620 bytes)
 #[inline(never)]
 pub fn f_800fb8c8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fb8c8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fb8c8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fb8c8); f_800fb8c8_at(c, 0x800fb8c8); crate::prof::exit(c, 0x800fb8c8); return; }
     }
     f_800fb8c8_b(c, 0x800fb8c8);
-    if p { crate::prof::exit(c, 0x800fb8c8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fb8c8_at(c: &mut Cpu, pc: u32) { f_800fb8c8_b(c, pc) }
@@ -23834,13 +23630,11 @@ fn f_800fb8c8_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgPrintRect (0x800fbb34, 596 bytes)
 #[inline(never)]
 pub fn f_800fbb34(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fbb34) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fbb34); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fbb34); f_800fbb34_at(c, 0x800fbb34); crate::prof::exit(c, 0x800fbb34); return; }
     }
     f_800fbb34_b(c, 0x800fbb34);
-    if p { crate::prof::exit(c, 0x800fbb34); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fbb34_at(c: &mut Cpu, pc: u32) { f_800fbb34_b(c, pc) }
@@ -24101,13 +23895,11 @@ fn f_800fbb34_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgFree (0x800fbd88, 244 bytes)
 #[inline(never)]
 pub fn f_800fbd88(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fbd88) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fbd88); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fbd88); f_800fbd88_at(c, 0x800fbd88); crate::prof::exit(c, 0x800fbd88); return; }
     }
     f_800fbd88_b(c, 0x800fbd88);
-    if p { crate::prof::exit(c, 0x800fbd88); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fbd88_at(c: &mut Cpu, pc: u32) { f_800fbd88_b(c, pc) }
@@ -24268,13 +24060,11 @@ fn f_800fbd88_b(c: &mut Cpu, mut pc: u32) {
 /// winMsgDrawMessage (0x800fbe7c, 148 bytes)
 #[inline(never)]
 pub fn f_800fbe7c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fbe7c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fbe7c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fbe7c); f_800fbe7c_at(c, 0x800fbe7c); crate::prof::exit(c, 0x800fbe7c); return; }
     }
     f_800fbe7c_b(c, 0x800fbe7c);
-    if p { crate::prof::exit(c, 0x800fbe7c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fbe7c_at(c: &mut Cpu, pc: u32) { f_800fbe7c_b(c, pc) }
@@ -24363,13 +24153,11 @@ fn f_800fbe7c_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgDaemon (0x800fbf10, 100 bytes)
 #[inline(never)]
 pub fn f_800fbf10(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fbf10) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fbf10); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fbf10); f_800fbf10_at(c, 0x800fbf10); crate::prof::exit(c, 0x800fbf10); return; }
     }
     f_800fbf10_b(c, 0x800fbf10);
-    if p { crate::prof::exit(c, 0x800fbf10); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fbf10_at(c: &mut Cpu, pc: u32) { f_800fbf10_b(c, pc) }
@@ -24422,13 +24210,11 @@ fn f_800fbf10_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgExec (0x800fbf74, 604 bytes)
 #[inline(never)]
 pub fn f_800fbf74(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fbf74) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fbf74); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fbf74); f_800fbf74_at(c, 0x800fbf74); crate::prof::exit(c, 0x800fbf74); return; }
     }
     f_800fbf74_b(c, 0x800fbf74);
-    if p { crate::prof::exit(c, 0x800fbf74); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fbf74_at(c: &mut Cpu, pc: u32) { f_800fbf74_b(c, pc) }
@@ -24712,13 +24498,11 @@ fn f_800fbf74_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgClose (0x800fc1d0, 116 bytes)
 #[inline(never)]
 pub fn f_800fc1d0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc1d0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc1d0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc1d0); f_800fc1d0_at(c, 0x800fc1d0); crate::prof::exit(c, 0x800fc1d0); return; }
     }
     f_800fc1d0_b(c, 0x800fc1d0);
-    if p { crate::prof::exit(c, 0x800fc1d0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc1d0_at(c: &mut Cpu, pc: u32) { f_800fc1d0_b(c, pc) }
@@ -24805,13 +24589,11 @@ fn f_800fc1d0_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgOpen (0x800fc244, 96 bytes)
 #[inline(never)]
 pub fn f_800fc244(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc244) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc244); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc244); f_800fc244_at(c, 0x800fc244); crate::prof::exit(c, 0x800fc244); return; }
     }
     f_800fc244_b(c, 0x800fc244);
-    if p { crate::prof::exit(c, 0x800fc244); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc244_at(c: &mut Cpu, pc: u32) { f_800fc244_b(c, pc) }
@@ -24881,13 +24663,11 @@ fn f_800fc244_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgOpen_ret (0x800fc2a4, 4 bytes)
 #[inline(never)]
 pub fn f_800fc2a4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc2a4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc2a4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc2a4); f_800fc2a4_at(c, 0x800fc2a4); crate::prof::exit(c, 0x800fc2a4); return; }
     }
     f_800fc2a4_b(c, 0x800fc2a4);
-    if p { crate::prof::exit(c, 0x800fc2a4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc2a4_at(c: &mut Cpu, pc: u32) { f_800fc2a4_b(c, pc) }
@@ -24913,13 +24693,11 @@ fn f_800fc2a4_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgFontClose (0x800fc2a8, 244 bytes)
 #[inline(never)]
 pub fn f_800fc2a8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc2a8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc2a8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc2a8); f_800fc2a8_at(c, 0x800fc2a8); crate::prof::exit(c, 0x800fc2a8); return; }
     }
     f_800fc2a8_b(c, 0x800fc2a8);
-    if p { crate::prof::exit(c, 0x800fc2a8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc2a8_at(c: &mut Cpu, pc: u32) { f_800fc2a8_b(c, pc) }
@@ -25062,13 +24840,11 @@ fn f_800fc2a8_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgFontOpen (0x800fc39c, 380 bytes)
 #[inline(never)]
 pub fn f_800fc39c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc39c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc39c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc39c); f_800fc39c_at(c, 0x800fc39c); crate::prof::exit(c, 0x800fc39c); return; }
     }
     f_800fc39c_b(c, 0x800fc39c);
-    if p { crate::prof::exit(c, 0x800fc39c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc39c_at(c: &mut Cpu, pc: u32) { f_800fc39c_b(c, pc) }
@@ -25260,13 +25036,11 @@ fn f_800fc39c_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgSetCtrlFunc (0x800fc518, 16 bytes)
 #[inline(never)]
 pub fn f_800fc518(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc518) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc518); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc518); f_800fc518_at(c, 0x800fc518); crate::prof::exit(c, 0x800fc518); return; }
     }
     f_800fc518_b(c, 0x800fc518);
-    if p { crate::prof::exit(c, 0x800fc518); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc518_at(c: &mut Cpu, pc: u32) { f_800fc518_b(c, pc) }
@@ -25295,13 +25069,11 @@ fn f_800fc518_b(c: &mut Cpu, mut pc: u32) {
 /// GSmsgInit (0x800fc528, 696 bytes)
 #[inline(never)]
 pub fn f_800fc528(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc528) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc528); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc528); f_800fc528_at(c, 0x800fc528); crate::prof::exit(c, 0x800fc528); return; }
     }
     f_800fc528_b(c, 0x800fc528);
-    if p { crate::prof::exit(c, 0x800fc528); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc528_at(c: &mut Cpu, pc: u32) { f_800fc528_b(c, pc) }
@@ -25572,13 +25344,11 @@ fn f_800fc528_b(c: &mut Cpu, mut pc: u32) {
 /// msgTaskDraw (0x800fc7e0, 2920 bytes)
 #[inline(never)]
 pub fn f_800fc7e0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fc7e0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fc7e0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fc7e0); f_800fc7e0_at(c, 0x800fc7e0); crate::prof::exit(c, 0x800fc7e0); return; }
     }
     f_800fc7e0_b(c, 0x800fc7e0);
-    if p { crate::prof::exit(c, 0x800fc7e0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fc7e0_at(c: &mut Cpu, pc: u32) { f_800fc7e0_b(c, pc) }
@@ -26894,13 +26664,11 @@ fn f_800fc7e0_b(c: &mut Cpu, mut pc: u32) {
 /// msgDrawRuby (0x800fd348, 852 bytes)
 #[inline(never)]
 pub fn f_800fd348(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fd348) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fd348); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fd348); f_800fd348_at(c, 0x800fd348); crate::prof::exit(c, 0x800fd348); return; }
     }
     f_800fd348_b(c, 0x800fd348);
-    if p { crate::prof::exit(c, 0x800fd348); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fd348_at(c: &mut Cpu, pc: u32) { f_800fd348_b(c, pc) }
@@ -27210,13 +26978,11 @@ fn f_800fd348_b(c: &mut Cpu, mut pc: u32) {
 /// _msgMakeTexture (0x800fd69c, 2176 bytes)
 #[inline(never)]
 pub fn f_800fd69c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fd69c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fd69c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fd69c); f_800fd69c_at(c, 0x800fd69c); crate::prof::exit(c, 0x800fd69c); return; }
     }
     f_800fd69c_b(c, 0x800fd69c);
-    if p { crate::prof::exit(c, 0x800fd69c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fd69c_at(c: &mut Cpu, pc: u32) { f_800fd69c_b(c, pc) }
@@ -28000,13 +27766,11 @@ fn f_800fd69c_b(c: &mut Cpu, mut pc: u32) {
 /// _msgGetCodeInfo__FP13MSG_TASK_WORKUsPP12tagFONT_INFO (0x800fdf1c, 200 bytes)
 #[inline(never)]
 pub fn f_800fdf1c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fdf1c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fdf1c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fdf1c); f_800fdf1c_at(c, 0x800fdf1c); crate::prof::exit(c, 0x800fdf1c); return; }
     }
     f_800fdf1c_b(c, 0x800fdf1c);
-    if p { crate::prof::exit(c, 0x800fdf1c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fdf1c_at(c: &mut Cpu, pc: u32) { f_800fdf1c_b(c, pc) }
@@ -28132,13 +27896,11 @@ fn f_800fdf1c_b(c: &mut Cpu, mut pc: u32) {
 /// _msgGetLength__FPCUs (0x800fdfe4, 44 bytes)
 #[inline(never)]
 pub fn f_800fdfe4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fdfe4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fdfe4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fdfe4); f_800fdfe4_at(c, 0x800fdfe4); crate::prof::exit(c, 0x800fdfe4); return; }
     }
     f_800fdfe4_b(c, 0x800fdfe4);
-    if p { crate::prof::exit(c, 0x800fdfe4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fdfe4_at(c: &mut Cpu, pc: u32) { f_800fdfe4_b(c, pc) }
@@ -28177,13 +27939,11 @@ fn f_800fdfe4_b(c: &mut Cpu, mut pc: u32) {
 /// _msgGetSize__FPCUs (0x800fe010, 844 bytes)
 #[inline(never)]
 pub fn f_800fe010(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe010) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe010); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe010); f_800fe010_at(c, 0x800fe010); crate::prof::exit(c, 0x800fe010); return; }
     }
     f_800fe010_b(c, 0x800fe010);
-    if p { crate::prof::exit(c, 0x800fe010); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe010_at(c: &mut Cpu, pc: u32) { f_800fe010_b(c, pc) }
@@ -28578,13 +28338,11 @@ fn f_800fe010_b(c: &mut Cpu, mut pc: u32) {
 /// spriteClearScissor (0x800fe35c, 48 bytes)
 #[inline(never)]
 pub fn f_800fe35c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe35c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe35c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe35c); f_800fe35c_at(c, 0x800fe35c); crate::prof::exit(c, 0x800fe35c); return; }
     }
     f_800fe35c_b(c, 0x800fe35c);
-    if p { crate::prof::exit(c, 0x800fe35c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe35c_at(c: &mut Cpu, pc: u32) { f_800fe35c_b(c, pc) }
@@ -28624,13 +28382,11 @@ fn f_800fe35c_b(c: &mut Cpu, mut pc: u32) {
 /// spriteSetScissor (0x800fe38c, 328 bytes)
 #[inline(never)]
 pub fn f_800fe38c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe38c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe38c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe38c); f_800fe38c_at(c, 0x800fe38c); crate::prof::exit(c, 0x800fe38c); return; }
     }
     f_800fe38c_b(c, 0x800fe38c);
-    if p { crate::prof::exit(c, 0x800fe38c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe38c_at(c: &mut Cpu, pc: u32) { f_800fe38c_b(c, pc) }
@@ -28788,13 +28544,11 @@ fn f_800fe38c_b(c: &mut Cpu, mut pc: u32) {
 /// spriteSetEnv (0x800fe4d4, 460 bytes)
 #[inline(never)]
 pub fn f_800fe4d4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe4d4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe4d4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe4d4); f_800fe4d4_at(c, 0x800fe4d4); crate::prof::exit(c, 0x800fe4d4); return; }
     }
     f_800fe4d4_b(c, 0x800fe4d4);
-    if p { crate::prof::exit(c, 0x800fe4d4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe4d4_at(c: &mut Cpu, pc: u32) { f_800fe4d4_b(c, pc) }
@@ -28976,13 +28730,11 @@ fn f_800fe4d4_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FE6A0 (0x800fe6a0, 12 bytes)
 #[inline(never)]
 pub fn f_800fe6a0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe6a0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe6a0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe6a0); f_800fe6a0_at(c, 0x800fe6a0); crate::prof::exit(c, 0x800fe6a0); return; }
     }
     f_800fe6a0_b(c, 0x800fe6a0);
-    if p { crate::prof::exit(c, 0x800fe6a0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe6a0_at(c: &mut Cpu, pc: u32) { f_800fe6a0_b(c, pc) }
@@ -29010,13 +28762,11 @@ fn f_800fe6a0_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FE6AC (0x800fe6ac, 36 bytes)
 #[inline(never)]
 pub fn f_800fe6ac(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe6ac) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe6ac); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe6ac); f_800fe6ac_at(c, 0x800fe6ac); crate::prof::exit(c, 0x800fe6ac); return; }
     }
     f_800fe6ac_b(c, 0x800fe6ac);
-    if p { crate::prof::exit(c, 0x800fe6ac); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe6ac_at(c: &mut Cpu, pc: u32) { f_800fe6ac_b(c, pc) }
@@ -29059,13 +28809,11 @@ fn f_800fe6ac_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FE6D0 (0x800fe6d0, 12 bytes)
 #[inline(never)]
 pub fn f_800fe6d0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe6d0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe6d0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe6d0); f_800fe6d0_at(c, 0x800fe6d0); crate::prof::exit(c, 0x800fe6d0); return; }
     }
     f_800fe6d0_b(c, 0x800fe6d0);
-    if p { crate::prof::exit(c, 0x800fe6d0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe6d0_at(c: &mut Cpu, pc: u32) { f_800fe6d0_b(c, pc) }
@@ -29093,13 +28841,11 @@ fn f_800fe6d0_b(c: &mut Cpu, mut pc: u32) {
 /// GSgappUnblock (0x800fe6dc, 28 bytes)
 #[inline(never)]
 pub fn f_800fe6dc(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe6dc) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe6dc); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe6dc); f_800fe6dc_at(c, 0x800fe6dc); crate::prof::exit(c, 0x800fe6dc); return; }
     }
     f_800fe6dc_b(c, 0x800fe6dc);
-    if p { crate::prof::exit(c, 0x800fe6dc); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe6dc_at(c: &mut Cpu, pc: u32) { f_800fe6dc_b(c, pc) }
@@ -29131,13 +28877,11 @@ fn f_800fe6dc_b(c: &mut Cpu, mut pc: u32) {
 /// GSgappBlock (0x800fe6f8, 28 bytes)
 #[inline(never)]
 pub fn f_800fe6f8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe6f8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe6f8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe6f8); f_800fe6f8_at(c, 0x800fe6f8); crate::prof::exit(c, 0x800fe6f8); return; }
     }
     f_800fe6f8_b(c, 0x800fe6f8);
-    if p { crate::prof::exit(c, 0x800fe6f8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe6f8_at(c: &mut Cpu, pc: u32) { f_800fe6f8_b(c, pc) }
@@ -29169,13 +28913,11 @@ fn f_800fe6f8_b(c: &mut Cpu, mut pc: u32) {
 /// GSgappTerminate (0x800fe714, 140 bytes)
 #[inline(never)]
 pub fn f_800fe714(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe714) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe714); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe714); f_800fe714_at(c, 0x800fe714); crate::prof::exit(c, 0x800fe714); return; }
     }
     f_800fe714_b(c, 0x800fe714);
-    if p { crate::prof::exit(c, 0x800fe714); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe714_at(c: &mut Cpu, pc: u32) { f_800fe714_b(c, pc) }
@@ -29259,13 +29001,11 @@ fn f_800fe714_b(c: &mut Cpu, mut pc: u32) {
 /// GSgappUpdate (0x800fe7a0, 148 bytes)
 #[inline(never)]
 pub fn f_800fe7a0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe7a0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe7a0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe7a0); f_800fe7a0_at(c, 0x800fe7a0); crate::prof::exit(c, 0x800fe7a0); return; }
     }
     f_800fe7a0_b(c, 0x800fe7a0);
-    if p { crate::prof::exit(c, 0x800fe7a0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe7a0_at(c: &mut Cpu, pc: u32) { f_800fe7a0_b(c, pc) }
@@ -29345,13 +29085,11 @@ fn f_800fe7a0_b(c: &mut Cpu, mut pc: u32) {
 /// GSgappCreate (0x800fe834, 380 bytes)
 #[inline(never)]
 pub fn f_800fe834(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe834) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe834); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe834); f_800fe834_at(c, 0x800fe834); crate::prof::exit(c, 0x800fe834); return; }
     }
     f_800fe834_b(c, 0x800fe834);
-    if p { crate::prof::exit(c, 0x800fe834); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe834_at(c: &mut Cpu, pc: u32) { f_800fe834_b(c, pc) }
@@ -29555,13 +29293,11 @@ fn f_800fe834_b(c: &mut Cpu, mut pc: u32) {
 /// GSgappInit (0x800fe9b0, 196 bytes)
 #[inline(never)]
 pub fn f_800fe9b0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fe9b0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fe9b0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fe9b0); f_800fe9b0_at(c, 0x800fe9b0); crate::prof::exit(c, 0x800fe9b0); return; }
     }
     f_800fe9b0_b(c, 0x800fe9b0);
-    if p { crate::prof::exit(c, 0x800fe9b0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fe9b0_at(c: &mut Cpu, pc: u32) { f_800fe9b0_b(c, pc) }
@@ -29666,13 +29402,11 @@ fn f_800fe9b0_b(c: &mut Cpu, mut pc: u32) {
 /// gappBackgroundCallback (0x800fea74, 300 bytes)
 #[inline(never)]
 pub fn f_800fea74(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fea74) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fea74); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fea74); f_800fea74_at(c, 0x800fea74); crate::prof::exit(c, 0x800fea74); return; }
     }
     f_800fea74_b(c, 0x800fea74);
-    if p { crate::prof::exit(c, 0x800fea74); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fea74_at(c: &mut Cpu, pc: u32) { f_800fea74_b(c, pc) }
@@ -29841,13 +29575,11 @@ fn f_800fea74_b(c: &mut Cpu, mut pc: u32) {
 /// gappVSyncCallback (0x800feba0, 148 bytes)
 #[inline(never)]
 pub fn f_800feba0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800feba0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800feba0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800feba0); f_800feba0_at(c, 0x800feba0); crate::prof::exit(c, 0x800feba0); return; }
     }
     f_800feba0_b(c, 0x800feba0);
-    if p { crate::prof::exit(c, 0x800feba0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800feba0_at(c: &mut Cpu, pc: u32) { f_800feba0_b(c, pc) }
@@ -29927,13 +29659,11 @@ fn f_800feba0_b(c: &mut Cpu, mut pc: u32) {
 /// threadReqUnblock (0x800fec34, 132 bytes)
 #[inline(never)]
 pub fn f_800fec34(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fec34) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fec34); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fec34); f_800fec34_at(c, 0x800fec34); crate::prof::exit(c, 0x800fec34); return; }
     }
     f_800fec34_b(c, 0x800fec34);
-    if p { crate::prof::exit(c, 0x800fec34); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fec34_at(c: &mut Cpu, pc: u32) { f_800fec34_b(c, pc) }
@@ -30021,13 +29751,11 @@ fn f_800fec34_b(c: &mut Cpu, mut pc: u32) {
 /// threadReqBlock (0x800fecb8, 132 bytes)
 #[inline(never)]
 pub fn f_800fecb8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fecb8) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fecb8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fecb8); f_800fecb8_at(c, 0x800fecb8); crate::prof::exit(c, 0x800fecb8); return; }
     }
     f_800fecb8_b(c, 0x800fecb8);
-    if p { crate::prof::exit(c, 0x800fecb8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fecb8_at(c: &mut Cpu, pc: u32) { f_800fecb8_b(c, pc) }
@@ -30115,13 +29843,11 @@ fn f_800fecb8_b(c: &mut Cpu, mut pc: u32) {
 /// threadReqAlloc2 (0x800fed3c, 300 bytes)
 #[inline(never)]
 pub fn f_800fed3c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fed3c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fed3c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fed3c); f_800fed3c_at(c, 0x800fed3c); crate::prof::exit(c, 0x800fed3c); return; }
     }
     f_800fed3c_b(c, 0x800fed3c);
-    if p { crate::prof::exit(c, 0x800fed3c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fed3c_at(c: &mut Cpu, pc: u32) { f_800fed3c_b(c, pc) }
@@ -30284,13 +30010,11 @@ fn f_800fed3c_b(c: &mut Cpu, mut pc: u32) {
 /// threadReqAlloc1 (0x800fee68, 292 bytes)
 #[inline(never)]
 pub fn f_800fee68(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fee68) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fee68); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fee68); f_800fee68_at(c, 0x800fee68); crate::prof::exit(c, 0x800fee68); return; }
     }
     f_800fee68_b(c, 0x800fee68);
-    if p { crate::prof::exit(c, 0x800fee68); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fee68_at(c: &mut Cpu, pc: u32) { f_800fee68_b(c, pc) }
@@ -30451,13 +30175,11 @@ fn f_800fee68_b(c: &mut Cpu, mut pc: u32) {
 /// threadReqAlloc0 (0x800fef8c, 276 bytes)
 #[inline(never)]
 pub fn f_800fef8c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800fef8c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800fef8c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800fef8c); f_800fef8c_at(c, 0x800fef8c); crate::prof::exit(c, 0x800fef8c); return; }
     }
     f_800fef8c_b(c, 0x800fef8c);
-    if p { crate::prof::exit(c, 0x800fef8c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800fef8c_at(c: &mut Cpu, pc: u32) { f_800fef8c_b(c, pc) }
@@ -30614,13 +30336,11 @@ fn f_800fef8c_b(c: &mut Cpu, mut pc: u32) {
 /// floorTerminateTasks (0x800ff0a0, 216 bytes)
 #[inline(never)]
 pub fn f_800ff0a0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff0a0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff0a0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff0a0); f_800ff0a0_at(c, 0x800ff0a0); crate::prof::exit(c, 0x800ff0a0); return; }
     }
     f_800ff0a0_b(c, 0x800ff0a0);
-    if p { crate::prof::exit(c, 0x800ff0a0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff0a0_at(c: &mut Cpu, pc: u32) { f_800ff0a0_b(c, pc) }
@@ -30750,13 +30470,11 @@ fn f_800ff0a0_b(c: &mut Cpu, mut pc: u32) {
 /// floorTaskRegister2 (0x800ff178, 296 bytes)
 #[inline(never)]
 pub fn f_800ff178(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff178) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff178); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff178); f_800ff178_at(c, 0x800ff178); crate::prof::exit(c, 0x800ff178); return; }
     }
     f_800ff178_b(c, 0x800ff178);
-    if p { crate::prof::exit(c, 0x800ff178); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff178_at(c: &mut Cpu, pc: u32) { f_800ff178_b(c, pc) }
@@ -30918,13 +30636,11 @@ fn f_800ff178_b(c: &mut Cpu, mut pc: u32) {
 /// floorTaskRegister1 (0x800ff2a0, 288 bytes)
 #[inline(never)]
 pub fn f_800ff2a0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff2a0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff2a0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff2a0); f_800ff2a0_at(c, 0x800ff2a0); crate::prof::exit(c, 0x800ff2a0); return; }
     }
     f_800ff2a0_b(c, 0x800ff2a0);
-    if p { crate::prof::exit(c, 0x800ff2a0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff2a0_at(c: &mut Cpu, pc: u32) { f_800ff2a0_b(c, pc) }
@@ -31084,13 +30800,11 @@ fn f_800ff2a0_b(c: &mut Cpu, mut pc: u32) {
 /// floorTaskRegister0 (0x800ff3c0, 276 bytes)
 #[inline(never)]
 pub fn f_800ff3c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff3c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff3c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff3c0); f_800ff3c0_at(c, 0x800ff3c0); crate::prof::exit(c, 0x800ff3c0); return; }
     }
     f_800ff3c0_b(c, 0x800ff3c0);
-    if p { crate::prof::exit(c, 0x800ff3c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff3c0_at(c: &mut Cpu, pc: u32) { f_800ff3c0_b(c, pc) }
@@ -31247,13 +30961,11 @@ fn f_800ff3c0_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FF4D4 (0x800ff4d4, 88 bytes)
 #[inline(never)]
 pub fn f_800ff4d4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff4d4) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff4d4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff4d4); f_800ff4d4_at(c, 0x800ff4d4); crate::prof::exit(c, 0x800ff4d4); return; }
     }
     f_800ff4d4_b(c, 0x800ff4d4);
-    if p { crate::prof::exit(c, 0x800ff4d4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff4d4_at(c: &mut Cpu, pc: u32) { f_800ff4d4_b(c, pc) }
@@ -31309,13 +31021,11 @@ fn f_800ff4d4_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FF52C (0x800ff52c, 20 bytes)
 #[inline(never)]
 pub fn f_800ff52c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff52c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff52c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff52c); f_800ff52c_at(c, 0x800ff52c); crate::prof::exit(c, 0x800ff52c); return; }
     }
     f_800ff52c_b(c, 0x800ff52c);
-    if p { crate::prof::exit(c, 0x800ff52c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff52c_at(c: &mut Cpu, pc: u32) { f_800ff52c_b(c, pc) }
@@ -31345,13 +31055,11 @@ fn f_800ff52c_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FF540 (0x800ff540, 8 bytes)
 #[inline(never)]
 pub fn f_800ff540(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff540) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff540); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff540); f_800ff540_at(c, 0x800ff540); crate::prof::exit(c, 0x800ff540); return; }
     }
     f_800ff540_b(c, 0x800ff540);
-    if p { crate::prof::exit(c, 0x800ff540); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff540_at(c: &mut Cpu, pc: u32) { f_800ff540_b(c, pc) }
@@ -31378,13 +31086,11 @@ fn f_800ff540_b(c: &mut Cpu, mut pc: u32) {
 /// floorGetFadeOutFlag (0x800ff548, 12 bytes)
 #[inline(never)]
 pub fn f_800ff548(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff548) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff548); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff548); f_800ff548_at(c, 0x800ff548); crate::prof::exit(c, 0x800ff548); return; }
     }
     f_800ff548_b(c, 0x800ff548);
-    if p { crate::prof::exit(c, 0x800ff548); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff548_at(c: &mut Cpu, pc: u32) { f_800ff548_b(c, pc) }
@@ -31412,13 +31118,11 @@ fn f_800ff548_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FF554 (0x800ff554, 12 bytes)
 #[inline(never)]
 pub fn f_800ff554(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff554) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff554); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff554); f_800ff554_at(c, 0x800ff554); crate::prof::exit(c, 0x800ff554); return; }
     }
     f_800ff554_b(c, 0x800ff554);
-    if p { crate::prof::exit(c, 0x800ff554); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff554_at(c: &mut Cpu, pc: u32) { f_800ff554_b(c, pc) }
@@ -31446,13 +31150,11 @@ fn f_800ff554_b(c: &mut Cpu, mut pc: u32) {
 /// floorGetCurrentContext (0x800ff560, 12 bytes)
 #[inline(never)]
 pub fn f_800ff560(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff560) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff560); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff560); f_800ff560_at(c, 0x800ff560); crate::prof::exit(c, 0x800ff560); return; }
     }
     f_800ff560_b(c, 0x800ff560);
-    if p { crate::prof::exit(c, 0x800ff560); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff560_at(c: &mut Cpu, pc: u32) { f_800ff560_b(c, pc) }
@@ -31480,13 +31182,11 @@ fn f_800ff560_b(c: &mut Cpu, mut pc: u32) {
 /// getCurrentRoomID (0x800ff56c, 32 bytes)
 #[inline(never)]
 pub fn f_800ff56c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff56c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff56c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff56c); f_800ff56c_at(c, 0x800ff56c); crate::prof::exit(c, 0x800ff56c); return; }
     }
     f_800ff56c_b(c, 0x800ff56c);
-    if p { crate::prof::exit(c, 0x800ff56c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff56c_at(c: &mut Cpu, pc: u32) { f_800ff56c_b(c, pc) }
@@ -31525,13 +31225,11 @@ fn f_800ff56c_b(c: &mut Cpu, mut pc: u32) {
 /// floorRequestChange (0x800ff58c, 212 bytes)
 #[inline(never)]
 pub fn f_800ff58c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff58c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff58c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff58c); f_800ff58c_at(c, 0x800ff58c); crate::prof::exit(c, 0x800ff58c); return; }
     }
     f_800ff58c_b(c, 0x800ff58c);
-    if p { crate::prof::exit(c, 0x800ff58c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff58c_at(c: &mut Cpu, pc: u32) { f_800ff58c_b(c, pc) }
@@ -31639,13 +31337,11 @@ fn f_800ff58c_b(c: &mut Cpu, mut pc: u32) {
 /// floorBattleEndTerminateScripts (0x800ff660, 208 bytes)
 #[inline(never)]
 pub fn f_800ff660(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff660) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff660); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff660); f_800ff660_at(c, 0x800ff660); crate::prof::exit(c, 0x800ff660); return; }
     }
     f_800ff660_b(c, 0x800ff660);
-    if p { crate::prof::exit(c, 0x800ff660); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff660_at(c: &mut Cpu, pc: u32) { f_800ff660_b(c, pc) }
@@ -31758,13 +31454,11 @@ fn f_800ff660_b(c: &mut Cpu, mut pc: u32) {
 /// mapWarpToMenuRoom (0x800ff730, 84 bytes)
 #[inline(never)]
 pub fn f_800ff730(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff730) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff730); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff730); f_800ff730_at(c, 0x800ff730); crate::prof::exit(c, 0x800ff730); return; }
     }
     f_800ff730_b(c, 0x800ff730);
-    if p { crate::prof::exit(c, 0x800ff730); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff730_at(c: &mut Cpu, pc: u32) { f_800ff730_b(c, pc) }
@@ -31819,13 +31513,11 @@ fn f_800ff730_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FF784 (0x800ff784, 4 bytes)
 #[inline(never)]
 pub fn f_800ff784(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff784) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff784); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff784); f_800ff784_at(c, 0x800ff784); crate::prof::exit(c, 0x800ff784); return; }
     }
     f_800ff784_b(c, 0x800ff784);
-    if p { crate::prof::exit(c, 0x800ff784); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff784_at(c: &mut Cpu, pc: u32) { f_800ff784_b(c, pc) }
@@ -31851,13 +31543,11 @@ fn f_800ff784_b(c: &mut Cpu, mut pc: u32) {
 /// GSfloorOpen (0x800ff788, 148 bytes)
 #[inline(never)]
 pub fn f_800ff788(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff788) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff788); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff788); f_800ff788_at(c, 0x800ff788); crate::prof::exit(c, 0x800ff788); return; }
     }
     f_800ff788_b(c, 0x800ff788);
-    if p { crate::prof::exit(c, 0x800ff788); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff788_at(c: &mut Cpu, pc: u32) { f_800ff788_b(c, pc) }
@@ -31949,13 +31639,11 @@ fn f_800ff788_b(c: &mut Cpu, mut pc: u32) {
 /// fn_800FF81C (0x800ff81c, 12 bytes)
 #[inline(never)]
 pub fn f_800ff81c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff81c) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff81c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff81c); f_800ff81c_at(c, 0x800ff81c); crate::prof::exit(c, 0x800ff81c); return; }
     }
     f_800ff81c_b(c, 0x800ff81c);
-    if p { crate::prof::exit(c, 0x800ff81c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff81c_at(c: &mut Cpu, pc: u32) { f_800ff81c_b(c, pc) }
@@ -31983,13 +31671,11 @@ fn f_800ff81c_b(c: &mut Cpu, mut pc: u32) {
 /// floorSystemStart (0x800ff828, 328 bytes)
 #[inline(never)]
 pub fn f_800ff828(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff828) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff828); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff828); f_800ff828_at(c, 0x800ff828); crate::prof::exit(c, 0x800ff828); return; }
     }
     f_800ff828_b(c, 0x800ff828);
-    if p { crate::prof::exit(c, 0x800ff828); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff828_at(c: &mut Cpu, pc: u32) { f_800ff828_b(c, pc) }
@@ -32128,13 +31814,11 @@ fn f_800ff828_b(c: &mut Cpu, mut pc: u32) {
 /// _floorManagerThread (0x800ff970, 4532 bytes)
 #[inline(never)]
 pub fn f_800ff970(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x800ff970) { return; }
-        if c.prof { crate::prof::enter(c, 0x800ff970); p = true; }
+        if c.prof { crate::prof::enter(c, 0x800ff970); f_800ff970_at(c, 0x800ff970); crate::prof::exit(c, 0x800ff970); return; }
     }
     f_800ff970_b(c, 0x800ff970);
-    if p { crate::prof::exit(c, 0x800ff970); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_800ff970_at(c: &mut Cpu, pc: u32) { f_800ff970_b(c, pc) }
@@ -34493,13 +34177,11 @@ fn f_800ff970_b(c: &mut Cpu, mut pc: u32) {
 /// floorStartScripts (0x80100b24, 1824 bytes)
 #[inline(never)]
 pub fn f_80100b24(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80100b24) { return; }
-        if c.prof { crate::prof::enter(c, 0x80100b24); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80100b24); f_80100b24_at(c, 0x80100b24); crate::prof::exit(c, 0x80100b24); return; }
     }
     f_80100b24_b(c, 0x80100b24);
-    if p { crate::prof::exit(c, 0x80100b24); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80100b24_at(c: &mut Cpu, pc: u32) { f_80100b24_b(c, pc) }
@@ -35440,13 +35122,11 @@ fn f_80100b24_b(c: &mut Cpu, mut pc: u32) {
 /// loadParticle (0x80101244, 164 bytes)
 #[inline(never)]
 pub fn f_80101244(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101244) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101244); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101244); f_80101244_at(c, 0x80101244); crate::prof::exit(c, 0x80101244); return; }
     }
     f_80101244_b(c, 0x80101244);
-    if p { crate::prof::exit(c, 0x80101244); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101244_at(c: &mut Cpu, pc: u32) { f_80101244_b(c, pc) }
@@ -35530,13 +35210,11 @@ fn f_80101244_b(c: &mut Cpu, mut pc: u32) {
 /// loadCamera (0x801012e8, 184 bytes)
 #[inline(never)]
 pub fn f_801012e8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801012e8) { return; }
-        if c.prof { crate::prof::enter(c, 0x801012e8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801012e8); f_801012e8_at(c, 0x801012e8); crate::prof::exit(c, 0x801012e8); return; }
     }
     f_801012e8_b(c, 0x801012e8);
-    if p { crate::prof::exit(c, 0x801012e8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801012e8_at(c: &mut Cpu, pc: u32) { f_801012e8_b(c, pc) }
@@ -35641,13 +35319,11 @@ fn f_801012e8_b(c: &mut Cpu, mut pc: u32) {
 /// loadModel (0x801013a0, 220 bytes)
 #[inline(never)]
 pub fn f_801013a0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801013a0) { return; }
-        if c.prof { crate::prof::enter(c, 0x801013a0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801013a0); f_801013a0_at(c, 0x801013a0); crate::prof::exit(c, 0x801013a0); return; }
     }
     f_801013a0_b(c, 0x801013a0);
-    if p { crate::prof::exit(c, 0x801013a0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801013a0_at(c: &mut Cpu, pc: u32) { f_801013a0_b(c, pc) }
@@ -35776,13 +35452,11 @@ fn f_801013a0_b(c: &mut Cpu, mut pc: u32) {
 /// loadArchivePtr (0x8010147c, 1172 bytes)
 #[inline(never)]
 pub fn f_8010147c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8010147c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8010147c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8010147c); f_8010147c_at(c, 0x8010147c); crate::prof::exit(c, 0x8010147c); return; }
     }
     f_8010147c_b(c, 0x8010147c);
-    if p { crate::prof::exit(c, 0x8010147c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8010147c_at(c: &mut Cpu, pc: u32) { f_8010147c_b(c, pc) }
@@ -36376,13 +36050,11 @@ fn f_8010147c_b(c: &mut Cpu, mut pc: u32) {
 /// floorModelRefDec (0x80101910, 232 bytes)
 #[inline(never)]
 pub fn f_80101910(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101910) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101910); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101910); f_80101910_at(c, 0x80101910); crate::prof::exit(c, 0x80101910); return; }
     }
     f_80101910_b(c, 0x80101910);
-    if p { crate::prof::exit(c, 0x80101910); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101910_at(c: &mut Cpu, pc: u32) { f_80101910_b(c, pc) }
@@ -36507,13 +36179,11 @@ fn f_80101910_b(c: &mut Cpu, mut pc: u32) {
 /// wazaSequenceSysClearWork (0x801019f8, 48 bytes)
 #[inline(never)]
 pub fn f_801019f8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801019f8) { return; }
-        if c.prof { crate::prof::enter(c, 0x801019f8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801019f8); f_801019f8_at(c, 0x801019f8); crate::prof::exit(c, 0x801019f8); return; }
     }
     f_801019f8_b(c, 0x801019f8);
-    if p { crate::prof::exit(c, 0x801019f8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801019f8_at(c: &mut Cpu, pc: u32) { f_801019f8_b(c, pc) }
@@ -36553,13 +36223,11 @@ fn f_801019f8_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80101A28 (0x80101a28, 36 bytes)
 #[inline(never)]
 pub fn f_80101a28(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101a28) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101a28); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101a28); f_80101a28_at(c, 0x80101a28); crate::prof::exit(c, 0x80101a28); return; }
     }
     f_80101a28_b(c, 0x80101a28);
-    if p { crate::prof::exit(c, 0x80101a28); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101a28_at(c: &mut Cpu, pc: u32) { f_80101a28_b(c, pc) }
@@ -36596,13 +36264,11 @@ fn f_80101a28_b(c: &mut Cpu, mut pc: u32) {
 /// floorModelFreeCB (0x80101a4c, 36 bytes)
 #[inline(never)]
 pub fn f_80101a4c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101a4c) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101a4c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101a4c); f_80101a4c_at(c, 0x80101a4c); crate::prof::exit(c, 0x80101a4c); return; }
     }
     f_80101a4c_b(c, 0x80101a4c);
-    if p { crate::prof::exit(c, 0x80101a4c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101a4c_at(c: &mut Cpu, pc: u32) { f_80101a4c_b(c, pc) }
@@ -36639,13 +36305,11 @@ fn f_80101a4c_b(c: &mut Cpu, mut pc: u32) {
 /// kaisuuBiosGetMax (0x80101a70, 44 bytes)
 #[inline(never)]
 pub fn f_80101a70(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101a70) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101a70); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101a70); f_80101a70_at(c, 0x80101a70); crate::prof::exit(c, 0x80101a70); return; }
     }
     f_80101a70_b(c, 0x80101a70);
-    if p { crate::prof::exit(c, 0x80101a70); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101a70_at(c: &mut Cpu, pc: u32) { f_80101a70_b(c, pc) }
@@ -36687,13 +36351,11 @@ fn f_80101a70_b(c: &mut Cpu, mut pc: u32) {
 /// kaisuuBiosGetMin (0x80101a9c, 40 bytes)
 #[inline(never)]
 pub fn f_80101a9c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101a9c) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101a9c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101a9c); f_80101a9c_at(c, 0x80101a9c); crate::prof::exit(c, 0x80101a9c); return; }
     }
     f_80101a9c_b(c, 0x80101a9c);
-    if p { crate::prof::exit(c, 0x80101a9c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101a9c_at(c: &mut Cpu, pc: u32) { f_80101a9c_b(c, pc) }
@@ -36734,13 +36396,11 @@ fn f_80101a9c_b(c: &mut Cpu, mut pc: u32) {
 /// kaisuuGetKaisuu (0x80101ac4, 112 bytes)
 #[inline(never)]
 pub fn f_80101ac4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101ac4) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101ac4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101ac4); f_80101ac4_at(c, 0x80101ac4); crate::prof::exit(c, 0x80101ac4); return; }
     }
     f_80101ac4_b(c, 0x80101ac4);
-    if p { crate::prof::exit(c, 0x80101ac4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101ac4_at(c: &mut Cpu, pc: u32) { f_80101ac4_b(c, pc) }
@@ -36811,13 +36471,11 @@ fn f_80101ac4_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80101B34 (0x80101b34, 84 bytes)
 #[inline(never)]
 pub fn f_80101b34(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101b34) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101b34); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101b34); f_80101b34_at(c, 0x80101b34); crate::prof::exit(c, 0x80101b34); return; }
     }
     f_80101b34_b(c, 0x80101b34);
-    if p { crate::prof::exit(c, 0x80101b34); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101b34_at(c: &mut Cpu, pc: u32) { f_80101b34_b(c, pc) }
@@ -36878,13 +36536,11 @@ fn f_80101b34_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80101B88 (0x80101b88, 8 bytes)
 #[inline(never)]
 pub fn f_80101b88(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101b88) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101b88); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101b88); f_80101b88_at(c, 0x80101b88); crate::prof::exit(c, 0x80101b88); return; }
     }
     f_80101b88_b(c, 0x80101b88);
-    if p { crate::prof::exit(c, 0x80101b88); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101b88_at(c: &mut Cpu, pc: u32) { f_80101b88_b(c, pc) }
@@ -36911,13 +36567,11 @@ fn f_80101b88_b(c: &mut Cpu, mut pc: u32) {
 /// gappLoadMeterDraw (0x80101b90, 460 bytes)
 #[inline(never)]
 pub fn f_80101b90(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101b90) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101b90); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101b90); f_80101b90_at(c, 0x80101b90); crate::prof::exit(c, 0x80101b90); return; }
     }
     f_80101b90_b(c, 0x80101b90);
-    if p { crate::prof::exit(c, 0x80101b90); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101b90_at(c: &mut Cpu, pc: u32) { f_80101b90_b(c, pc) }
@@ -37114,13 +36768,11 @@ fn f_80101b90_b(c: &mut Cpu, mut pc: u32) {
 /// fn_80101D5C (0x80101d5c, 48 bytes)
 #[inline(never)]
 pub fn f_80101d5c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101d5c) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101d5c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101d5c); f_80101d5c_at(c, 0x80101d5c); crate::prof::exit(c, 0x80101d5c); return; }
     }
     f_80101d5c_b(c, 0x80101d5c);
-    if p { crate::prof::exit(c, 0x80101d5c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101d5c_at(c: &mut Cpu, pc: u32) { f_80101d5c_b(c, pc) }
@@ -37163,13 +36815,11 @@ fn f_80101d5c_b(c: &mut Cpu, mut pc: u32) {
 /// gappLoadMeterDrawFrame (0x80101d8c, 556 bytes)
 #[inline(never)]
 pub fn f_80101d8c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101d8c) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101d8c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101d8c); f_80101d8c_at(c, 0x80101d8c); crate::prof::exit(c, 0x80101d8c); return; }
     }
     f_80101d8c_b(c, 0x80101d8c);
-    if p { crate::prof::exit(c, 0x80101d8c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101d8c_at(c: &mut Cpu, pc: u32) { f_80101d8c_b(c, pc) }
@@ -37420,13 +37070,11 @@ fn f_80101d8c_b(c: &mut Cpu, mut pc: u32) {
 /// gappLoadMeterInit (0x80101fb8, 76 bytes)
 #[inline(never)]
 pub fn f_80101fb8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80101fb8) { return; }
-        if c.prof { crate::prof::enter(c, 0x80101fb8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80101fb8); f_80101fb8_at(c, 0x80101fb8); crate::prof::exit(c, 0x80101fb8); return; }
     }
     f_80101fb8_b(c, 0x80101fb8);
-    if p { crate::prof::exit(c, 0x80101fb8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80101fb8_at(c: &mut Cpu, pc: u32) { f_80101fb8_b(c, pc) }
@@ -37482,13 +37130,11 @@ fn f_80101fb8_b(c: &mut Cpu, mut pc: u32) {
 /// menuGetLastError (0x80102004, 16 bytes)
 #[inline(never)]
 pub fn f_80102004(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102004) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102004); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102004); f_80102004_at(c, 0x80102004); crate::prof::exit(c, 0x80102004); return; }
     }
     f_80102004_b(c, 0x80102004);
-    if p { crate::prof::exit(c, 0x80102004); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102004_at(c: &mut Cpu, pc: u32) { f_80102004_b(c, pc) }
@@ -37517,13 +37163,11 @@ fn f_80102004_b(c: &mut Cpu, mut pc: u32) {
 /// menuGetOffScreenFlag (0x80102014, 36 bytes)
 #[inline(never)]
 pub fn f_80102014(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102014) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102014); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102014); f_80102014_at(c, 0x80102014); crate::prof::exit(c, 0x80102014); return; }
     }
     f_80102014_b(c, 0x80102014);
-    if p { crate::prof::exit(c, 0x80102014); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102014_at(c: &mut Cpu, pc: u32) { f_80102014_b(c, pc) }
@@ -37560,13 +37204,11 @@ fn f_80102014_b(c: &mut Cpu, mut pc: u32) {
 /// menuReleaseOffScreen (0x80102038, 52 bytes)
 #[inline(never)]
 pub fn f_80102038(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102038) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102038); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102038); f_80102038_at(c, 0x80102038); crate::prof::exit(c, 0x80102038); return; }
     }
     f_80102038_b(c, 0x80102038);
-    if p { crate::prof::exit(c, 0x80102038); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102038_at(c: &mut Cpu, pc: u32) { f_80102038_b(c, pc) }
@@ -37613,13 +37255,11 @@ fn f_80102038_b(c: &mut Cpu, mut pc: u32) {
 /// menuCreateOffScreen (0x8010206c, 84 bytes)
 #[inline(never)]
 pub fn f_8010206c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8010206c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8010206c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8010206c); f_8010206c_at(c, 0x8010206c); crate::prof::exit(c, 0x8010206c); return; }
     }
     f_8010206c_b(c, 0x8010206c);
-    if p { crate::prof::exit(c, 0x8010206c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8010206c_at(c: &mut Cpu, pc: u32) { f_8010206c_b(c, pc) }
@@ -37677,13 +37317,11 @@ fn f_8010206c_b(c: &mut Cpu, mut pc: u32) {
 /// menuGetSelectItemNum (0x801020c0, 120 bytes)
 #[inline(never)]
 pub fn f_801020c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801020c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x801020c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801020c0); f_801020c0_at(c, 0x801020c0); crate::prof::exit(c, 0x801020c0); return; }
     }
     f_801020c0_b(c, 0x801020c0);
-    if p { crate::prof::exit(c, 0x801020c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801020c0_at(c: &mut Cpu, pc: u32) { f_801020c0_b(c, pc) }
@@ -37768,13 +37406,11 @@ fn f_801020c0_b(c: &mut Cpu, mut pc: u32) {
 /// menuGetCursorFromItemID (0x80102138, 192 bytes)
 #[inline(never)]
 pub fn f_80102138(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102138) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102138); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102138); f_80102138_at(c, 0x80102138); crate::prof::exit(c, 0x80102138); return; }
     }
     f_80102138_b(c, 0x80102138);
-    if p { crate::prof::exit(c, 0x80102138); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102138_at(c: &mut Cpu, pc: u32) { f_80102138_b(c, pc) }
@@ -37889,13 +37525,11 @@ fn f_80102138_b(c: &mut Cpu, mut pc: u32) {
 /// fn_801021F8 (0x801021f8, 92 bytes)
 #[inline(never)]
 pub fn f_801021f8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801021f8) { return; }
-        if c.prof { crate::prof::enter(c, 0x801021f8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801021f8); f_801021f8_at(c, 0x801021f8); crate::prof::exit(c, 0x801021f8); return; }
     }
     f_801021f8_b(c, 0x801021f8);
-    if p { crate::prof::exit(c, 0x801021f8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801021f8_at(c: &mut Cpu, pc: u32) { f_801021f8_b(c, pc) }
@@ -37961,13 +37595,11 @@ fn f_801021f8_b(c: &mut Cpu, mut pc: u32) {
 /// menuSetDisp (0x80102254, 100 bytes)
 #[inline(never)]
 pub fn f_80102254(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102254) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102254); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102254); f_80102254_at(c, 0x80102254); crate::prof::exit(c, 0x80102254); return; }
     }
     f_80102254_b(c, 0x80102254);
-    if p { crate::prof::exit(c, 0x80102254); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102254_at(c: &mut Cpu, pc: u32) { f_80102254_b(c, pc) }
@@ -38032,13 +37664,11 @@ fn f_80102254_b(c: &mut Cpu, mut pc: u32) {
 /// menuGetCursorItemID (0x801022b8, 224 bytes)
 #[inline(never)]
 pub fn f_801022b8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801022b8) { return; }
-        if c.prof { crate::prof::enter(c, 0x801022b8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801022b8); f_801022b8_at(c, 0x801022b8); crate::prof::exit(c, 0x801022b8); return; }
     }
     f_801022b8_b(c, 0x801022b8);
-    if p { crate::prof::exit(c, 0x801022b8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801022b8_at(c: &mut Cpu, pc: u32) { f_801022b8_b(c, pc) }
@@ -38173,13 +37803,11 @@ fn f_801022b8_b(c: &mut Cpu, mut pc: u32) {
 /// menuSetCursor (0x80102398, 76 bytes)
 #[inline(never)]
 pub fn f_80102398(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102398) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102398); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102398); f_80102398_at(c, 0x80102398); crate::prof::exit(c, 0x80102398); return; }
     }
     f_80102398_b(c, 0x80102398);
-    if p { crate::prof::exit(c, 0x80102398); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102398_at(c: &mut Cpu, pc: u32) { f_80102398_b(c, pc) }
@@ -38238,13 +37866,11 @@ fn f_80102398_b(c: &mut Cpu, mut pc: u32) {
 /// menuGetCursor (0x801023e4, 68 bytes)
 #[inline(never)]
 pub fn f_801023e4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801023e4) { return; }
-        if c.prof { crate::prof::enter(c, 0x801023e4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801023e4); f_801023e4_at(c, 0x801023e4); crate::prof::exit(c, 0x801023e4); return; }
     }
     f_801023e4_b(c, 0x801023e4);
-    if p { crate::prof::exit(c, 0x801023e4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801023e4_at(c: &mut Cpu, pc: u32) { f_801023e4_b(c, pc) }
@@ -38298,13 +37924,11 @@ fn f_801023e4_b(c: &mut Cpu, mut pc: u32) {
 /// menuCloseSync (0x80102428, 152 bytes)
 #[inline(never)]
 pub fn f_80102428(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102428) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102428); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102428); f_80102428_at(c, 0x80102428); crate::prof::exit(c, 0x80102428); return; }
     }
     f_80102428_b(c, 0x80102428);
-    if p { crate::prof::exit(c, 0x80102428); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102428_at(c: &mut Cpu, pc: u32) { f_80102428_b(c, pc) }
@@ -38406,13 +38030,11 @@ fn f_80102428_b(c: &mut Cpu, mut pc: u32) {
 /// menuCloseFloor (0x801024c0, 40 bytes)
 #[inline(never)]
 pub fn f_801024c0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801024c0) { return; }
-        if c.prof { crate::prof::enter(c, 0x801024c0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801024c0); f_801024c0_at(c, 0x801024c0); crate::prof::exit(c, 0x801024c0); return; }
     }
     f_801024c0_b(c, 0x801024c0);
-    if p { crate::prof::exit(c, 0x801024c0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801024c0_at(c: &mut Cpu, pc: u32) { f_801024c0_b(c, pc) }
@@ -38450,13 +38072,11 @@ fn f_801024c0_b(c: &mut Cpu, mut pc: u32) {
 /// fn_801024E8 (0x801024e8, 40 bytes)
 #[inline(never)]
 pub fn f_801024e8(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801024e8) { return; }
-        if c.prof { crate::prof::enter(c, 0x801024e8); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801024e8); f_801024e8_at(c, 0x801024e8); crate::prof::exit(c, 0x801024e8); return; }
     }
     f_801024e8_b(c, 0x801024e8);
-    if p { crate::prof::exit(c, 0x801024e8); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801024e8_at(c: &mut Cpu, pc: u32) { f_801024e8_b(c, pc) }
@@ -38494,13 +38114,11 @@ fn f_801024e8_b(c: &mut Cpu, mut pc: u32) {
 /// menuClose (0x80102510, 88 bytes)
 #[inline(never)]
 pub fn f_80102510(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102510) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102510); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102510); f_80102510_at(c, 0x80102510); crate::prof::exit(c, 0x80102510); return; }
     }
     f_80102510_b(c, 0x80102510);
-    if p { crate::prof::exit(c, 0x80102510); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102510_at(c: &mut Cpu, pc: u32) { f_80102510_b(c, pc) }
@@ -38568,13 +38186,11 @@ fn f_80102510_b(c: &mut Cpu, mut pc: u32) {
 /// menuCloseCustom (0x80102568, 184 bytes)
 #[inline(never)]
 pub fn f_80102568(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102568) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102568); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102568); f_80102568_at(c, 0x80102568); crate::prof::exit(c, 0x80102568); return; }
     }
     f_80102568_b(c, 0x80102568);
-    if p { crate::prof::exit(c, 0x80102568); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102568_at(c: &mut Cpu, pc: u32) { f_80102568_b(c, pc) }
@@ -38690,13 +38306,11 @@ fn f_80102568_b(c: &mut Cpu, mut pc: u32) {
 /// menuIsCheck (0x80102620, 44 bytes)
 #[inline(never)]
 pub fn f_80102620(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102620) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102620); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102620); f_80102620_at(c, 0x80102620); crate::prof::exit(c, 0x80102620); return; }
     }
     f_80102620_b(c, 0x80102620);
-    if p { crate::prof::exit(c, 0x80102620); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102620_at(c: &mut Cpu, pc: u32) { f_80102620_b(c, pc) }
@@ -38735,13 +38349,11 @@ fn f_80102620_b(c: &mut Cpu, mut pc: u32) {
 /// menuOpen (0x8010264c, 88 bytes)
 #[inline(never)]
 pub fn f_8010264c(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x8010264c) { return; }
-        if c.prof { crate::prof::enter(c, 0x8010264c); p = true; }
+        if c.prof { crate::prof::enter(c, 0x8010264c); f_8010264c_at(c, 0x8010264c); crate::prof::exit(c, 0x8010264c); return; }
     }
     f_8010264c_b(c, 0x8010264c);
-    if p { crate::prof::exit(c, 0x8010264c); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_8010264c_at(c: &mut Cpu, pc: u32) { f_8010264c_b(c, pc) }
@@ -38794,13 +38406,11 @@ fn f_8010264c_b(c: &mut Cpu, mut pc: u32) {
 /// menuOpenCustom (0x801026a4, 452 bytes)
 #[inline(never)]
 pub fn f_801026a4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801026a4) { return; }
-        if c.prof { crate::prof::enter(c, 0x801026a4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801026a4); f_801026a4_at(c, 0x801026a4); crate::prof::exit(c, 0x801026a4); return; }
     }
     f_801026a4_b(c, 0x801026a4);
-    if p { crate::prof::exit(c, 0x801026a4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801026a4_at(c: &mut Cpu, pc: u32) { f_801026a4_b(c, pc) }
@@ -39025,13 +38635,11 @@ fn f_801026a4_b(c: &mut Cpu, mut pc: u32) {
 /// menuSetPosition (0x80102868, 72 bytes)
 #[inline(never)]
 pub fn f_80102868(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102868) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102868); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102868); f_80102868_at(c, 0x80102868); crate::prof::exit(c, 0x80102868); return; }
     }
     f_80102868_b(c, 0x80102868);
-    if p { crate::prof::exit(c, 0x80102868); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102868_at(c: &mut Cpu, pc: u32) { f_80102868_b(c, pc) }
@@ -39083,13 +38691,11 @@ fn f_80102868_b(c: &mut Cpu, mut pc: u32) {
 /// menuDaemon (0x801028b0, 1572 bytes)
 #[inline(never)]
 pub fn f_801028b0(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x801028b0) { return; }
-        if c.prof { crate::prof::enter(c, 0x801028b0); p = true; }
+        if c.prof { crate::prof::enter(c, 0x801028b0); f_801028b0_at(c, 0x801028b0); crate::prof::exit(c, 0x801028b0); return; }
     }
     f_801028b0_b(c, 0x801028b0);
-    if p { crate::prof::exit(c, 0x801028b0); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_801028b0_at(c: &mut Cpu, pc: u32) { f_801028b0_b(c, pc) }
@@ -39975,13 +39581,11 @@ fn f_801028b0_b(c: &mut Cpu, mut pc: u32) {
 /// menuButtonNormal (0x80102ed4, 100 bytes)
 #[inline(never)]
 pub fn f_80102ed4(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102ed4) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102ed4); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102ed4); f_80102ed4_at(c, 0x80102ed4); crate::prof::exit(c, 0x80102ed4); return; }
     }
     f_80102ed4_b(c, 0x80102ed4);
-    if p { crate::prof::exit(c, 0x80102ed4); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102ed4_at(c: &mut Cpu, pc: u32) { f_80102ed4_b(c, pc) }
@@ -40049,13 +39653,11 @@ fn f_80102ed4_b(c: &mut Cpu, mut pc: u32) {
 /// menuCursorNormal (0x80102f38, 1356 bytes)
 #[inline(never)]
 pub fn f_80102f38(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80102f38) { return; }
-        if c.prof { crate::prof::enter(c, 0x80102f38); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80102f38); f_80102f38_at(c, 0x80102f38); crate::prof::exit(c, 0x80102f38); return; }
     }
     f_80102f38_b(c, 0x80102f38);
-    if p { crate::prof::exit(c, 0x80102f38); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80102f38_at(c: &mut Cpu, pc: u32) { f_80102f38_b(c, pc) }
@@ -40812,13 +40414,11 @@ fn f_80102f38_b(c: &mut Cpu, mut pc: u32) {
 /// menuPlaySe (0x80103484, 88 bytes)
 #[inline(never)]
 pub fn f_80103484(c: &mut Cpu) {
-    let mut p = false;
     if c.hooks {
         if c.stub_hit(0x80103484) { return; }
-        if c.prof { crate::prof::enter(c, 0x80103484); p = true; }
+        if c.prof { crate::prof::enter(c, 0x80103484); f_80103484_at(c, 0x80103484); crate::prof::exit(c, 0x80103484); return; }
     }
     f_80103484_b(c, 0x80103484);
-    if p { crate::prof::exit(c, 0x80103484); }
 }
 /// Enter at a block label (a call's return address: resuming a parked GS thread). No hooks.
 pub fn f_80103484_at(c: &mut Cpu, pc: u32) { f_80103484_b(c, pc) }
